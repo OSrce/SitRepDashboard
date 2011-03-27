@@ -1,6 +1,31 @@
 
 var map, stc_chokepoints, dragControl;
 
+// For selecting items
+var selectControl, selectedFeature;
+
+function onPopupClose(evt) {
+	selectControl.unselect(selectedFeature);
+}
+function onFeatureSelect(feature) {
+	selectedFeature = feature;
+//	var postNum = feature.data { 
+	popup = new OpenLayers.Popup.FramedCloud("chicken", 
+		feature.geometry.getBounds().getCenterLonLat(),
+		null,
+		"<div style='font-size:.8em'>Post : " + feature.Post_Number +"<br />Patrol Boro: " + feature.geometry.getArea()+"</div>",
+		null, true, onPopupClose);
+	feature.popup = popup;
+	map.addPopup(popup);
+}
+function onFeatureUnselect(feature) {
+	map.removePopup(feature.popup);
+	feature.popup.destroy();
+	feature.popup = null;
+}    
+	
+
+
 function init() {
 
 // Start Location :
@@ -60,7 +85,21 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 
 
 //Testing purposes only, we're going to move this to its own file soon.
-stc_chokepoints = new OpenLayers.Layer.GML("NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: true, styleMap: stc_styleMap  } );
+stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
+	strategies: [ new OpenLayers.Strategy.Fixed() ],
+	protocol: new OpenLayers.Protocol.HTTP( {
+		url: "data_sensitive/NYPD_STC_CHOKEPOINTS.gml",
+		format: new OpenLayers.Format.GML()
+//			extractAttributes: true
+//		} ) 
+	} ),
+	isBaseLayer: false,
+	projection: "EPSG:4326",
+	visibility: true,
+	styleMap: stc_styleMap  
+} );
+
+
 var nypd_veh_inter_com = new OpenLayers.Layer.GML("NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 var nypd_veh_inter_pas = new OpenLayers.Layer.GML("NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
@@ -81,6 +120,13 @@ dragControl = new OpenLayers.Control.DragFeature( {
 } ); 
 map.addControl(dragControl);
 //dragControl.activate();
+
+// Adding select control for stc_chokepoints
+selectControl = new OpenLayers.Control.SelectFeature(stc_chokepoints,
+                {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
+map.addControl(selectControl);
+selectControl.activate();
+
 
 //Add the events we wish to register
 //map.events.register("mousemove", map, function(e) {
