@@ -1,0 +1,11 @@
+
+
+Ok, SVN repository is setup, checkout via :
+
+svn co svn+ssh://ny2.osrce.com/var/svn/osrce/SitRepDashboard/trunk SitRepDashboard
+
+
+
+
+
+
