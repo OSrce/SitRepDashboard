@@ -9,11 +9,13 @@ function onPopupClose(evt) {
 }
 function onFeatureSelect(feature) {
 	selectedFeature = feature;
-//	var postNum = feature.data { 
+	var postNum = feature.attributes['Post_Number'];
+	var patrolBoro = feature.attributes['Patrol_Boro']; 
+	var postDesc = feature.attributes['Post_Description'];
 	popup = new OpenLayers.Popup.FramedCloud("chicken", 
 		feature.geometry.getBounds().getCenterLonLat(),
 		null,
-		"<div style='font-size:.8em'>Post : " + feature.Post_Number +"<br />Patrol Boro: " + feature.geometry.getArea()+"</div>",
+		"<div style='font-size:.8em'>Post : " + postNum +"<br />Patrol Boro: " + patrolBoro+"<br/> Location: "+postDesc +"</div>",
 		null, true, onPopupClose);
 	feature.popup = popup;
 	map.addPopup(popup);
@@ -89,9 +91,9 @@ stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
 	strategies: [ new OpenLayers.Strategy.Fixed() ],
 	protocol: new OpenLayers.Protocol.HTTP( {
 		url: "data_sensitive/NYPD_STC_CHOKEPOINTS.gml",
-		format: new OpenLayers.Format.GML()
-//			extractAttributes: true
-//		} ) 
+		format: new OpenLayers.Format.GML( {
+			extractAttributes: true
+		} ) 
 	} ),
 	isBaseLayer: false,
 	projection: "EPSG:4326",

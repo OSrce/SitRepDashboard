@@ -6,6 +6,9 @@ svn co svn+ssh://ny2.osrce.com/var/svn/osrce/SitRepDashboard/trunk SitRepDashboa
 
 
 
+### Conversion of shp -> gml files with reprojection to EPSG:4326 (from NAD83 NY Long Island in feet etc etc) :
+ogr2ogr -t_srs "EPSG:4326" -f GML PolicePctBoundaries.gml nypp.shp
+
 
 
 
