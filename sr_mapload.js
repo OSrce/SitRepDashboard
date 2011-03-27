@@ -39,28 +39,20 @@ var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "data_public/Po
 map.addLayers( [  gmap  ]);
 map.addLayers( [   policePcts ]);
 
-/*
+
 //TESTING Add style for chokepoints:
 var stc_style_def =  new OpenLayers.Style( { 
 	fillColor: "#FF0000",
 	fillOpacity: 0.6,
 	strokeColor: "#FF0000",
-	strokeOpacity: 1
+	strokeOpacity: 1,
+	pointRadius: 6
 } ); 
-//var stc_styleMap = new OpenLayers.StyleMap( {'default': stc_style_def } );
-var stcSMap = new OpenLayers.StyleMap( {'default':  new OpenLayers.Style( { 
-	fillColor: "#FF0000",
-	fillOpacity: 0.6,
-	strokeColor: "#FF0000",
-	strokeOpacity: 1
-} ) 
-} );
+var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 
-*/
 
 //Testing purposes only, we're going to move this to its own file soon.
-var stc_chokepoints = new OpenLayers.Layer.GML("NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: true} );
-
+var stc_chokepoints = new OpenLayers.Layer.GML("NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: true, styleMap: stc_styleMap  } );
 var nypd_veh_inter_com = new OpenLayers.Layer.GML("NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 var nypd_veh_inter_pas = new OpenLayers.Layer.GML("NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
