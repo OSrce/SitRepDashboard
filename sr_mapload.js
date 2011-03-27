@@ -30,19 +30,46 @@ var dm_wms = new OpenLayers.Layer.WMS(
 var gmap = new OpenLayers.Layer.Google( "Google Maps", {numZoomLevels: 20} );
 
 // Add the precinct boundaries as a gml file for now.
-var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, style: {fillColor: "#0000FF", fillOpacity: 0.3, strokeColor: "#0000FF" }  } );
+
+//Add style for precincts :
+//TODO
+
+// Attach the base layer + the data_public layer(s)
+map.addLayers( [  gmap  ]);
+map.addLayers( [   policePcts ]);
+
+/*
+//TESTING Add style for chokepoints:
+var stc_style_def =  new OpenLayers.Style( { 
+	fillColor: "#FF0000",
+	fillOpacity: 0.6,
+	strokeColor: "#FF0000",
+	strokeOpacity: 1
+} ); 
+//var stc_styleMap = new OpenLayers.StyleMap( {'default': stc_style_def } );
+var stcSMap = new OpenLayers.StyleMap( {'default':  new OpenLayers.Style( { 
+	fillColor: "#FF0000",
+	fillOpacity: 0.6,
+	strokeColor: "#FF0000",
+	strokeOpacity: 1
+} ) 
+} );
+
+*/
 
 //Testing purposes only, we're going to move this to its own file soon.
-var stc_chokepoints = new OpenLayers.Layer.GML("NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+var stc_chokepoints = new OpenLayers.Layer.GML("NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: true} );
+
 var nypd_veh_inter_com = new OpenLayers.Layer.GML("NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 var nypd_veh_inter_pas = new OpenLayers.Layer.GML("NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
-//Add style for precincts :
 
 
 
-map.addLayers( [  gmap  ]);
-map.addLayers( [   policePcts ]);
+
+
+
 //Add testing layers - to be taken out soon.
 map.addLayers( [ stc_chokepoints, nypd_veh_inter_com, nypd_veh_inter_pas ]);
 
