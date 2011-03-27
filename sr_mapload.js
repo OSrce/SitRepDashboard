@@ -117,11 +117,8 @@ map.addControl(new OpenLayers.Control.MousePosition( {
 	displayProjection: new OpenLayers.Projection("EPSG:4326")
 } ) );
 //Adding the Control to allow for points to be selected and moved 
-dragControl = new OpenLayers.Control.DragFeature( {
-	layer: stc_chokepoints 
-} ); 
+dragControl = new OpenLayers.Control.DragFeature( stc_chokepoints ); 
 map.addControl(dragControl);
-//dragControl.activate();
 
 // Adding select control for stc_chokepoints
 selectControl = new OpenLayers.Control.SelectFeature(stc_chokepoints,
@@ -145,6 +142,9 @@ map.setOptions(
 );
 var lonlat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection, map.projection);
 map.setCenter(lonlat , zoom ); 
+
+
+dragControl.activate();
 
 }
 /// END init Function
