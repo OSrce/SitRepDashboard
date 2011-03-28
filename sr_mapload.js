@@ -7,15 +7,18 @@ var selectControl, selectedFeature;
 function onPopupClose(evt) {
 	selectControl.unselect(selectedFeature);
 }
+
 function onFeatureSelect(feature) {
 	selectedFeature = feature;
 	var postNum = feature.attributes['Post_Number'];
 	var patrolBoro = feature.attributes['Patrol_Boro']; 
 	var postDesc = feature.attributes['Post_Description'];
+	var postLat = feature.attributes['Lat'];
+	var postLon = feature.attributes['Lon'];
 	popup = new OpenLayers.Popup.FramedCloud("chicken", 
 		feature.geometry.getBounds().getCenterLonLat(),
 		null,
-		"<div style='font-size:.8em'>Post : " + postNum +"<br />Patrol Boro: " + patrolBoro+"<br/> Location: "+postDesc +"</div>",
+		"<div style='font-size:.8em'>Post: " + postNum +"<br />Patrol Boro: " + patrolBoro+"<br/> Location: "+postDesc +"<br/> Lat/Lon: "+postLat+"/"+postLon +"</div>",
 		null, true, onPopupClose);
 	feature.popup = popup;
 	map.addPopup(popup);
@@ -47,7 +50,15 @@ map = new OpenLayers.Map("map", {
 
 //Add the Google Maps Layer for debug purposes only (don't
 //forget to get rid of script src from html file.)
-var gmap = new OpenLayers.Layer.Google( "Google Maps", {numZoomLevels: 20} );
+var gMapLayer = new OpenLayers.Layer.Google( "Google Maps", {numZoomLevels: 20} );
+
+//Add OpenStreetMap Layer for debug purposes as well 
+var osmMapLayer = new OpenLayers.Layer.OSM();
+
+var srMapLayer = new OpenLayers.Layer.WMS("SitRep GIS", 
+	[ "gis.local:3000/osm_tiles2?" ],
+	{layers: 'osm-4326', format: 'image/png' }
+);
 
 //Add style for precincts :
 var pct_style_def =  new OpenLayers.Style( { 
@@ -71,7 +82,7 @@ var pct_styleMap = new OpenLayers.StyleMap( {"default":  pct_style_def, "select"
 var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
 
 // Attach the base layer + the data_public layer(s)
-map.addLayers( [  gmap  ]);
+map.addLayers( [  gMapLayer, osmMapLayer, srMapLayer  ]);
 map.addLayers( [   policePcts ]);
 
 
@@ -88,7 +99,10 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 
 //Testing purposes only, we're going to move this to its own file soon.
 stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
-	strategies: [ new OpenLayers.Strategy.Fixed() ],
+	strategies: [ 
+		new OpenLayers.Strategy.Fixed(),
+		new OpenLayers.Strategy.Save({auto:true}) 
+	],
 	protocol: new OpenLayers.Protocol.HTTP( {
 		url: "data_sensitive/NYPD_STC_CHOKEPOINTS.gml",
 		format: new OpenLayers.Format.GML( {
@@ -125,7 +139,11 @@ selectControl = new OpenLayers.Control.SelectFeature(stc_chokepoints,
                 {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
 map.addControl(selectControl);
 selectControl.activate();
-
+modifyControl = new OpenLayers.Control.ModifyFeature(stc_chokepoints,
+							{ mode: OpenLayers.Control.ModifyFeature.DRAG,
+								standalone: true } );
+map.addControl(modifyControl);
+modifyControl.activate();
 
 //Add the events we wish to register
 //map.events.register("mousemove", map, function(e) {
@@ -144,7 +162,7 @@ var lonlat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection, ma
 map.setCenter(lonlat , zoom ); 
 
 
-dragControl.activate();
+//dragControl.activate();
 
 }
 /// END init Function
