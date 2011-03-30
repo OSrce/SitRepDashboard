@@ -55,9 +55,9 @@ var gMapLayer = new OpenLayers.Layer.Google( "Google Maps", {numZoomLevels: 20} 
 //Add OpenStreetMap Layer for debug purposes as well 
 var osmMapLayer = new OpenLayers.Layer.OSM();
 
-var srMapLayer = new OpenLayers.Layer.WMS("SitRep GIS", 
-	[ "gis.local:3000/osm_tiles2?" ],
-	{layers: 'osm-4326', format: 'image/png' }
+var srMapLayer = new OpenLayers.Layer.OSM("SitRep GIS", 
+	"http://SitRepGIS.local:3001/osm_tiles/${z}/${x}/${y}.png",
+	{numZoomLevels: 19 }
 );
 
 //Add style for precincts :
