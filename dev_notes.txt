@@ -1,13 +1,44 @@
+2011-03-30 1340 : Notes for the development of SitRepDashboard :
 
-
-Ok, SVN repository is setup, checkout via :
-
+##### GETTING THE DATA #######
+### This Repo :
 svn co svn+ssh://ny2.osrce.com/var/svn/osrce/SitRepDashboard/trunk SitRepDashboard
 
+### OpenLayers :
+
+### Dojo Javascript Library :
+
+###############################
 
 
+### TODO :
+1. "Welcome" Splash Page with link to main page (eventually to be changed to a login/pass using 
+	either ldap or a postgres database.
+2.  Seperate out the srd (SitRepDashboard) code from code that specific to the client / deployment.
+
+
+
+
+
+
+
+
+
+
+
+
+#### MISC INFO :
 ### Conversion of shp -> gml files with reprojection to EPSG:4326 (from NAD83 NY Long Island in feet etc etc) :
 ogr2ogr -t_srs "EPSG:4326" -f GML PolicePctBoundaries.gml nypp.shp
+
+
+
+
+
+
+
+
+
 
 
 
