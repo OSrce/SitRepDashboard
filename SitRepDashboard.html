@@ -32,6 +32,9 @@
 			dojo.require("dojo.parser");
 			dojo.require("dijit.layout.ContentPane");
 			dojo.require("dijit.layout.BorderContainer");
+			dojo.require("dijit.MenuBar");
+			dojo.require("dijit.PopupMenuBarItem");
+			dojo.require("dijit.layout.TabContainer");
 		</script>
 	</head>
 	<body class="tundra" onload="init()"> 
@@ -40,13 +43,40 @@
 
 			<div dojoType="dijit.layout.ContentPane" id="top" region="top" style="background-color:gray">
 					<h3>SitRep System Main Screen</h3>
+<!--					<div dojoType="dijit.MenuBar" id="navMenu" style="height:15px">
+						<div dojoType="PopupMenuBarItem" id="Map" style="height:15px">
+						<span>Map</span>	
+							
+						</div> 
+						<div dojoType="PopupMenuBarItem" id="Overlays"  style="height:15px">
+						<span>Overlays</span>	
+		
+						</div> 
+						</div> 
+						<div dojoType="PopupMenuBarItem" id="Assets"  style="height:15px">
+						<span> Assets </span>	
+
+						</div> 
+
+					</div>
+--->
 			</div>
 <!--			<div dojoType="dijit.layout.ContentPane" id="left" region="left"  style="background-color:lightblue;width: 125px;">
 
 			</div>
 -->
-		<div dojoType="dijit.layout.ContentPane" id="right" region="right" style="background-color:gray; width: 130px;">
+		<div dojoType="dijit.layout.ContentPane" id="right" region="right" style="background-color:gray; width: 130px;"   splitter="true" >
+			<div dojoType="dijit.layout.TabContainer" region="center" id="overlayTabs" tabStrip="true" style="height:100%;">
+<!---   Just a demo of what we're going to do for each overlay layer --->
+				<div id="basicFormTab" dojoType="dijit.layout.ContentPane" title="Basic Form Widgets" style="padding:10px;display:none;">
+					<b> JONTEST1</b>
+				</div>	
 
+<!---
+----DONE WITH THE DEMO
+--->
+
+			</div>
 		</div>
 
 
