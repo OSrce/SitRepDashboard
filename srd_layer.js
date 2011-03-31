@@ -62,7 +62,9 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 //	this.modifyControl.activate();
 
 */
-//	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
+
+
+	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
 
 
 }; 
@@ -74,6 +76,7 @@ srd_layer.prototype.turnOnEvents = function () {
 	this.layer.events.on( {
 		"featureselected": function(e) { onFeatureSelect(e, this); },
 		"featureunselected": function(e) {onFeatureUnselect(e, this); },
+		"loadend": function(e) { loadDataGrid(e, this); }, 
 		scope: this 
 	} );
 
@@ -108,51 +111,67 @@ onFeatureUnselect = function(evt, the_srd_layer) {
 	feature.popup = null;
 };    
 	
-srd_layer.prototype.loadDataGrid = function() {
+loadDataGrid = function(evt, the_srd_layer) {
 	var overlayTabContainer = dijit.byId("overlayTabContainer");
 	var layerTab = new dijit.layout.ContentPane();
 	layerTab.set('title', 'debugging');
 
+	var layer = the_srd_layer.layer;
+
 /// DESCRIBING HOW THE dojox.data.grid "spreadsheet"  should look.
-	var srd_tableLayout = [{
-		field: 'PostNum',
-		name: 'Post Number',
-		width: '100px'
-	}, {
-		field: 'PatrolBoro',
-		name: 'Patrol Boro',
-		width: '100px'
-	}, { 
-		field: 'Location',
-		name: 'Location',
-		width: '100px'
-	}, { 
-		field: 'Latitude',
-		name: 'Latitude',
-		width: '100px'
-	}, { 
-		field: 'Longitude',
-		name: 'Longitude',
-		width: '100px'
-	} ];
+
+	
+	var theFeatArr = layer.features;
+	var theFeatPropNames = {};
+	var srd_tableLayout = new Array();
+	var i=0;
+	for(var propName in theFeatArr[0].attributes ) {
+		theFeatPropNames[i] = propName;
+		srd_tableLayout[i] = { field: theFeatPropNames[i], name: theFeatPropNames[i], width: 'auto' };
+		i++;
+	}
+
+	var srd_LayerStore = new dojo.store.Memory( { 
+		idProperty: 'fid', 
+		data: layer.features,
+		features: { 'dojo.data.api.Read': true} 
+	} );
+
+//alert( "TEST:" + 	srd_LayerStore.get('F1') +":TEST" );
+	
+	
+/*
+	for(i=0;i<theFeatArr.length;i++) {
+		var tmpFeat = layer.features[i];
+		var k=0;
+		srd_LayerStore.items[i] = tmpFeat.attributes;
+		var tmpAttArr = new Array();
+		for(var j in tmpFeat.attributes ) {
+			tmpAttArr[k] = tmpFeat.attributes[j];
+			k++;
+		}
+
+//		layerGrid.addRow( tmpAttArr );	
+	}
+*/
+//	var theReadStore = new dojo.data.ItemFileReadStore( { jsld: "blah", data: srd_LayerStore } );
+
+	/// Utility Adapter for using dojo.store.Memory objects where dojo.data. objects are needed.
+	var srd_LegacyDataStore =  new dojo.data.ObjectStore({ objectStore: srd_LayerStore});
 
 	var layerGrid = new dojox.grid.DataGrid( {
 		title: layer.name, 
 		clientSort: true,
-		rowSelector: '20px',
+//		rowSelector: '20px',
+		store:srd_LegacyDataStore ,
 		structure: srd_tableLayout},
 		document.createElement('div') );
 	var i=0;
-	var theFeatArr = layer.features;
 //	var theFeatArr = new Array( "", "", "");
-	for(i=0;i<theFeatArr.length;i++) {
-		var tmpFeat = layer.features[i];
-		layerGrid.addRow( tmpFeat.attributes );	
-	}
 	overlayTabContainer.addChild(layerGrid);
 
-	layerTab.set('content', "TEST"+this.layer.features+"END");
-	overlayTabContainer.addChild(layerTab);
+//	layerTab.set('content', "TEST"+layer.features[0].attributes['Post_Number']+"END");
+//	overlayTabContainer.addChild(layerTab);
 
 };
 

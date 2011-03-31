@@ -121,7 +121,8 @@ map.addControl(selectControl);
 selectControl.activate();
 
 stc_chokepoints.turnOnEvents();
-
+nypd_veh_inter_com.turnOnEvents();
+nypd_veh_inter_pas.turnOnEvents();
 
 //Add the events we wish to register
 //map.events.register("mousemove", map, function(e) {
