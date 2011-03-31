@@ -62,16 +62,7 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 //	this.modifyControl.activate();
 
 */
-	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
-
-	this.layer.events.on( {
-		"featureselected": function(e) {
-			this.onFeatureSelect(e);
-		},
-		"featureunselected": function(e) {
-			this.onFeatureUnselect(e);
-		} 
-	} );
+//	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
 
 
 }; 
@@ -79,28 +70,39 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 
 
 
-srd_layer.prototype.onPopupClose = function(evt) {
-	this.selectControl.unselect(selectedFeature);
+srd_layer.prototype.turnOnEvents = function () {
+	this.layer.events.on( {
+		"featureselected": function(e) { onFeatureSelect(e, this); },
+		"featureunselected": function(e) {onFeatureUnselect(e, this); },
+		scope: this 
+	} );
+
 };
 
-srd_layer.prototype.onFeatureSelect = function(feature) {
-	this.selectedFeature = feature;
-	var postNum = feature.attributes['Post_Number'];
-	alert("PostNum:"+postNum+" = Selected");
-	var patrolBoro = feature.attributes['Patrol_Boro']; 
-	var postDesc = feature.attributes['Post_Description'];
-	var postLat = feature.attributes['Lat'];
-	var postLon = feature.attributes['Lon'];
+
+
+onFeatureSelect = function(evt, the_srd_layer) {
+	this.selFeature = evt.feature;
+	var postNum = selFeature.attributes['Post_Number'];
+	var patrolBoro = selFeature.attributes['Patrol_Boro']; 
+	var postDesc = selFeature.attributes['Post_Description'];
+	var postLat = selFeature.attributes['Lat'];
+	var postLon = selFeature.attributes['Lon'];
 	popup = new OpenLayers.Popup.FramedCloud("chicken", 
-		feature.geometry.getBounds().getCenterLonLat(),
+		selFeature.geometry.getBounds().getCenterLonLat(),
 		null,
 		"<div style='font-size:.8em'>Post: " + postNum +"<br />Patrol Boro: " + patrolBoro+"<br/> Location: "+postDesc +"<br/> Lat/Lon: "+postLat+"/"+postLon +"</div>",
-		null, true, onPopupClose);
-	feature.popup = popup;
+		null, true );  
+	selFeature.popup = popup;
 	this.map.addPopup(popup);
+
+	
+
 };
 
-srd_layer.prototype.onFeatureUnselect = function(feature) {
+
+onFeatureUnselect = function(evt, the_srd_layer) {
+	var feature = evt.feature;
 	this.map.removePopup(feature.popup);
 	feature.popup.destroy();
 	feature.popup = null;

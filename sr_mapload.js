@@ -120,6 +120,9 @@ selectControl = new OpenLayers.Control.SelectFeature(
 map.addControl(selectControl);
 selectControl.activate();
 
+stc_chokepoints.turnOnEvents();
+
+
 //Add the events we wish to register
 //map.events.register("mousemove", map, function(e) {
 //	var position = this.events.getMousePosition(e);
