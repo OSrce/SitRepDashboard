@@ -1,85 +1,6 @@
 
-var map, stc_chokepoints, dragControl;
-
-// For selecting items
-var selectControl, selectedFeature;
-
-function onPopupClose(evt) {
-	selectControl.unselect(selectedFeature);
-}
-
-function onFeatureSelect(feature) {
-	selectedFeature = feature;
-	var postNum = feature.attributes['Post_Number'];
-	var patrolBoro = feature.attributes['Patrol_Boro']; 
-	var postDesc = feature.attributes['Post_Description'];
-	var postLat = feature.attributes['Lat'];
-	var postLon = feature.attributes['Lon'];
-	popup = new OpenLayers.Popup.FramedCloud("chicken", 
-		feature.geometry.getBounds().getCenterLonLat(),
-		null,
-		"<div style='font-size:.8em'>Post: " + postNum +"<br />Patrol Boro: " + patrolBoro+"<br/> Location: "+postDesc +"<br/> Lat/Lon: "+postLat+"/"+postLon +"</div>",
-		null, true, onPopupClose);
-	feature.popup = popup;
-	map.addPopup(popup);
-}
-function onFeatureUnselect(feature) {
-	map.removePopup(feature.popup);
-	feature.popup.destroy();
-	feature.popup = null;
-}    
-	
-function showLayerData(layer) {
-	var overlayTabContainer = dijit.byId("overlayTabContainer");
-	var layerTab = new dijit.layout.ContentPane();
-	layerTab.set('title', 'debugging');
-
-/// DESCRIBING HOW THE dojox.data.grid "spreadsheet"  should look.
-	var srd_tableLayout = [{
-		field: 'PostNum',
-		name: 'Post Number',
-		width: '100px'
-	}, {
-		field: 'PatrolBoro',
-		name: 'Patrol Boro',
-		width: '100px'
-	}, { 
-		field: 'Location',
-		name: 'Location',
-		width: '100px'
-	}, { 
-		field: 'Latitude',
-		name: 'Latitude',
-		width: '100px'
-	}, { 
-		field: 'Longitude',
-		name: 'Longitude',
-		width: '100px'
-	} ];
-
-	var layerGrid = new dojox.grid.DataGrid( {
-		title: layer.name, 
-		clientSort: true,
-		rowSelector: '20px',
-		structure: srd_tableLayout},
-		document.createElement('div') );
-	var i=0;
-	var theFeatArr = layer.features;
-//	var theFeatArr = new Array( "", "", "");
-	for(i=0;i<theFeatArr.length;i++) {
-		var tmpFeat = layer.features[i];
-		layerGrid.addRow( tmpFeat.attributes );	
-	}
-	overlayTabContainer.addChild(layerGrid);
-
-	layerTab.set('content', "TEST"+layer.features+"END");
-	overlayTabContainer.addChild(layerTab);
-
-}
-
-
-
-
+var map ;
+var selectControl;
 
 function init() {
 
@@ -166,16 +87,17 @@ stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
 	styleMap: stc_styleMap  
 } );
 */
-var stc_chokepoints = new OpenLayers.Layer.GML("NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
 
-stc_chokepoints.events.register( "loadend", stc_chokepoints,showLayerData(stc_chokepoints));
+var stc_chokepoints = new srd_layer(map); 
+stc_chokepoints.loadData("GML", "NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
 
-var nypd_veh_inter_com = new OpenLayers.Layer.GML("NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-var nypd_veh_inter_pas = new OpenLayers.Layer.GML("NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+var nypd_veh_inter_com = new srd_layer(map); 
+nypd_veh_inter_com.loadData("GML", "NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
-//Add testing layers - to be taken out soon.
-map.addLayers( [ stc_chokepoints, nypd_veh_inter_com, nypd_veh_inter_pas ]);
+var nypd_veh_inter_pas = new srd_layer(map);
+nypd_veh_inter_pas.loadData( "GML", "NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} ); 
 
+//stc_chokepoints.events.register( "loadend", stc_chokepoints,showLayerData(stc_chokepoints));
 
 
 // Adding the Control for the Layer select 
@@ -184,29 +106,25 @@ map.addControl(new OpenLayers.Control.LayerSwitcher() );
 map.addControl(new OpenLayers.Control.MousePosition( {  
 	displayProjection: new OpenLayers.Projection("EPSG:4326")
 } ) );
-//Adding the Control to allow for points to be selected and moved 
-dragControl = new OpenLayers.Control.DragFeature( stc_chokepoints ); 
-map.addControl(dragControl);
 
-// Adding select control for stc_chokepoints
-selectControl = new OpenLayers.Control.SelectFeature(stc_chokepoints,
-                {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
+
+selectControl = new OpenLayers.Control.SelectFeature( 
+	[ stc_chokepoints.getLayer(), nypd_veh_inter_com.getLayer(), nypd_veh_inter_pas.getLayer() ],
+	{
+		clickout: true, toggle: false,
+		multiple: false, hover: false,
+		toggleKey: "ctrlKey", // ctrl key removes from selection
+		multipleKey: "shiftKey" // shift key adds to selection
+	}
+);
 map.addControl(selectControl);
 selectControl.activate();
-modifyControl = new OpenLayers.Control.ModifyFeature(stc_chokepoints,
-							{ mode: OpenLayers.Control.ModifyFeature.DRAG,
-								standalone: true } );
-map.addControl(modifyControl);
-modifyControl.activate();
 
 //Add the events we wish to register
 //map.events.register("mousemove", map, function(e) {
 //	var position = this.events.getMousePosition(e);
 //	OpenLayers.Util.getElement("coords").innerHTML = position;
 //});
-
-
-
 
 map.setOptions( 
 	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
