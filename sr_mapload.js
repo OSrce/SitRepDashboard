@@ -29,6 +29,56 @@ function onFeatureUnselect(feature) {
 	feature.popup = null;
 }    
 	
+function showLayerData(layer) {
+	var overlayTabContainer = dijit.byId("overlayTabContainer");
+	var layerTab = new dijit.layout.ContentPane();
+	layerTab.set('title', 'debugging');
+
+/// DESCRIBING HOW THE dojox.data.grid "spreadsheet"  should look.
+	var srd_tableLayout = [{
+		field: 'PostNum',
+		name: 'Post Number',
+		width: '100px'
+	}, {
+		field: 'PatrolBoro',
+		name: 'Patrol Boro',
+		width: '100px'
+	}, { 
+		field: 'Location',
+		name: 'Location',
+		width: '100px'
+	}, { 
+		field: 'Latitude',
+		name: 'Latitude',
+		width: '100px'
+	}, { 
+		field: 'Longitude',
+		name: 'Longitude',
+		width: '100px'
+	} ];
+
+	var layerGrid = new dojox.grid.DataGrid( {
+		title: layer.name, 
+		clientSort: true,
+		rowSelector: '20px',
+		structure: srd_tableLayout},
+		document.createElement('div') );
+	var i=0;
+	var theFeatArr = layer.features;
+//	var theFeatArr = new Array( "", "", "");
+	for(i=0;i<theFeatArr.length;i++) {
+		var tmpFeat = layer.features[i];
+		layerGrid.addRow( tmpFeat.attributes );	
+	}
+	overlayTabContainer.addChild(layerGrid);
+
+	layerTab.set('content', "TEST"+layer.features+"END");
+	overlayTabContainer.addChild(layerTab);
+
+}
+
+
+
 
 
 function init() {
@@ -118,6 +168,8 @@ stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
 */
 var stc_chokepoints = new OpenLayers.Layer.GML("NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
 
+stc_chokepoints.events.register( "loadend", stc_chokepoints,showLayerData(stc_chokepoints));
+
 var nypd_veh_inter_com = new OpenLayers.Layer.GML("NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 var nypd_veh_inter_pas = new OpenLayers.Layer.GML("NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
@@ -164,6 +216,7 @@ var lonlat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection, ma
 map.setCenter(lonlat , zoom ); 
 
 
+//stc_chokepoints.afterAdd(showLayerData(stc_chokepoints));
 //dragControl.activate();
 
 }

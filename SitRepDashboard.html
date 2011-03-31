@@ -35,6 +35,7 @@
 			dojo.require("dijit.MenuBar");
 			dojo.require("dijit.PopupMenuBarItem");
 			dojo.require("dijit.layout.TabContainer");
+	    dojo.require("dojox.grid.DataGrid");
 		</script>
 	</head>
 	<body class="tundra" onload="init()"> 
@@ -66,12 +67,11 @@
 			</div>
 -->
 		<div dojoType="dijit.layout.ContentPane" id="right" region="right" style="background-color:gray; width: 130px;"   splitter="true" >
-			<div dojoType="dijit.layout.TabContainer" region="center" id="overlayTabs" tabStrip="true" style="height:100%;">
+			<div dojoType="dijit.layout.TabContainer" region="center" id="overlayTabContainer" tabStrip="true" style="height:100%;">
 <!---   Just a demo of what we're going to do for each overlay layer --->
 				<div id="basicFormTab" dojoType="dijit.layout.ContentPane" title="Basic Form Widgets" style="padding:10px;display:none;">
-					<b> JONTEST1</b>
+					<b> JONTEST:</b>
 				</div>	
-
 <!---
 ----DONE WITH THE DEMO
 --->
