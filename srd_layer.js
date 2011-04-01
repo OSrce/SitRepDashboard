@@ -18,6 +18,7 @@ function srd_layer( map ) {
 		this.selectedFeatures = null;
 		this.dragControl = null;
 		this.selectedFeature = null;
+		this.srd_data = new Array();
 }
 
 // srd_layer return the OpenLayer layer class.
@@ -86,7 +87,7 @@ srd_layer.prototype.turnOnEvents = function () {
 
 onFeatureSelect = function(evt, the_srd_layer) {
 	this.selFeature = evt.feature;
-	var postNum = selFeature.attributes['Post_Number'];
+	var postNum = selFeature.attributes.Post_Number;
 	var patrolBoro = selFeature.attributes['Patrol_Boro']; 
 	var postDesc = selFeature.attributes['Post_Description'];
 	var postLat = selFeature.attributes['Lat'];
@@ -123,39 +124,31 @@ loadDataGrid = function(evt, the_srd_layer) {
 	
 	var theFeatArr = layer.features;
 	var theFeatPropNames = {};
+	var srd_layout = new Array();
 	var srd_tableLayout = new Array();
-	var i=0;
-	for(var propName in theFeatArr[0].attributes ) {
-		theFeatPropNames[i] = propName;
-		srd_tableLayout[i] = { field: theFeatPropNames[i], name: theFeatPropNames[i], width: 'auto' };
-		i++;
+	srd_tableLayout[0] = { cells: new Array() }; 
+	var j=0;
+	for(j=0;j<theFeatArr.length;j++) {
+		the_srd_layer.srd_data[j] = new Array();
+		the_srd_layer.srd_data[j].fid = theFeatArr[j].fid;
+		var i=0;
+		for(var propName in theFeatArr[j].attributes ) {
+			theFeatPropNames[i] = propName;
+			the_srd_layer.srd_data[j][propName] = theFeatArr[j].attributes[propName];
+			srd_layout[i] = { field: theFeatPropNames[i], name: theFeatPropNames[i], width: 'auto' };
+			i++;
+		}
 	}
-
+	srd_tableLayout[0].cells = srd_layout; 
 	var srd_LayerStore = new dojo.store.Memory( { 
 		idProperty: 'fid', 
-		data: layer.features,
-		features: { 'dojo.data.api.Read': true} 
+		data: the_srd_layer.srd_data,
+		features: { 'dojo.data.api.Read': true,
+								'dojo.data.api.Write': true } 
 	} );
 
 //alert( "TEST:" + 	srd_LayerStore.get('F1') +":TEST" );
 	
-	
-/*
-	for(i=0;i<theFeatArr.length;i++) {
-		var tmpFeat = layer.features[i];
-		var k=0;
-		srd_LayerStore.items[i] = tmpFeat.attributes;
-		var tmpAttArr = new Array();
-		for(var j in tmpFeat.attributes ) {
-			tmpAttArr[k] = tmpFeat.attributes[j];
-			k++;
-		}
-
-//		layerGrid.addRow( tmpAttArr );	
-	}
-*/
-//	var theReadStore = new dojo.data.ItemFileReadStore( { jsld: "blah", data: srd_LayerStore } );
-
 	/// Utility Adapter for using dojo.store.Memory objects where dojo.data. objects are needed.
 	var srd_LegacyDataStore =  new dojo.data.ObjectStore({ objectStore: srd_LayerStore});
 
@@ -175,8 +168,12 @@ loadDataGrid = function(evt, the_srd_layer) {
 
 };
 
-
-
+/*
+srd_LayerStore.prototype.get(theID) {
+	
+	
+}
+*/
 
 
 
