@@ -101,10 +101,10 @@ onFeatureSelect = function(evt, the_srd_layer) {
 		null, true );  
 	selFeature.popup = popup;
 	this.map.addPopup(popup);
-
-	
-
 };
+
+//srd_layer.prototype.featureSelected(selFeature) {
+//	}
 
 
 onFeatureUnselect = function(evt, the_srd_layer) {
@@ -170,12 +170,12 @@ loadDataGrid = function(evt, the_srd_layer) {
 //	layerTab.set('content', "TEST"+layer.features[0].attributes['Post_Number']+"END");
 //	overlayTabContainer.addChild(layerTab);
 
-	dojo.connect(the_srd_layer.srd_layerGrid, "onRowClick", the_srd_layer, the_srd_layer.selectFeature );
+	dojo.connect(the_srd_layer.srd_layerGrid, "onRowDblClick", the_srd_layer, the_srd_layer.selectFeature );
 
 };
 
 
-// this is going to be called by DataGrid -> onRowClick.  Event will be passed with 
+// this is going to be called by DataGrid -> onRowDblClick.  Event will be passed with 
 // ref to the grid, cell and rowIndex
 srd_layer.prototype.selectFeature = function(e) {
 //	alert(e.rowIndex);
@@ -187,7 +187,7 @@ srd_layer.prototype.selectFeature = function(e) {
 	var lonlat = new OpenLayers.LonLat(thelon, thelat).transform(map.projection, map.projection);
 	this.map.panTo(lonlat );
 
-//	this.selectedFeature.toState("Selected");	
+	selectControl.select(this.selectedFeature);		
 
 
 };
