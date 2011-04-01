@@ -19,6 +19,7 @@ function srd_layer( map ) {
 		this.dragControl = null;
 		this.selectedFeature = null;
 		this.srd_data = new Array();
+		this.srd_layerGrid = null;
 }
 
 // srd_layer return the OpenLayer layer class.
@@ -26,7 +27,8 @@ srd_layer.prototype.getLayer = function() {
 	return this.layer;	
 }
 
-
+// loadData <- bring in the vector data from whatever source is specifed
+// right now only GML hopefully wfs-t real fucking soon.
 srd_layer.prototype.loadData = function(type, name, source, settings ) { 
 	if( settings ) {
 		this.settings = settings;
@@ -43,6 +45,7 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 		this.layer = new OpenLayers.Layer.GML(name, source, settings);
 //		this.layer = new OpenLayers.Layer.GML("NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 		this.map.addLayer( this.layer );
+		this.layer.loadGML();	
 			return 0;
 	}
 
@@ -63,10 +66,8 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 //	this.modifyControl.activate();
 
 */
-
-
-	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
-
+//	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
+	
 
 }; 
 //// END srd_loadData  function
@@ -80,6 +81,7 @@ srd_layer.prototype.turnOnEvents = function () {
 		"loadend": function(e) { loadDataGrid(e, this); }, 
 		scope: this 
 	} );
+
 
 };
 
@@ -134,9 +136,11 @@ loadDataGrid = function(evt, the_srd_layer) {
 		var i=0;
 		for(var propName in theFeatArr[j].attributes ) {
 			theFeatPropNames[i] = propName;
-			the_srd_layer.srd_data[j][propName] = theFeatArr[j].attributes[propName];
-			srd_layout[i] = { field: theFeatPropNames[i], name: theFeatPropNames[i], width: 'auto' };
-			i++;
+			if( propName != 'Lat' && propName != 'Lon' && propName != 'Latitude' && propName != 'Longitude') {
+				the_srd_layer.srd_data[j][propName] = theFeatArr[j].attributes[propName];
+				srd_layout[i] = { field: theFeatPropNames[i], name: theFeatPropNames[i], width: 'auto' };
+				i++;
+			}
 		}
 	}
 	srd_tableLayout[0].cells = srd_layout; 
@@ -152,7 +156,7 @@ loadDataGrid = function(evt, the_srd_layer) {
 	/// Utility Adapter for using dojo.store.Memory objects where dojo.data. objects are needed.
 	var srd_LegacyDataStore =  new dojo.data.ObjectStore({ objectStore: srd_LayerStore});
 
-	var layerGrid = new dojox.grid.DataGrid( {
+	the_srd_layer.srd_layerGrid = new dojox.grid.DataGrid( {
 		title: layer.name, 
 		clientSort: true,
 //		rowSelector: '20px',
@@ -161,19 +165,34 @@ loadDataGrid = function(evt, the_srd_layer) {
 		document.createElement('div') );
 	var i=0;
 //	var theFeatArr = new Array( "", "", "");
-	overlayTabContainer.addChild(layerGrid);
+	overlayTabContainer.addChild(the_srd_layer.srd_layerGrid);
 
 //	layerTab.set('content', "TEST"+layer.features[0].attributes['Post_Number']+"END");
 //	overlayTabContainer.addChild(layerTab);
 
+	dojo.connect(the_srd_layer.srd_layerGrid, "onRowClick", the_srd_layer, the_srd_layer.selectFeature );
+
 };
 
-/*
-srd_LayerStore.prototype.get(theID) {
-	
-	
-}
-*/
+
+// this is going to be called by DataGrid -> onRowClick.  Event will be passed with 
+// ref to the grid, cell and rowIndex
+srd_layer.prototype.selectFeature = function(e) {
+//	alert(e.rowIndex);
+	var item = this.srd_layerGrid.getItem( e.rowIndex );
+	this.selectedFeature  = this.layer.getFeatureByFid(item.fid);
+	var thePoint = this.selectedFeature.geometry;
+	var thelat = thePoint.y;
+	var thelon = thePoint.x;
+	var lonlat = new OpenLayers.LonLat(thelon, thelat).transform(map.projection, map.projection);
+	this.map.panTo(lonlat );
+
+//	this.selectedFeature.toState("Selected");	
+
+
+};
+
+
 
 
 

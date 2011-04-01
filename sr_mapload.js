@@ -135,7 +135,7 @@ map.setOptions(
 	displayProjection : new OpenLayers.Projection("EPSG:4326") }
 );
 var lonlat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection, map.projection);
-map.setCenter(lonlat , zoom ); 
+map.setCenter( lonlat, zoom ); 
 
 
 //stc_chokepoints.afterAdd(showLayerData(stc_chokepoints));
