@@ -89,7 +89,7 @@ stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
 */
 
 var stc_chokepoints = new srd_layer(map); 
-stc_chokepoints.loadData("GML", "NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+stc_chokepoints.loadData("GML-WFST", "NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
 
 var nypd_veh_inter_com = new srd_layer(map); 
 nypd_veh_inter_com.loadData("GML", "NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
@@ -130,6 +130,32 @@ nypd_veh_inter_pas.turnOnEvents();
 //	OpenLayers.Util.getElement("coords").innerHTML = position;
 //});
 
+var panel = new OpenLayers.Control.Panel(
+        {'displayClass': 'customEditingToolbar'}
+    );
+
+var edit = new OpenLayers.Control.ModifyFeature(stc_chokepoints.layer, {
+        title: "Modify Feature",
+        displayClass: "olControlModifyFeature"
+});
+
+//var del = new DeleteFeature(stc_chokepoints.layer, {title: "Delete Feature"});
+
+var save = new OpenLayers.Control.Button({
+        title: "Save Changes",
+        trigger: function() {
+            if(edit.feature) {
+                edit.selectControl.unselectAll();
+            }
+            stc_chokepoints.saveStrategy.save();
+        },
+        displayClass: "olControlSaveFeatures"
+    });
+    panel.addControls([save, edit ]);
+    map.addControl(panel);
+
+
+
 map.setOptions( 
 	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
 	displayProjection : new OpenLayers.Projection("EPSG:4326") }
@@ -148,6 +174,12 @@ map.setCenter( lonlat, zoom );
 function activateDrag() {
 	dragControl.activate();
 }
+
+
+
+
+
+
 
 
 

@@ -7,6 +7,8 @@
 //
 //////////////////////////////
 
+//OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+
 //srd_layer constructor 
 function srd_layer( map ) {
 		this.map = 	map;
@@ -20,6 +22,9 @@ function srd_layer( map ) {
 		this.selectedFeature = null;
 		this.srd_data = new Array();
 		this.srd_layerGrid = null;
+
+		this.tmpLayer = null;
+		this.saveStrategy = null;
 }
 
 // srd_layer return the OpenLayer layer class.
@@ -39,7 +44,7 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 	if( !source ) {
 		return -1;
 	}		
-	
+
 
 	if(type == "GML" ) {
 		this.layer = new OpenLayers.Layer.GML(name, source, settings);
@@ -47,7 +52,57 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 		this.map.addLayer( this.layer );
 		this.layer.loadGML();	
 			return 0;
+	} else if(type == "GML-WFST" ) {
+		this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
+    this.saveStrategy.events.register("success", '', showSuccessMsg);
+    this.saveStrategy.events.register("fail", '', showFailureMsg);	
+
+
+		this.tmpLayer = new OpenLayers.Layer.GML(name, source, settings);
+		this.map.addLayer(this.tmpLayer);
+		this.tmpLayer.loadGML();
+		this.layer = new OpenLayers.Layer.Vector("STC Chokepoints - Load", {
+			isBaseLayer: false,
+			visibility: false,
+			strategies: [ this.saveStrategy],
+			projection: new OpenLayers.Projection("EPSG:4326"),
+			protocol: new OpenLayers.Protocol.WFS({
+				version: "1.1.0",
+				srsName: "EPSG:4326",
+				url: "https://SitRepGIS.local/cgi-bin/tinyows",
+				featureType: "stcChokepoints",
+				geometryName: "the_geom",
+//				schema: "https://SitRepGIS.local/cgi-bin/tinyows?version=1.1.0&typename=public:stcChokepoints"
+				schema: "https://SitRepGIS.local/cgi-bin/tinyows?DescribeFeatureType?version=1.1.0&typename=og:restricted"
+        })
+    }); 
+		
+//			this.layer.addFeatures( tmpLayer.features );			
+	
+			this.map.addLayer(this.layer);	
+//			saveStrategy.save();
+	
+			return 0;
+	} else if(type == "WFST" ) {
+		this.layer = new OpenLayers.Layer.Vector("STC Chokepoints - Editable", {
+			isBaseLayer: false,
+			visibility: false,
+			strategies: [new OpenLayers.Strategy.BBOX(), saveStrategy],
+			projection: new OpenLayers.Projection("EPSG:31467"),
+			protocol: new OpenLayers.Protocol.WFS({
+				version: "1.1.0",
+				srsName: "EPSG:31467",
+				url: "https://SitRepGIS.local/cgi-bin/tinyows",
+				featureNS :  "https://SitRepGIS.local/",
+				featureType: "sr",
+				geometryName: "stc_chokepoints",
+				schema: "https://SitRepGIS.local/cgi-bin/tinyows?service=wfs&request=DescribeFeatureType&version=1.1.0&typename=tows:stc_chokepoints"
+        })
+    }); 
+		
 	}
+
+
 
 	//Adding the Control to allow for points to be selected and moved 
 //	this.dragControl = new OpenLayers.Control.DragFeature( this.layer ); 
@@ -81,7 +136,14 @@ srd_layer.prototype.turnOnEvents = function () {
 		"loadend": function(e) { loadDataGrid(e, this); }, 
 		scope: this 
 	} );
+	if(this.tmpLayer != null) {
 
+	this.tmpLayer.events.on( {
+		"loadend": function(e) { loadWFS(e, this); }, 
+		scope: this 
+	} );
+	
+	}
 
 };
 
@@ -113,8 +175,24 @@ onFeatureUnselect = function(evt, the_srd_layer) {
 	feature.popup.destroy();
 	feature.popup = null;
 };    
+
+loadWFS = function(evt, the_srd_layer) {
+	/// WFS testing :
+		someFeatures = new Array();
+		var i=0;
+		for(i=0;i<the_srd_layer.tmpLayer.features.length;i++) {
+				someFeatures[i] = the_srd_layer.tmpLayer.features[i].clone();
+				someFeatures[i].state = OpenLayers.State.INSERT;
+		}
+		the_srd_layer.layer.addFeatures( someFeatures );
+	/// END WFS TESTING.
+}
+
 	
 loadDataGrid = function(evt, the_srd_layer) {
+	if(the_srd_layer.saveStrategy != null) {
+		the_srd_layer.saveStrategy.save();
+	}
 	var overlayTabContainer = dijit.byId("overlayTabContainer");
 	var layerTab = new dijit.layout.ContentPane();
 	layerTab.set('title', 'debugging');
@@ -191,6 +269,21 @@ srd_layer.prototype.selectFeature = function(e) {
 
 
 };
+
+
+// TO FIX using for wfs-t debugging right now.
+function showMsg(szMessage) {
+	alert(szMessage);
+}
+
+function showSuccessMsg(){
+    showMsg("Transaction successfully completed");
+};
+
+function showFailureMsg(){
+    showMsg("An error occured while operating the transaction");
+};
+
 
 
 
