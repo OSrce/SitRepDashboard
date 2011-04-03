@@ -130,8 +130,10 @@ nypd_veh_inter_pas.turnOnEvents();
 //	OpenLayers.Util.getElement("coords").innerHTML = position;
 //});
 
-var panel = new OpenLayers.Control.Panel(
-        {'displayClass': 'customEditingToolbar'}
+var panel = new OpenLayers.Control.Panel( {
+        'displayClass': 'customEditingToolbar',
+				div: document.getElementById('editToolsPanel') 
+}
     );
 
 var edit = new OpenLayers.Control.ModifyFeature(stc_chokepoints.layer, {
@@ -139,7 +141,9 @@ var edit = new OpenLayers.Control.ModifyFeature(stc_chokepoints.layer, {
         displayClass: "olControlModifyFeature"
 });
 
-//var del = new DeleteFeature(stc_chokepoints.layer, {title: "Delete Feature"});
+var del = new DeleteFeature(stc_chokepoints.layer, {title: "Delete Feature"});
+
+
 
 var save = new OpenLayers.Control.Button({
         title: "Save Changes",

@@ -154,15 +154,20 @@ srd_layer.prototype.turnOnEvents = function () {
 
 onFeatureSelect = function(evt, the_srd_layer) {
 	this.selFeature = evt.feature;
-	var postNum = selFeature.attributes.Post_Number;
+/*	var postNum = selFeature.attributes.Post_Number;
 	var patrolBoro = selFeature.attributes['Patrol_Boro']; 
 	var postDesc = selFeature.attributes['Post_Description'];
 	var postLat = selFeature.attributes['Lat'];
 	var postLon = selFeature.attributes['Lon'];
+*/
+	var theAttString = "";
+	for(var propName in this.selFeature.attributes ) {
+		theAttString += propName+": "+this.selFeature.attributes[propName]+"<br>";
+	}
 	popup = new OpenLayers.Popup.FramedCloud("chicken", 
 		selFeature.geometry.getBounds().getCenterLonLat(),
 		null,
-		"<div style='font-size:.8em'>Post: " + postNum +"<br />Patrol Boro: " + patrolBoro+"<br/> Location: "+postDesc +"<br/> Lat/Lon: "+postLat+"/"+postLon +"</div>",
+		"<div style='font-size:.8em'>"+theAttString+"</div>",
 		null, true );  
 	selFeature.popup = popup;
 	this.map.addPopup(popup);
