@@ -21,6 +21,7 @@ function srd_layer( map ) {
 		this.dragControl = null;
 		this.selectedFeature = null;
 		this.srd_data = new Array();
+		this.srd_LayerStore = null;
 		this.srd_layerGrid = null;
 
 		this.tmpLayer = null;
@@ -90,17 +91,18 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 			strategies: [ new OpenLayers.Strategy.BBOX() ],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
-				version: "1.1.0",
+				version: "1.0.0",
 				srsName: "EPSG:4326",
 				url: "https://SitRepGIS.local/cgi-bin/tinyows",
 				featureNS :  "https://SitRepGIS.local/",
 				featureType: "stc_chokepoints",
 				geometryName: "the_geom",
-				schema: "https://SitRepGIS.local/cgi-bin/tinyows?service=wfs&request=DescribeFeatureType&version=1.1.0&typename=sr:stc_chokepoints"
+				extractAttributes: true,
+				schema: "https://SitRepGIS.local/cgi-bin/tinyows?service=wfs&request=DescribeFeatureType&version=1.0.0&typename=sr:stc_chokepoints"
         })
     }); 
 			this.map.addLayer(this.layer);	
-		
+	
 	}
 
 
@@ -223,7 +225,10 @@ loadDataGrid = function(evt, the_srd_layer) {
 		}
 	}
 	srd_tableLayout[0].cells = srd_layout; 
-	var srd_LayerStore = new dojo.store.Memory( { 
+
+	if(the_srd_layer.srd_LayerStore == null) {
+
+	the_srd_layer.srd_LayerStore = new dojo.store.Memory( { 
 		idProperty: 'fid', 
 		data: the_srd_layer.srd_data,
 		features: { 'dojo.data.api.Read': true,
@@ -233,7 +238,7 @@ loadDataGrid = function(evt, the_srd_layer) {
 //alert( "TEST:" + 	srd_LayerStore.get('F1') +":TEST" );
 	
 	/// Utility Adapter for using dojo.store.Memory objects where dojo.data. objects are needed.
-	var srd_LegacyDataStore =  new dojo.data.ObjectStore({ objectStore: srd_LayerStore});
+	var srd_LegacyDataStore =  new dojo.data.ObjectStore({ objectStore: the_srd_layer.srd_LayerStore});
 
 	the_srd_layer.srd_layerGrid = new dojox.grid.DataGrid( {
 		title: layer.name, 
@@ -268,6 +273,8 @@ srd_layer.prototype.selectFeature = function(e) {
 
 	selectControl.select(this.selectedFeature);		
 
+
+	}
 
 };
 
