@@ -87,18 +87,19 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 		this.layer = new OpenLayers.Layer.Vector("STC Chokepoints - Editable", {
 			isBaseLayer: false,
 			visibility: false,
-			strategies: [new OpenLayers.Strategy.BBOX(), saveStrategy],
-			projection: new OpenLayers.Projection("EPSG:31467"),
+			strategies: [ new OpenLayers.Strategy.BBOX() ],
+			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
 				version: "1.1.0",
-				srsName: "EPSG:31467",
+				srsName: "EPSG:4326",
 				url: "https://SitRepGIS.local/cgi-bin/tinyows",
 				featureNS :  "https://SitRepGIS.local/",
-				featureType: "sr",
-				geometryName: "stc_chokepoints",
-				schema: "https://SitRepGIS.local/cgi-bin/tinyows?service=wfs&request=DescribeFeatureType&version=1.1.0&typename=tows:stc_chokepoints"
+				featureType: "stc_chokepoints",
+				geometryName: "the_geom",
+				schema: "https://SitRepGIS.local/cgi-bin/tinyows?service=wfs&request=DescribeFeatureType&version=1.1.0&typename=sr:stc_chokepoints"
         })
     }); 
+			this.map.addLayer(this.layer);	
 		
 	}
 
