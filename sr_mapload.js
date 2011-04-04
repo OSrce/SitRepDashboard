@@ -108,6 +108,14 @@ map.addControl(new OpenLayers.Control.MousePosition( {
 } ) );
 
 
+
+var dynamicLayers = { 
+	"NYPD STC Chokepoints": stc_chokepoints,
+	"NYPD Commercial Vehicle Interdiction": nypd_veh_inter_com,	
+	"NYPD Passenger  Vehicle Interdiction": nypd_veh_inter_pas	
+};
+
+
 selectControl = new OpenLayers.Control.SelectFeature( 
 	[ stc_chokepoints.getLayer(), nypd_veh_inter_com.getLayer(), nypd_veh_inter_pas.getLayer() ],
 	{
@@ -118,7 +126,8 @@ selectControl = new OpenLayers.Control.SelectFeature(
 	}
 );
 map.addControl(selectControl);
-selectControl.activate();
+//selectControl.activate();
+
 
 stc_chokepoints.turnOnEvents();
 nypd_veh_inter_com.turnOnEvents();
@@ -136,13 +145,6 @@ var panel = new OpenLayers.Control.Panel( {
 }
     );
 
-var edit = new OpenLayers.Control.ModifyFeature(stc_chokepoints.layer, {
-        title: "Modify Feature",
-        displayClass: "olControlModifyFeature"
-});
-
-var del = new DeleteFeature(stc_chokepoints.layer, {title: "Delete Feature"});
-
 
 
 var save = new OpenLayers.Control.Button({
@@ -155,7 +157,7 @@ var save = new OpenLayers.Control.Button({
         },
         displayClass: "olControlSaveFeatures"
     });
-    panel.addControls([save, edit ]);
+    panel.addControls([save  ]);
     map.addControl(panel);
 
 

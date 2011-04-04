@@ -18,7 +18,7 @@ function srd_layer( map ) {
 		this.name = "Unnamed Layer";
 		this.selectControl = null;
 		this.selectedFeatures = null;
-		this.dragControl = null;
+		this.modifyControl = null;
 		this.selectedFeature = null;
 		this.srd_data = new Array();
 		this.srd_LayerStore = null;
@@ -105,6 +105,11 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 	
 	}
 
+	this.modifyControl = new OpenLayers.Control.ModifyFeature(this.layer,
+								{ mode: OpenLayers.Control.ModifyFeature.DRAG } );
+	this.map.addControl(this.modifyControl);
+	this.modifyControl.activate();
+
 
 
 	//Adding the Control to allow for points to be selected and moved 
@@ -116,12 +121,6 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
                 {onSelect: this.onFeatureSelect, onUnselect: this.onFeatureUnselect});
 	this.map.addControl(this.selectControl);
 	this.selectControl.activate();
-
-//	this.modifyControl = new OpenLayers.Control.ModifyFeature(this.layer,
-//								{ mode: OpenLayers.Control.ModifyFeature.DRAG,
-//									standalone: true } );
-//	this.map.addControl(this.modifyControl);
-//	this.modifyControl.activate();
 
 */
 //	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
