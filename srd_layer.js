@@ -52,7 +52,6 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 //		this.layer = new OpenLayers.Layer.GML("NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 		this.map.addLayer( this.layer );
 		this.layer.loadGML();	
-			return 0;
 	} else if(type == "GML-WFST" ) {
 		this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
     this.saveStrategy.events.register("success", '', showSuccessMsg);
@@ -83,22 +82,26 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 			this.map.addLayer(this.layer);	
 //			saveStrategy.save();
 	
-			return 0;
 	} else if(type == "WFST" ) {
-		this.layer = new OpenLayers.Layer.Vector("STC Chokepoints - Editable", {
+
+		this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
+    this.saveStrategy.events.register("success", '', showSuccessMsg);
+    this.saveStrategy.events.register("fail", '', showFailureMsg);	
+
+		this.layer = new OpenLayers.Layer.Vector(name, {
 			isBaseLayer: false,
 			visibility: false,
-			strategies: [ new OpenLayers.Strategy.BBOX() ],
+			strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy ],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
 				version: "1.0.0",
 				srsName: "EPSG:4326",
 				url: "https://SitRepGIS.local/cgi-bin/tinyows",
 				featureNS :  "https://SitRepGIS.local/",
-				featureType: "stc_chokepoints",
+				featureType: source,
 				geometryName: "the_geom",
 				extractAttributes: true,
-				schema: "https://SitRepGIS.local/cgi-bin/tinyows?service=wfs&request=DescribeFeatureType&version=1.0.0&typename=sr:stc_chokepoints"
+				schema: "https://SitRepGIS.local/cgi-bin/tinyows?service=wfs&request=DescribeFeatureType&version=1.0.0&typename=sr:"+source
         })
     }); 
 			this.map.addLayer(this.layer);	
@@ -125,7 +128,7 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 */
 //	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
 	
-
+	return 0;
 }; 
 //// END srd_loadData  function
 
@@ -275,8 +278,10 @@ srd_layer.prototype.selectFeature = function(e) {
 	var lonlat = new OpenLayers.LonLat(thelon, thelat).transform(map.projection, map.projection);
 	this.map.panTo(lonlat );
 
+	if( this.layer.getVisibility() == false) {
+		this.layer.setVisibility(true);
+	}
 	selectControl.select(this.selectedFeature);		
-
 
 	}
 
@@ -293,7 +298,7 @@ function showSuccessMsg(){
 };
 
 function showFailureMsg(){
-    showMsg("An error occured while operating the transaction");
+//    showMsg("An error occured while operating the transaction");
 };
 
 

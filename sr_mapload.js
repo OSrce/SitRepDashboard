@@ -89,13 +89,21 @@ stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
 */
 
 var stc_chokepoints = new srd_layer(map); 
-stc_chokepoints.loadData("WFST", "NYPD STC Chokepoints", "data_sensitive/NYPD_STC_CHOKEPOINTS.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+stc_chokepoints.loadData("WFST", "NYPD STC Chokepoints", "stc_chokepoints" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+
+var stc_maritime = new srd_layer(map); 
+stc_maritime.loadData("WFST", "NYPD STC Maritime", "stc_maritime" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+
+var stc_transit = new srd_layer(map); 
+stc_transit.loadData("WFST", "NYPD STC Transit", "stc_transit" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
 
 var nypd_veh_inter_com = new srd_layer(map); 
-nypd_veh_inter_com.loadData("GML", "NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+nypd_veh_inter_com.loadData("WFST", "NYPD Commercial Vehicle Interdiction", "nypd_veh_inter_com" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+//nypd_veh_inter_com.loadData("GML", "NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var nypd_veh_inter_pas = new srd_layer(map);
-nypd_veh_inter_pas.loadData( "GML", "NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} ); 
+nypd_veh_inter_pas.loadData("WFST", "NYPD Passenger Vehicle Interdiction", "nypd_veh_inter_pas" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+//nypd_veh_inter_pas.loadData( "GML", "NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} ); 
 
 //stc_chokepoints.events.register( "loadend", stc_chokepoints,showLayerData(stc_chokepoints));
 
@@ -109,15 +117,21 @@ map.addControl(new OpenLayers.Control.MousePosition( {
 
 
 
-var dynamicLayers = { 
+var sr_dynamicLayers = { 
 	"NYPD STC Chokepoints": stc_chokepoints,
+	"NYPD STC Maritime Locations": stc_maritime,
+	"NYPD STC Transit Locations": stc_transit,
 	"NYPD Commercial Vehicle Interdiction": nypd_veh_inter_com,	
 	"NYPD Passenger  Vehicle Interdiction": nypd_veh_inter_pas	
 };
 
+var sr_dynamicLayer_layer = new Array();
+for(var layerName in sr_dynamicLayers ) {
+	sr_dynamicLayer_layer.push( sr_dynamicLayers[layerName] );
+}
 
 selectControl = new OpenLayers.Control.SelectFeature( 
-	[ stc_chokepoints.getLayer(), nypd_veh_inter_com.getLayer(), nypd_veh_inter_pas.getLayer() ],
+	sr_dynamicLayer_layer,
 	{
 		clickout: true, toggle: false,
 		multiple: false, hover: false,
@@ -128,10 +142,9 @@ selectControl = new OpenLayers.Control.SelectFeature(
 map.addControl(selectControl);
 //selectControl.activate();
 
-
-stc_chokepoints.turnOnEvents();
-nypd_veh_inter_com.turnOnEvents();
-nypd_veh_inter_pas.turnOnEvents();
+for(var layerName in sr_dynamicLayers ) {
+	sr_dynamicLayers[layerName].turnOnEvents();
+}
 
 //Add the events we wish to register
 //map.events.register("mousemove", map, function(e) {
@@ -150,10 +163,12 @@ var panel = new OpenLayers.Control.Panel( {
 var save = new OpenLayers.Control.Button({
         title: "Save Changes",
         trigger: function() {
-            if(edit.feature) {
-                edit.selectControl.unselectAll();
-            }
-            stc_chokepoints.saveStrategy.save();
+//            if(edit.feature) {
+//                edit.selectControl.unselectAll();
+//            }
+						for(var layerName in sr_dynamicLayers ) {
+							sr_dynamicLayers[layerName].saveStrategy.save();
+						}
         },
         displayClass: "olControlSaveFeatures"
     });
@@ -168,6 +183,10 @@ map.setOptions(
 );
 var lonlat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection, map.projection);
 map.setCenter( lonlat, zoom ); 
+
+
+// Create dijit.form.FilteringSelect for drop down list to select which layer we would like to be able to edit.
+
 
 
 //stc_chokepoints.afterAdd(showLayerData(stc_chokepoints));
