@@ -5,6 +5,7 @@
 			@import "dojo-release-1.6.0/dojo/resources/dojo.css";
 			@import "dojo-release-1.6.0/dojox/grid/resources/Grid.css";
 			@import "dojo-release-1.6.0/dojox/grid/resources/{{ theme }}Grid.css";
+
 		  .dojoxGrid table {
  		   margin: 0;
   		}
@@ -93,6 +94,7 @@
 			dojo.require("dijit.layout.BorderContainer");
 			dojo.require("dijit.MenuBar");
 			dojo.require("dijit.PopupMenuBarItem");
+
 			dojo.require("dijit.layout.TabContainer");
 			dojo.require("dijit.TitlePane");
 	    dojo.require("dojox.grid.DataGrid");
@@ -104,25 +106,28 @@
 
 		<div dojoType="dijit.layout.BorderContainer" style="height:100%;width:100%" >
 
-			<div dojoType="dijit.layout.ContentPane" id="top" region="top" style="background-color:gray">
-					<h3>SitRep System Main Screen</h3>
-<!--					<div dojoType="dijit.MenuBar" id="navMenu" style="height:15px">
-						<div dojoType="PopupMenuBarItem" id="Map" style="height:15px">
-						<span>Map</span>	
-							
-						</div> 
-						<div dojoType="PopupMenuBarItem" id="Overlays"  style="height:15px">
-						<span>Overlays</span>	
-		
-						</div> 
-						</div> 
-						<div dojoType="PopupMenuBarItem" id="Assets"  style="height:15px">
-						<span> Assets </span>	
+			<div dojoType="dijit.layout.ContentPane" id="top" region="top" style="padding:0px;" >
+					<div dojoType="dijit.MenuBar" id="navMenuBar" >
+						<span> SitRep </span>
 
+						<div dojoType="dijit.PopupMenuBarItem" >
+							<span>Map</span>			
+							<div dojoType="dijit.Menu" id="fileMenu">
+								<div dojoType="dijit.MenuItem" onClick="alert('file 1')">
+                File #1
+            </div>
+							</div>
 						</div> 
 
-					</div>
+<!--						<div dojoType="dijit.PopupMenuBarItem" id="Overlays" >
+							<span>Overlays</span>	
+						</div> 
+						</div> 
+						<div dojoType="dijit.PopupMenuBarItem" id="Assets" >
+							<span> Assets </span>	
+						</div> 
 -->
+					</div>  
 			</div>
 <!--			<div dojoType="dijit.layout.ContentPane" id="left" region="left"  style="background-color:lightblue;width: 125px;">
 
