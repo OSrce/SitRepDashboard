@@ -47,6 +47,17 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 	}		
 
 
+//TESTING Add style for chokepoints:
+var stc_style_def =  new OpenLayers.Style( { 
+	fillColor: "#FF0000",
+	fillOpacity: 0.6,
+	strokeColor: "#FF0000",
+	strokeOpacity: 1,
+	pointRadius: 6
+} ); 
+var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
+
+
 	if(type == "GML" ) {
 		this.layer = new OpenLayers.Layer.GML(name, source, settings);
 //		this.layer = new OpenLayers.Layer.GML("NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
@@ -64,6 +75,7 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 		this.layer = new OpenLayers.Layer.Vector("STC Chokepoints - Load", {
 			isBaseLayer: false,
 			visibility: false,
+			styleMap: stc_styleMap,
 			strategies: [ this.saveStrategy],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({

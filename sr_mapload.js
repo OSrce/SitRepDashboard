@@ -1,5 +1,6 @@
 
 var map ;
+var editTools;
 var selectControl;
 
 function init() {
@@ -55,17 +56,6 @@ var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "data_public/Po
 // Attach the base layer + the data_public layer(s)
 map.addLayers( [ srMapLayer,  gMapLayer, osmMapLayer]);
 map.addLayers( [   policePcts ]);
-
-
-//TESTING Add style for chokepoints:
-var stc_style_def =  new OpenLayers.Style( { 
-	fillColor: "#FF0000",
-	fillOpacity: 0.6,
-	strokeColor: "#FF0000",
-	strokeOpacity: 1,
-	pointRadius: 6
-} ); 
-var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 
 
 //Testing purposes only, we're going to move this to its own file soon.
@@ -185,7 +175,9 @@ var lonlat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection, ma
 map.setCenter( lonlat, zoom ); 
 
 
-// Create dijit.form.FilteringSelect for drop down list to select which layer we would like to be able to edit.
+
+editTools = new srd_edit(map, sr_dynamicLayers);
+editTools.loadEditTools();
 
 
 

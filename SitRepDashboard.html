@@ -100,6 +100,7 @@
 	    dojo.require("dojox.grid.DataGrid");
 	    dojo.require("dojo.store.Memory");
 			dojo.require("dojo.data.ObjectStore");
+			dojo.require("dijit.form.FilteringSelect");
 		</script>
 	</head>
 	<body class="tundra" onload="init()"> 
@@ -133,12 +134,15 @@
 
 			</div>
 -->
-		<div dojoType="dijit.layout.ContentPane" id="right" region="right" style="background-color:gray; width: 150px;padding:0px;margin:0px;"   splitter="true" >
-				<div dojoType="dijit.TitlePane" title="Edit Tools" id="editToolsContainer" sytle="height:200px;" open="false">
-					<div class="customEditingToolbar" id="editToolsPanel"> </div>	
+		<div dojoType="dijit.layout.ContentPane" id="right" region="right" style="background-color:gray; width:150px;padding:0px;margin:0px;"   splitter="true" >
+
+				<div dojoType="dijit.TitlePane" title="Edit Tools" id="editToolsTPContainer" sytle="height:200px;" open="false">
+					<div dojoType="dijit.layout.ContentPane" id="editToolsContainer">
+
+					</div>
 				</div>
 				<div dojoType="dijit.TitlePane" title="Overlay Information" id="overlayTPContainer" style="width:100%;padding:0px;margin:0px;height:100%">
-					<div dojoType="dijit.layout.TabContainer" region="center" id="overlayTabContainer" tabStrip="true" style="height:100%;padding:0px;margin:0px;">
+					<div dojoType="dijit.layout.TabContainer" region="center" id="overlayTabContainer" tabStrip="true" style="height:100%;padding:0px;margin:0px;width:100%;">
 				</div>
 			</div>
 		</div>
@@ -153,6 +157,7 @@
 		<script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
 		<script src="SR_OpenLayers/OpenLayers.js"></script>
 		<script src="srd_layer.js"></script>
+		<script src="srd_edit.js"></script>
 		<script src="sr_mapload.js"></script>
 		<div id="off_map_controls" onload="activateDrag()"></div>
 
