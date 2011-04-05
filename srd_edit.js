@@ -10,7 +10,7 @@ function srd_edit(map, srd_layers) {
 	this.container = dijit.byId("editToolsContainer");
 //	this.container = new dijit.layout.ContentPane();
 //	this.parentContainer.appendDiv(this.container);
-
+/*
 	this.selectDataStore = null; 
 	this.layerSelect = new dijit.form.FilteringSelect( {
 		id: "layerSelect",
@@ -21,6 +21,7 @@ function srd_edit(map, srd_layers) {
 	}
 	);	
 
+*/
 }
 
 

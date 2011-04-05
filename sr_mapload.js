@@ -79,20 +79,20 @@ stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
 */
 
 var stc_chokepoints = new srd_layer(map); 
-stc_chokepoints.loadData("WFST", "NYPD STC Chokepoints", "stc_chokepoints" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+stc_chokepoints.loadData("WFST", "NYPD STC Chokepoints", "stc_chokepoints" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var stc_maritime = new srd_layer(map); 
-stc_maritime.loadData("WFST", "NYPD STC Maritime", "stc_maritime" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+stc_maritime.loadData("WFST", "NYPD STC Maritime", "stc_maritime" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var stc_transit = new srd_layer(map); 
-stc_transit.loadData("WFST", "NYPD STC Transit", "stc_transit" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+stc_transit.loadData("WFST", "NYPD STC Transit", "stc_transit" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var nypd_veh_inter_com = new srd_layer(map); 
-nypd_veh_inter_com.loadData("WFST", "NYPD Commercial Vehicle Interdiction", "nypd_veh_inter_com" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+nypd_veh_inter_com.loadData("WFST", "NYPD Commercial Vehicle Interdiction", "nypd_veh_inter_com" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 //nypd_veh_inter_com.loadData("GML", "NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var nypd_veh_inter_pas = new srd_layer(map);
-nypd_veh_inter_pas.loadData("WFST", "NYPD Passenger Vehicle Interdiction", "nypd_veh_inter_pas" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: stc_styleMap} );
+nypd_veh_inter_pas.loadData("WFST", "NYPD Passenger Vehicle Interdiction", "nypd_veh_inter_pas" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 //nypd_veh_inter_pas.loadData( "GML", "NYPD Passenger Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_PASSENGER.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} ); 
 
 //stc_chokepoints.events.register( "loadend", stc_chokepoints,showLayerData(stc_chokepoints));

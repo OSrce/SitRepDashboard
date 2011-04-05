@@ -75,7 +75,6 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 		this.layer = new OpenLayers.Layer.Vector("STC Chokepoints - Load", {
 			isBaseLayer: false,
 			visibility: false,
-			styleMap: stc_styleMap,
 			strategies: [ this.saveStrategy],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
@@ -103,6 +102,7 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 		this.layer = new OpenLayers.Layer.Vector(name, {
 			isBaseLayer: false,
 			visibility: false,
+			styleMap: stc_styleMap,
 			strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy ],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
