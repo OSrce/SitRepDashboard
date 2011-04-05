@@ -26,6 +26,64 @@ function srd_layer( map ) {
 
 		this.tmpLayer = null;
 		this.saveStrategy = null;
+
+		this.srd_mapDefault = new OpenLayers.Style( { 
+			fillColor: "#FF0000",
+			fillOpacity: 0.6,
+			strokeColor: "#FF0000",
+			strokeOpacity: 1,
+			pointRadius: 6
+		} ); 
+
+		this.srd_mapGreen = new OpenLayers.Style( { 
+			fillColor: "#00FF00",
+			fillOpacity: 0.6,
+			strokeColor: "#00FF00",
+			strokeOpacity: 1,
+			pointRadius: 6
+		} ); 
+
+		this.srd_mapBlue = new OpenLayers.Style( { 
+			fillColor: "#0000FF",
+			fillOpacity: 0.6,
+			strokeColor: "#0000FF",
+			strokeOpacity: 1,
+			pointRadius: 6
+		} ); 
+
+		this.srd_styleMap =  new OpenLayers.StyleMap( { 
+			'default': this.srd_mapDefault, 
+			'mapGreen': this.srd_mapGreen,
+			'mapBlue': this.srd_mapBlue } );
+
+		
+		this.lookupStatus = {
+				'Default' : {					fillColor: "#FF0000",
+					fillOpacity: 0.6,
+					strokeColor: "#FF0000",
+					strokeOpacity: 1,
+					pointRadius: 6
+				},
+				'Clear' : {					fillColor: "#00FF00",
+					fillOpacity: 0.6,
+					strokeColor: "#00FF00",
+					strokeOpacity: 1,
+					pointRadius: 6
+				},
+				'Pending' : {  
+					fillColor: "#0000FF",
+					fillOpacity: 0.6,
+					strokeColor: "#0000FF",
+					strokeOpacity: 1,
+					pointRadius: 6
+				}
+	};
+
+
+		this.srd_styleMap.addUniqueValueRules("default", "srd_status", this.lookupStatus);
+
+
+
 }
 
 // srd_layer return the OpenLayer layer class.
@@ -102,7 +160,7 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 		this.layer = new OpenLayers.Layer.Vector(name, {
 			isBaseLayer: false,
 			visibility: false,
-			styleMap: stc_styleMap,
+			styleMap: this.srd_styleMap,
 			strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy ],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
@@ -151,6 +209,7 @@ srd_layer.prototype.turnOnEvents = function () {
 		"featureselected": function(e) { onFeatureSelect(e, this); },
 		"featureunselected": function(e) {onFeatureUnselect(e, this); },
 		"loadend": function(e) { loadDataGrid(e, this); }, 
+		"featureadded": function(e) { featureAdded(e,this); },
 		scope: this 
 	} );
 	if(this.tmpLayer != null) {
@@ -184,7 +243,19 @@ onFeatureSelect = function(evt, the_srd_layer) {
 		"<div style='font-size:.8em'>"+theAttString+"</div>",
 		null, true );  
 	selFeature.popup = popup;
+	
 	this.map.addPopup(popup);
+
+		if( this.selFeature.attributes.srd_status == 'Default') {
+			this.selFeature.attributes.srd_status = 'Pending';
+		} else  if( this.selFeature.attributes.srd_status == 'Pending') {
+			this.selFeature.attributes.srd_status = 'Clear';
+		} else  if( this.selFeature.attributes.srd_status == 'Clear') {
+			this.selFeature.attributes.srd_status = 'Default';
+		} else {
+			this.selFeature.attributes.srd_status = 'Default';
+		}
+		the_srd_layer.layer.redraw();
 };
 
 //srd_layer.prototype.featureSelected(selFeature) {
@@ -231,6 +302,10 @@ loadDataGrid = function(evt, the_srd_layer) {
 	srd_tableLayout[0] = { cells: new Array() }; 
 	var j=0;
 	for(j=0;j<theFeatArr.length;j++) {
+		if( !theFeatArr[j].attributes.srd_status) {
+			theFeatArr[j].attributes.srd_status = 'Default';
+			theFeatArr[j].state =  OpenLayers.State.UPDATE;
+		}
 		the_srd_layer.srd_data[j] = new Array();
 		the_srd_layer.srd_data[j].fid = theFeatArr[j].fid;
 		var i=0;
@@ -314,7 +389,15 @@ function showFailureMsg(){
 };
 
 
-
+function featureAdded(evt, the_srd_layer) {
+	if(!evt.feature.attributes.srd_status) {
+		evt.feature.attributes.srd_status = 'Default';
+		if(evt.feature.state != OpenLayers.State.INSERT) {
+			evt.feature.state = OpenLayers.State.UPDATE;
+		}
+	}
+	the_srd_layer.layer.redraw();
+};
 
 
 

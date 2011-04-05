@@ -138,6 +138,34 @@
 				<div dojoType="dijit.TitlePane" title="Edit Tools" id="editToolsTPContainer" sytle="height:200px;" open="false">
 					<div dojoType="dijit.layout.ContentPane" id="editToolsContainer">
 
+
+<ul id="controlToggle">
+            <li>
+                <input type="radio" name="type" value="none" id="noneToggle"
+                       onclick="toggleControl(noneToggle);" checked="checked" />
+                <label for="noneToggle">navigate</label>
+
+            </li>
+            <li>
+                <input type="radio" name="type" value="point" id="pointToggle" onclick="toggleControl(pointToggle);" />
+                <label for="pointToggle">draw point</label>
+            </li>
+            <li>
+                <input type="radio" name="type" value="line" id="lineToggle" onclick="toggleControl(lineToggle);" />
+                <label for="lineToggle">draw line</label>
+
+            </li>
+            <li>
+                <input type="radio" name="type" value="polygon" id="polygonToggle" onclick="toggleControl(polygonToggle);" />
+                <label for="polygonToggle">draw polygon</label>
+            </li>
+            <li>
+                <input type="checkbox" name="allow-pan" value="allow-pan" id="allowPanCheckbox" checked=true onclick="allowPan();" />
+                <label for="allowPanCheckbox">allow pan while drawing</label>
+
+            </li>
+        </ul>
+
 					</div>
 				</div>
 				<div dojoType="dijit.TitlePane" title="Overlay Information" id="overlayTPContainer" style="width:100%;padding:0px;margin:0px;height:100%">

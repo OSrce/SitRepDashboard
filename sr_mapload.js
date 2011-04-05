@@ -2,6 +2,8 @@
 var map ;
 var editTools;
 var selectControl;
+var drawControls;
+var panel;
 
 function init() {
 
@@ -142,7 +144,7 @@ for(var layerName in sr_dynamicLayers ) {
 //	OpenLayers.Util.getElement("coords").innerHTML = position;
 //});
 
-var panel = new OpenLayers.Control.Panel( {
+panel = new OpenLayers.Control.Panel( {
         'displayClass': 'customEditingToolbar',
 				div: document.getElementById('editToolsPanel') 
 }
@@ -179,6 +181,22 @@ map.setCenter( lonlat, zoom );
 editTools = new srd_edit(map, sr_dynamicLayers);
 editTools.loadEditTools();
 
+   drawControls = {
+                    point: new OpenLayers.Control.DrawFeature( nypd_veh_inter_com.layer,
+                                OpenLayers.Handler.Point),
+                    line: new OpenLayers.Control.DrawFeature(nypd_veh_inter_com.layer,
+                                OpenLayers.Handler.Path),
+                    polygon: new OpenLayers.Control.DrawFeature(nypd_veh_inter_com.layer,
+                                OpenLayers.Handler.Polygon)
+                };
+
+                for(var key in drawControls) {
+                    map.addControl(drawControls[key]);
+                }
+
+
+                document.getElementById('noneToggle').checked = true;
+
 
 
 //stc_chokepoints.afterAdd(showLayerData(stc_chokepoints));
@@ -191,6 +209,19 @@ editTools.loadEditTools();
 function activateDrag() {
 	dragControl.activate();
 }
+
+  function toggleControl(element) {
+                for(key in drawControls) {
+                    var control = drawControls[key];
+                    if(element.value == key && element.checked) {
+                        control.activate();
+                    } else {
+                        control.deactivate();
+                    }
+                }
+								panel.activate();
+            }
+
 
 
 
