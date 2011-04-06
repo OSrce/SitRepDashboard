@@ -385,7 +385,6 @@ loadDataGrid = function(evt, the_srd_layer) {
 //END GLOBAL FUNC loadDataGrid
 //
 
-
 // TO FIX using for wfs-t debugging right now.
 function showMsg(szMessage) {
 	alert(szMessage);
@@ -406,8 +405,8 @@ function featureAdded(evt, the_srd_layer) {
 		if(evt.feature.state != OpenLayers.State.INSERT) {
 			evt.feature.state = OpenLayers.State.UPDATE;
 		}
+		the_srd_layer.layer.redraw();
 	}
-//	the_srd_layer.layer.redraw();
 };
 
 

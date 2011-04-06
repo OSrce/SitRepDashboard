@@ -89,6 +89,14 @@ stc_maritime.loadData("WFST", "NYPD STC Maritime", "stc_maritime" ,{ isBaseLayer
 var stc_transit = new srd_layer(map); 
 stc_transit.loadData("WFST", "NYPD STC Transit", "stc_transit" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
+
+ var stc1 = new srd_layer(map); 
+stc1.loadData("WFST", "STC Exercise Day 1", "stc1" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+
+var stc2 = new srd_layer(map); 
+stc2.loadData("WFST", "STC Exercise Day 2", "stc1" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+
+
 var nypd_veh_inter_com = new srd_layer(map); 
 nypd_veh_inter_com.loadData("WFST", "NYPD Commercial Vehicle Interdiction", "nypd_veh_inter_com" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 //nypd_veh_inter_com.loadData("GML", "NYPD Commercial Vehicle Interdiction", "data_sensitive/NYPD_VEH_INTERDICTION_COMMERCIAL.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
@@ -113,6 +121,8 @@ var sr_dynamicLayers = {
 	"NYPD STC Chokepoints": stc_chokepoints,
 	"NYPD STC Maritime Locations": stc_maritime,
 	"NYPD STC Transit Locations": stc_transit,
+	"STC Exercise Day 1": stc1,
+	"STC Exercise Day 2": stc2,
 	"NYPD Commercial Vehicle Interdiction": nypd_veh_inter_com,	
 	"NYPD Passenger  Vehicle Interdiction": nypd_veh_inter_pas	
 };
@@ -182,11 +192,11 @@ editTools = new srd_edit(map, sr_dynamicLayers);
 editTools.loadEditTools();
 
    drawControls = {
-                    point: new OpenLayers.Control.DrawFeature( nypd_veh_inter_com.layer,
+                    point: new OpenLayers.Control.DrawFeature( stc2.layer,
                                 OpenLayers.Handler.Point),
-                    line: new OpenLayers.Control.DrawFeature(nypd_veh_inter_com.layer,
+                    line: new OpenLayers.Control.DrawFeature(stc2.layer,
                                 OpenLayers.Handler.Path),
-                    polygon: new OpenLayers.Control.DrawFeature(nypd_veh_inter_com.layer,
+                    polygon: new OpenLayers.Control.DrawFeature(stc2.layer,
                                 OpenLayers.Handler.Polygon)
                 };
 
