@@ -160,6 +160,7 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 		this.layer = new OpenLayers.Layer.Vector(name, {
 			isBaseLayer: false,
 			visibility: false,
+//			onFeatureInsert: this.onFeatureInserted, 
 			styleMap: this.srd_styleMap,
 			strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy ],
 			projection: new OpenLayers.Projection("EPSG:4326"),
@@ -210,6 +211,7 @@ srd_layer.prototype.turnOnEvents = function () {
 		"featureunselected": function(e) {onFeatureUnselect(e, this); },
 		"loadend": function(e) { loadDataGrid(e, this); }, 
 		"featureadded": function(e) { featureAdded(e,this); },
+		"featureadded": function(e) { featureAdded(e,this); },
 		scope: this 
 	} );
 	if(this.tmpLayer != null) {
@@ -224,7 +226,7 @@ srd_layer.prototype.turnOnEvents = function () {
 };
 
 
-
+// BEGIN GLOBAL FUNC onFeatureSelect
 onFeatureSelect = function(evt, the_srd_layer) {
 	this.selFeature = evt.feature;
 /*	var postNum = selFeature.attributes.Post_Number;
@@ -257,18 +259,20 @@ onFeatureSelect = function(evt, the_srd_layer) {
 		}
 		the_srd_layer.layer.redraw();
 };
-
-//srd_layer.prototype.featureSelected(selFeature) {
-//	}
+//END GLOBAL FUNC onFeatureSelect
 
 
+
+//BEGIN GLOBAL FUNC onFeatureUnselect
 onFeatureUnselect = function(evt, the_srd_layer) {
 	var feature = evt.feature;
 	this.map.removePopup(feature.popup);
 	feature.popup.destroy();
 	feature.popup = null;
 };    
+//END GLOBAL FUNC onFeatureUnselect
 
+//NO LONGER CALLED...
 loadWFS = function(evt, the_srd_layer) {
 	/// WFS testing :
 		someFeatures = new Array();
@@ -280,15 +284,16 @@ loadWFS = function(evt, the_srd_layer) {
 		the_srd_layer.layer.addFeatures( someFeatures );
 	/// END WFS TESTING.
 }
+///END TO REMOVE.
 
-	
+// BEGIN GLOBAL FUNC loadDataGrid	
 loadDataGrid = function(evt, the_srd_layer) {
 	if(the_srd_layer.saveStrategy != null) {
 		the_srd_layer.saveStrategy.save();
 	}
 	var overlayTabContainer = dijit.byId("overlayTabContainer");
-	var layerTab = new dijit.layout.ContentPane();
-	layerTab.set('title', 'debugging');
+//	var layerTab = new dijit.layout.ContentPane();
+//	layerTab.set('title', 'debugging');
 
 	var layer = the_srd_layer.layer;
 
@@ -351,12 +356,13 @@ loadDataGrid = function(evt, the_srd_layer) {
 	dojo.connect(the_srd_layer.srd_layerGrid, "onRowDblClick", the_srd_layer, the_srd_layer.selectFeature );
 
 };
-
+//END GLOBAL FUNC loadDataGrid
+//
 
 // this is going to be called by DataGrid -> onRowDblClick.  Event will be passed with 
 // ref to the grid, cell and rowIndex
 srd_layer.prototype.selectFeature = function(e) {
-//	alert(e.rowIndex);
+	alert(e.rowIndex);
 	var item = this.srd_layerGrid.getItem( e.rowIndex );
 	this.selectedFeature  = this.layer.getFeatureByFid(item.fid);
 	var thePoint = this.selectedFeature.geometry;
@@ -396,10 +402,26 @@ function featureAdded(evt, the_srd_layer) {
 			evt.feature.state = OpenLayers.State.UPDATE;
 		}
 	}
-	the_srd_layer.layer.redraw();
+//	the_srd_layer.layer.redraw();
 };
 
 
+srd_layer.prototype.onFeatureInserted = function(insertedFeature) {
+	if(!insertedFeature.attributes.srd_status) {
+		insertedFeature.attributes.srd_status = 'Default';
+	}	
+	var propName ="";
+	for(propName in this.layer.features[0].attributes ) {
+		if(!insertedFeature.attributes.propName) {
+			alert("prop without "+propName);
+			insertedFeature.attributes.propName = "";
+			if(insertedFeature.state != OpenLayers.State.INSERT) {
+				insertedFeature.state = OpenLayers.State.UPDATE;
+			}
+		}
+	}
+
+};
 
 
 
