@@ -286,6 +286,28 @@ loadWFS = function(evt, the_srd_layer) {
 }
 ///END TO REMOVE.
 
+
+// this is going to be called by DataGrid -> onRowDblClick.  Event will be passed with 
+// ref to the grid, cell and rowIndex
+srd_layer.prototype.selectFeature = function(e) {
+	var item = this.srd_layerGrid.getItem( e.rowIndex );
+	this.selectedFeature  = this.layer.getFeatureByFid(item.fid);
+	var thePoint = this.selectedFeature.geometry;
+	var thelat = thePoint.y;
+	var thelon = thePoint.x;
+	var lonlat = new OpenLayers.LonLat(thelon, thelat).transform(map.projection, map.projection);
+	this.map.panTo(lonlat );
+
+	if( this.layer.getVisibility() == false) {
+		this.layer.setVisibility(true);
+	}
+	selectControl.select(this.selectedFeature);		
+
+};
+
+
+
+
 // BEGIN GLOBAL FUNC loadDataGrid	
 loadDataGrid = function(evt, the_srd_layer) {
 	if(the_srd_layer.saveStrategy != null) {
@@ -327,25 +349,29 @@ loadDataGrid = function(evt, the_srd_layer) {
 
 	if(the_srd_layer.srd_LayerStore == null) {
 
-	the_srd_layer.srd_LayerStore = new dojo.store.Memory( { 
-		idProperty: 'fid', 
-		data: the_srd_layer.srd_data,
-		features: { 'dojo.data.api.Read': true,
-								'dojo.data.api.Write': true } 
-	} );
+		the_srd_layer.srd_LayerStore = new dojo.store.Memory( { 
+			idProperty: 'fid', 
+			data: the_srd_layer.srd_data,
+			features: { 'dojo.data.api.Read': true,
+									'dojo.data.api.Write': true } 
+			} );
+		}
 
 //alert( "TEST:" + 	srd_LayerStore.get('F1') +":TEST" );
 	
 	/// Utility Adapter for using dojo.store.Memory objects where dojo.data. objects are needed.
 	var srd_LegacyDataStore =  new dojo.data.ObjectStore({ objectStore: the_srd_layer.srd_LayerStore});
 
-	the_srd_layer.srd_layerGrid = new dojox.grid.DataGrid( {
-		title: layer.name, 
-		clientSort: true,
-//		rowSelector: '20px',
-		store:srd_LegacyDataStore ,
-		structure: srd_tableLayout},
-		document.createElement('div') );
+	the_srd_layer.srd_layerGrid = new dojox.grid.DataGrid( 
+		{
+			title: layer.name, 
+			clientSort: true,
+//			rowSelector: '20px',
+			store:srd_LegacyDataStore ,
+			structure: srd_tableLayout
+		},
+		document.createElement('div')
+	);
 	var i=0;
 //	var theFeatArr = new Array( "", "", "");
 	overlayTabContainer.addChild(the_srd_layer.srd_layerGrid);
@@ -353,32 +379,11 @@ loadDataGrid = function(evt, the_srd_layer) {
 //	layerTab.set('content', "TEST"+layer.features[0].attributes['Post_Number']+"END");
 //	overlayTabContainer.addChild(layerTab);
 
-	dojo.connect(the_srd_layer.srd_layerGrid, "onRowDblClick", the_srd_layer, the_srd_layer.selectFeature );
+	dojo.connect(the_srd_layer.srd_layerGrid, "onRowDblClick", the_srd_layer, the_srd_layer.selectFeature , true);
 
 };
 //END GLOBAL FUNC loadDataGrid
 //
-
-// this is going to be called by DataGrid -> onRowDblClick.  Event will be passed with 
-// ref to the grid, cell and rowIndex
-srd_layer.prototype.selectFeature = function(e) {
-	alert(e.rowIndex);
-	var item = this.srd_layerGrid.getItem( e.rowIndex );
-	this.selectedFeature  = this.layer.getFeatureByFid(item.fid);
-	var thePoint = this.selectedFeature.geometry;
-	var thelat = thePoint.y;
-	var thelon = thePoint.x;
-	var lonlat = new OpenLayers.LonLat(thelon, thelat).transform(map.projection, map.projection);
-	this.map.panTo(lonlat );
-
-	if( this.layer.getVisibility() == false) {
-		this.layer.setVisibility(true);
-	}
-	selectControl.select(this.selectedFeature);		
-
-	}
-
-};
 
 
 // TO FIX using for wfs-t debugging right now.
