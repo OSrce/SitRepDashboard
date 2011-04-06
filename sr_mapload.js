@@ -94,7 +94,7 @@ stc_transit.loadData("WFST", "NYPD STC Transit", "stc_transit" ,{ isBaseLayer: f
 stc1.loadData("WFST", "STC Exercise Day 1", "stc1" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var stc2 = new srd_layer(map); 
-stc2.loadData("WFST", "STC Exercise Day 2", "stc1" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+stc2.loadData("WFST", "STC Exercise Day 2", "stc2" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 
 var nypd_veh_inter_com = new srd_layer(map); 
@@ -191,14 +191,34 @@ map.setCenter( lonlat, zoom );
 editTools = new srd_edit(map, sr_dynamicLayers);
 editTools.loadEditTools();
 
+var  removeControl = new OpenLayers.Control.SelectFeature(stc2.layer, {
+												clickout: false,
+												toggle: false,
+												title: "Delete",
+												displayClass: "olControlDelete"
+										} );
+
+
+
    drawControls = {
                     point: new OpenLayers.Control.DrawFeature( stc2.layer,
                                 OpenLayers.Handler.Point),
                     line: new OpenLayers.Control.DrawFeature(stc2.layer,
                                 OpenLayers.Handler.Path),
                     polygon: new OpenLayers.Control.DrawFeature(stc2.layer,
-                                OpenLayers.Handler.Polygon)
+                                OpenLayers.Handler.Polygon),
+										remove: removeControl
+
                 };
+		removeControl.events.register("featurehighlighted", this, function(e) {
+			if (confirm('Are you sure you want to delete this feature?')) {
+				stc2.layer.removeFeatures([e.feature]);
+//				removeControl.deactivate();
+			} else {
+				removeControl.unselect(e.feature);
+			}
+		});
+
 
                 for(var key in drawControls) {
                     map.addControl(drawControls[key]);
