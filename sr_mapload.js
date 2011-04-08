@@ -206,7 +206,7 @@ var  removeControl = new OpenLayers.Control.SelectFeature(
 										} );
 
 
-var drawLayer = stc3.layer;
+var drawLayer = stc4.layer;
    drawControls = {
                     point: new OpenLayers.Control.DrawFeature( drawLayer,
                                 OpenLayers.Handler.Point),
@@ -219,8 +219,9 @@ var drawLayer = stc3.layer;
                 };
 		selectControl.events.register("featurehighlighted", this, function(e) {
 			if (confirm('Are you sure you want to delete this feature?')) {
-
+				e.feature.state = OpenLayers.State.DELETE;
 				drawLayer.removeFeatures([e.feature]);
+//				drawLayer.destroyFeatures([e.feature]);
 //				removeControl.deactivate();
 			} else {
 				selectControl.unselect(e.feature);

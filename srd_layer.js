@@ -26,6 +26,7 @@ function srd_layer( map ) {
 
 		this.tmpLayer = null;
 		this.saveStrategy = null;
+		this.refreshStrategy = null;
 
 		this.srd_mapDefault = new OpenLayers.Style( { 
 			fillColor: "#FF0000",
@@ -166,11 +167,13 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
     this.saveStrategy.events.register("success", '', showSuccessMsg);
     this.saveStrategy.events.register("fail", '', showFailureMsg);	
 
+//		this.refreshStrategy = new OpenLayers.Strategy.Refresh({force: true, interval: 10000});
+
 		this.layer = new OpenLayers.Layer.Vector(name, {
 			isBaseLayer: false,
 			visibility: false,
 			styleMap: this.srd_styleMap,
-			strategies: [ new OpenLayers.Strategy.BBOX(), this.saveStrategy ],
+			strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
 				version: "1.1.0",
@@ -340,7 +343,7 @@ loadDataGrid = function(evt, the_srd_layer) {
 	var srd_layout = new Array();
 	var srd_tableLayout = new Array();
 	srd_tableLayout[0] = { cells: new Array() }; 
-	alert("Load complete Number of features:"+layer.features.length);
+//	alert("Load complete Number of features:"+layer.features.length);
 	var j=0;
 	for(j=0;j<theFeatArr.length;j++) {
 		if( !theFeatArr[j].attributes.srd_status) {
