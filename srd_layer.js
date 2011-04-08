@@ -173,15 +173,13 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 			strategies: [ new OpenLayers.Strategy.BBOX(), this.saveStrategy ],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
-				version: "1.0.0",
+				version: "1.1.0",
 				srsName: "EPSG:4326",
-//				srsName: "http://www.opengis.net/gml/srs/epsg.xml#4326",
 				url: "http://SitRepGIS.local/geoserver/wfs",
 				featureNS :  "http://SitRepGIS.local/",
 				featureType: source,
 //				geometryName: "the_geom",
 //				extractAttributes: true,
-				schema: "http://SitRepGIS.local/geoserver/wfs/DescribeFeatureType?typename=sr_data:stc3"
         })
     }); 
 
@@ -428,13 +426,9 @@ function showFailureMsg(){
 function featureAdded(evt, the_srd_layer) {
 	if(!evt.feature.attributes.srd_status) {
 		evt.feature.attributes.srd_status = 'Default';
-		evt.feature.attributes.srd_description = 'DefaultDesc';
-		evt.feature.attributes.srd_notes = 'DefaultNotes';
+//		evt.feature.attributes.srd_description = 'DefaultDesc';
+//		evt.feature.attributes.srd_notes = 'DefaultNotes';
 	
-//		evt.feature.fid = 1;
-//		evt.feature.attributes.gid = 1;
-		evt.feature.gid = 1;
-		alert ("FID="+evt.feature.fid);		
 		if(evt.feature.state != OpenLayers.State.INSERT) {
 			evt.feature.state = OpenLayers.State.UPDATE;
 		}
@@ -444,7 +438,6 @@ function featureAdded(evt, the_srd_layer) {
 
 
 srd_layer.prototype.onFeatureInserted = function(insertedFeature) {
-		alert ("onFeatureInsert FID="+evt.feature.fid);		
 	if(!insertedFeature.attributes.srd_status) {
 		insertedFeature.attributes.srd_status = 'Default';
 	}

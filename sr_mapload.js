@@ -81,34 +81,33 @@ stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
 */
 
 var stc_chokepoints = new srd_layer(map); 
-//stc_chokepoints.loadData("WFST", "NYPD STC Chokepoints", "stc_chokepoints" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+stc_chokepoints.loadData("WFST", "NYPD STC Chokepoints", "stc_chokepoints" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var stc_maritime = new srd_layer(map); 
-//stc_maritime.loadData("WFST", "NYPD STC Maritime", "stc_maritime" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+stc_maritime.loadData("WFST", "NYPD STC Maritime", "stc_maritime" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var stc_transit = new srd_layer(map); 
-//stc_transit.loadData("WFST", "NYPD STC Transit", "stc_transit" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+stc_transit.loadData("WFST", "NYPD STC Transit", "stc_transit" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 
-var poi = new srd_layer(map); 
-//poi.loadData("WFST", "Tiger", "poi" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+var stc1 = new srd_layer(map); 
+stc1.loadData("WFST", "STC Exercise Day 1", "stc1" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
-
-
- var stc1 = new srd_layer(map); 
-//stc1.loadData("WFST", "STC Exercise Day 1", "stc1" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+var stc2 = new srd_layer(map); 
+stc2.loadData("WFST", "STC Exercise Day 2", "stc2" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var stc3 = new srd_layer(map); 
 stc3.loadData("WFST", "STC Exercise Day 3", "stc3" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
-//var nyc1 = new srd_layer(map); 
-//nyc1.loadData("WFST", "NYC Buildings", "nyc_buildings" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+var stc4 = new srd_layer(map); 
+stc4.loadData("WFST", "STC Exercise Day 4", "stc4" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+
 
 var nypd_veh_inter_com = new srd_layer(map); 
-//nypd_veh_inter_com.loadData("WFST", "NYPD Commercial Vehicle Interdiction", "nypd_veh_inter_com" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+nypd_veh_inter_com.loadData("WFST", "NYPD Commercial Vehicle Interdiction", "nypd_veh_inter_com" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 var nypd_veh_inter_pas = new srd_layer(map);
-//nypd_veh_inter_pas.loadData("WFST", "NYPD Passenger Vehicle Interdiction", "nypd_veh_inter_pas" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+nypd_veh_inter_pas.loadData("WFST", "NYPD Passenger Vehicle Interdiction", "nypd_veh_inter_pas" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 //stc_chokepoints.events.register( "loadend", stc_chokepoints,showLayerData(stc_chokepoints));
 
@@ -123,15 +122,15 @@ map.addControl(new OpenLayers.Control.MousePosition( {
 
 
 var sr_dynamicLayers = { 
-//	"NYPD STC Chokepoints": stc_chokepoints
-//	"NYPD STC Maritime Locations": stc_maritime,
-//	"NYPD STC Transit Locations": stc_transit,
-//	"STC Exercise Day 1": stc1,
-	"STC Exercise Day 3": stc3
-//	"NYC Building Test": nyc1
-//	"Tiger": poi,
-//	"NYPD Commercial Vehicle Interdiction": nypd_veh_inter_com,	
-//	"NYPD Passenger  Vehicle Interdiction": nypd_veh_inter_pas	
+	"NYPD STC Chokepoints": stc_chokepoints,
+	"NYPD STC Maritime Locations": stc_maritime,
+	"NYPD STC Transit Locations": stc_transit,
+	"STC Exercise Day 1": stc1,
+	"STC Exercise Day 2": stc2,
+	"STC Exercise Day 3": stc3,
+	"STC Exercise Day 4": stc4,
+	"NYPD Commercial Vehicle Interdiction": nypd_veh_inter_com,	
+	"NYPD Passenger  Vehicle Interdiction": nypd_veh_inter_pas
 };
 
 var sr_dynamicLayer_layer = new Array();
