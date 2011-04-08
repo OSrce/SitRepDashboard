@@ -58,13 +58,22 @@ function srd_layer( map ) {
 
 		
 		this.lookupStatus = {
-				'Default' : {					fillColor: "#FF0000",
+				null : {
+					fillColor: "#FF0F00",
 					fillOpacity: 0.6,
 					strokeColor: "#FF0000",
 					strokeOpacity: 1,
 					pointRadius: 6
 				},
-				'Clear' : {					fillColor: "#00FF00",
+				'Default' : {	
+					fillColor: "#FF0000",
+					fillOpacity: 0.6,
+					strokeColor: "#FF0000",
+					strokeOpacity: 1,
+					pointRadius: 6
+				},
+				'Clear' : {
+					fillColor: "#00FF00",
 					fillOpacity: 0.6,
 					strokeColor: "#00FF00",
 					strokeOpacity: 1,
@@ -160,21 +169,26 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 		this.layer = new OpenLayers.Layer.Vector(name, {
 			isBaseLayer: false,
 			visibility: false,
-//			onFeatureInsert: this.onFeatureInserted, 
 			styleMap: this.srd_styleMap,
-			strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy ],
+			strategies: [ new OpenLayers.Strategy.BBOX(), this.saveStrategy ],
 			projection: new OpenLayers.Projection("EPSG:4326"),
 			protocol: new OpenLayers.Protocol.WFS({
 				version: "1.0.0",
 				srsName: "EPSG:4326",
-				url: "https://SitRepGIS.local/cgi-bin/tinyows",
-				featureNS :  "https://SitRepGIS.local/",
+//				srsName: "http://www.opengis.net/gml/srs/epsg.xml#4326",
+				url: "http://SitRepGIS.local/geoserver/wfs",
+				featureNS :  "http://SitRepGIS.local/",
 				featureType: source,
-				geometryName: "the_geom",
-				extractAttributes: true,
-				schema: "https://SitRepGIS.local/cgi-bin/tinyows?service=wfs&request=DescribeFeatureType&version=1.0.0&typename=sr:"+source
+//				geometryName: "the_geom",
+//				extractAttributes: true,
+				schema: "http://SitRepGIS.local/geoserver/wfs/DescribeFeatureType?typename=sr_data:stc3"
         })
     }); 
+
+
+
+
+
 			this.map.addLayer(this.layer);	
 	
 	}
@@ -258,6 +272,7 @@ onFeatureSelect = function(evt, the_srd_layer) {
 			this.selFeature.attributes.srd_status = 'Default';
 		}
 		the_srd_layer.layer.redraw();
+
 };
 //END GLOBAL FUNC onFeatureSelect
 
@@ -311,7 +326,7 @@ srd_layer.prototype.selectFeature = function(e) {
 // BEGIN GLOBAL FUNC loadDataGrid	
 loadDataGrid = function(evt, the_srd_layer) {
 	if(the_srd_layer.saveStrategy != null) {
-		the_srd_layer.saveStrategy.save();
+//		the_srd_layer.saveStrategy.save();
 	}
 	var overlayTabContainer = dijit.byId("overlayTabContainer");
 //	var layerTab = new dijit.layout.ContentPane();
@@ -327,12 +342,23 @@ loadDataGrid = function(evt, the_srd_layer) {
 	var srd_layout = new Array();
 	var srd_tableLayout = new Array();
 	srd_tableLayout[0] = { cells: new Array() }; 
+	alert("Load complete Number of features:"+layer.features.length);
 	var j=0;
 	for(j=0;j<theFeatArr.length;j++) {
 		if( !theFeatArr[j].attributes.srd_status) {
 			theFeatArr[j].attributes.srd_status = 'Default';
 			theFeatArr[j].state =  OpenLayers.State.UPDATE;
 		}
+		if( !theFeatArr[j].attributes.srd_description) {
+			theFeatArr[j].attributes.srd_description = 'None';
+			theFeatArr[j].state =  OpenLayers.State.UPDATE;
+		}
+		if( !theFeatArr[j].attributes.srd_notes) {
+			theFeatArr[j].attributes.srd_notes = 'None';
+			theFeatArr[j].state =  OpenLayers.State.UPDATE;
+		}
+		
+
 		the_srd_layer.srd_data[j] = new Array();
 		the_srd_layer.srd_data[j].fid = theFeatArr[j].fid;
 		var i=0;
@@ -387,7 +413,7 @@ loadDataGrid = function(evt, the_srd_layer) {
 
 // TO FIX using for wfs-t debugging right now.
 function showMsg(szMessage) {
-	alert(szMessage);
+//	alert(szMessage);
 }
 
 function showSuccessMsg(){
@@ -402,6 +428,13 @@ function showFailureMsg(){
 function featureAdded(evt, the_srd_layer) {
 	if(!evt.feature.attributes.srd_status) {
 		evt.feature.attributes.srd_status = 'Default';
+		evt.feature.attributes.srd_description = 'DefaultDesc';
+		evt.feature.attributes.srd_notes = 'DefaultNotes';
+	
+//		evt.feature.fid = 1;
+//		evt.feature.attributes.gid = 1;
+		evt.feature.gid = 1;
+		alert ("FID="+evt.feature.fid);		
 		if(evt.feature.state != OpenLayers.State.INSERT) {
 			evt.feature.state = OpenLayers.State.UPDATE;
 		}
@@ -411,9 +444,16 @@ function featureAdded(evt, the_srd_layer) {
 
 
 srd_layer.prototype.onFeatureInserted = function(insertedFeature) {
+		alert ("onFeatureInsert FID="+evt.feature.fid);		
 	if(!insertedFeature.attributes.srd_status) {
 		insertedFeature.attributes.srd_status = 'Default';
-	}	
+	}
+	if(!insertedFeature.attributes.srd_description) {
+		insertedFeature.attributes.srd_description = 'Default';
+	}
+	if(!insertedFeature.attributes.srd_notes) {
+		insertedFeature.attributes.srd_notes = 'Default';
+	}
 	var propName ="";
 	for(propName in this.layer.features[0].attributes ) {
 		if(!insertedFeature.attributes.propName) {
