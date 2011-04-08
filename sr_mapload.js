@@ -24,7 +24,7 @@ map = new OpenLayers.Map("map", {
 
 //Add the Google Maps Layer for debug purposes only (don't
 //forget to get rid of script src from html file.)
-var gMapLayer = new OpenLayers.Layer.Google( "Google Maps", {numZoomLevels: 20} );
+//var gMapLayer = new OpenLayers.Layer.Google( "Google Maps", {numZoomLevels: 20} );
 
 //Add OpenStreetMap Layer for debug purposes as well 
 var osmMapLayer = new OpenLayers.Layer.OSM();
@@ -56,7 +56,7 @@ var pct_styleMap = new OpenLayers.StyleMap( {"default":  pct_style_def, "select"
 var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
 
 // Attach the base layer + the data_public layer(s)
-map.addLayers( [ srMapLayer,  gMapLayer, osmMapLayer]);
+map.addLayers( [ srMapLayer,  osmMapLayer]);
 map.addLayers( [   policePcts ]);
 
 
@@ -206,7 +206,7 @@ var  removeControl = new OpenLayers.Control.SelectFeature(
 										} );
 
 
-var drawLayer = stc4.layer;
+var drawLayer = stc1.layer;
    drawControls = {
                     point: new OpenLayers.Control.DrawFeature( drawLayer,
                                 OpenLayers.Handler.Point),
@@ -220,7 +220,7 @@ var drawLayer = stc4.layer;
 		selectControl.events.register("featurehighlighted", this, function(e) {
 			if (confirm('Are you sure you want to delete this feature?')) {
 				e.feature.state = OpenLayers.State.DELETE;
-				drawLayer.removeFeatures([e.feature]);
+//				drawLayer.removeFeatures([e.feature]);
 //				drawLayer.destroyFeatures([e.feature]);
 //				removeControl.deactivate();
 			} else {
