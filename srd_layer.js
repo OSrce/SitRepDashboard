@@ -226,7 +226,6 @@ srd_layer.prototype.turnOnEvents = function () {
 		"featureunselected": function(e) {onFeatureUnselect(e, this); },
 		"loadend": function(e) { loadDataGrid(e, this); }, 
 		"featureadded": function(e) { featureAdded(e,this); },
-		"featureadded": function(e) { featureAdded(e,this); },
 		scope: this 
 	} );
 	if(this.tmpLayer != null) {
