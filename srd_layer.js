@@ -435,6 +435,7 @@ function featureAdded(evt, the_srd_layer) {
 		if(evt.feature.state != OpenLayers.State.INSERT) {
 			evt.feature.state = OpenLayers.State.UPDATE;
 		}
+		alert("featureAdded Called, and srd_status not there");
 		the_srd_layer.layer.redraw();
 	}
 };
