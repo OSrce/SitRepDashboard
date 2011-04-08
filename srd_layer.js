@@ -243,6 +243,9 @@ srd_layer.prototype.turnOnEvents = function () {
 
 // BEGIN GLOBAL FUNC onFeatureSelect
 onFeatureSelect = function(evt, the_srd_layer) {
+	if(theSelectedControl != selectControl) {
+		return 0;
+	}
 	this.selFeature = evt.feature;
 /*	var postNum = selFeature.attributes.Post_Number;
 	var patrolBoro = selFeature.attributes['Patrol_Boro']; 
@@ -282,9 +285,11 @@ onFeatureSelect = function(evt, the_srd_layer) {
 //BEGIN GLOBAL FUNC onFeatureUnselect
 onFeatureUnselect = function(evt, the_srd_layer) {
 	var feature = evt.feature;
-	this.map.removePopup(feature.popup);
-	feature.popup.destroy();
-	feature.popup = null;
+	if( feature.popup ) {
+		this.map.removePopup(feature.popup);
+		feature.popup.destroy();
+		feature.popup = null;
+	}
 };    
 //END GLOBAL FUNC onFeatureUnselect
 
@@ -363,11 +368,16 @@ loadDataGrid = function(evt, the_srd_layer) {
 		the_srd_layer.srd_data[j] = new Array();
 		the_srd_layer.srd_data[j].fid = theFeatArr[j].fid;
 		var i=0;
+		var canEdit = false;
 		for(var propName in theFeatArr[j].attributes ) {
+			canEdit = true;
+			if( propName == "gid" ) {
+				canEdit = false;
+			}
 			theFeatPropNames[i] = propName;
-			if( propName != 'Lat' && propName != 'Lon' && propName != 'Latitude' && propName != 'Longitude') {
+			if( propName.toLowerCase() != 'lat' && propName.toLowerCase() != 'lon' && propName.toLowerCase() != 'latitude' && propName.toLowerCase() != 'longitude') {
 				the_srd_layer.srd_data[j][propName] = theFeatArr[j].attributes[propName];
-				srd_layout[i] = { field: theFeatPropNames[i], name: theFeatPropNames[i], width: 'auto' };
+				srd_layout[i] = { field: theFeatPropNames[i], name: theFeatPropNames[i], width: 'auto', editable: canEdit };
 				i++;
 			}
 		}
@@ -435,7 +445,7 @@ function featureAdded(evt, the_srd_layer) {
 		if(evt.feature.state != OpenLayers.State.INSERT) {
 			evt.feature.state = OpenLayers.State.UPDATE;
 		}
-		alert("featureAdded Called, and srd_status not there");
+//		alert("featureAdded Called, and srd_status not there");
 		the_srd_layer.layer.redraw();
 	}
 };

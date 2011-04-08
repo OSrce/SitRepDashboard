@@ -4,6 +4,7 @@ var editTools;
 var selectControl;
 var drawControls;
 var panel;
+var theSelectedControl;
 
 function init() {
 
@@ -134,8 +135,13 @@ var sr_dynamicLayers = {
 };
 
 var sr_dynamicLayer_layer = new Array();
-for(var layerName in sr_dynamicLayers ) {
-	sr_dynamicLayer_layer.push( sr_dynamicLayers[layerName] );
+/*for(var layerName in sr_dynamicLayers ) {
+	alert('LayerName :'+layerName);
+	sr_dynamicLayer_layer.push( sr_dynamicLayers{layerName} );
+}
+*/
+for(var layerName in sr_dynamicLayers) {
+		sr_dynamicLayer_layer.push( sr_dynamicLayers[layerName].layer );
 }
 
 selectControl = new OpenLayers.Control.SelectFeature( 
@@ -199,10 +205,24 @@ editTools.loadEditTools();
 
 var  removeControl = new OpenLayers.Control.SelectFeature(
 										sr_dynamicLayer_layer, {
-												clickout: false,
+												clickout: true,
 												toggle: false,
+												hover: false,
 												title: "Delete",
-												displayClass: "olControlDelete"
+												displayClass: "olControlDelete",
+												onSelect: function (theFeat) {
+													for(var layerName in sr_dynamicLayers ) {
+														if( sr_dynamicLayers[layerName].layer.getFeatureByFid(theFeat.fid) ) {
+														if (confirm('Are you sure you want to delete this feature from Overlay : '+layerName+'?')) {
+															theFeat.state = OpenLayers.State.DELETE;
+//															sr_dynamicLayers[layerName].layer.removeFeatures([theFeat]);
+//													} else {
+//														this.unselect(e.layer.feature);
+														}
+													}	
+
+													}	
+											}
 										} );
 
 
@@ -214,28 +234,41 @@ var drawLayer = stc1.layer;
                                 OpenLayers.Handler.Path),
                     polygon: new OpenLayers.Control.DrawFeature( drawLayer,
                                 OpenLayers.Handler.Polygon),
-										remove: selectControl
+										remove: removeControl,
+										select: selectControl
 
                 };
-		selectControl.events.register("featurehighlighted", this, function(e) {
+/*
+  removeControl.events.register("onSelect", function(e, ) {
 			if (confirm('Are you sure you want to delete this feature?')) {
-				e.feature.state = OpenLayers.State.DELETE;
+				e.layer.feature.state = OpenLayers.State.DELETE;
 //				drawLayer.removeFeatures([e.feature]);
 //				drawLayer.destroyFeatures([e.feature]);
 //				removeControl.deactivate();
 			} else {
-				selectControl.unselect(e.feature);
+				removeControl.unselect(e.layer.feature);
 			}
 		});
-
+*/
 
                 for(var key in drawControls) {
                     map.addControl(drawControls[key]);
                 }
 
+								theSelectedControl = selectControl;
+                document.getElementById('selectToggle').checked = true;
 
-                document.getElementById('noneToggle').checked = true;
-
+					/// CODE IS A MESS, NEED TO FIX :
+					// use dojo.form.FilteringSelect to select which layer you want to have editing enabled on.
+					
+					var editLayerSelect = new dijit.form.FilteringSelect( {
+						id: "layerEditSelect",
+						name: "layerEditSel",
+						value: "NONE SELECTED",
+						store: srd_layerStore,
+						searchAttr: "name"
+						}, "layerEditSelect"
+					);
 
 
 //stc_chokepoints.afterAdd(showLayerData(stc_chokepoints));
@@ -254,14 +287,15 @@ function activateDrag() {
                     var control = drawControls[key];
                     if(element.value == key && element.checked) {
                         control.activate();
+												theSelectedControl = control;
                     } else {
                         control.deactivate();
                     }
                 }
 								panel.activate();
-								if(element.value == "noneToggle") {
-									selectControl.activate();
-								}
+//								if(element.value == "noneToggle") {
+//									selectControl.activate();
+//								}
             }
 
 
