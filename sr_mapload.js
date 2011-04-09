@@ -22,6 +22,25 @@ map = new OpenLayers.Map("map", {
 	numZoomLevels: 6 
 } );
 
+OpenLayers.Layer.MapQuestOSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
+     name: "MapQuestOSM",
+     //attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+     sphericalMercator: true,
+     url: ' http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
+     clone: function(obj) {
+         if (obj == null) {
+             obj = new OpenLayers.Layer.OSM(
+             this.name, this.url, this.getOptions());
+         }
+         obj = OpenLayers.Layer.XYZ.prototype.clone.apply(this, [obj]);
+         return obj;
+     },
+     CLASS_NAME: "OpenLayers.Layer.MapQuestOSM"
+ });
+ var mapquestosm = new OpenLayers.Layer.MapQuestOSM();
+
+
+
 
 //Add the Google Maps Layer for debug purposes only (don't
 //forget to get rid of script src from html file.)
@@ -57,7 +76,7 @@ var pct_styleMap = new OpenLayers.StyleMap( {"default":  pct_style_def, "select"
 var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
 
 // Attach the base layer + the data_public layer(s)
-map.addLayers( [ srMapLayer,  osmMapLayer]);
+map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm]);
 map.addLayers( [   policePcts ]);
 
 
@@ -103,6 +122,9 @@ stc3.loadData("WFST", "STC Exercise Day 3", "stc3" ,{ isBaseLayer: false, projec
 var stc4 = new srd_layer(map); 
 stc4.loadData("WFST", "STC Exercise Day 4", "stc4" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
+var stc5 = new srd_layer(map); 
+stc5.loadData("WFST", "STC Exercise Day 5", "stc5" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+
 
 var nypd_veh_inter_com = new srd_layer(map); 
 nypd_veh_inter_com.loadData("WFST", "NYPD Commercial Vehicle Interdiction", "nypd_veh_inter_com" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
@@ -130,6 +152,7 @@ var sr_dynamicLayers = {
 	"STC Exercise Day 2": stc2,
 	"STC Exercise Day 3": stc3,
 	"STC Exercise Day 4": stc4,
+	"STC Exercise Day 5": stc5,
 	"NYPD Commercial Vehicle Interdiction": nypd_veh_inter_com,	
 	"NYPD Passenger  Vehicle Interdiction": nypd_veh_inter_pas
 };
@@ -215,7 +238,9 @@ var  removeControl = new OpenLayers.Control.SelectFeature(
 														if( sr_dynamicLayers[layerName].layer.getFeatureByFid(theFeat.fid) ) {
 														if (confirm('Are you sure you want to delete this feature from Overlay : '+layerName+'?')) {
 															theFeat.state = OpenLayers.State.DELETE;
-//															sr_dynamicLayers[layerName].layer.removeFeatures([theFeat]);
+															if( !theFeat.attributes.gid) {
+																sr_dynamicLayers[layerName].layer.removeFeatures([theFeat]);
+															}
 //													} else {
 //														this.unselect(e.layer.feature);
 														}
@@ -226,7 +251,7 @@ var  removeControl = new OpenLayers.Control.SelectFeature(
 										} );
 
 
-var drawLayer = stc1.layer;
+var drawLayer = stc5.layer;
    drawControls = {
                     point: new OpenLayers.Control.DrawFeature( drawLayer,
                                 OpenLayers.Handler.Point),
