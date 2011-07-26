@@ -59,7 +59,7 @@ function srd_layer( map ) {
 
 		
 		this.lookupStatus = {
-				null : {
+				'null' : {
 					fillColor: "#FF0F00",
 					fillOpacity: 0.6,
 					strokeColor: "#FF0000",
@@ -180,7 +180,7 @@ var stc_styleMap = new OpenLayers.StyleMap( {'default':  stc_style_def } );
 				srsName: "EPSG:4326",
 				url: "http://SitRepGIS.local/geoserver/wfs",
 				featureNS :  "http://SitRepGIS.local/",
-				featureType: source,
+				featureType: source
 //				geometryName: "the_geom",
 //				extractAttributes: true,
         })
@@ -281,11 +281,13 @@ onFeatureSelect = function(evt, the_srd_layer) {
 
 
 
+//DEV TESTING -- changed this.map to the_srd_layer.map and 
+// added if not null's for both vars.
 //BEGIN GLOBAL FUNC onFeatureUnselect
 onFeatureUnselect = function(evt, the_srd_layer) {
 	var feature = evt.feature;
-	if( feature.popup ) {
-		this.map.removePopup(feature.popup);
+	if( the_srd_layer != null && feature.popup != null ) {
+		the_srd_layer.map.removePopup(feature.popup);
 		feature.popup.destroy();
 		feature.popup = null;
 	}

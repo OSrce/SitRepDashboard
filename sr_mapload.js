@@ -50,7 +50,8 @@ OpenLayers.Layer.MapQuestOSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
 var osmMapLayer = new OpenLayers.Layer.OSM();
 
 var srMapLayer = new OpenLayers.Layer.OSM("SitRep GIS", 
-	"http://SitRepGIS.local:3001/osm_tiles/${z}/${x}/${y}.png",
+//	"http://SitRepGIS.local:3001/osm_tiles/${z}/${x}/${y}.png",
+	"http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png",
 	{numZoomLevels: 19 }
 );
 
@@ -285,15 +286,18 @@ var drawLayer = stc5.layer;
 
 					/// CODE IS A MESS, NEED TO FIX :
 					// use dojo.form.FilteringSelect to select which layer you want to have editing enabled on.
-					
-					var editLayerSelect = new dijit.form.FilteringSelect( {
-						id: "layerEditSelect",
-						name: "layerEditSel",
-						value: "NONE SELECTED",
-						store: srd_layerStore,
-						searchAttr: "name"
-						}, "layerEditSelect"
-					);
+
+
+//DEV-TESTING  commented out below section since not being used
+//right now.					
+//					var editLayerSelect = new dijit.form.FilteringSelect( {
+//						id: "layerEditSelect",
+//						name: "layerEditSel",
+//						value: "NONE SELECTED",
+//						store: srd_layerStore,
+//						searchAttr: "name"
+//						}, "layerEditSelect"
+//					);
 
 
 //stc_chokepoints.afterAdd(showLayerData(stc_chokepoints));
