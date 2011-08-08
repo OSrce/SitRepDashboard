@@ -81,63 +81,6 @@ map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm]);
 map.addLayers( [   policePcts ]);
 
 
-//Testing purposes only, we're going to move this to its own file soon.
-/*
-stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
-	strategies: [ 
-		new OpenLayers.Strategy.Fixed(),
-		new OpenLayers.Strategy.Save({auto:true}) 
-	],
-	protocol: new OpenLayers.Protocol.HTTP( {
-		url: "data_sensitive/NYPD_STC_CHOKEPOINTS.gml",
-		format: new OpenLayers.Format.GML( {
-			extractAttributes: true
-		} ) 
-	} ),
-	isBaseLayer: false,
-	projection: "EPSG:4326",
-	visibility: true,
-	styleMap: stc_styleMap  
-} );
-*/
-
-/*
-var stc_chokepoints = new srd_layer(map); 
-stc_chokepoints.loadData("WFST", "NYPD STC Chokepoints", "stc_chokepoints" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-var stc_maritime = new srd_layer(map); 
-stc_maritime.loadData("WFST", "NYPD STC Maritime", "stc_maritime" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-var stc_transit = new srd_layer(map); 
-stc_transit.loadData("WFST", "NYPD STC Transit", "stc_transit" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-
-var stc1 = new srd_layer(map); 
-stc1.loadData("WFST", "STC Exercise Day 1", "stc1" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-var stc2 = new srd_layer(map); 
-stc2.loadData("WFST", "STC Exercise Day 2", "stc2" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-var stc3 = new srd_layer(map); 
-stc3.loadData("WFST", "STC Exercise Day 3", "stc3" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-var stc4 = new srd_layer(map); 
-stc4.loadData("WFST", "STC Exercise Day 4", "stc4" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-var stc5 = new srd_layer(map); 
-stc5.loadData("WFST", "STC Exercise Day 5", "stc5" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-
-var nypd_veh_inter_com = new srd_layer(map); 
-nypd_veh_inter_com.loadData("WFST", "NYPD Commercial Vehicle Interdiction", "nypd_veh_inter_com" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-var nypd_veh_inter_pas = new srd_layer(map);
-nypd_veh_inter_pas.loadData("WFST", "NYPD Passenger Vehicle Interdiction", "nypd_veh_inter_pas" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
-
-//stc_chokepoints.events.register( "loadend", stc_chokepoints,showLayerData(stc_chokepoints));
-
-*/
-
 var whiteboard = new srd_layer(map); 
 whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
@@ -299,9 +242,6 @@ var drawLayer = whiteboard.layer;
 //						}, "layerEditSelect"
 //					);
 
-
-//stc_chokepoints.afterAdd(showLayerData(stc_chokepoints));
-//dragControl.activate();
 
 }
 /// END init Function
