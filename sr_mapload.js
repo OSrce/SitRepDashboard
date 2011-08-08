@@ -74,9 +74,9 @@ var pct_styleMap = new OpenLayers.StyleMap( {"default":  pct_style_def, "select"
 
 
 // Add the precinct boundaries as a gml file for now.
-var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
+var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "sr_data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
 
-// Attach the base layer + the data_public layer(s)
+// Attach the base layer + the sr_data_public layer(s)
 map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm]);
 map.addLayers( [   policePcts ]);
 
