@@ -101,6 +101,7 @@ stc_chokepoints = new OpenLayers.Layer.Vector("NYPD STC Chokepoints", {
 } );
 */
 
+/*
 var stc_chokepoints = new srd_layer(map); 
 stc_chokepoints.loadData("WFST", "NYPD STC Chokepoints", "stc_chokepoints" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
@@ -135,6 +136,14 @@ nypd_veh_inter_pas.loadData("WFST", "NYPD Passenger Vehicle Interdiction", "nypd
 
 //stc_chokepoints.events.register( "loadend", stc_chokepoints,showLayerData(stc_chokepoints));
 
+*/
+
+var whiteboard = new srd_layer(map); 
+whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+
+
+
+
 
 // Adding the Control for the Layer select 
 map.addControl(new OpenLayers.Control.LayerSwitcher() );
@@ -146,16 +155,7 @@ map.addControl(new OpenLayers.Control.MousePosition( {
 
 
 var sr_dynamicLayers = { 
-	"NYPD STC Chokepoints": stc_chokepoints,
-	"NYPD STC Maritime Locations": stc_maritime,
-	"NYPD STC Transit Locations": stc_transit,
-	"STC Exercise Day 1": stc1,
-	"STC Exercise Day 2": stc2,
-	"STC Exercise Day 3": stc3,
-	"STC Exercise Day 4": stc4,
-	"STC Exercise Day 5": stc5,
-	"NYPD Commercial Vehicle Interdiction": nypd_veh_inter_com,	
-	"NYPD Passenger  Vehicle Interdiction": nypd_veh_inter_pas
+	"Whiteboard": whiteboard
 };
 
 var sr_dynamicLayer_layer = new Array();
@@ -252,7 +252,7 @@ var  removeControl = new OpenLayers.Control.SelectFeature(
 										} );
 
 
-var drawLayer = stc5.layer;
+var drawLayer = whiteboard.layer;
    drawControls = {
                     point: new OpenLayers.Control.DrawFeature( drawLayer,
                                 OpenLayers.Handler.Point),

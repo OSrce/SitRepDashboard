@@ -44,6 +44,23 @@ ogr2ogr -t_srs "EPSG:4326" -f GML PolicePctBoundaries.gml nypp.shp
 
 
 
+------------------
+2011-08-08
+
+Finally getting around to removing old, exercise specific, code.
+Look at revisions pre-45 for old code.
+
+Renamed dojo-release-1.6.0 -> SR_Dojo, need to optimize both dojo and openlayers
+for deployment to trim down on code size (ie dojo is 24mb YIKES!)
+
+Renamed : 
+data_public -> sr_data_public
+data_sensistive -> sr_data_private
+Removed:
+data_dynamic
+
+
+--------------------
 
 
 
