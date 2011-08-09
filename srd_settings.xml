@@ -1,13 +1,93 @@
 <xml>
-<!-- SitRepDashboard - Global Config Settings
+<!-- SitRepDashboard - Global Config Settings for client only mode 
+		( no php / server side stuff).
 
 -->
+<settings>
+	<single_user>true</single_user>
+	<runFromServer>false</runFromServer>
+
+	<public_data_directory>sr_data_public</public_data_directory>
+	<private_data_directory>sr_data_private</private_data_directory>
+
+
+	<default_projection>EPSG:4326</default_projection>
+	<start_lat>40.713</start_lat>
+	<start_lon>-73.998</start_lon>
+	<start_zoom>13</start_zoom>
+
+
+	<layers>
+
+
+<!-- BASE LAYERS -->
+		<layer>
+			<name>SitRep GIS</name>	
+			<id>1</id>	
+			<layertype>XYZ</layertype>
+			<isBaseLayer>true</isBaseLayer>
+			<visibility>true</visibility>
+			<projection>EPSG:4326</projection>
+			<sphericalMercator>true</sphericalMercator>
+			<url>http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png</url>
+			<numZoomLevels>19</numZoomLevels>
+			<attribution><img src="img/SitRepLogo_Tiny.png" height="25" width="60"></attribution>
+		</layer>
+
+		<layer>
+			<name>OSM - from openstreetmap.org</name>	
+			<id>2</id>	
+			<layertype>XYZ</layertype>
+			<isBaseLayer>true</isBaseLayer>
+			<visibility>false</visibility>
+
+			<projection>EPSG:4326</projection>
+			<sphericalMercator>true</sphericalMercator>
+			<url>http://a.tile.openstreetmap.org/${z}/${x}/${y}.png</url>
+			<numZoomLevels>19</numZoomLevels>
+			<attribution><img src="img/SitRepLogo_Tiny.png" height="25" width="60"> - Using OSM Data</attribution>
+		</layer>
+
+		<layer>
+			<name>MapQuest - from mapquest.org</name>	
+			<id>3</id>	
+			<layertype>XYZ</layertype>
+			<isBaseLayer>true</isBaseLayer>
+			<visibility>false</visibility>
+
+			<projection>EPSG:4326</projection>
+			<sphericalMercator>true</sphericalMercator>
+			<url>http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png</url>
+			<numZoomLevels>19</numZoomLevels>
+			<attribution><img src="img/SitRepLogo_Tiny.png" height="25" width="60"> - Using Mapquest Data</attribution>
+		</layer>
+
+
+<!-- OVERLAY LAYERS -->
+
+		<layer>
+			<name>PolicePctBoundaries</name>	
+			<id>4</id>	
+			<isBaseLayer>false</isBaseLayer>
+			<layertype>Vector</layertype>
+			<format>gml</format>
+			<filename>sr_data_public/PolicePctBoundaries.gml</filename>
+			<layertype>polygon</layertype>
+
+			<projection>EPSG:4326</projection>
+
+			<visibility>false</visibility>
+
+		</layer>
 
 
 
 
+	</layers>
 
 
 
+
+</settings>
 
 </xml>

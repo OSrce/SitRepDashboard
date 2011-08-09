@@ -1,18 +1,65 @@
 
-var map ;
-var editTools;
-var selectControl;
-var drawControls;
-var panel;
-var theSelectedControl;
 
-function init() {
 
-// Start Location :
-var lat = 40.713;
-var lon = -73.998;
-var zoom = 13;
+// srd_init : called by SitRepDashboard when we are ready to 
+// load initial values and the first 'screen' we will see :
+// map, admin, or data.
+function srd_init() {
 
+var theSrdDocument = new srd_document;
+
+// NEED TO GET RID OF THIS, values should be read in from srd_settings.xml
+lat = 40.713;
+lon = -73.998;
+zoom = 13;
+runFromServer = false;
+
+// READ the srd_settings.xml file and load it into a dojo.data object.
+dojo.xhrGet( {
+	url	: "srd_settings.xml",
+	handleAs: "xml",
+	load: theSrdDocument.settings_init
+} );
+
+
+	
+}
+// END INIT FUNCTION
+
+//srd_document CLASS 
+function srd_document() {
+	this.map = null;
+	this.editTools = null;
+	this.selectControl = null;
+	this.drawControls = null;
+	this.panel = null;
+	this.theSelectedControl = null;
+
+// SETTINGS WE SHOULD GET FROM srd_settings.xml
+	this.srd_config = null;
+	this.single_user = null;
+	this.runFromServer = null;
+	this.default_projection = null;
+	this.start_lat = null;
+	this.start_lon = null;
+	this.start_zoom = null;
+	
+	
+
+}
+
+srd_document.prototype.settings_init = function(result) {
+	this.srd_config = result;
+	this.start_lat = this.srd_config.byId('start_lat');
+	alert("TEST" + this.start_lat );
+//		alert("TEST" + this.srd_config.name);
+
+
+	this.map_init();
+}
+
+
+srd_document.prototype.map_init = function() {
 
 map = new OpenLayers.Map("map", { 
 	controls: [
@@ -28,7 +75,7 @@ OpenLayers.Layer.MapQuestOSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
      //attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
      sphericalMercator: true,
      url: ' http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
-     clone: function(obj) {
+/*     clone: function(obj) {
          if (obj == null) {
              obj = new OpenLayers.Layer.OSM(
              this.name, this.url, this.getOptions());
@@ -36,6 +83,7 @@ OpenLayers.Layer.MapQuestOSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
          obj = OpenLayers.Layer.XYZ.prototype.clone.apply(this, [obj]);
          return obj;
      },
+*/
      CLASS_NAME: "OpenLayers.Layer.MapQuestOSM"
  });
  var mapquestosm = new OpenLayers.Layer.MapQuestOSM();
@@ -48,7 +96,16 @@ OpenLayers.Layer.MapQuestOSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
 //var gMapLayer = new OpenLayers.Layer.Google( "Google Maps", {numZoomLevels: 20} );
 
 //Add OpenStreetMap Layer for debug purposes as well 
-var osmMapLayer = new OpenLayers.Layer.OSM();
+//var osmMapLayer = new OpenLayers.Layer.OSM();
+var osmMapLayer = new OpenLayers.Layer.XYZ(
+		"OSM",
+		"http://a.tile.openstreetmap.org/${z}/${x}/${y}.png",
+		{
+			attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+			sphericalMercator: true
+ 	}
+
+);
 
 var srMapLayer = new OpenLayers.Layer.OSM("SitRep GIS", 
 //	"http://SitRepGIS.local:3001/osm_tiles/${z}/${x}/${y}.png",
@@ -76,16 +133,40 @@ var pct_style_sel =  new OpenLayers.Style( {
 var pct_styleMap = new OpenLayers.StyleMap( {"default":  pct_style_def, "select": pct_style_sel } );
 
 
+// GET THE FULL DIR if we are running locally.
+//var path = document.location.pathname;
+//var dir = path.substring(path.indexOf('/', 1), path.lastIndexOf('/'));
+//alert("DIR="+dir);
+
 // Add the precinct boundaries as a gml file for now.
-var policePcts = new OpenLayers.Layer.GML("Precinct Boundaries", "sr_data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
+var policePcts;
+
+
+if(runFromServer == false) {
+	policePcts  = new OpenLayers.Layer.GML("Precinct Boundaries", "sr_data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
+} else {
+	policePcts = new OpenLayers.Layer.Vector("Precinct Boundaries", {
+		isBaseLayer: false,
+		projection: "EPSG:4326",
+		visibility: true,
+		styleMap: pct_styleMap,
+		strategies: [new OpenLayers.Strategy.Fixed()],
+		projection: new OpenLayers.Projection("EPSG:4326"),
+		protocol: new OpenLayers.Protocol.HTTP ( {
+//		 	url: "file://"+dir+"/sr_data_public/PolicePctBoundaries.gml" ,
+		 	url: "/Users/jreifer/Desktop/VBOX_SHARED/SitRepDashboard/sr_data_public/PolicePctBoundaries.gml" ,
+			format: new OpenLayers.Format.GML()
+		} ) 
+	});
+}
 
 // Attach the base layer + the sr_data_public layer(s)
-map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm]);
+map.addLayers( [ mapquestosm, srMapLayer,  osmMapLayer]);
 map.addLayers( [   policePcts ]);
 
 
 var whiteboard = new srd_layer(map); 
-whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: true} );
+whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
 
 
@@ -247,7 +328,7 @@ var drawLayer = whiteboard.layer;
 
 
 }
-/// END init Function
+/// END map_init Function
 
 // activate 
 function activateDrag() {
