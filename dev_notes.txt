@@ -21,18 +21,8 @@ svn co svn+ssh://ny2.osrce.com/var/svn/osrce/SitRepDashboard/trunk SitRepDashboa
 
 
 ### Loading shape files into tinyows database - "sr_data" :
-shp2pgsql -s 4326 -I NYPD_PasVehInterdiction.shp  nypd_veh_inter_pas >_NYPD_PasVehInterdiction.sql
-psql -d sr_data <_NYPD_PasVehInterdiction.sql
-
-
-
-
-
-
-
-
-
-
+shp2pgsql -s 4326 -I someShpFile.shp  nameOfSQLTableToMake >TheSQLFileToImport.sql
+psql -d sr_data <TheSQLFileToImport.sql
 
 
 

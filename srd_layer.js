@@ -120,36 +120,6 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 		this.layer = new OpenLayers.Layer.GML(name, source, settings);
 		this.map.addLayer( this.layer );
 		this.layer.loadGML();	
-	} else if(type == "GML-WFST" ) {
-		this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
-    this.saveStrategy.events.register("success", '', showSuccessMsg);
-    this.saveStrategy.events.register("fail", '', showFailureMsg);	
-
-
-		this.tmpLayer = new OpenLayers.Layer.GML(name, source, settings);
-		this.map.addLayer(this.tmpLayer);
-		this.tmpLayer.loadGML();
-		this.layer = new OpenLayers.Layer.Vector("STC Chokepoints - Load", {
-			isBaseLayer: false,
-			visibility: false,
-			strategies: [ this.saveStrategy],
-			projection: new OpenLayers.Projection("EPSG:4326"),
-			protocol: new OpenLayers.Protocol.WFS({
-				version: "1.1.0",
-				srsName: "EPSG:4326",
-				url: "https://SitRepGIS.local/cgi-bin/tinyows",
-				featureType: "stcChokepoints",
-				geometryName: "the_geom",
-//				schema: "https://SitRepGIS.local/cgi-bin/tinyows?version=1.1.0&typename=public:stcChokepoints"
-				schema: "https://SitRepGIS.local/cgi-bin/tinyows?DescribeFeatureType?version=1.1.0&typename=og:restricted"
-        })
-    }); 
-		
-//			this.layer.addFeatures( tmpLayer.features );			
-	
-			this.map.addLayer(this.layer);	
-//			saveStrategy.save();
-	
 	} else if(type == "WFST" ) {
 
 		this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
@@ -160,7 +130,7 @@ srd_layer.prototype.loadData = function(type, name, source, settings ) {
 
 		this.layer = new OpenLayers.Layer.Vector(name, {
 			isBaseLayer: false,
-			visibility: false,
+			visibility: this.settings.visibility,
 			styleMap: this.srd_styleMap,
 			strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy],
 			projection: new OpenLayers.Projection("EPSG:4326"),

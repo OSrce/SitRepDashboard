@@ -17,7 +17,8 @@ var zoom = 13;
 map = new OpenLayers.Map("map", { 
 	controls: [
 		new OpenLayers.Control.Navigation(),
-		new OpenLayers.Control.PanZoomBar()
+		new OpenLayers.Control.PanZoomBar(),
+		new OpenLayers.Control.Attribution()
 	],
 	numZoomLevels: 6 
 } );
@@ -52,7 +53,9 @@ var osmMapLayer = new OpenLayers.Layer.OSM();
 var srMapLayer = new OpenLayers.Layer.OSM("SitRep GIS", 
 //	"http://SitRepGIS.local:3001/osm_tiles/${z}/${x}/${y}.png",
 	"http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png",
-	{numZoomLevels: 19 }
+	{numZoomLevels: 19,
+	 attribution: '<img src="img/SitRepLogo_Tiny.png" height="25" width="60">'
+	 }
 );
 
 //Add style for precincts :
@@ -82,7 +85,7 @@ map.addLayers( [   policePcts ]);
 
 
 var whiteboard = new srd_layer(map); 
-whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: true} );
 
 
 
