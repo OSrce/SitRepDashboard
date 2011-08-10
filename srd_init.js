@@ -2,6 +2,8 @@
 
 var theSrdDocument = new srd_document;
 
+theSrdDocument.start_zoom= 1000;
+
 // srd_init : called by SitRepDashboard when we are ready to 
 // load initial values and the first 'screen' we will see :
 // map, admin, or data.
@@ -18,7 +20,12 @@ runFromServer = false;
 dojo.xhrGet( {
 	url	: "srd_settings.xml",
 	handleAs: "xml",
-	load: theSrdDocument.settings_init
+	load: function(result) {
+		theSrdDocument.settings_init(result);
+	},
+	error: function(errorMessage) {
+		theSrdDocument.errorOnLoad(errorMessage);
+	}
 } );
 
 
@@ -43,16 +50,24 @@ function srd_document() {
 	this.start_lat = null;
 	this.start_lon = null;
 	this.start_zoom = null;
-	
-	
+		
 
 }
 
+
+srd_document.prototype.errorOnLoad = function(errorMessage) {
+	alert("Error Loading srd_setttings.xml : "+errorMessage);
+	
+}
+
 srd_document.prototype.settings_init = function(result) {
-	theSrdDocument.srd_config = result;
-//	this.start_lat = this.srd_config.get('start_lat');
-	alert("TEST" + theSrdDocument.srd_config );
-//		alert("TEST" + this.srd_config.name);
+	this.srd_config = result;
+	this.start_lat = this.srd_config.getElementsByTagName('start_lat')[0].childNodes[0].nodeValue;
+	this.start_lon = this.srd_config.getElementsByTagName('start_lon')[0].childNodes[0].nodeValue;
+	alert("TEST" + this.start_lat);
+
+
+
 
 
 	theSrdDocument.map_init();
@@ -161,7 +176,7 @@ if(runFromServer == false) {
 }
 
 // Attach the base layer + the sr_data_public layer(s)
-map.addLayers( [ mapquestosm, srMapLayer,  osmMapLayer]);
+map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm ]);
 map.addLayers( [   policePcts ]);
 
 
