@@ -1,4 +1,4 @@
-<xml>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- SitRepDashboard - Global Config Settings for client only mode 
 		( no php / server side stuff).
 
@@ -31,7 +31,6 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
-			<attribution><img src="img/SitRepLogo_Tiny.png" height="25" width="60"></attribution>
 		</layer>
 
 		<layer>
@@ -45,7 +44,6 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://a.tile.openstreetmap.org/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
-			<attribution><img src="img/SitRepLogo_Tiny.png" height="25" width="60"> - Using OSM Data</attribution>
 		</layer>
 
 		<layer>
@@ -59,7 +57,8 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
-			<attribution><img src="img/SitRepLogo_Tiny.png" height="25" width="60"> - Using Mapquest Data</attribution>
+		<!-- 	<attribution><img src="img/SitRepLogo_Tiny.png" height="25" width="60"> - Using Mapquest Data</attribution>
+	-->
 		</layer>
 
 
@@ -90,4 +89,3 @@
 
 </settings>
 
-</xml>

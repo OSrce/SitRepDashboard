@@ -1,12 +1,12 @@
 
 
+var theSrdDocument = new srd_document;
 
 // srd_init : called by SitRepDashboard when we are ready to 
 // load initial values and the first 'screen' we will see :
 // map, admin, or data.
 function srd_init() {
 
-var theSrdDocument = new srd_document;
 
 // NEED TO GET RID OF THIS, values should be read in from srd_settings.xml
 lat = 40.713;
@@ -49,13 +49,13 @@ function srd_document() {
 }
 
 srd_document.prototype.settings_init = function(result) {
-	this.srd_config = result;
-	this.start_lat = this.srd_config.byId('start_lat');
-	alert("TEST" + this.start_lat );
+	theSrdDocument.srd_config = result;
+//	this.start_lat = this.srd_config.get('start_lat');
+	alert("TEST" + theSrdDocument.srd_config );
 //		alert("TEST" + this.srd_config.name);
 
 
-	this.map_init();
+	theSrdDocument.map_init();
 }
 
 
