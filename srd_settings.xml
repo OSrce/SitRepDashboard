@@ -21,9 +21,8 @@
 
 
 <!-- BASE LAYERS -->
-		<layer>
+		<layer id="1">
 			<name>SitRep GIS</name>	
-			<id>1</id>	
 			<layertype>XYZ</layertype>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>true</visibility>
@@ -31,11 +30,11 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
+			<attribution>&lt;img src="img/SitRepLogo_Tiny.png" height="25" width="60"&gt;</attribution>
 		</layer>
 
-		<layer>
+		<layer id="2">
 			<name>OSM - from openstreetmap.org</name>	
-			<id>2</id>	
 			<layertype>XYZ</layertype>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>false</visibility>
@@ -44,11 +43,11 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://a.tile.openstreetmap.org/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
+			<attribution>&lt;img src="img/SitRepLogo_Tiny.png" height="25" width="60"&gt; - Using OSM Data</attribution>
 		</layer>
 
-		<layer>
+		<layer id="3">
 			<name>MapQuest - from mapquest.org</name>	
-			<id>3</id>	
 			<layertype>XYZ</layertype>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>false</visibility>
@@ -57,20 +56,18 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
-		<!-- 	<attribution><img src="img/SitRepLogo_Tiny.png" height="25" width="60"> - Using Mapquest Data</attribution>
-	-->
+			<attribution>&lt;img src="img/SitRepLogo_Tiny.png" height="25" width="60"&gt; - Using Mapquest Data</attribution>
 		</layer>
 
 
 <!-- OVERLAY LAYERS -->
 
-		<layer>
+		<layer id="4">
 			<name>PolicePctBoundaries</name>	
-			<id>4</id>	
 			<isBaseLayer>false</isBaseLayer>
 			<layertype>Vector</layertype>
 			<format>gml</format>
-			<filename>sr_data_public/PolicePctBoundaries.gml</filename>
+			<url>sr_data_public/PolicePctBoundaries.gml</url>
 			<layertype>polygon</layertype>
 
 			<projection>EPSG:4326</projection>
@@ -86,6 +83,6 @@
 
 
 
-
 </settings>
+
 

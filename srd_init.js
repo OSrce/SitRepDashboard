@@ -2,7 +2,6 @@
 
 var theSrdDocument = new srd_document;
 
-theSrdDocument.start_zoom= 1000;
 
 // srd_init : called by SitRepDashboard when we are ready to 
 // load initial values and the first 'screen' we will see :
@@ -11,12 +10,10 @@ function srd_init() {
 
 
 // NEED TO GET RID OF THIS, values should be read in from srd_settings.xml
-lat = 40.713;
-lon = -73.998;
-zoom = 13;
 runFromServer = false;
 
 // READ the srd_settings.xml file and load it into a dojo.data object.
+/*
 dojo.xhrGet( {
 	url	: "srd_settings.xml",
 	handleAs: "xml",
@@ -27,6 +24,36 @@ dojo.xhrGet( {
 		theSrdDocument.errorOnLoad(errorMessage);
 	}
 } );
+*/
+	theSrdDocument.srd_settingsStore = new dojox.data.XmlStore({ 
+		url: 'srd_settings.xml',
+		label: 'srd_settings' 
+	}); 
+	
+
+	//Fetch all global settings (except layer stuff).
+	theSrdDocument.srd_settingsStore.fetch({
+		onComplete: function(items,request) { 
+			theSrdDocument.settings_init(items,request);
+
+		},
+		onError: function(errScope) {
+			theSrdDocument.errorOnLoad(errScope);
+		}
+	});
+
+	//Fetch all settings for all layers
+
+	theSrdDocument.srd_settingsStore.fetch({
+		query: { tagName:"layer" },
+		onComplete: function(items, request) {
+			theSrdDocument.load_layer_settings(items,request);
+		},
+		onError: function(errScope) {
+			theSrdDocument.errorOnLoad(errScope);
+		}
+	});
+
 
 
 	
@@ -41,8 +68,11 @@ function srd_document() {
 	this.drawControls = null;
 	this.panel = null;
 	this.theSelectedControl = null;
+	
+	this.srd_layerArr = null;
 
 // SETTINGS WE SHOULD GET FROM srd_settings.xml
+	this.srd_settingsStore = null;
 	this.srd_config = null;
 	this.single_user = null;
 	this.runFromServer = null;
@@ -55,35 +85,90 @@ function srd_document() {
 }
 
 
+srd_document.prototype.load_layer_settings = function(items, request) {
+	for(i=0;i<items.length;i++) {
+		var itemName = this.srd_settingsStore.getValue( items[i], "tagName" ); 
+		var itemValue = this.srd_settingsStore.getValue( items[i], "text()" ); 
+		alert( "LayerTest="+itemName+"=");
+	}
+
+	
+}
+
 srd_document.prototype.errorOnLoad = function(errorMessage) {
 	alert("Error Loading srd_setttings.xml : "+errorMessage);
 	
 }
 
-srd_document.prototype.settings_init = function(result) {
-	this.srd_config = result;
-	this.start_lat = this.srd_config.getElementsByTagName('start_lat')[0].childNodes[0].nodeValue;
-	this.start_lon = this.srd_config.getElementsByTagName('start_lon')[0].childNodes[0].nodeValue;
-	alert("TEST" + this.start_lat);
+srd_document.prototype.settings_init = function(items,request) {
+	this.srd_items = items;
+	for(i=0;i<this.srd_items.length;i++) {
+//		var itemName = this.srd_settingsStore.getIdentity( this.srd_items[i] ); 
+//		var itemValue = this.srd_settingsStore.getAttributes( this.srd_items[i] ); 
+		var itemName = this.srd_settingsStore.getValue( this.srd_items[i], "tagName" ); 
+		var itemValue = this.srd_settingsStore.getValue( this.srd_items[i], "text()" ); 
+		if( itemName == "layers") {
+			console.log("Layers from="+itemName+"==="+itemValue);
+			var item = this.srd_items[i];
+//			var theLayerItems = this.srd_settingsStore.getValues(itemValue,"tagName");
+//			console.log("theLayerItems.length=",theLayerItems.length);
+
+			var theItemAtts = this.srd_settingsStore.getAttributes(item);
+			for(var j = 0; j < theItemAtts.length; j++){
+
+			var values = this.srd_settingsStore.getValues(item, theItemAtts[j]);
+      for(var k = 0; k < values.length; k++){
+        var value = values[k];
+	
+				if(this.srd_settingsStore.isItem(value)){
+					console.log("Located a child item with name: [" + this.srd_settingsStore.getValue(value,"tagName") + "]");
+					
+
+				}else{
+					console.log("Attribute: [" + theItemAtts[j] + "] has value: [" + value + "]");
+				}
+
+//				var childName = this.srd_settingsStore.getAttribute( tmpChild, "id" ); 
+//				console.log("LayerTest="+j+":::LayerName"+childName);
+			}	
+			}
 
 
+//			alert("Layer="+i+", itemName="+itemName+", itemValue="+itemValue+"===");
+				
+		} else {
+//			alert("Layer="+i+", itemName="+itemName+", itemValue="+itemValue+"===");
+			//THIS NIFTY LINE STORES THE VALUES FROM THE XML TO THE srd_document variables.
+			this[itemName] = itemValue;
+
+		}
+	}
+
+//	this.start_lat = this.srd_settingsStore.getValue(this.srd_items,'start_lat');
+//	this.start_lat = this.srd_config.getElementsByTagName('start_lat')[0].childNodes[0].nodeValue;
+//	this.start_lon = this.srd_config.getElementsByTagName('start_lon')[0].childNodes[0].nodeValue;
 
 
-
+	//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
 	theSrdDocument.map_init();
 }
 
 
 srd_document.prototype.map_init = function() {
 
-map = new OpenLayers.Map("map", { 
-	controls: [
-		new OpenLayers.Control.Navigation(),
-		new OpenLayers.Control.PanZoomBar(),
-		new OpenLayers.Control.Attribution()
-	],
-	numZoomLevels: 6 
-} );
+	if(this.map == null) {
+		this.map = new OpenLayers.Map("map", { 
+			controls: [
+				new OpenLayers.Control.Navigation(),
+				new OpenLayers.Control.PanZoomBar(),
+				new OpenLayers.Control.Attribution()
+			],
+			numZoomLevels: 6 
+		} );
+	}
+////////////////////////
+///// LAYER CREATION ////
+
 
 OpenLayers.Layer.MapQuestOSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
      name: "MapQuestOSM",
@@ -175,22 +260,25 @@ if(runFromServer == false) {
 	});
 }
 
-// Attach the base layer + the sr_data_public layer(s)
-map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm ]);
-map.addLayers( [   policePcts ]);
+	// Attach the base layer + the sr_data_public layer(s)
+	this.map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm ]);
+	this.map.addLayers( [   policePcts ]);
 
 
-var whiteboard = new srd_layer(map); 
-whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+//Dynamic layer creation lets change this to make the
+// settings in srd_layer, 
+//var whiteboard = new srd_layer(this.map); 
+//whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
 
+// whiteboard.attachLayerToMap(this.map);
 
 
 
 
 // Adding the Control for the Layer select 
-map.addControl(new OpenLayers.Control.LayerSwitcher() );
+this.map.addControl(new OpenLayers.Control.LayerSwitcher() );
 //Adding control for tracking mouse movement 
-map.addControl(new OpenLayers.Control.MousePosition( {  
+this.map.addControl(new OpenLayers.Control.MousePosition( {  
 	displayProjection: new OpenLayers.Projection("EPSG:4326")
 } ) );
 
@@ -219,7 +307,7 @@ selectControl = new OpenLayers.Control.SelectFeature(
 		multipleKey: "shiftKey" // shift key adds to selection
 	}
 );
-map.addControl(selectControl);
+this.map.addControl(selectControl);
 //selectControl.activate();
 
 for(var layerName in sr_dynamicLayers ) {
@@ -253,20 +341,19 @@ var save = new OpenLayers.Control.Button({
         displayClass: "olControlSaveFeatures"
     });
     panel.addControls([save  ]);
-    map.addControl(panel);
+    this.map.addControl(panel);
 
 
-
-map.setOptions( 
+this.map.setOptions( 
 	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
 	displayProjection : new OpenLayers.Projection("EPSG:4326") }
 );
-var lonlat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection, map.projection);
-map.setCenter( lonlat, zoom ); 
+var lonlat = new OpenLayers.LonLat(this.start_lon, this.start_lat).transform(this.map.displayProjection, this.map.projection);
+this.map.setCenter( lonlat, this.start_zoom ); 
 
 
 
-editTools = new srd_edit(map, sr_dynamicLayers);
+editTools = new srd_edit(this.map, sr_dynamicLayers);
 editTools.loadEditTools();
 
 var  removeControl = new OpenLayers.Control.SelectFeature(
@@ -320,7 +407,7 @@ var drawLayer = whiteboard.layer;
 */
 
                 for(var key in drawControls) {
-                    map.addControl(drawControls[key]);
+                    this.map.addControl(drawControls[key]);
                 }
 
 								theSelectedControl = selectControl;

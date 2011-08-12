@@ -10,12 +10,29 @@
 //OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
 
 //srd_layer constructor 
-function srd_layer( map ) {
-		this.map = 	map;
-		this.layer = null;
+function srd_layer( ) {
+		this.map = 	null;  //OpenLayers Map Class.
+		this.layer = null; //OpenLayers Layer Class.
+		
+
 		this.settings = { isBaseLayer: false, projection: "EPSG:4326", visibility: false };
 		this.source = null;
-		this.name = "Unnamed Layer";
+
+
+// All of the values from the settings.xml file:
+		this.name = null;
+		this.id = null;
+		this.layertype = null;
+		this.format = null;
+		this.isBaseLayer = null;
+		this.projection = null;
+		this.visibility = null;
+		this.sphericalMercator = null;
+		this.url = null;
+		this.numZoomLevels = null;
+// End section in settings.xml (for now).	
+
+
 		this.selectControl = null;
 		this.selectedFeatures = null;
 		this.modifyControl = null;
