@@ -1,5 +1,4 @@
 
-
 var theSrdDocument = new srd_document;
 
 
@@ -7,10 +6,6 @@ var theSrdDocument = new srd_document;
 // load initial values and the first 'screen' we will see :
 // map, admin, or data.
 function srd_init() {
-
-
-// NEED TO GET RID OF THIS, values should be read in from srd_settings.xml
-runFromServer = false;
 
 // READ the srd_settings.xml file and load it into a dojo.data object.
 /*
@@ -42,20 +37,6 @@ dojo.xhrGet( {
 		}
 	});
 
-	//Fetch all settings for all layers
-
-	theSrdDocument.srd_settingsStore.fetch({
-		query: { tagName:"layer" },
-		onComplete: function(items, request) {
-			theSrdDocument.load_layer_settings(items,request);
-		},
-		onError: function(errScope) {
-			theSrdDocument.errorOnLoad(errScope);
-		}
-	});
-
-
-
 	
 }
 // END INIT FUNCTION
@@ -69,7 +50,7 @@ function srd_document() {
 	this.panel = null;
 	this.theSelectedControl = null;
 	
-	this.srd_layerArr = null;
+	this.srd_layerArr = [];
 
 // SETTINGS WE SHOULD GET FROM srd_settings.xml
 	this.srd_settingsStore = null;
@@ -82,17 +63,6 @@ function srd_document() {
 	this.start_zoom = null;
 		
 
-}
-
-
-srd_document.prototype.load_layer_settings = function(items, request) {
-	for(i=0;i<items.length;i++) {
-		var itemName = this.srd_settingsStore.getValue( items[i], "tagName" ); 
-		var itemValue = this.srd_settingsStore.getValue( items[i], "text()" ); 
-		alert( "LayerTest="+itemName+"=");
-	}
-
-	
 }
 
 srd_document.prototype.errorOnLoad = function(errorMessage) {
@@ -112,30 +82,34 @@ srd_document.prototype.settings_init = function(items,request) {
 			var item = this.srd_items[i];
 //			var theLayerItems = this.srd_settingsStore.getValues(itemValue,"tagName");
 //			console.log("theLayerItems.length=",theLayerItems.length);
+//			var theItemAtts = this.srd_settingsStore.getAttributes(item);
+//			for(var j = 0; j < theItemAtts.length; j++){
+//				var values = this.srd_settingsStore.getValues(item, theItemAtts[j]);
 
-			var theItemAtts = this.srd_settingsStore.getAttributes(item);
-			for(var j = 0; j < theItemAtts.length; j++){
-
-			var values = this.srd_settingsStore.getValues(item, theItemAtts[j]);
-      for(var k = 0; k < values.length; k++){
-        var value = values[k];
-	
-				if(this.srd_settingsStore.isItem(value)){
-					console.log("Located a child item with name: [" + this.srd_settingsStore.getValue(value,"tagName") + "]");
-					
-
-				}else{
-					console.log("Attribute: [" + theItemAtts[j] + "] has value: [" + value + "]");
+			// THE LINE BELOW GETS AN ARRAY OF ALL LAYERS FROM XML.
+			var theLayerItemArr = this.srd_settingsStore.getValues(item, "layer");
+			for(var j = 0; j < theLayerItemArr.length; j++){
+				var theLayerItem = theLayerItemArr[j];
+				if(this.srd_settingsStore.isItem(theLayerItem)){
+					console.log("Located a child item with name: [" + this.srd_settingsStore.getValue(theLayerItem,"tagName") + "]");
+					var tmpLayerAtts = this.srd_settingsStore.getAttributes(theLayerItem);
+					var tmpSrdLayer = new srd_layer();
+//			 	CODE TO iterate through the layer variables and assign the values.
+					for(var l=0;l < tmpLayerAtts.length;l++) {
+						if( tmpLayerAtts[l] in tmpSrdLayer) {
+							console.log(":::: Atts="+tmpLayerAtts[l]+":::"+this.srd_settingsStore.getValues(theLayerItem,tmpLayerAtts[l])+":::");
+//							if(tmpLayerAtts[l] == "url") {
+//								tmpSrdLayer[tmpLayerAtts[l]] = new String( this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[l]) );
+//							} else {
+								var tmpVal = this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[l]);
+								tmpSrdLayer[tmpLayerAtts[l]] = this.srd_settingsStore.getValue(tmpVal,"text()");
+								console.log("TEST5="+tmpSrdLayer[tmpLayerAtts[l]]+"===");
+//							}
+						}
+					}
+					this.srd_layerArr[tmpSrdLayer.id] = tmpSrdLayer;
 				}
-
-//				var childName = this.srd_settingsStore.getAttribute( tmpChild, "id" ); 
-//				console.log("LayerTest="+j+":::LayerName"+childName);
 			}	
-			}
-
-
-//			alert("Layer="+i+", itemName="+itemName+", itemValue="+itemValue+"===");
-				
 		} else {
 //			alert("Layer="+i+", itemName="+itemName+", itemValue="+itemValue+"===");
 			//THIS NIFTY LINE STORES THE VALUES FROM THE XML TO THE srd_document variables.
@@ -169,25 +143,25 @@ srd_document.prototype.map_init = function() {
 ////////////////////////
 ///// LAYER CREATION ////
 
-
+/*
 OpenLayers.Layer.MapQuestOSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
      name: "MapQuestOSM",
      //attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
      sphericalMercator: true,
      url: ' http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
-/*     clone: function(obj) {
-         if (obj == null) {
-             obj = new OpenLayers.Layer.OSM(
-             this.name, this.url, this.getOptions());
-         }
-         obj = OpenLayers.Layer.XYZ.prototype.clone.apply(this, [obj]);
-         return obj;
-     },
-*/
+//     clone: function(obj) {
+//         if (obj == null) {
+//             obj = new OpenLayers.Layer.OSM(
+//             this.name, this.url, this.getOptions());
+ //        }
+//         obj = OpenLayers.Layer.XYZ.prototype.clone.apply(this, [obj]);
+//         return obj;
+//     },
+
      CLASS_NAME: "OpenLayers.Layer.MapQuestOSM"
  });
  var mapquestosm = new OpenLayers.Layer.MapQuestOSM();
-
+*/
 
 
 
@@ -207,6 +181,9 @@ var osmMapLayer = new OpenLayers.Layer.XYZ(
 
 );
 
+/*
+
+
 var srMapLayer = new OpenLayers.Layer.OSM("SitRep GIS", 
 //	"http://SitRepGIS.local:3001/osm_tiles/${z}/${x}/${y}.png",
 	"http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png",
@@ -214,6 +191,8 @@ var srMapLayer = new OpenLayers.Layer.OSM("SitRep GIS",
 	 attribution: '<img src="img/SitRepLogo_Tiny.png" height="25" width="60">'
 	 }
 );
+
+*/
 
 //Add style for precincts :
 var pct_style_def =  new OpenLayers.Style( { 
@@ -242,6 +221,7 @@ var pct_styleMap = new OpenLayers.StyleMap( {"default":  pct_style_def, "select"
 var policePcts;
 
 
+/*
 if(runFromServer == false) {
 	policePcts  = new OpenLayers.Layer.GML("Precinct Boundaries", "sr_data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
 } else {
@@ -259,18 +239,60 @@ if(runFromServer == false) {
 		} ) 
 	});
 }
+*/
 
 	// Attach the base layer + the sr_data_public layer(s)
-	this.map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm ]);
-	this.map.addLayers( [   policePcts ]);
+//	this.map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm ]);
+//	this.map.addLayers( [   policePcts ]);
 
 
-//Dynamic layer creation lets change this to make the
-// settings in srd_layer, 
-//var whiteboard = new srd_layer(this.map); 
-//whiteboard.loadData("WFST", "Whiteboard", "whiteboard" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false} );
+// Iterate through each srd_layer and call loadData and addLayerToMap)
 
-// whiteboard.attachLayerToMap(this.map);
+for( i in this.srd_layerArr ) {
+	console.log("Loading Layer:"+i+":::");
+	this.srd_layerArr[i].loadData();
+	this.srd_layerArr[i].addLayerToMap(this.map);
+}
+
+
+//	this.srd_layerArr[2].url = 'http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png';
+//	console.log("layer2_url==="+this.srd_layerArr[2].url+"===" );
+//	this.map.addLayer( osmMapLayer);
+/*
+	this.srd_layerArr[1].loadData();
+	this.srd_layerArr[1].addLayerToMap(this.map);
+	this.srd_layerArr[2].loadData();
+	this.srd_layerArr[2].addLayerToMap(this.map);
+	this.srd_layerArr[3].loadData();
+	this.srd_layerArr[3].addLayerToMap(this.map);
+	this.srd_layerArr[4].loadData();
+	this.srd_layerArr[4].addLayerToMap(this.map);
+	*/
+
+
+
+
+this.map.setOptions( 
+	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
+	displayProjection : new OpenLayers.Projection("EPSG:4326") }
+);
+var lonlat = new OpenLayers.LonLat(this.start_lon, this.start_lat).transform(this.map.displayProjection, this.map.projection);
+this.map.setCenter( lonlat, this.start_zoom ); 
+
+
+
+		//Dynamic layer creation lets change this to make the
+		// settings in srd_layer, 
+		var whiteboard = new srd_layer();
+		whiteboard.name = "Whiteboard";
+		whiteboard.id = 5;
+		whiteboard.layertype="Vector";
+		whiteboard.format="WFST";
+		whiteboard.isBaseLayer = false;
+		whiteboard.projection = "EPSG:4326";
+		whiteboard.visibility = false;
+//		whiteboard.loadData();
+//		whiteboard.addLayerToMap(this.map);
 
 
 
@@ -278,22 +300,23 @@ if(runFromServer == false) {
 // Adding the Control for the Layer select 
 this.map.addControl(new OpenLayers.Control.LayerSwitcher() );
 //Adding control for tracking mouse movement 
+/*
 this.map.addControl(new OpenLayers.Control.MousePosition( {  
 	displayProjection: new OpenLayers.Projection("EPSG:4326")
 } ) );
-
-
+*/
+/*
 
 var sr_dynamicLayers = { 
 	"Whiteboard": whiteboard
 };
 
 var sr_dynamicLayer_layer = new Array();
-/*for(var layerName in sr_dynamicLayers ) {
-	alert('LayerName :'+layerName);
-	sr_dynamicLayer_layer.push( sr_dynamicLayers{layerName} );
-}
-*/
+//for(var layerName in sr_dynamicLayers ) {
+//	alert('LayerName :'+layerName);
+//	sr_dynamicLayer_layer.push( sr_dynamicLayers{layerName} );
+//}
+
 for(var layerName in sr_dynamicLayers) {
 		sr_dynamicLayer_layer.push( sr_dynamicLayers[layerName].layer );
 }
@@ -323,7 +346,7 @@ for(var layerName in sr_dynamicLayers ) {
 panel = new OpenLayers.Control.Panel( {
         'displayClass': 'customEditingToolbar',
 				div: document.getElementById('editToolsPanel') 
-}
+			}
     );
 
 
@@ -342,17 +365,10 @@ var save = new OpenLayers.Control.Button({
     });
     panel.addControls([save  ]);
     this.map.addControl(panel);
+*/
 
 
-this.map.setOptions( 
-	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
-	displayProjection : new OpenLayers.Projection("EPSG:4326") }
-);
-var lonlat = new OpenLayers.LonLat(this.start_lon, this.start_lat).transform(this.map.displayProjection, this.map.projection);
-this.map.setCenter( lonlat, this.start_zoom ); 
-
-
-
+/*
 editTools = new srd_edit(this.map, sr_dynamicLayers);
 editTools.loadEditTools();
 
@@ -393,6 +409,7 @@ var drawLayer = whiteboard.layer;
 										select: selectControl
 
                 };
+*/
 /*
   removeControl.events.register("onSelect", function(e, ) {
 			if (confirm('Are you sure you want to delete this feature?')) {
@@ -406,12 +423,15 @@ var drawLayer = whiteboard.layer;
 		});
 */
 
+/*
                 for(var key in drawControls) {
                     this.map.addControl(drawControls[key]);
                 }
 
 								theSelectedControl = selectControl;
                 document.getElementById('selectToggle').checked = true;
+
+*/
 
 					/// CODE IS A MESS, NEED TO FIX :
 					// use dojo.form.FilteringSelect to select which layer you want to have editing enabled on.
@@ -432,6 +452,7 @@ var drawLayer = whiteboard.layer;
 }
 /// END map_init Function
 
+/*
 // activate 
 function activateDrag() {
 	dragControl.activate();
@@ -455,7 +476,7 @@ function activateDrag() {
 
 
 
-
+*/
 
 
 

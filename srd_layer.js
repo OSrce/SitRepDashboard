@@ -15,7 +15,7 @@ function srd_layer( ) {
 		this.layer = null; //OpenLayers Layer Class.
 		
 
-		this.settings = { isBaseLayer: false, projection: "EPSG:4326", visibility: false };
+//		this.settings = { isBaseLayer: false, projection: "EPSG:4326", visibility: false };
 		this.source = null;
 
 
@@ -30,6 +30,9 @@ function srd_layer( ) {
 		this.sphericalMercator = null;
 		this.url = null;
 		this.numZoomLevels = null;
+
+		// NEED TO CHANGE THIS!
+		this.runFromServer = false;
 // End section in settings.xml (for now).	
 
 
@@ -118,64 +121,85 @@ srd_layer.prototype.getLayer = function() {
 	return this.layer;	
 }
 
+srd_layer.prototype.addLayerToMap = function(theMap) {
+	this.map = theMap; 
+	this.map.addLayer( this.layer );
+}
+
+
 // loadData <- bring in the vector data from whatever source is specifed
 // right now only GML hopefully wfs-t real fucking soon.
-srd_layer.prototype.loadData = function(type, name, source, settings ) { 
-	if( settings ) {
-		this.settings = settings;
-	}
-	if (name) {
-		this.name = name;
-	}
-	if( !source ) {
-		return -1;
-	}		
+srd_layer.prototype.loadData = function( ) { 
+//srd_layer.prototype.loadData = function(type, name, source, settings ) { 
 
-
-
-	if(type == "GML" ) {
-		this.layer = new OpenLayers.Layer.GML(name, source, settings);
-		this.map.addLayer( this.layer );
-		this.layer.loadGML();	
-	} else if(type == "WFST" ) {
-
-		this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
-    this.saveStrategy.events.register("success", '', showSuccessMsg);
-    this.saveStrategy.events.register("fail", '', showFailureMsg);	
-
+	if( this.layertype == "XYZ" ) {
+		console.log("XYZ Layer Created : "+this.name+":::"+this.url+":::");
+		this.layer = new OpenLayers.Layer.XYZ ( 
+			this.name,
+//				"test",
+//				'http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
+			this.url,
+			{
+				attribution:				this.attribution,
+				sphericalMercator: 	this.sphericalMercator
+			} 
+		);
+	} else if (this.layertype == "Vector" ) {
+		if(this.format == "GML" ) {
+			if( this.runFromServer == false ) {
+				console.log("Create GML Layer="+this.name+"===");
+				this.layer = new OpenLayers.Layer.GML(this.name, this.url, { 
+					isBaseLayer:	this.isBaseLayer,
+//					projection:		this.projection,
+					projection:		new OpenLayers.Projection(this.projection),
+					visibility:		this.visibility, 
+					styleMap:			this.styleMap
+				} );
+				this.layer.loadGML();	
+			} else {
+				this.layer = new OpenLayers.Layer.Vector(this.name, {
+					isBaseLayer:	this.isBaseLayer,
+//					projection:		this.projection,
+					projection:		new OpenLayers.Projection(this.projection),
+					visibility:		this.visibility,
+					styleMap:			this.styleMap,
+					strategies:		[new OpenLayers.Strategy.Fixed()],
+					protocol: 		new OpenLayers.Protocol.HTTP( {
+						url:			this.url,
+						format:		new OpenLayers.Format.GML()
+					} )
+				} );
+			}
+		} else if(this.format == "WFST" ) {
+			this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
+ 			this.saveStrategy.events.register("success", '', showSuccessMsg);
+			this.saveStrategy.events.register("fail", '', showFailureMsg);	
 //		this.refreshStrategy = new OpenLayers.Strategy.Refresh({force: true, interval: 10000});
 
-		this.layer = new OpenLayers.Layer.Vector(name, {
-			isBaseLayer: false,
-			visibility: this.settings.visibility,
-			styleMap: this.srd_styleMap,
-			strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy],
-			projection: new OpenLayers.Projection("EPSG:4326"),
-			protocol: new OpenLayers.Protocol.WFS({
+			this.layer = new OpenLayers.Layer.Vector(this.name, {
+				isBaseLayer: this.isBaseLayer,
+				visibility: this.visibility,
+				styleMap: this.srd_styleMap,
+				strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy],
+				projection: new OpenLayers.Projection("EPSG:4326"),
+				protocol: new OpenLayers.Protocol.WFS({
 				version: "1.1.0",
 				srsName: "EPSG:4326",
 				url: "http://SitRepGIS.local/geoserver/wfs",
 				featureNS :  "http://SitRepGIS.local/",
-				featureType: source
+				featureType: this.name
 //				geometryName: "the_geom",
 //				extractAttributes: true,
         })
     }); 
-
-
-
-
-
-			this.map.addLayer(this.layer);	
-	
-	}
-
-	this.modifyControl = new OpenLayers.Control.ModifyFeature(this.layer,
+		}
+		this.modifyControl = new OpenLayers.Control.ModifyFeature(this.layer,
 								{ mode: OpenLayers.Control.ModifyFeature.DRAG } );
-	this.map.addControl(this.modifyControl);
-	this.modifyControl.activate();
 
+//		this.map.addControl(this.modifyControl);
+//		this.modifyControl.activate();
 
+	}
 
 	//Adding the Control to allow for points to be selected and moved 
 //	this.dragControl = new OpenLayers.Control.DragFeature( this.layer ); 

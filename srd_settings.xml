@@ -21,7 +21,8 @@
 
 
 <!-- BASE LAYERS -->
-		<layer id="1">
+		<layer>
+			<id>1</id>
 			<name>SitRep GIS</name>	
 			<layertype>XYZ</layertype>
 			<isBaseLayer>true</isBaseLayer>
@@ -33,12 +34,12 @@
 			<attribution>&lt;img src="img/SitRepLogo_Tiny.png" height="25" width="60"&gt;</attribution>
 		</layer>
 
-		<layer id="2">
+		<layer>
+			<id>2</id>
 			<name>OSM - from openstreetmap.org</name>	
 			<layertype>XYZ</layertype>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>false</visibility>
-
 			<projection>EPSG:4326</projection>
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://a.tile.openstreetmap.org/${z}/${x}/${y}.png</url>
@@ -46,12 +47,12 @@
 			<attribution>&lt;img src="img/SitRepLogo_Tiny.png" height="25" width="60"&gt; - Using OSM Data</attribution>
 		</layer>
 
-		<layer id="3">
+		<layer>
+			<id>3</id>
 			<name>MapQuest - from mapquest.org</name>	
 			<layertype>XYZ</layertype>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>false</visibility>
-
 			<projection>EPSG:4326</projection>
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png</url>
@@ -62,16 +63,15 @@
 
 <!-- OVERLAY LAYERS -->
 
-		<layer id="4">
+		<layer>
+			<id>4</id>
 			<name>PolicePctBoundaries</name>	
 			<isBaseLayer>false</isBaseLayer>
 			<layertype>Vector</layertype>
-			<format>gml</format>
+			<format>GML</format>
 			<url>sr_data_public/PolicePctBoundaries.gml</url>
 			<layertype>polygon</layertype>
-
 			<projection>EPSG:4326</projection>
-
 			<visibility>false</visibility>
 
 		</layer>
