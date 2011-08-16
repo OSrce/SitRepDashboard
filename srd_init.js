@@ -7,22 +7,11 @@ var theSrdDocument = new srd_document;
 // map, admin, or data.
 function srd_init() {
 
-// READ the srd_settings.xml file and load it into a dojo.data object.
-/*
-dojo.xhrGet( {
-	url	: "srd_settings.xml",
-	handleAs: "xml",
-	load: function(result) {
-		theSrdDocument.settings_init(result);
-	},
-	error: function(errorMessage) {
-		theSrdDocument.errorOnLoad(errorMessage);
-	}
-} );
-*/
+	// READ the srd_settings.xml file and load it into a dojo.data object.
 	theSrdDocument.srd_settingsStore = new dojox.data.XmlStore({ 
 		url: 'srd_settings.xml',
-		label: 'srd_settings' 
+//		label: 'srd_settings', 
+		label: 'tag_name', 
 	}); 
 	
 
@@ -54,6 +43,7 @@ function srd_document() {
 
 // SETTINGS WE SHOULD GET FROM srd_settings.xml
 	this.srd_settingsStore = null;
+	this.srd_settingsTypeMap = null;
 	this.srd_config = null;
 	this.single_user = null;
 	this.runFromServer = null;
@@ -64,6 +54,28 @@ function srd_document() {
 		
 
 }
+
+srd_document.prototype.setValue = function(varName, varValue) {
+	switch(String(varName) ) {
+		case "single_user" :
+		case "runFromServer" :
+			if(String(varValue).toUpperCase() == "TRUE") {
+				this[varName] = Boolean(true);
+			} else {
+				this[varName] = Boolean(false);
+			}
+			break;
+		case "start_lat" :
+		case "start_lon" :
+		case "start_zoom" :
+			this[varName] = Number(varValue);
+			break;
+		default :
+			this[varName] = String(varValue);
+	}
+	return 0;
+}
+
 
 srd_document.prototype.errorOnLoad = function(errorMessage) {
 	alert("Error Loading srd_setttings.xml : "+errorMessage);
@@ -101,8 +113,12 @@ srd_document.prototype.settings_init = function(items,request) {
 //							if(tmpLayerAtts[l] == "url") {
 //								tmpSrdLayer[tmpLayerAtts[l]] = new String( this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[l]) );
 //							} else {
+
+								//TEST ONLY: 
 								var tmpVal = this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[l]);
-								tmpSrdLayer[tmpLayerAtts[l]] = this.srd_settingsStore.getValue(tmpVal,"text()");
+								tmpSrdLayer.setValue( [tmpLayerAtts[l]], this.srd_settingsStore.getValue(tmpVal,"text()") );
+								//END TEST
+								tmpSrdLayer.setValue( [tmpLayerAtts[l]],  this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[l] ) );
 								console.log("TEST5="+tmpSrdLayer[tmpLayerAtts[l]]+"===");
 //							}
 						}
@@ -113,7 +129,7 @@ srd_document.prototype.settings_init = function(items,request) {
 		} else {
 //			alert("Layer="+i+", itemName="+itemName+", itemValue="+itemValue+"===");
 			//THIS NIFTY LINE STORES THE VALUES FROM THE XML TO THE srd_document variables.
-			this[itemName] = itemValue;
+			this.setValue(itemName, itemValue);
 
 		}
 	}

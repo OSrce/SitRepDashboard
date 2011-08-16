@@ -475,7 +475,27 @@ srd_layer.prototype.onFeatureInserted = function(insertedFeature) {
 
 };
 
+srd_layer.prototype.setValue = function(varName, varValue) {
+//		console.log("setValue Called: Name:"+varName+", Value:"+varValue);
+	switch( String(varName )) {
+		case "sphericalMercator" :
+		case "visibility" :
+		case "isBaseLayer" :
+			if(String(varValue).toUpperCase() == "TRUE" ) {
+				this[varName] = Boolean(true);
+			} else {
+				this[varName] = Boolean(false);
+			}
+			break;
+		case "numZoomLevels" :
+			this[varName] = Number(varValue);
+			break;
+		default :
+			this[varName] = String(varValue);
+	}
 
+	return 0;
+}
 
 
 
