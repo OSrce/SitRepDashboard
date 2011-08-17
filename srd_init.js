@@ -100,6 +100,7 @@ srd_document.prototype.settings_init = function(items,request) {
 
 			// THE LINE BELOW GETS AN ARRAY OF ALL LAYERS FROM XML.
 			var theLayerItemArr = this.srd_settingsStore.getValues(item, "layer");
+			// FOR EACH <layer> in <layers>
 			for(var j = 0; j < theLayerItemArr.length; j++){
 				var theLayerItem = theLayerItemArr[j];
 				if(this.srd_settingsStore.isItem(theLayerItem)){
@@ -107,21 +108,31 @@ srd_document.prototype.settings_init = function(items,request) {
 					var tmpLayerAtts = this.srd_settingsStore.getAttributes(theLayerItem);
 					var tmpSrdLayer = new srd_layer();
 //			 	CODE TO iterate through the layer variables and assign the values.
-					for(var l=0;l < tmpLayerAtts.length;l++) {
-						if( tmpLayerAtts[l] in tmpSrdLayer) {
-							console.log(":::: Atts="+tmpLayerAtts[l]+":::"+this.srd_settingsStore.getValues(theLayerItem,tmpLayerAtts[l])+":::");
-//							if(tmpLayerAtts[l] == "url") {
-//								tmpSrdLayer[tmpLayerAtts[l]] = new String( this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[l]) );
-//							} else {
-
-								//TEST ONLY: 
-								var tmpVal = this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[l]);
-								tmpSrdLayer.setValue( [tmpLayerAtts[l]], this.srd_settingsStore.getValue(tmpVal,"text()") );
-								//END TEST
-								tmpSrdLayer.setValue( [tmpLayerAtts[l]],  this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[l] ) );
-								console.log("TEST5="+tmpSrdLayer[tmpLayerAtts[l]]+"===");
-//							}
-						}
+					// FOR EACH <layer attribute> in <layer>
+					for(var k=0;k < tmpLayerAtts.length;k++) {
+						if( tmpLayerAtts[k] in tmpSrdLayer) {
+							console.log(":::: Atts="+tmpLayerAtts[k]+":::"+this.srd_settingsStore.getValues(theLayerItem,tmpLayerAtts[k])+":::");
+								tmpSrdLayer.setValue( [tmpLayerAtts[k]],  this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[k] ) );
+							//TIME TO IMPORT StyleMap data into srd_layer
+						} else if (tmpLayerAtts[k] == "StyleMap") {
+							console.log("STYLEMAP="+tmpLayerAtts[k]+":::"+this.srd_settingsStore.getValues(theLayerItem,tmpLayerAtts[k])+":::");
+							var theStyleMap = this.srd_settingsStore.getValue(theLayerItem,"StyleMap");
+							var theStyleArr = this.srd_settingsStore.getValues(theStyleMap,"Style");
+							// FOR EACH <Style> in <StyleMap>
+							for(var l=0; l < theStyleArr.length; l++) {
+								var theStyleItem = theStyleArr[l];
+//								console.log("StyleItem======="+theStyleItem[l]);
+								if(this.srd_settingsStore.isItem(theStyleItem) ) {
+									var theStyleAtts = this.srd_settingsStore.getAttributes(theStyleItem);
+//									console.log("StyleAtts======="+theStyleAtts);
+									var styleName = this.srd_settingsStore.getValues(theStyleItem,"name");
+									tmpSrdLayer.createStyle(styleName);
+									for(var m=0; m < theStyleAtts.length; m++) {
+										tmpSrdLayer.setStyleProperty(styleName,theStyleAtts[m],this.srd_settingsStore.getValue(theStyleItem,theStyleAtts[m]) );
+									}
+								}
+							}
+						}										
 					}
 					this.srd_layerArr[tmpSrdLayer.id] = tmpSrdLayer;
 				}

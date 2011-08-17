@@ -48,6 +48,7 @@ function srd_layer( ) {
 		this.saveStrategy = null;
 		this.refreshStrategy = null;
 
+/*
 		this.srd_mapDefault = new OpenLayers.Style( { 
 			fillColor: "#FF0000",
 			fillOpacity: 0.6,
@@ -77,7 +78,10 @@ function srd_layer( ) {
 			'mapGreen': this.srd_mapGreen,
 			'mapBlue': this.srd_mapBlue } );
 
-		
+*/
+
+//		console.log("srd_styleMap.mapGreen.pointRadius="+this.srd_mapGreen.defaultStyle.pointRadius);	
+/*
 		this.lookupStatus = {
 				'null' : {
 					fillColor: "#FF0F00",
@@ -111,8 +115,9 @@ function srd_layer( ) {
 
 
 		this.srd_styleMap.addUniqueValueRules("default", "srd_status", this.lookupStatus);
+	*/
 
-
+		this.srd_styleMap = null; //new OpenLayers.StyleMap();
 
 }
 
@@ -496,6 +501,46 @@ srd_layer.prototype.setValue = function(varName, varValue) {
 
 	return 0;
 }
+
+srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
+	console.log("setStyleProperty name="+styleName+", varName="+varName+", varVal="+varValue);	
+
+	switch( String(varName) ) {
+		// COLORS :
+		case "fillColor" :
+		case "strokeColor" :
+			this.srd_styleMap.styles[styleName].defaultStyle[varName] = String(varValue);
+			break;
+		case "fillOpacity" :
+		case "strokeOpacity" :
+		case "pointRadius" :
+			this.srd_styleMap.styles[styleName].defaultStyle[varName] = Number(varValue);
+			break;
+	}
+}
+
+srd_layer.prototype.createStyle = function(styleName) {
+	console.log("CREATE STYLE CALLED="+styleName);
+	if(this.srd_styleMap == null) {
+		this.srd_styleMap = new OpenLayers.StyleMap();
+	}
+	tmpStyleName = String(styleName);
+	if( tmpStyleName in this.srd_styleMap.styles ) {
+		return 1;
+	} else {
+		this.srd_styleMap.styles[tmpStyleName] = new OpenLayers.Style();
+	}
+
+}
+
+
+
+
+
+
+
+
+
 
 
 

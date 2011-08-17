@@ -73,7 +73,16 @@
 			<layertype>polygon</layertype>
 			<projection>EPSG:4326</projection>
 			<visibility>false</visibility>
-
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#0000FF</fillColor>
+					<fillOpacity>0.3</fillOpacity>
+					<strokeColor>#0000FF</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+				</Style>
+			</StyleMap>	
 		</layer>
 
 
