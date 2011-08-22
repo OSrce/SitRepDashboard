@@ -30,6 +30,7 @@ function srd_layer( ) {
 		this.sphericalMercator = null;
 		this.url = null;
 		this.numZoomLevels = null;
+		this.attribution = null;
 
 		// NEED TO CHANGE THIS!
 		this.runFromServer = false;
@@ -47,78 +48,7 @@ function srd_layer( ) {
 		this.tmpLayer = null;
 		this.saveStrategy = null;
 		this.refreshStrategy = null;
-
-/*
-		this.srd_mapDefault = new OpenLayers.Style( { 
-			fillColor: "#FF0000",
-			fillOpacity: 0.6,
-			strokeColor: "#FF0000",
-			strokeOpacity: 1,
-			pointRadius: 6
-		} ); 
-
-		this.srd_mapGreen = new OpenLayers.Style( { 
-			fillColor: "#00FF00",
-			fillOpacity: 0.6,
-			strokeColor: "#00FF00",
-			strokeOpacity: 1,
-			pointRadius: 6
-		} ); 
-
-		this.srd_mapBlue = new OpenLayers.Style( { 
-			fillColor: "#0000FF",
-			fillOpacity: 0.6,
-			strokeColor: "#0000FF",
-			strokeOpacity: 1,
-			pointRadius: 6
-		} ); 
-
-		this.srd_styleMap =  new OpenLayers.StyleMap( { 
-			'default': this.srd_mapDefault, 
-			'mapGreen': this.srd_mapGreen,
-			'mapBlue': this.srd_mapBlue } );
-
-*/
-
-//		console.log("srd_styleMap.mapGreen.pointRadius="+this.srd_mapGreen.defaultStyle.pointRadius);	
-/*
-		this.lookupStatus = {
-				'null' : {
-					fillColor: "#FF0F00",
-					fillOpacity: 0.6,
-					strokeColor: "#FF0000",
-					strokeOpacity: 1,
-					pointRadius: 6
-				},
-				'Default' : {	
-					fillColor: "#FF0000",
-					fillOpacity: 0.6,
-					strokeColor: "#FF0000",
-					strokeOpacity: 1,
-					pointRadius: 6
-				},
-				'Clear' : {
-					fillColor: "#00FF00",
-					fillOpacity: 0.6,
-					strokeColor: "#00FF00",
-					strokeOpacity: 1,
-					pointRadius: 6
-				},
-				'Pending' : {  
-					fillColor: "#0000FF",
-					fillOpacity: 0.6,
-					strokeColor: "#0000FF",
-					strokeOpacity: 1,
-					pointRadius: 6
-				}
-	};
-
-
-		this.srd_styleMap.addUniqueValueRules("default", "srd_status", this.lookupStatus);
-	*/
-
-		this.srd_styleMap = null; //new OpenLayers.StyleMap();
-
+		this.srd_styleMap = null; 
 }
 
 // srd_layer return the OpenLayer layer class.
@@ -158,7 +88,7 @@ srd_layer.prototype.loadData = function( ) {
 //					projection:		this.projection,
 					projection:		new OpenLayers.Projection(this.projection),
 					visibility:		this.visibility, 
-					styleMap:			this.styleMap
+					styleMap:			this.srd_styleMap
 				} );
 				this.layer.loadGML();	
 			} else {
@@ -167,7 +97,7 @@ srd_layer.prototype.loadData = function( ) {
 //					projection:		this.projection,
 					projection:		new OpenLayers.Projection(this.projection),
 					visibility:		this.visibility,
-					styleMap:			this.styleMap,
+					styleMap:			this.srd_styleMap,
 					strategies:		[new OpenLayers.Strategy.Fixed()],
 					protocol: 		new OpenLayers.Protocol.HTTP( {
 						url:			this.url,
@@ -503,13 +433,14 @@ srd_layer.prototype.setValue = function(varName, varValue) {
 }
 
 srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
-	console.log("setStyleProperty name="+styleName+", varName="+varName+", varVal="+varValue);	
-
+	console.log(":::"+this.name+":::setStyleProperty name="+styleName+", varName="+varName+", varVal="+varValue);	
+//	return 0;
 	switch( String(varName) ) {
 		// COLORS :
 		case "fillColor" :
 		case "strokeColor" :
 			this.srd_styleMap.styles[styleName].defaultStyle[varName] = String(varValue);
+//			this.srd_styleMap.styles['test'].defaultStyle[varName] = String(varValue);
 			break;
 		case "fillOpacity" :
 		case "strokeOpacity" :
@@ -522,14 +453,54 @@ srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
 srd_layer.prototype.createStyle = function(styleName) {
 	console.log("CREATE STYLE CALLED="+styleName);
 	if(this.srd_styleMap == null) {
-		this.srd_styleMap = new OpenLayers.StyleMap();
+		console.log("New StyleMap Created for Layer="+this.name);
+//		this.srd_styleMap = new OpenLayers.StyleMap();
+
+		var test = "#00FF00";
+		if( this.id ==4) {
+				test = "#0000FF";
+		}
+		var testStyle = new OpenLayers.Style( {
+			'fillColor': "#0000FF",
+			'fillOpacity': 0.55,
+			'strokeColor': test,
+			'strokeOpacity': 1
+		} );		
+		this.srd_styleMap = new OpenLayers.StyleMap( {
+			'default': testStyle
+			}
+			);
+
+//		this.srd_styleMap.extendDefault = false;
 	}
 	tmpStyleName = String(styleName);
-	if( tmpStyleName in this.srd_styleMap.styles ) {
-		return 1;
-	} else {
-		this.srd_styleMap.styles[tmpStyleName] = new OpenLayers.Style();
-	}
+//	if( tmpStyleName in this.srd_styleMap.styles ) {
+//		return 1;
+//	} else {
+		console.log("New Style Created for Layer="+this.name+"Style="+styleName);
+//		this.srd_styleMap.styles[tmpStyleName] = new OpenLayers.Style();
+
+//	}
+//		if(tmpStyleName == 'default') {
+//			this.srd_styleMap.
+//		}
+	//TESTING ONLY
+/*	this.srd_styleMap.styles['default'] = new OpenLayers.Style( {
+		fillColor: '#000000',
+		fillOpacity: 0.55,
+//		strokeColor: "#000000",
+		strokeOpacity: 1
+	} );
+
+//	this.srd_styleMap.styles['default'].isDefault=true;
+
+		this.srd_styleMap.styles['test'] = new OpenLayers.Style( {
+		fillColor: "#000000",
+		fillOpacity: 0.55,
+		strokeColor: "#000000",
+		strokeOpacity: 1
+	} );
+	*/	
 
 }
 

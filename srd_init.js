@@ -135,6 +135,10 @@ srd_document.prototype.settings_init = function(items,request) {
 						}										
 					}
 					this.srd_layerArr[tmpSrdLayer.id] = tmpSrdLayer;
+					if(tmpSrdLayer.id >3) {
+						console.log("Finished with Layer="+tmpSrdLayer.name+", Style Default - fillColor="+tmpSrdLayer.srd_styleMap.styles.default.defaultStyle.fillColor+":::");
+					}
+					tmpSrdLayer = null;
 				}
 			}	
 		} else {

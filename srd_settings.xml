@@ -70,15 +70,77 @@
 			<layertype>Vector</layertype>
 			<format>GML</format>
 			<url>sr_data_public/PolicePctBoundaries.gml</url>
-			<layertype>polygon</layertype>
+			<projection>EPSG:4326</projection>
+			<visibility>false</visibility>
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#00FF00</fillColor>
+					<fillOpacity>0.2</fillOpacity>
+					<strokeColor>#0000FF</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+				</Style>
+			</StyleMap>	
+		</layer>
+
+		<layer>
+			<id>5</id>
+			<name>MTA Subway Routes</name>	
+			<isBaseLayer>false</isBaseLayer>
+			<layertype>Vector</layertype>
+			<format>GML</format>
+			<url>sr_data_public/MTA_SubwayRoutes.gml</url>
+			<projection>EPSG:4326</projection>
+			<visibility>false</visibility>
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#00FF00</fillColor>
+					<fillOpacity>0.5</fillOpacity>
+					<strokeColor>#00FF00</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+				</Style>
+			</StyleMap>	
+		</layer>
+
+		<layer>
+			<id>6</id>
+			<name>MTA Subway Stations</name>	
+			<isBaseLayer>false</isBaseLayer>
+			<layertype>Vector</layertype>
+			<format>GML</format>
+			<url>sr_data_public/MTA_SubwayStations.gml</url>
 			<projection>EPSG:4326</projection>
 			<visibility>false</visibility>
 			<StyleMap>
 				<Style>
 					<name>default</name>
 					<fillColor>#0000FF</fillColor>
-					<fillOpacity>0.3</fillOpacity>
-					<strokeColor>#0000FF</strokeColor>
+					<fillOpacity>0.2</fillOpacity>
+					<strokeColor>#FF0000</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+				</Style>
+			</StyleMap>	
+		</layer>
+
+		<layer>
+			<id>7</id>
+			<name>LIRR Routes</name>	
+			<isBaseLayer>false</isBaseLayer>
+			<layertype>Vector</layertype>
+			<format>GML</format>
+			<url>sr_data_public/LIRR_Routes.gml</url>
+			<projection>EPSG:4326</projection>
+			<visibility>false</visibility>
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#FF00F0</fillColor>
+					<fillOpacity>0.2</fillOpacity>
+					<strokeColor>#FF0000</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
 					<pointRadius>6</pointRadius>
 				</Style>
