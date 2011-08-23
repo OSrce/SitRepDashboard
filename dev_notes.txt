@@ -52,6 +52,34 @@ data_dynamic
 
 --------------------
 
+2011-08-23
+
+OK.  We have the initial settings being read into a dojo.data store from
+srd_settings.xml.  But thats not all we want.  We want a persistent local
+store of some kind and so we are going to try and implement the following :
+
+On load :
+
+1. Look for dojox.LocalStorageProvider store and read that if it exists.
+2. If not, read srd_settings.xml (dojo.data.XMLStore) and convert it to
+	an dojo Object Store via the wrapper ( dojo.store.DataStore).
+
+3. Use data obtained above to log in etc.
+
+4. Provide handling for saving changes to the dojox.LocalStorageProvider
+
+------------------------
+
+
+
+
+
+
+
+
+
+
+
 
 
 

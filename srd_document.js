@@ -1,5 +1,11 @@
 
+// THE srd_document <- 
 var theSrdDocument = new srd_document;
+
+function srd_newWindow() {
+	window.open("SitRepDashboard.html");
+	return 0;
+}
 
 
 // srd_init : called by SitRepDashboard when we are ready to 
@@ -7,13 +13,18 @@ var theSrdDocument = new srd_document;
 // map, admin, or data.
 function srd_init() {
 
-	// READ the srd_settings.xml file and load it into a dojo.data object.
-	theSrdDocument.srd_settingsStore = new dojox.data.XmlStore({ 
-		url: 'srd_settings.xml',
-//		label: 'srd_settings', 
-		label: 'tag_name', 
-	}); 
-	
+
+	//LETS TRY AND MAKE A dojo.store.DataStore that takes the settingsStore.
+
+
+	if( theSrdDocument.staticVals.srd_settingsStore == null ) {
+		// READ the srd_settings.xml file and load it into a dojo.data object.
+		theSrdDocument.srd_settingsStore = new dojox.data.XmlStore({ 
+			url: 'srd_settings.xml',
+			label: 'tag_name', 
+		});
+		theSrdDocument.staticVals.srd_settingsStore = theSrdDocument.srd_settingsStore; 
+	} 
 
 	//Fetch all global settings (except layer stuff).
 	theSrdDocument.srd_settingsStore.fetch({
@@ -45,14 +56,35 @@ function srd_document() {
 	this.srd_settingsStore = null;
 	this.srd_settingsTypeMap = null;
 	this.srd_config = null;
-	this.single_user = null;
-	this.runFromServer = null;
-	this.default_projection = null;
-	this.start_lat = null;
-	this.start_lon = null;
-	this.start_zoom = null;
-		
+//	this.single_user = null;
+//	this.runFromServer = null;
+//	this.default_projection = null;
+//	this.start_lat = null;
+//	this.start_lon = null;
+//	this.start_zoom = null;
+	
+		if ( typeof srd_document.counter == 'undefined' ) {
+        // It has not... perform the initilization
+        srd_document.counter = 0;
+    }
 
+	this.staticVals = { 
+			srd_doc_count: null,
+			srd_doc_id : null,
+			single_user: null,
+			runFromServer: null,
+			default_projection: null,
+			start_lat: null,
+			start_lon: null,
+			start_zoom: null,
+			srd_settingsStore: null
+	};
+	
+	srd_document.counter++;	
+	this.staticVals.srd_doc_id++;
+//	alert("Created srd_document with ID="+this.staticVals.srd_doc_id);
+//	alert("Created srd_document with ID="+srd_document.counter);
+	
 }
 
 srd_document.prototype.setValue = function(varName, varValue) {
@@ -60,18 +92,18 @@ srd_document.prototype.setValue = function(varName, varValue) {
 		case "single_user" :
 		case "runFromServer" :
 			if(String(varValue).toUpperCase() == "TRUE") {
-				this[varName] = Boolean(true);
+				this.staticVals[varName] = Boolean(true);
 			} else {
-				this[varName] = Boolean(false);
+				this.staticVals[varName] = Boolean(false);
 			}
 			break;
 		case "start_lat" :
 		case "start_lon" :
 		case "start_zoom" :
-			this[varName] = Number(varValue);
+			this.staticVals[varName] = Number(varValue);
 			break;
 		default :
-			this[varName] = String(varValue);
+			this.staticVals[varName] = String(varValue);
 	}
 	return 0;
 }
@@ -84,7 +116,7 @@ srd_document.prototype.errorOnLoad = function(errorMessage) {
 
 srd_document.prototype.settings_init = function(items,request) {
 	this.srd_items = items;
-	for(i=0;i<this.srd_items.length;i++) {
+	for(var i=0;i<this.srd_items.length;i++) {
 //		var itemName = this.srd_settingsStore.getIdentity( this.srd_items[i] ); 
 //		var itemValue = this.srd_settingsStore.getAttributes( this.srd_items[i] ); 
 		var itemName = this.srd_settingsStore.getValue( this.srd_items[i], "tagName" ); 
@@ -162,7 +194,7 @@ srd_document.prototype.settings_init = function(items,request) {
 srd_document.prototype.map_init = function() {
 
 	if(this.map == null) {
-		this.map = new OpenLayers.Map("map", { 
+		this.map = new OpenLayers.Map("srd_docContent", { 
 			controls: [
 				new OpenLayers.Control.Navigation(),
 				new OpenLayers.Control.PanZoomBar(),
@@ -174,157 +206,36 @@ srd_document.prototype.map_init = function() {
 ////////////////////////
 ///// LAYER CREATION ////
 
-/*
-OpenLayers.Layer.MapQuestOSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
-     name: "MapQuestOSM",
-     //attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-     sphericalMercator: true,
-     url: ' http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
-//     clone: function(obj) {
-//         if (obj == null) {
-//             obj = new OpenLayers.Layer.OSM(
-//             this.name, this.url, this.getOptions());
- //        }
-//         obj = OpenLayers.Layer.XYZ.prototype.clone.apply(this, [obj]);
-//         return obj;
-//     },
-
-     CLASS_NAME: "OpenLayers.Layer.MapQuestOSM"
- });
- var mapquestosm = new OpenLayers.Layer.MapQuestOSM();
-*/
-
-
-
-//Add the Google Maps Layer for debug purposes only (don't
-//forget to get rid of script src from html file.)
-//var gMapLayer = new OpenLayers.Layer.Google( "Google Maps", {numZoomLevels: 20} );
-
-//Add OpenStreetMap Layer for debug purposes as well 
-//var osmMapLayer = new OpenLayers.Layer.OSM();
-var osmMapLayer = new OpenLayers.Layer.XYZ(
-		"OSM",
-		"http://a.tile.openstreetmap.org/${z}/${x}/${y}.png",
-		{
-			attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-			sphericalMercator: true
- 	}
-
-);
-
-/*
-
-
-var srMapLayer = new OpenLayers.Layer.OSM("SitRep GIS", 
-//	"http://SitRepGIS.local:3001/osm_tiles/${z}/${x}/${y}.png",
-	"http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png",
-	{numZoomLevels: 19,
-	 attribution: '<img src="img/SitRepLogo_Tiny.png" height="25" width="60">'
-	 }
-);
-
-*/
-
-//Add style for precincts :
-var pct_style_def =  new OpenLayers.Style( { 
-	fillColor: "#0000FF",
-	fillOpacity: 0.3,
-	strokeColor: "#0000FF",
-	strokeOpacity: 1,
-	pointRadius: 6
-} ); 
-var pct_style_sel =  new OpenLayers.Style( { 
-	fillColor: "#0011FF",
-	fillOpacity: 0.3,
-	strokeColor: "#0000FF",
-	strokeOpacity: 1,
-	pointRadius: 6
-} ); 
-var pct_styleMap = new OpenLayers.StyleMap( {"default":  pct_style_def, "select": pct_style_sel } );
-
-
-// GET THE FULL DIR if we are running locally.
-//var path = document.location.pathname;
-//var dir = path.substring(path.indexOf('/', 1), path.lastIndexOf('/'));
-//alert("DIR="+dir);
-
-// Add the precinct boundaries as a gml file for now.
-var policePcts;
-
-
-/*
-if(runFromServer == false) {
-	policePcts  = new OpenLayers.Layer.GML("Precinct Boundaries", "sr_data_public/PolicePctBoundaries.gml" ,{ isBaseLayer: false, projection: "EPSG:4326", visibility: false, styleMap: pct_styleMap  } );
-} else {
-	policePcts = new OpenLayers.Layer.Vector("Precinct Boundaries", {
-		isBaseLayer: false,
-		projection: "EPSG:4326",
-		visibility: true,
-		styleMap: pct_styleMap,
-		strategies: [new OpenLayers.Strategy.Fixed()],
-		projection: new OpenLayers.Projection("EPSG:4326"),
-		protocol: new OpenLayers.Protocol.HTTP ( {
-//		 	url: "file://"+dir+"/sr_data_public/PolicePctBoundaries.gml" ,
-		 	url: "/Users/jreifer/Desktop/VBOX_SHARED/SitRepDashboard/sr_data_public/PolicePctBoundaries.gml" ,
-			format: new OpenLayers.Format.GML()
-		} ) 
-	});
-}
-*/
-
-	// Attach the base layer + the sr_data_public layer(s)
-//	this.map.addLayers( [ srMapLayer,  osmMapLayer, mapquestosm ]);
-//	this.map.addLayers( [   policePcts ]);
-
-
 // Iterate through each srd_layer and call loadData and addLayerToMap)
 
-for( i in this.srd_layerArr ) {
+for(var i in this.srd_layerArr ) {
 	console.log("Loading Layer:"+i+":::");
 	this.srd_layerArr[i].loadData();
 	this.srd_layerArr[i].addLayerToMap(this.map);
 }
 
-
-//	this.srd_layerArr[2].url = 'http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png';
-//	console.log("layer2_url==="+this.srd_layerArr[2].url+"===" );
-//	this.map.addLayer( osmMapLayer);
-/*
-	this.srd_layerArr[1].loadData();
-	this.srd_layerArr[1].addLayerToMap(this.map);
-	this.srd_layerArr[2].loadData();
-	this.srd_layerArr[2].addLayerToMap(this.map);
-	this.srd_layerArr[3].loadData();
-	this.srd_layerArr[3].addLayerToMap(this.map);
-	this.srd_layerArr[4].loadData();
-	this.srd_layerArr[4].addLayerToMap(this.map);
-	*/
-
-
-
-
 this.map.setOptions( 
 	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
 	displayProjection : new OpenLayers.Projection("EPSG:4326") }
 );
-var lonlat = new OpenLayers.LonLat(this.start_lon, this.start_lat).transform(this.map.displayProjection, this.map.projection);
-this.map.setCenter( lonlat, this.start_zoom ); 
+var lonlat = new OpenLayers.LonLat(this.staticVals.start_lon, this.staticVals.start_lat).transform(this.map.displayProjection, this.map.projection);
+this.map.setCenter( lonlat, this.staticVals.start_zoom ); 
 
 
-
+/*
 		//Dynamic layer creation lets change this to make the
 		// settings in srd_layer, 
 		var whiteboard = new srd_layer();
 		whiteboard.name = "Whiteboard";
-		whiteboard.id = 5;
+		whiteboard.id = this.srd_layerArr.length;
 		whiteboard.layertype="Vector";
 		whiteboard.format="WFST";
 		whiteboard.isBaseLayer = false;
 		whiteboard.projection = "EPSG:4326";
-		whiteboard.visibility = false;
-//		whiteboard.loadData();
-//		whiteboard.addLayerToMap(this.map);
-
+		whiteboard.visibility = true;
+		whiteboard.loadData();
+		whiteboard.addLayerToMap(this.map);
+*/
 
 
 
@@ -478,7 +389,6 @@ var drawLayer = whiteboard.layer;
 //						searchAttr: "name"
 //						}, "layerEditSelect"
 //					);
-
 
 }
 /// END map_init Function

@@ -31,7 +31,6 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
-			<attribution>&lt;img src="img/SitRepLogo_Tiny.png" height="25" width="60"&gt;</attribution>
 		</layer>
 
 		<layer>
@@ -44,7 +43,7 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://a.tile.openstreetmap.org/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
-			<attribution>&lt;img src="img/SitRepLogo_Tiny.png" height="25" width="60"&gt; - Using OSM Data</attribution>
+			<attribution>OSM Data</attribution>
 		</layer>
 
 		<layer>
@@ -57,7 +56,7 @@
 			<sphericalMercator>true</sphericalMercator>
 			<url>http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
-			<attribution>&lt;img src="img/SitRepLogo_Tiny.png" height="25" width="60"&gt; - Using Mapquest Data</attribution>
+			<attribution>Mapquest Data</attribution>
 		</layer>
 
 
@@ -146,12 +145,7 @@
 				</Style>
 			</StyleMap>	
 		</layer>
-
-
-
-
 	</layers>
-
 
 
 </settings>

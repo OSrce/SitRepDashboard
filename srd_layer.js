@@ -30,7 +30,7 @@ function srd_layer( ) {
 		this.sphericalMercator = null;
 		this.url = null;
 		this.numZoomLevels = null;
-		this.attribution = null;
+		this.attribution = "";
 
 		// NEED TO CHANGE THIS!
 		this.runFromServer = false;
@@ -75,7 +75,7 @@ srd_layer.prototype.loadData = function( ) {
 //				'http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
 			this.url,
 			{
-				attribution:				this.attribution,
+				attribution:				"<img src='img/SitRepLogo_Tiny.png' height='25' width='60'><br> "+this.attribution,
 				sphericalMercator: 	this.sphericalMercator
 			} 
 		);
@@ -455,7 +455,7 @@ srd_layer.prototype.createStyle = function(styleName) {
 //		console.log("New StyleMap Created for Layer="+this.name);
 		this.srd_styleMap = new OpenLayers.StyleMap();
 	}
-	tmpStyleName = String(styleName);
+	var tmpStyleName = String(styleName);
 	this.srd_styleMap.styles[tmpStyleName] = new OpenLayers.Style( {} );
 
 }
