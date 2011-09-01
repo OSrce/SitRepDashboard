@@ -1,4 +1,7 @@
 
+dojo.require("dojox.storage.LocalStorageProvider");
+
+
 // THE srd_document <- 
 var theSrdDocument = new srd_document;
 
@@ -26,6 +29,16 @@ function srd_init() {
 		theSrdDocument.staticVals.srd_settingsStore = theSrdDocument.srd_settingsStore; 
 	} 
 
+//	theSrdDocument.srd_store = new dojo.store.DataStore({});
+	theSrdDocument.srd_localStore = new dojox.storage.LocalStorageProvider({});
+
+	if( theSrdDocument.srd_localStore.isAvailable() ) {
+	
+
+	}
+
+
+	
 	//Fetch all global settings (except layer stuff).
 	theSrdDocument.srd_settingsStore.fetch({
 		onComplete: function(items,request) { 
@@ -53,6 +66,7 @@ function srd_document() {
 	this.srd_layerArr = [];
 
 // SETTINGS WE SHOULD GET FROM srd_settings.xml
+	this.srd_store = null;
 	this.srd_settingsStore = null;
 	this.srd_settingsTypeMap = null;
 	this.srd_config = null;
