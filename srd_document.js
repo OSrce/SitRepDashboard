@@ -1,4 +1,6 @@
 
+//dojo.require("dojo.store.Memory");
+//dojo.require("dojo.store.LocalStorage");
 dojo.require("dojox.storage.LocalStorageProvider");
 
 
@@ -30,11 +32,25 @@ function srd_init() {
 	} 
 
 //	theSrdDocument.srd_store = new dojo.store.DataStore({});
+//	theSrdDocument.srd_localStore = new dojo.store.LocalStorage({});
 	theSrdDocument.srd_localStore = new dojox.storage.LocalStorageProvider({});
 
 	if( theSrdDocument.srd_localStore.isAvailable() ) {
-	
+		console.log("LocalStore available");
+//		theSrdDocument.srd_localStore.initialize();
 
+/*		if(theSrdDocument.srd_localStore.initialized == false ) {
+			dojo.event.connect(dojox.storage.manager,
+                     "loaded", theSrdDocument.srd_localStore,
+                     storeIsInitialized);
+
+		} else {
+*/
+			dojo.connect(null,
+                     "onload", 
+                     function(evt) { storeIsInitialized(); }  );
+
+//		}
 	}
 
 
@@ -53,6 +69,28 @@ function srd_init() {
 	
 }
 // END INIT FUNCTION
+
+
+function storeIsInitialized() {
+		var isPerm = theSrdDocument.srd_localStore.isPermanent();
+		console.log("LocalStore Permanece = "+isPerm);
+
+		var test = theSrdDocument.srd_localStore.get("single_user","srd");
+		if(test != null) {
+			console.log("Localstore has data! single_user="+test);
+		
+		} else {
+			console.log("Localstore has no data");
+		}
+		
+		var resultsHandler = function(thestatus, key, message, namespace){ alert("status="+thestatus+", key="+key+", message="+message); }; 
+
+		theSrdDocument.srd_localStore.put("single_user", true,resultsHandler,"srd");
+	return 0;
+}
+
+
+
 
 //srd_document CLASS 
 function srd_document() {

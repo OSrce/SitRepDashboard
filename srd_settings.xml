@@ -74,9 +74,9 @@
 			<StyleMap>
 				<Style>
 					<name>default</name>
-					<fillColor>#F00400</fillColor>
-					<fillOpacity>0.2</fillOpacity>
-					<strokeColor>#F00400</strokeColor>
+					<fillColor>#0000FF</fillColor>
+					<fillOpacity>0</fillOpacity>
+					<strokeColor>#0000FF</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
 					<pointRadius>6</pointRadius>
 				</Style>
