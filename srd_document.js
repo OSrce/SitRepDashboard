@@ -35,7 +35,7 @@ function srd_init() {
 //	theSrdDocument.srd_localStore = new dojo.store.LocalStorage({});
 	theSrdDocument.srd_localStore = new dojox.storage.LocalStorageProvider({});
 
-	if( theSrdDocument.srd_localStore.isAvailable() ) {
+//	if( theSrdDocument.srd_localStore.isAvailable() ) {
 		console.log("LocalStore available");
 //		theSrdDocument.srd_localStore.initialize();
 
@@ -46,13 +46,15 @@ function srd_init() {
 
 		} else {
 */
-			dojo.connect(null,
-                     "onload", 
-                     function(evt) { storeIsInitialized(); }  );
+//			dojo.connect(null,
+  //                   "onload", 
+ //                    function(evt) { storeIsInitialized(); }  );
+
+//		dojo.addOnLoad( storeIsInitialized() );
 
 //		}
-	}
-
+//	}
+//		storeIsInitialized();
 
 	
 	//Fetch all global settings (except layer stuff).
@@ -72,10 +74,11 @@ function srd_init() {
 
 
 function storeIsInitialized() {
-		var isPerm = theSrdDocument.srd_localStore.isPermanent();
-		console.log("LocalStore Permanece = "+isPerm);
+//		var isPerm = theSrdDocument.srd_localStore.isPermanent();
+//		console.log("LocalStore Permanece = "+isPerm);
 
-		var test = theSrdDocument.srd_localStore.get("single_user","srd");
+//		var test = theSrdDocument.srd_localStore.get("staticVals");
+		var test = false;
 		if(test != null) {
 			console.log("Localstore has data! single_user="+test);
 		
@@ -85,7 +88,10 @@ function storeIsInitialized() {
 		
 		var resultsHandler = function(thestatus, key, message, namespace){ alert("status="+thestatus+", key="+key+", message="+message); }; 
 
-		theSrdDocument.srd_localStore.put("single_user", true,resultsHandler,"srd");
+//		theSrdDocument.srd_localStore.put("single_user", true,resultsHandler,"srd");
+		theSrdDocument.staticVals.single_user = true;
+		var options = { id: "staticVals" };
+		theSrdDocument.srd_localStore.put(theSrdDocument.staticVals, options);
 	return 0;
 }
 

@@ -80,6 +80,15 @@ srd_layer.prototype.loadData = function( ) {
 			} 
 		);
 	} else if (this.layertype == "Vector" ) {
+
+
+// BEGIN MESSY STYLE RULE CODE
+		var tmpSymbolizer = this.srd_styleMap.styles["default"].defaultStyle;
+		var mainRule = new OpenLayers.Rule( { symbolizer: tmpSymbolizer} );
+		this.srd_styleMap.styles["default"].addRules( [mainRule] );
+// END MESSY STYLE RULE CODE
+
+
 		if(this.format == "GML" ) {
 			if( this.runFromServer == false ) {
 				console.log("Create GML Layer="+this.name+"===");
@@ -439,12 +448,20 @@ srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
 		// COLORS :
 		case "fillColor" :
 		case "strokeColor" :
+		case "labelAlign" :
+		case "fontColor" :
+		case "fontFamily" :
 			this.srd_styleMap.styles[styleName].defaultStyle[varName] = String(varValue);
 			break;
 		case "fillOpacity" :
 		case "strokeOpacity" :
 		case "pointRadius" :
+		case "fontOpacity" :
+		case "fontSize" :
 			this.srd_styleMap.styles[styleName].defaultStyle[varName] = Number(varValue);
+			break;
+		case "label" :
+			this.srd_styleMap.styles[styleName].defaultStyle[varName] = "${"+String(varValue)+"}";
 			break;
 	}
 }
