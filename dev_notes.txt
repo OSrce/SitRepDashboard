@@ -60,7 +60,7 @@ store of some kind and so we are going to try and implement the following :
 
 On load :
 
-1. Look for dojox.LocalStorageProvider store and read that if it exists.
+1. Look for dojox.storage.LocalStorageProvider store and read that if it exists.
 
 2. If not, read srd_settings.xml (dojo.data.XMLStore) and convert it to
 	an dojo Object Store via the wrapper ( dojo.store.DataStore).

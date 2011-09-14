@@ -1,87 +1,26 @@
-
+/*
+Function.prototype.bind = function(scope) {
+  var _function = this;
+  
+  return function() {
+    return _function.apply(scope, arguments);
+  }
+}
+*/
 //dojo.require("dojo.store.Memory");
 //dojo.require("dojo.store.LocalStorage");
 dojo.require("dojox.storage.LocalStorageProvider");
-
-
-// THE srd_document <- 
-var theSrdDocument = new srd_document;
 
 function srd_newWindow() {
 	window.open("SitRepDashboard.html");
 	return 0;
 }
 
+srd_document.prototype.storeIsInitialized = function() {
 
-// srd_init : called by SitRepDashboard when we are ready to 
-// load initial values and the first 'screen' we will see :
-// map, admin, or data.
-function srd_init() {
-
-
-	//LETS TRY AND MAKE A dojo.store.DataStore that takes the settingsStore.
-
-
-	if( theSrdDocument.staticVals.srd_settingsStore == null ) {
-		// READ the srd_settings.xml file and load it into a dojo.data object.
-		theSrdDocument.srd_settingsStore = new dojox.data.XmlStore({ 
-			url: 'srd_settings.xml',
-			label: 'tag_name', 
-		});
-		theSrdDocument.staticVals.srd_settingsStore = theSrdDocument.srd_settingsStore; 
-	} 
-
-//	theSrdDocument.srd_store = new dojo.store.DataStore({});
-//	theSrdDocument.srd_localStore = new dojo.store.LocalStorage({});
-	theSrdDocument.srd_localStore = new dojox.storage.LocalStorageProvider({});
-
-//	if( theSrdDocument.srd_localStore.isAvailable() ) {
-		console.log("LocalStore available");
-//		theSrdDocument.srd_localStore.initialize();
-
-/*		if(theSrdDocument.srd_localStore.initialized == false ) {
-			dojo.event.connect(dojox.storage.manager,
-                     "loaded", theSrdDocument.srd_localStore,
-                     storeIsInitialized);
-
-		} else {
-*/
-//			dojo.connect(null,
-  //                   "onload", 
- //                    function(evt) { storeIsInitialized(); }  );
-
-//		dojo.addOnLoad( storeIsInitialized() );
-
-//		}
-//	}
-//		storeIsInitialized();
-
-	
-	//Fetch all global settings (except layer stuff).
-	theSrdDocument.srd_settingsStore.fetch({
-		onComplete: function(items,request) { 
-			theSrdDocument.settings_init(items,request);
-
-		},
-		onError: function(errScope) {
-			theSrdDocument.errorOnLoad(errScope);
-		}
-	});
-
-	
-}
-// END INIT FUNCTION
-
-
-function storeIsInitialized() {
-//		var isPerm = theSrdDocument.srd_localStore.isPermanent();
-//		console.log("LocalStore Permanece = "+isPerm);
-
-//		var test = theSrdDocument.srd_localStore.get("staticVals");
-		var test = false;
+		var test = this.srd_localStore.get("single_user", "srd");
 		if(test != null) {
 			console.log("Localstore has data! single_user="+test);
-		
 		} else {
 			console.log("Localstore has no data");
 		}
@@ -89,14 +28,8 @@ function storeIsInitialized() {
 		var resultsHandler = function(thestatus, key, message, namespace){ alert("status="+thestatus+", key="+key+", message="+message); }; 
 
 //		theSrdDocument.srd_localStore.put("single_user", true,resultsHandler,"srd");
-		theSrdDocument.staticVals.single_user = true;
-		var options = { id: "staticVals" };
-		theSrdDocument.srd_localStore.put(theSrdDocument.staticVals, options);
 	return 0;
 }
-
-
-
 
 //srd_document CLASS 
 function srd_document() {
@@ -114,21 +47,14 @@ function srd_document() {
 	this.srd_settingsStore = null;
 	this.srd_settingsTypeMap = null;
 	this.srd_config = null;
-//	this.single_user = null;
-//	this.runFromServer = null;
-//	this.default_projection = null;
-//	this.start_lat = null;
-//	this.start_lon = null;
-//	this.start_zoom = null;
-	
-		if ( typeof srd_document.counter == 'undefined' ) {
+		
+	if ( typeof srd_document.counter == 'undefined' ) {
         // It has not... perform the initilization
         srd_document.counter = 0;
     }
-
+	this.srd_doc_id = null;
 	this.staticVals = { 
 			srd_doc_count: null,
-			srd_doc_id : null,
 			single_user: null,
 			runFromServer: null,
 			default_projection: null,
@@ -142,8 +68,57 @@ function srd_document() {
 	this.staticVals.srd_doc_id++;
 //	alert("Created srd_document with ID="+this.staticVals.srd_doc_id);
 //	alert("Created srd_document with ID="+srd_document.counter);
-	
+	this.srd_init();	
 }
+
+// SRD_DOCUMENT CONSTRUCTOR
+srd_document.prototype.srd_init = function() {
+// srd_init : called by SitRepDashboard when we are ready to 
+// load initial values and the first 'screen' we will see :
+// map, admin, or data.
+
+//LETS TRY AND MAKE A dojo.store.DataStore that takes the settingsStore.
+
+	if( this.staticVals.srd_settingsStore == null ) {
+		// READ the srd_settings.xml file and load it into a dojo.data object.
+		this.srd_settingsStore = new dojox.data.XmlStore({ 
+			url: 'srd_settings.xml',
+			label: 'tag_name', 
+		});
+		this.staticVals.srd_settingsStore = this.srd_settingsStore; 
+	} 
+
+
+	// LOCAL STORAGE LOADING
+	this.srd_localStore = new dojox.storage.LocalStorageProvider({});
+	if( this.srd_localStore.isAvailable() ) {
+		this.srd_localStore.initialize();
+		if(this.srd_localStore.initialized == false ) {
+			console.log("Store is not initialed yet");
+			dojo.event.connect(dojox.storage.manager,
+                     "loaded", this.srd_localStore,
+                     this.storeIsInitialized);
+		} else {
+			console.log("Store Is Inited");
+			this.storeIsInitialized();
+		}
+	}
+
+	
+	//Fetch all global settings (except layer stuff).
+	this.srd_settingsStore.fetch({
+		onComplete: function(items,request) { 
+			this.settings_init(items,request);
+
+		}.bind(this),
+		onError: function(errScope) {
+			this.errorOnLoad(errScope);
+		}.bind(this)
+	});
+}
+// END SRD_DOCUMENT CONSTRUCTOR
+
+
 
 srd_document.prototype.setValue = function(varName, varValue) {
 	switch(String(varName) ) {
@@ -245,7 +220,7 @@ srd_document.prototype.settings_init = function(items,request) {
 
 
 	//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
-	theSrdDocument.map_init();
+	this.map_init();
 }
 
 
