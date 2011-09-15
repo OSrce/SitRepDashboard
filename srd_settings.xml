@@ -29,7 +29,7 @@
 			<visibility>true</visibility>
 			<projection>EPSG:4326</projection>
 			<sphericalMercator>true</sphericalMercator>
-			<url>http://SitRepGIS.local:3001/mq_tiles/${z}/${x}/${y}.png</url>
+			<url>https://sitrep.local/mq_tiles/${z}/${x}/${y}.png</url>
 			<numZoomLevels>19</numZoomLevels>
 		</layer>
 

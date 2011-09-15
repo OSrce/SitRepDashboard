@@ -83,7 +83,7 @@ srd_document.prototype.srd_init = function() {
 		// READ the srd_settings.xml file and load it into a dojo.data object.
 		this.srd_settingsStore = new dojox.data.XmlStore({ 
 			url: 'srd_settings.xml',
-			label: 'tag_name', 
+			label: 'tag_name' 
 		});
 		this.staticVals.srd_settingsStore = this.srd_settingsStore; 
 	} 
