@@ -79,7 +79,7 @@
 					<strokeColor>#0000FF</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
 					<pointRadius>6</pointRadius>
-					<label>PctName</label>
+					<label>${PctName}</label>
 					<labelAlign>cc</labelAlign>
 					<fontColor>#0000FF</fontColor>
 					<fontOpacity>0.9</fontOpacity>
@@ -103,7 +103,7 @@
 					<name>default</name>
 					<fillColor>#0F0050</fillColor>
 					<fillOpacity>0.5</fillOpacity>
-					<strokeColor>#0F0050</strokeColor>
+					<strokeColor>${COLOR}</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
 					<pointRadius>6</pointRadius>
 				</Style>
@@ -122,11 +122,11 @@
 			<StyleMap>
 				<Style>
 					<name>default</name>
-					<fillColor>#00F006</fillColor>
-					<fillOpacity>0.2</fillOpacity>
-					<strokeColor>#00F006</strokeColor>
+					<fillColor>#000000</fillColor>
+					<fillOpacity>0.8</fillOpacity>
+					<strokeColor>#FFFFFF</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
-					<pointRadius>6</pointRadius>
+					<pointRadius>3</pointRadius>
 				</Style>
 			</StyleMap>	
 		</layer>

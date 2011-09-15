@@ -461,7 +461,8 @@ srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
 			this.srd_styleMap.styles[styleName].defaultStyle[varName] = Number(varValue);
 			break;
 		case "label" :
-			this.srd_styleMap.styles[styleName].defaultStyle[varName] = "${"+String(varValue)+"}";
+//			this.srd_styleMap.styles[styleName].defaultStyle[varName] = "${"+String(varValue)+"}";
+			this.srd_styleMap.styles[styleName].defaultStyle[varName] = String(varValue);
 			break;
 	}
 }
