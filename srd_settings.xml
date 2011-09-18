@@ -64,7 +64,7 @@
 
 		<layer>
 			<id>4</id>
-			<name>PolicePctBoundaries</name>	
+			<name>NYPD Precincts</name>	
 			<isBaseLayer>false</isBaseLayer>
 			<layertype>Vector</layertype>
 			<format>GML</format>
@@ -151,6 +151,36 @@
 				</Style>
 			</StyleMap>	
 		</layer>
+
+		<layer>
+			<id>8</id>
+			<name>NYPD Sectors</name>	
+			<isBaseLayer>false</isBaseLayer>
+			<layertype>Vector</layertype>
+			<format>GML</format>
+			<url>sr_data_private/NYPD_SectorBoundaries.gml</url>
+			<projection>EPSG:4326</projection>
+			<visibility>false</visibility>
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#0000FF</fillColor>
+					<fillOpacity>0</fillOpacity>
+					<strokeColor>#0000FF</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+					<label>${Name}</label>
+					<labelAlign>cc</labelAlign>
+					<fontColor>#0000FF</fontColor>
+					<fontOpacity>0.9</fontOpacity>
+					<fontFamily>Arial</fontFamily>
+					<fontSize>14</fontSize>
+				</Style>
+			</StyleMap>	
+		</layer>
+
+
+
 	</layers>
 
 

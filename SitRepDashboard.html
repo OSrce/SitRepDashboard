@@ -86,7 +86,11 @@
 
 		</style>	
 		<script type="text/javascript" src="SR_Dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-		
+		<script src="SR_OpenLayers/OpenLayers.js"></script>
+		<script src="srd_layer.js"></script>
+		<script src="srd_edit.js"></script>
+		<script src="srd_document.js"></script>
+
 		<script type="text/javascript">
 			dojo.require("dojo.parser");
 			dojo.require("dijit.layout.ContentPane");
@@ -104,13 +108,14 @@
 			dojo.require("dijit.form.FilteringSelect");
 			function srd_init() {
 					var theSrdDoc = document.getElementById('theSrdDoc');
-					theSrdDoc = new srd_document();
+//					theSrdDoc = new srd_document();
 					return;
-			}	
+			}
+			var test = new srd_document();	
 		</script>
 	</head>
- 	<body class="tundra" onload="srd_init()">
-		<div id="theSrdDoc" >
+ 	<body class="tundra" onload="test.srd_init()">
+		<div id="theSrdDoc"  >
 		<div dojoType="dijit.layout.BorderContainer" style="height:100%;width:100%" >
 
 			<div dojoType="dijit.layout.ContentPane" id="top" region="top" style="padding:0px;" >
@@ -189,11 +194,7 @@
 			</div>
 
 		</div>
-		<script src="SR_OpenLayers/OpenLayers.js"></script>
-		<script src="srd_layer.js"></script>
-		<script src="srd_edit.js"></script>
-		<script src="srd_document.js"></script>
-		<div id="off_map_controls" onload="activateDrag()"></div>
+	<div id="off_map_controls" onload="activateDrag()"></div>
 	</div>
 	</body>
 </html>

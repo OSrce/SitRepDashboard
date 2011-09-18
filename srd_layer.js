@@ -51,6 +51,23 @@ function srd_layer( ) {
 		this.srd_styleMap = null; 
 }
 
+srd_layer.prototype.copyValuesFromLayer = function(the_srd_layer) {
+	for( var layerVal in the_srd_layer) {
+		if(layerVal == "srd_styleMap" ) {
+			if( the_srd_layer.srd_styleMap != null) {
+				for(var theStyleName in the_srd_layer.srd_styleMap.styles) {
+//					console.log("Copying Style ="+theStyleName);
+					this.copyStyle(theStyleName,the_srd_layer.srd_styleMap.styles[theStyleName]);
+				} 
+			}
+		} else { 
+			this[layerVal] = the_srd_layer[layerVal];
+		}
+	}	
+	return;
+}
+
+
 // srd_layer return the OpenLayer layer class.
 srd_layer.prototype.getLayer = function() {
 	return this.layer;	
@@ -477,6 +494,16 @@ srd_layer.prototype.createStyle = function(styleName) {
 	this.srd_styleMap.styles[tmpStyleName] = new OpenLayers.Style( {} );
 
 }
+
+srd_layer.prototype.copyStyle = function(theStyleName,theStyle) {
+	this.createStyle(theStyleName);
+	for(var styleVal in theStyle.defaultStyle) {
+//		console.log("Loading StyleSettings"+theStyleName+":::"+styleVal+":::"+theStyle.defaultStyle[styleVal] );
+		this.setStyleProperty(theStyleName,styleVal,theStyle.defaultStyle[styleVal] );
+	}
+
+}
+
 
 
 

@@ -1,3 +1,4 @@
+
 /*
 Function.prototype.bind = function(scope) {
   var _function = this;
@@ -16,18 +17,17 @@ function srd_newWindow() {
 	return 0;
 }
 
-srd_document.prototype.storeIsInitialized = function() {
-
-		var test = this.srd_localStore.get("single_user", "srd");
-		if(test != null) {
-			console.log("Localstore has data! single_user="+test);
-		} else {
-			console.log("Localstore has no data");
-		}
-		
-		var resultsHandler = function(thestatus, key, message, namespace){ alert("status="+thestatus+", key="+key+", message="+message); }; 
-
-//		theSrdDocument.srd_localStore.put("single_user", true,resultsHandler,"srd");
+srd_document.prototype.loadFromLocalStore = function() {
+//	this.srd_localStore.clear("srd");	
+	var tmpStaticVals = this.srd_localStore.get("staticVals","srd"); 
+	for(var tmpVal in tmpStaticVals) {
+		this.setValue(tmpVal,tmpStaticVals[tmpVal] );
+//		console.log("Loading Values: "+tmpVal+", "+tmpStaticVals[tmpVal]);
+	}
+	for(var i=1;i<this.staticVals.layerCount; i++) {
+		this.srd_layerArr[i] = new srd_layer();
+		this.srd_layerArr[i].copyValuesFromLayer( this.srd_localStore.get(i,"srdLayer") );
+	}
 	return 0;
 }
 
@@ -42,33 +42,23 @@ function srd_document() {
 	
 	this.srd_layerArr = [];
 
-// SETTINGS WE SHOULD GET FROM srd_settings.xml
-	this.srd_store = null;
-	this.srd_settingsStore = null;
-	this.srd_settingsTypeMap = null;
-	this.srd_config = null;
+// SETTINGS WE SHOULD GET FROM localStore or srd_settings.xml
+	this.srd_localStore = null;
+	this.srd_xmlStore = null;
 		
-	if ( typeof srd_document.counter == 'undefined' ) {
-        // It has not... perform the initilization
-        srd_document.counter = 0;
-    }
 	this.srd_doc_id = null;
 	this.staticVals = { 
-			srd_doc_count: null,
+			docCount: null,
 			single_user: null,
 			runFromServer: null,
 			default_projection: null,
 			start_lat: null,
 			start_lon: null,
 			start_zoom: null,
-			srd_settingsStore: null
+			layerCount: null
 	};
-	
-	srd_document.counter++;	
-	this.staticVals.srd_doc_id++;
-//	alert("Created srd_document with ID="+this.staticVals.srd_doc_id);
-//	alert("Created srd_document with ID="+srd_document.counter);
-	this.srd_init();	
+
+//	this.srd_init();	
 }
 
 // SRD_DOCUMENT CONSTRUCTOR
@@ -77,19 +67,10 @@ srd_document.prototype.srd_init = function() {
 // load initial values and the first 'screen' we will see :
 // map, admin, or data.
 
-//LETS TRY AND MAKE A dojo.store.DataStore that takes the settingsStore.
-
-	if( this.staticVals.srd_settingsStore == null ) {
-		// READ the srd_settings.xml file and load it into a dojo.data object.
-		this.srd_settingsStore = new dojox.data.XmlStore({ 
-			url: 'srd_settings.xml',
-			label: 'tag_name' 
-		});
-		this.staticVals.srd_settingsStore = this.srd_settingsStore; 
-	} 
-
 
 	// LOCAL STORAGE LOADING
+	// LOAD THE VALUES AND CHECK TO SEE THAT WE HAVE EVERYTHING
+	// WE NEED.  OTHERWISE, LOAD DEFAULTS FROM XML FILE.
 	this.srd_localStore = new dojox.storage.LocalStorageProvider({});
 	if( this.srd_localStore.isAvailable() ) {
 		this.srd_localStore.initialize();
@@ -100,24 +81,46 @@ srd_document.prototype.srd_init = function() {
                      this.storeIsInitialized);
 		} else {
 			console.log("Store Is Inited");
-			this.storeIsInitialized();
+			this.loadFromLocalStore();
 		}
 	}
+	if(this.staticVals.docCount == null) {
+		// Local Storage is empty, need to load from xml (defaults)
+		console.log( "LocalStore is empty, loading from xml");
+		this.loadDefaults();
 
-	
+	} else {	
+		//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
+		this.map_init();
+	}
+}
+// END SRD_DOCUMENT CONSTRUCTOR
+
+srd_document.prototype.storePutHandler = function() {
+//	console.log("LocalStorage Put called!");
+}
+
+
+srd_document.prototype.loadDefaults = function() {
+	if( this.srd_xmlStore == null ) {
+		// READ the srd_settings.xml file and load it into a dojo.data object.
+		this.srd_xmlStore = new dojox.data.XmlStore({ 
+			url: 'srd_settings.xml',
+			label: 'tag_name' 
+		});
+	} 
 	//Fetch all global settings (except layer stuff).
-	this.srd_settingsStore.fetch({
+	this.srd_xmlStore.fetch({
 		onComplete: function(items,request) { 
-			this.settings_init(items,request);
+			this.defaultSettingsLoaded(items,request);
 
 		}.bind(this),
 		onError: function(errScope) {
 			this.errorOnLoad(errScope);
 		}.bind(this)
 	});
-}
-// END SRD_DOCUMENT CONSTRUCTOR
 
+}
 
 
 srd_document.prototype.setValue = function(varName, varValue) {
@@ -130,6 +133,8 @@ srd_document.prototype.setValue = function(varName, varValue) {
 				this.staticVals[varName] = Boolean(false);
 			}
 			break;
+		case "docCount" :
+		case "layerCount" :
 		case "start_lat" :
 		case "start_lon" :
 		case "start_zoom" :
@@ -147,62 +152,60 @@ srd_document.prototype.errorOnLoad = function(errorMessage) {
 	
 }
 
-srd_document.prototype.settings_init = function(items,request) {
+srd_document.prototype.defaultSettingsLoaded = function(items,request) {
 	this.srd_items = items;
 	for(var i=0;i<this.srd_items.length;i++) {
-//		var itemName = this.srd_settingsStore.getIdentity( this.srd_items[i] ); 
-//		var itemValue = this.srd_settingsStore.getAttributes( this.srd_items[i] ); 
-		var itemName = this.srd_settingsStore.getValue( this.srd_items[i], "tagName" ); 
-		var itemValue = this.srd_settingsStore.getValue( this.srd_items[i], "text()" ); 
+//		var itemName = this.srd_xmlStore.getIdentity( this.srd_items[i] ); 
+//		var itemValue = this.srd_xmlStore.getAttributes( this.srd_items[i] ); 
+		var itemName = this.srd_xmlStore.getValue( this.srd_items[i], "tagName" ); 
+		var itemValue = this.srd_xmlStore.getValue( this.srd_items[i], "text()" ); 
 		if( itemName == "layers") {
 //			console.log("Layers from="+itemName+"==="+itemValue);
 			var item = this.srd_items[i];
-//			var theLayerItems = this.srd_settingsStore.getValues(itemValue,"tagName");
+//			var theLayerItems = this.srd_xmlStore.getValues(itemValue,"tagName");
 //			console.log("theLayerItems.length=",theLayerItems.length);
-//			var theItemAtts = this.srd_settingsStore.getAttributes(item);
+//			var theItemAtts = this.srd_xmlStore.getAttributes(item);
 //			for(var j = 0; j < theItemAtts.length; j++){
-//				var values = this.srd_settingsStore.getValues(item, theItemAtts[j]);
+//				var values = this.srd_xmlStore.getValues(item, theItemAtts[j]);
 
 			// THE LINE BELOW GETS AN ARRAY OF ALL LAYERS FROM XML.
-			var theLayerItemArr = this.srd_settingsStore.getValues(item, "layer");
+			var theLayerItemArr = this.srd_xmlStore.getValues(item, "layer");
 			// FOR EACH <layer> in <layers>
 			for(var j = 0; j < theLayerItemArr.length; j++){
 				var theLayerItem = theLayerItemArr[j];
-				if(this.srd_settingsStore.isItem(theLayerItem)){
-//					console.log("Located a child item with name: [" + this.srd_settingsStore.getValue(theLayerItem,"tagName") + "]");
-					var tmpLayerAtts = this.srd_settingsStore.getAttributes(theLayerItem);
+				if(this.srd_xmlStore.isItem(theLayerItem)){
+//					console.log("Located a child item with name: [" + this.srd_xmlStore.getValue(theLayerItem,"tagName") + "]");
+					var tmpLayerAtts = this.srd_xmlStore.getAttributes(theLayerItem);
 					var tmpSrdLayer = new srd_layer();
 //			 	CODE TO iterate through the layer variables and assign the values.
 					// FOR EACH <layer attribute> in <layer>
 					for(var k=0;k < tmpLayerAtts.length;k++) {
 						if( tmpLayerAtts[k] in tmpSrdLayer) {
-//							console.log(":::: Atts="+tmpLayerAtts[k]+":::"+this.srd_settingsStore.getValues(theLayerItem,tmpLayerAtts[k])+":::");
-								tmpSrdLayer.setValue( [tmpLayerAtts[k]],  this.srd_settingsStore.getValue(theLayerItem,tmpLayerAtts[k] ) );
+//							console.log(":::: Atts="+tmpLayerAtts[k]+":::"+this.srd_xmlStore.getValues(theLayerItem,tmpLayerAtts[k])+":::");
+								tmpSrdLayer.setValue( [tmpLayerAtts[k]],  this.srd_xmlStore.getValue(theLayerItem,tmpLayerAtts[k] ) );
 							//TIME TO IMPORT StyleMap data into srd_layer
 						} else if (tmpLayerAtts[k] == "StyleMap") {
-//							console.log("STYLEMAP="+tmpLayerAtts[k]+":::"+this.srd_settingsStore.getValues(theLayerItem,tmpLayerAtts[k])+":::");
-							var theStyleMap = this.srd_settingsStore.getValue(theLayerItem,"StyleMap");
-							var theStyleArr = this.srd_settingsStore.getValues(theStyleMap,"Style");
+//							console.log("STYLEMAP="+tmpLayerAtts[k]+":::"+this.srd_xmlStore.getValues(theLayerItem,tmpLayerAtts[k])+":::");
+							var theStyleMap = this.srd_xmlStore.getValue(theLayerItem,"StyleMap");
+							var theStyleArr = this.srd_xmlStore.getValues(theStyleMap,"Style");
 							// FOR EACH <Style> in <StyleMap>
 							for(var l=0; l < theStyleArr.length; l++) {
 								var theStyleItem = theStyleArr[l];
 //								console.log("StyleItem======="+theStyleItem[l]);
-								if(this.srd_settingsStore.isItem(theStyleItem) ) {
-									var theStyleAtts = this.srd_settingsStore.getAttributes(theStyleItem);
+								if(this.srd_xmlStore.isItem(theStyleItem) ) {
+									var theStyleAtts = this.srd_xmlStore.getAttributes(theStyleItem);
 //									console.log("StyleAtts======="+theStyleAtts);
-									var styleName = this.srd_settingsStore.getValues(theStyleItem,"name");
+									var styleName = this.srd_xmlStore.getValues(theStyleItem,"name");
 									tmpSrdLayer.createStyle(styleName);
 									for(var m=0; m < theStyleAtts.length; m++) {
-										tmpSrdLayer.setStyleProperty(styleName,theStyleAtts[m],this.srd_settingsStore.getValue(theStyleItem,theStyleAtts[m]) );
+										tmpSrdLayer.setStyleProperty(styleName,theStyleAtts[m],this.srd_xmlStore.getValue(theStyleItem,theStyleAtts[m]) );
 									}
 								}
 							}
 						}										
 					}
 					this.srd_layerArr[tmpSrdLayer.id] = tmpSrdLayer;
-					if(tmpSrdLayer.id >3) {
-//						console.log("Finished with Layer="+tmpSrdLayer.name+", Style Default - fillColor="+tmpSrdLayer.srd_styleMap.styles.default.defaultStyle.fillColor+":::");
-					}
+					this.srd_localStore.put(tmpSrdLayer.id,tmpSrdLayer,this.storePutHandler,"srdLayer");
 					tmpSrdLayer = null;
 				}
 			}	
@@ -214,13 +217,11 @@ srd_document.prototype.settings_init = function(items,request) {
 		}
 	}
 
-//	this.start_lat = this.srd_settingsStore.getValue(this.srd_items,'start_lat');
-//	this.start_lat = this.srd_config.getElementsByTagName('start_lat')[0].childNodes[0].nodeValue;
-//	this.start_lon = this.srd_config.getElementsByTagName('start_lon')[0].childNodes[0].nodeValue;
+		this.staticVals.layerCount = this.srd_layerArr.length;
+		this.srd_localStore.put("staticVals", this.staticVals,this.storePutHandler,"srd");
 
 
-	//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
-	this.map_init();
+		this.map_init();
 }
 
 
