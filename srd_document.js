@@ -33,6 +33,14 @@ srd_document.prototype.loadFromLocalStore = function() {
 
 //srd_document CLASS 
 function srd_document() {
+	//THE UI VARS
+	this.srd_container = null;
+	this.srd_menuBar = null;
+	this.srd_mapContent = null;
+	this.srd_adminContent = null;
+	this.srd_dataContent = null;
+
+	//THE OpenLayers VARS
 	this.map = null;
 	this.editTools = null;
 	this.selectControl = null;
@@ -84,11 +92,11 @@ srd_document.prototype.srd_init = function() {
 			this.loadFromLocalStore();
 		}
 	}
+	this.srd_mapDisplay();
 	if(this.staticVals.docCount == null) {
 		// Local Storage is empty, need to load from xml (defaults)
 		console.log( "LocalStore is empty, loading from xml");
 		this.loadDefaults();
-
 	} else {	
 		//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
 		this.map_init();
@@ -452,6 +460,92 @@ function activateDrag() {
 
 
 */
+
+srd_document.prototype.srd_displayMenuBar = function() {
+	dojo.addOnLoad(function() {
+		if(this.srd_container == null) {
+			var srd_jsDisabled = dojo.byId("srd_jsDisabled");
+			dojo.style(srd_jsDisabled, "display", "none");
+			this.srd_container = new dijit.layout.BorderContainer(
+				{ style: "height:100%;width:100%"}, 'srd_container' );
+			this.srd_container.placeAt("theSrdDoc");
+		}
+		if(this.srd_menuBar == null) {
+			this.srd_menuBar = new dijit.MenuBar({region: 'top'});	
+			var srd_sitrepMenu = new dijit.Menu({});
+			this.srd_menuBar.addChild(new dijit.MenuBarItem( {
+				label: '<img src="img/NYPD_Seal_Tiny.png" height="20" width="16">' } ) );
+	
+			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+				label: "SitRep",
+				popup: srd_sitrepMenu
+			}) );
+			srd_sitrepMenu.addChild(new dijit.MenuItem({
+				label: "Map Screen",
+				onClick: function() {this.srd_mapDisplay() }.bind(this)
+			}));
+			srd_sitrepMenu.addChild(new dijit.MenuItem({
+				label: "Admin Screen",
+				onClick: function() { this.srd_adminDisplay() }.bind(this)
+			}));
+			srd_sitrepMenu.addChild(new dijit.MenuItem({
+				label: "Data Screen",
+				onClick: function() { this.srd_dataDisplay() }.bind(this)
+			}));
+		}
+		var widgetArr = this.srd_container.getChildren();
+		for(var i=0;i<widgetArr.length;i++) {
+			this.srd_container.removeChild(widgetArr[i]);
+		}
+		this.srd_container.addChild(this.srd_menuBar);
+	}.bind(this) );
+	return;
+}
+
+srd_document.prototype.srd_mapDisplay = function() {
+	this.srd_displayMenuBar();
+
+	dojo.addOnLoad(function() {
+		if(this.srd_mapContent == null) {
+			this.srd_mapContent = new dijit.layout.ContentPane(
+	      { style: "height:100%;width:100%", region: 'center',content: '<div id="srd_docContent"></div>'}, 'srd_centerPane');
+		}
+		this.srd_container.addChild(this.srd_mapContent);
+	}.bind(this) );
+
+	return;
+}
+
+srd_document.prototype.srd_adminDisplay = function() {
+	this.srd_displayMenuBar();
+	
+	
+	return;
+}
+
+srd_document.prototype.srd_dataDisplay = function() {
+	this.srd_displayMenuBar();
+
+
+	return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
