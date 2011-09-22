@@ -1,21 +1,8 @@
 
-/*
-Function.prototype.bind = function(scope) {
-  var _function = this;
-  
-  return function() {
-    return _function.apply(scope, arguments);
-  }
-}
-*/
 //dojo.require("dojo.store.Memory");
 //dojo.require("dojo.store.LocalStorage");
 dojo.require("dojox.storage.LocalStorageProvider");
-
-function srd_newWindow() {
-	window.open("SitRepDashboard.html");
-	return 0;
-}
+dojo.require("dojo.date.locale");
 
 srd_document.prototype.loadFromLocalStore = function() {
 //	this.srd_localStore.clear("srd");	
@@ -45,10 +32,23 @@ function srd_document() {
 	this.editTools = null;
 	this.selectControl = null;
 	this.drawControls = null;
-	this.panel = null;
+	this.srd_panel = null;
 	this.theSelectedControl = null;
 	
 	this.srd_layerArr = [];
+
+	this.srd_selLayer = null;
+	this.srd_selControl = null;
+
+	// LAYER EDIT CONTROLS
+	this.srd_drawControls = {
+		point: null,
+		line: null,
+		polygon: null,
+		remove: null,
+		select: null
+	};
+
 
 // SETTINGS WE SHOULD GET FROM localStore or srd_settings.xml
 	this.srd_localStore = null;
@@ -264,22 +264,6 @@ var lonlat = new OpenLayers.LonLat(this.staticVals.start_lon, this.staticVals.st
 this.map.setCenter( lonlat, this.staticVals.start_zoom ); 
 
 
-/*
-		//Dynamic layer creation lets change this to make the
-		// settings in srd_layer, 
-		var whiteboard = new srd_layer();
-		whiteboard.name = "Whiteboard";
-		whiteboard.id = this.srd_layerArr.length;
-		whiteboard.layertype="Vector";
-		whiteboard.format="WFST";
-		whiteboard.isBaseLayer = false;
-		whiteboard.projection = "EPSG:4326";
-		whiteboard.visibility = true;
-		whiteboard.loadData();
-		whiteboard.addLayerToMap(this.map);
-*/
-
-
 
 // Adding the Control for the Layer select 
 this.map.addControl(new OpenLayers.Control.LayerSwitcher() );
@@ -326,12 +310,6 @@ for(var layerName in sr_dynamicLayers ) {
 //	var position = this.events.getMousePosition(e);
 //	OpenLayers.Util.getElement("coords").innerHTML = position;
 //});
-
-panel = new OpenLayers.Control.Panel( {
-        'displayClass': 'customEditingToolbar',
-				div: document.getElementById('editToolsPanel') 
-			}
-    );
 
 
 
@@ -461,21 +439,46 @@ function activateDrag() {
 
 */
 
+srd_document.prototype.srd_createWhiteboard = function() {
+	var theDate = new Date();
+	var theFrmt = "yyyyMMdd_HHmm";
+	
+	var wbLayer = new srd_layer();
+	wbLayer.name = "WhiteBoard_"+dojo.date.locale.format(theDate,  {
+            selector: "date",
+            datePattern: theFrmt
+        });
+	wbLayer.layertype = "Vector";
+	wbLayer.format = "WFST";
+	
+	wbLayer.isBaseLayer = false;
+	wbLayer.visibility = true;
+
+	wbLayer.id = this.srd_layerArr.length;
+	this.srd_layerArr[wbLayer.id] = wbLayer;	
+
+	wbLayer.loadData();
+	wbLayer.addLayerToMap(this.map);
+	this.srd_selLayer = wbLayer;
+}
+
+
 srd_document.prototype.srd_displayMenuBar = function() {
 	dojo.addOnLoad(function() {
 		if(this.srd_container == null) {
 			var srd_jsDisabled = dojo.byId("srd_jsDisabled");
 			dojo.style(srd_jsDisabled, "display", "none");
 			this.srd_container = new dijit.layout.BorderContainer(
-				{ style: "height:100%;width:100%"}, 'srd_container' );
+				{}, 'srd_container' );
 			this.srd_container.placeAt("theSrdDoc");
 		}
 		if(this.srd_menuBar == null) {
 			this.srd_menuBar = new dijit.MenuBar({region: 'top'});	
-			var srd_sitrepMenu = new dijit.Menu({});
+			//// ICON in LEFT CORNER ////
 			this.srd_menuBar.addChild(new dijit.MenuBarItem( {
 				label: '<img src="img/NYPD_Seal_Tiny.png" height="20" width="16">' } ) );
-	
+			//// SitRep MENU /////	
+			var srd_sitrepMenu = new dijit.Menu({});
 			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
 				label: "SitRep",
 				popup: srd_sitrepMenu
@@ -492,7 +495,46 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				label: "Data Screen",
 				onClick: function() { this.srd_dataDisplay() }.bind(this)
 			}));
+			//// File Menu ////
+			var srd_fileMenu = new dijit.Menu({});
+			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+				label: "File",
+				popup: srd_fileMenu
+			}) );
+			srd_fileMenu.addChild(new dijit.MenuItem({
+				label: "New Whiteboard Layer",
+				onClick: function() { this.srd_createWhiteboard()  }.bind(this)
+			}));
+			srd_fileMenu.addChild(new dijit.MenuItem({
+				label: "Open",
+				onClick: function() { alert("Place Open Here") }.bind(this)
+			}));
+			//// Edit Menu ////
+			var srd_editMenu = new dijit.Menu({});
+			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+				label: "Edit",
+				popup: srd_editMenu
+			}) );
+			srd_editMenu.addChild(new dijit.MenuItem({
+				label: "TEST1",
+				onClick: function() { alert("Place TEST Here") }.bind(this)
+			}));
+			//// Tools Menu ////
+			var srd_toolsMenu = new dijit.Menu({});
+			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+				label: "Tools",
+				popup: srd_toolsMenu
+			}) );
+			srd_toolsMenu.addChild(new dijit.MenuItem({
+				label: "Show Edit Toolbar",
+				onClick: function() { var test= false; this.srd_toggleEditPanel(test); }.bind(this)
+			}));
+				
+
+
 		}
+		
+		// GET RID OF ALL WIDGETS ON SCREEN
 		var widgetArr = this.srd_container.getChildren();
 		for(var i=0;i<widgetArr.length;i++) {
 			this.srd_container.removeChild(widgetArr[i]);
@@ -508,9 +550,10 @@ srd_document.prototype.srd_mapDisplay = function() {
 	dojo.addOnLoad(function() {
 		if(this.srd_mapContent == null) {
 			this.srd_mapContent = new dijit.layout.ContentPane(
-	      { style: "height:100%;width:100%", region: 'center',content: '<div id="srd_docContent"></div>'}, 'srd_centerPane');
+	      {  region: 'center', content: '<div id="srd_docContent"></div>'}, 'center');
 		}
 		this.srd_container.addChild(this.srd_mapContent);
+		this.srd_mapContent.resize();
 	}.bind(this) );
 
 	return;
@@ -525,23 +568,36 @@ srd_document.prototype.srd_adminDisplay = function() {
 
 srd_document.prototype.srd_dataDisplay = function() {
 	this.srd_displayMenuBar();
-
+	
 
 	return;
 }
 
 
+srd_document.prototype.srd_toggleEditPanel = function(toggleVal) {
+	toggleVal = true;
+	if(toggleVal == true) {
+		if(this.srd_panel == null) {
+			this.srd_panel = new OpenLayers.Control.Panel( );
+			
+			if(this.srd_selLayer != null ) {
+				for( theCon in this.srd_selLayer.srd_drawControls) {
+					this.srd_panel.addControls([ this.srd_selLayer.srd_drawControls[theCon] ]);
+				}
+			}
+			console.log("Added the Edit Panel!");	
+			this.map.addControl(this.srd_panel);
+		}
+		this.srd_panel.activate();
+//TESTING ONLY - WE GOT IT THOUGH !!!
+//		this.srd_selLayer.srd_drawControls.point.activate();
+		
+	} else {
+		this.srd_panel.deactivate();
 
-
-
-
-
-
-
-
-
-
-
+	}
+	return;
+}
 
 
 

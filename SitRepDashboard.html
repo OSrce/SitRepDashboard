@@ -20,7 +20,7 @@
                 margin: 0;
                 width: 100%;
                 height: 100%;
-            }
+			      }
 
             #text {
                 position: absolute;
@@ -31,13 +31,13 @@
                 background-color: white;
             }
         .customEditingToolbar {
-            float: right;
+            float: bottom;
             right: 0px;
             height: 30px; 
             width: 200px;
         }
         .customEditingToolbar div {
-            float: right;
+            float: bottom;
             margin: 5px;
             width: 24px;
             height: 24px;
@@ -114,7 +114,9 @@
 			var test = new srd_document();	
 		</script>
 	</head>
- 	<body class="tundra" onload="test.srd_init()">
+ 	<body class="tundra" onload="test.srd_init()" >
+    <div id="panel"></div> 
+
 		<div id="theSrdDoc"  >
 			<div id="srd_jsDisabled" >It appears you have javascript disabled.  Please enable and reload the page.</div>
 		</div>

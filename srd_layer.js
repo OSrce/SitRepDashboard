@@ -49,6 +49,17 @@ function srd_layer( ) {
 		this.saveStrategy = null;
 		this.refreshStrategy = null;
 		this.srd_styleMap = null; 
+
+
+		// CONTROL FUNCTIONS FOR EDITING LAYER
+		this.srd_drawControls = {
+			point		:	null,
+			line		:	null,
+			polygon	:	null,
+			remove	:	null,
+			select	:	null
+		}
+
 }
 
 srd_layer.prototype.copyValuesFromLayer = function(the_srd_layer) {
@@ -100,6 +111,9 @@ srd_layer.prototype.loadData = function( ) {
 
 
 // BEGIN MESSY STYLE RULE CODE
+		if(this.srd_styleMap == null) {
+			this.srd_styleMap = new OpenLayers.StyleMap();
+		}
 		var tmpSymbolizer = this.srd_styleMap.styles["default"].defaultStyle;
 		var mainRule = new OpenLayers.Rule( { symbolizer: tmpSymbolizer} );
 		this.srd_styleMap.styles["default"].addRules( [mainRule] );
@@ -154,25 +168,50 @@ srd_layer.prototype.loadData = function( ) {
         })
     }); 
 		}
-		this.modifyControl = new OpenLayers.Control.ModifyFeature(this.layer,
-								{ mode: OpenLayers.Control.ModifyFeature.DRAG } );
 
+//		this.modifyControl = new OpenLayers.Control.ModifyFeature(this.layer,
+//								{ mode: OpenLayers.Control.ModifyFeature.DRAG } );
 //		this.map.addControl(this.modifyControl);
 //		this.modifyControl.activate();
 
+
+//// BEGIN controller initialize ////
+
+		this.srd_drawControls.point = new OpenLayers.Control.DrawFeature( this.layer,
+			OpenLayers.Handler.Point);
+
+		this.srd_drawControls.line = new OpenLayers.Control.DrawFeature( this.layer,
+			OpenLayers.Handler.Path);
+
+		this.srd_drawControls.polygon = new OpenLayers.Control.DrawFeature( this.layer,
+			OpenLayers.Handler.Polygon);
+
+		this.srd_drawControls.remove = new OpenLayers.Control.SelectFeature(
+			this.layer, {
+				clickout: true,
+				toggle: false,
+				hover: false,
+				title: "Delete",
+				displayClass: "olControlDelete",
+				onSelect: function (theFeat) {
+					if (confirm('Are you sure you want to delete this feature from Overlay : '+this.name+'?')) {
+						theFeat.state = OpenLayers.State.DELETE;
+						if( !theFeat.attributes.gid) {
+							this.layer.removeFeatures([theFeat]);
+						}
+					}
+				}
+			} );
+	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer,
+		{onSelect: this.onFeatureSelect, onUnselect: this.onFeatureUnselect});
+
+/////////////////////////////////////////////
 	}
+	// END IF VECTOR
 
 	//Adding the Control to allow for points to be selected and moved 
 //	this.dragControl = new OpenLayers.Control.DragFeature( this.layer ); 
 //	this.map.addControl(dragControl);
-/*
-	// Adding select control for layer
-	this.selectControl = new OpenLayers.Control.SelectFeature(this.layer,
-                {onSelect: this.onFeatureSelect, onUnselect: this.onFeatureUnselect});
-	this.map.addControl(this.selectControl);
-	this.selectControl.activate();
-
-*/
 //	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
 	
 	return 0;

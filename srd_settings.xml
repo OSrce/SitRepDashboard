@@ -15,7 +15,7 @@
 	<start_lat>40.713</start_lat>
 	<start_lon>-73.998</start_lon>
 	<start_zoom>13</start_zoom>
-
+	<include_whiteboard>true</include_whiteboard>
 
 	<layers>
 
