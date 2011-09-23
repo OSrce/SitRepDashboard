@@ -13,15 +13,18 @@
 		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>SitRep</title>
-		<link rel="stylesheet" href="SR_OpenLayers/theme/default/style.css" type="text/css" />
+		<link rel="stylesheet" href="SR_Openlayers/theme/default/style.css" type="text/css" />
 		<link rel="stylesheet" href="SR_OpenLayers/style.css" type="text/css" />
+
+				<!--.olControlPanel  DESCRIBES THE PANEL ITSELF -->
+				<!-- olControlPanel div  DESCRIBES THE ELE IN THE PANEL (DEFAULTS) -->
 		<style type="text/css">
-            html, body {
-                margin: 0;
+            html, body, #theSrdDoc  {
+                border: 0; padding: 0; margin: 0;
                 width: 100%;
                 height: 100%;
 			      }
-
+ 
             #text {
                 position: absolute;
                 bottom: 1em;
@@ -30,58 +33,88 @@
                 z-index: 20000;
                 background-color: white;
             }
-        .customEditingToolbar {
-            float: bottom;
-            right: 0px;
-            height: 30px; 
-            width: 200px;
+       .olControlPanel  {
+						display:block;
+            float: right;
+						width: 300px;
+						height: 100px;
+            margin: 5px;
+						right: 250px;
+						background-color:gray;
         }
-        .customEditingToolbar div {
-            float: bottom;
+       .olControlPanel  div {
+						display:block;
+            float: right;
             margin: 5px;
             width: 24px;
             height: 24px;
+						top: 50px;
+						right: 0px;
+						background-color:blue;
         }
         .olControlNavigationItemActive { 
-            background-image: url("../theme/default/img/editing_tool_bar.png");
+            background-image: url("SR_Openlayers/theme/default/img/editing_tool_bar.png");
             background-repeat: no-repeat;
             background-position: -103px -23px; 
         }
         .olControlNavigationItemInactive { 
-            background-image: url("../theme/default/img/editing_tool_bar.png");
+            background-image: url("SR_Openlayers/theme/default/img/editing_tool_bar.png");
             background-repeat: no-repeat;
             background-position: -103px -0px; 
         }
-        .olControlDrawFeaturePolygonItemInactive { 
-            background-image: url("../theme/default/img/editing_tool_bar.png");
-            background-repeat: no-repeat;
-            background-position: -26px 0px; 
+
+        .olControlPanel .olControlDrawFeaturePointItemInactive { 
+            background-image: url("SR_Openlayers/theme/default/img/draw_point_off.png");
+            width: 24px;
+						height: 24px; 
         }
-        .olControlDrawFeaturePolygonItemActive { 
-            background-image: url("../theme/default/img/editing_tool_bar.png");
-            background-repeat: no-repeat;
-            background-position: -26px -23px ;                                                                   
+        .olControlPanel .olControlDrawFeaturePointItemActive { 
+            background-image: url("SR_Openlayers/theme/default/img/draw_point_on.png");
+            width: 24px;
+						height: 24px; 
         }
+
+        .olControlPanel .olControlDrawFeaturePathItemInactive { 
+            background-image: url("SR_Openlayers/theme/default/img/draw_line_off.png");
+            width: 24px;
+						height: 24px; 
+        }
+        .olControlPanel .olControlDrawFeaturePathItemActive { 
+            background-image: url("SR_Openlayers/theme/default/img/draw_line_on.png");
+            width: 24px;
+						height: 24px; 
+        }
+
+        .olControlPanel .olControlDrawFeaturePolygonItemInactive { 
+            background-image: url("SR_Openlayers/theme/default/img/draw_polygon_off.png");
+            width: 24px;
+						height: 24px; 
+        }
+        .olControlPanel .olControlDrawFeaturePolygonItemActive { 
+            background-image: url("SR_Openlayers/theme/default/img/draw_polygon_on.png");
+            width: 24px;
+						height: 24px; 
+       	}
         .olControlModifyFeatureItemActive { 
-            background-image: url(../theme/default/img/move_feature_on.png);
-            background-repeat: no-repeat;
-            background-position: 0px 1px;
-        }
+            background-image: url(SR_Openlayers/theme/default/img/move_feature_on.png);
+            width: 24px;
+						height: 24px; 
+      	}
         .olControlModifyFeatureItemInactive { 
-            background-image: url(../theme/default/img/move_feature_off.png);
-            background-repeat: no-repeat;
-            background-position: 0px 1px;
-        }
-        .olControlDeleteFeatureItemActive { 
-            background-image: url(../theme/default/img/remove_point_on.png);
-            background-repeat: no-repeat;
-            background-position: 0px 1px;
-        }
-        .olControlDeleteFeatureItemInactive { 
-            background-image: url(../theme/default/img/remove_point_off.png);
-            background-repeat: no-repeat;
-            background-position: 0px 1px;
-        }
+            background-image: url(SR_Openlayers/theme/default/img/move_feature_off.png);
+            width: 24px;
+						height: 24px; 
+				}
+        .olControlPanel	.olControlDeleteItemActive  { 
+            background-image: url(SR_Openlayers/theme/default/img/remove_point_on.png);
+           	width: 24px;
+						height: 24px; 
+				}
+        .olControlPanel	.olControlDeleteItemInactive { 
+            background-image: url(SR_Openlayers/theme/default/img/remove_point_off.png);
+            width: 24px;
+						height: 24px; 
+				}
 
 
 		</style>	
@@ -115,8 +148,6 @@
 		</script>
 	</head>
  	<body class="tundra" onload="test.srd_init()" >
-    <div id="panel"></div> 
-
 		<div id="theSrdDoc"  >
 			<div id="srd_jsDisabled" >It appears you have javascript disabled.  Please enable and reload the page.</div>
 		</div>

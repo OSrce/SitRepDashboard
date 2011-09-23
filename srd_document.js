@@ -100,6 +100,10 @@ srd_document.prototype.srd_init = function() {
 	} else {	
 		//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
 		this.map_init();
+////TESTING ONLY
+		this.srd_createWhiteboard();
+var test= false; this.srd_toggleEditPanel(test);
+
 	}
 }
 // END SRD_DOCUMENT CONSTRUCTOR
@@ -236,6 +240,7 @@ srd_document.prototype.defaultSettingsLoaded = function(items,request) {
 srd_document.prototype.map_init = function() {
 
 	if(this.map == null) {
+//		this.map = new OpenLayers.Map("srd_docContent", { 
 		this.map = new OpenLayers.Map("srd_docContent", { 
 			controls: [
 				new OpenLayers.Control.Navigation(),
@@ -469,11 +474,11 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			var srd_jsDisabled = dojo.byId("srd_jsDisabled");
 			dojo.style(srd_jsDisabled, "display", "none");
 			this.srd_container = new dijit.layout.BorderContainer(
-				{}, 'srd_container' );
+				{ style: "height:100%;width:100%;margin:0px;padding:0px;border:0px;" }, 'srd_container' );
 			this.srd_container.placeAt("theSrdDoc");
 		}
 		if(this.srd_menuBar == null) {
-			this.srd_menuBar = new dijit.MenuBar({region: 'top'});	
+			this.srd_menuBar = new dijit.MenuBar({region: 'top' });	
 			//// ICON in LEFT CORNER ////
 			this.srd_menuBar.addChild(new dijit.MenuBarItem( {
 				label: '<img src="img/NYPD_Seal_Tiny.png" height="20" width="16">' } ) );
@@ -550,10 +555,9 @@ srd_document.prototype.srd_mapDisplay = function() {
 	dojo.addOnLoad(function() {
 		if(this.srd_mapContent == null) {
 			this.srd_mapContent = new dijit.layout.ContentPane(
-	      {  region: 'center', content: '<div id="srd_docContent"></div>'}, 'center');
+	      {  style: "background-color:white", region: 'center', content: '<div id="srd_docContent"></div>' }, 'center');
 		}
 		this.srd_container.addChild(this.srd_mapContent);
-		this.srd_mapContent.resize();
 	}.bind(this) );
 
 	return;
@@ -581,7 +585,7 @@ srd_document.prototype.srd_toggleEditPanel = function(toggleVal) {
 			this.srd_panel = new OpenLayers.Control.Panel( );
 			
 			if(this.srd_selLayer != null ) {
-				for( theCon in this.srd_selLayer.srd_drawControls) {
+				for( var theCon in this.srd_selLayer.srd_drawControls) {
 					this.srd_panel.addControls([ this.srd_selLayer.srd_drawControls[theCon] ]);
 				}
 			}

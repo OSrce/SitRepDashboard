@@ -179,12 +179,15 @@ srd_layer.prototype.loadData = function( ) {
 
 		this.srd_drawControls.point = new OpenLayers.Control.DrawFeature( this.layer,
 			OpenLayers.Handler.Point);
+		this.srd_drawControls.point.displayClass = "olControlDrawFeaturePoint";	
 
 		this.srd_drawControls.line = new OpenLayers.Control.DrawFeature( this.layer,
 			OpenLayers.Handler.Path);
+		this.srd_drawControls.line.displayClass = "olControlDrawFeaturePath";	
 
 		this.srd_drawControls.polygon = new OpenLayers.Control.DrawFeature( this.layer,
 			OpenLayers.Handler.Polygon);
+		this.srd_drawControls.polygon.displayClass = "olControlDrawFeaturePolygon";	
 
 		this.srd_drawControls.remove = new OpenLayers.Control.SelectFeature(
 			this.layer, {
@@ -200,7 +203,7 @@ srd_layer.prototype.loadData = function( ) {
 							this.layer.removeFeatures([theFeat]);
 						}
 					}
-				}
+				}.bind(this)
 			} );
 	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer,
 		{onSelect: this.onFeatureSelect, onUnselect: this.onFeatureUnselect});
