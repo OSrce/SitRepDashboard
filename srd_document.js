@@ -100,9 +100,6 @@ srd_document.prototype.srd_init = function() {
 	} else {	
 		//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
 		this.map_init();
-////TESTING ONLY
-		this.srd_createWhiteboard();
-var test= false; this.srd_toggleEditPanel(test);
 
 	}
 }
@@ -530,10 +527,11 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				label: "Tools",
 				popup: srd_toolsMenu
 			}) );
-			srd_toolsMenu.addChild(new dijit.MenuItem({
+			var editPanelMenuItem =new dijit.CheckedMenuItem({
 				label: "Show Edit Toolbar",
-				onClick: function() { var test= false; this.srd_toggleEditPanel(test); }.bind(this)
-			}));
+				onClick: function() { this.srd_toggleEditPanel(editPanelMenuItem); }.bind(this)
+			});
+			srd_toolsMenu.addChild(editPanelMenuItem);
 				
 
 
@@ -578,27 +576,59 @@ srd_document.prototype.srd_dataDisplay = function() {
 }
 
 
-srd_document.prototype.srd_toggleEditPanel = function(toggleVal) {
-	toggleVal = true;
-	if(toggleVal == true) {
+srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
+	if(menuItem.checked == true) {
 		if(this.srd_panel == null) {
 			this.srd_panel = new OpenLayers.Control.Panel( );
-			
+
+			this.map.addControl(this.srd_panel);
+			// BEGIN LAYER SELECT	
+			var menu = new dijit.Menu({
+				style: "display: none;"
+			});
+			var button = new dijit.form.DropDownButton({
+				label: "Active Edit Layer",
+				name: "programmatic2",
+				dropDown: menu,
+				id: "progButton"
+			});
+			dojo.byId(this.srd_panel.id).appendChild(button.domNode);
+			// END LAYER SELECT
+			//BEGIN ADD THE BUTTONS TO THE PANEL	
 			if(this.srd_selLayer != null ) {
 				for( var theCon in this.srd_selLayer.srd_drawControls) {
 					this.srd_panel.addControls([ this.srd_selLayer.srd_drawControls[theCon] ]);
 				}
 			}
+			// END ADDING BUTTONS TO THE PANEL
 			console.log("Added the Edit Panel!");	
-			this.map.addControl(this.srd_panel);
+
+
+			var colorMenu = new dijit.Menu({});
+			var colorButton = new dijit.form.DropDownButton({
+				label: "COLOR",
+				name: "programmatic22",
+				dropDown: colorMenu,
+				id: "progButton2"
+			});
+	
+			// BEGIN COLOR SELECT
+			var picker = new dijit.ColorPalette({ }, "somePicker" );
+			colorMenu.addChild(picker);
+			dojo.byId(this.srd_panel.id).appendChild(colorButton.domNode);
+			//END COLOR SELECT
+
+			
 		}
 		this.srd_panel.activate();
-//TESTING ONLY - WE GOT IT THOUGH !!!
-//		this.srd_selLayer.srd_drawControls.point.activate();
+		menuItem.checked = true;
+
 		
 	} else {
-		this.srd_panel.deactivate();
-
+		if(this.srd_panel != null) {
+			this.srd_panel.deactivate();
+		}
+		menuItem.checked = false;
 	}
 	return;
 }
