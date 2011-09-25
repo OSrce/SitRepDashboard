@@ -34,6 +34,8 @@ function srd_document() {
 	this.drawControls = null;
 	this.srd_panel = null;
 	this.theSelectedControl = null;
+
+	this.srd_toolbar = null;
 	
 	this.srd_layerArr = [];
 
@@ -100,6 +102,10 @@ srd_document.prototype.srd_init = function() {
 	} else {	
 		//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
 		this.map_init();
+		//TESTING ONLY
+//		this.srd_createWhiteboard();
+//		this.srd_toggleEditPanel(null);
+
 
 	}
 }
@@ -475,7 +481,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			this.srd_container.placeAt("theSrdDoc");
 		}
 		if(this.srd_menuBar == null) {
-			this.srd_menuBar = new dijit.MenuBar({region: 'top' });	
+			this.srd_menuBar = new dijit.MenuBar({region: 'top' } );	
 			//// ICON in LEFT CORNER ////
 			this.srd_menuBar.addChild(new dijit.MenuBarItem( {
 				label: '<img src="img/NYPD_Seal_Tiny.png" height="20" width="16">' } ) );
@@ -553,7 +559,7 @@ srd_document.prototype.srd_mapDisplay = function() {
 	dojo.addOnLoad(function() {
 		if(this.srd_mapContent == null) {
 			this.srd_mapContent = new dijit.layout.ContentPane(
-	      {  style: "background-color:white", region: 'center', content: '<div id="srd_docContent"></div>' }, 'center');
+	      {  style: "background-color:white", region: 'center', content: '<div id="srd_docContent" class="map"></div>' }, 'center');
 		}
 		this.srd_container.addChild(this.srd_mapContent);
 	}.bind(this) );
@@ -577,22 +583,47 @@ srd_document.prototype.srd_dataDisplay = function() {
 
 
 srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
+	dojo.addOnLoad( function() {
+	menuItem = new dijit.CheckedMenuItem();
+	menuItem.checked = true;
 	if(menuItem.checked == true) {
 		if(this.srd_panel == null) {
-			this.srd_panel = new OpenLayers.Control.Panel( );
+				//TESTING - THIS IS SILLY, FIND A dijit object that
+				// MAKE MORE SENSE TO CONTAIN panel, colorpicker and layerselect
+			
+			this.srd_toolbar = new dijit.layout.LayoutContainer({ 
+				style: "background-color:blue;width:150px;",
+				region: 'right'
+//				content: "Layer Edit Tools:<br>Active Layer :<div id='srd_activeLayer'></div><br>Color:<div id='srd_color'></div><br><div id='srd_tool_panel'></div>" 
+				}  );			
+			this.srd_container.addChild(this.srd_toolbar);
+			this.srd_container.resize();
 
+			var cp_tool_panel = new dijit.layout.ContentPane({
+					region: 'bottom',
+					style: "height:100px",
+//					id: "srd_tool_panel",
+					content:"<div id='srd_tool_panel' class='olControlPanel' ></div>" } );
+
+			this.srd_toolbar.addChild(cp_tool_panel);
+
+			this.srd_panel = new OpenLayers.Control.Panel( { div: dojo.byId('srd_tool_panel')  } );
+//			this.srd_panel = new OpenLayers.Control.Panel(  );
+
+			this.srd_toolbar.resize();
 			this.map.addControl(this.srd_panel);
 			// BEGIN LAYER SELECT	
 			var menu = new dijit.Menu({
 				style: "display: none;"
 			});
-			var button = new dijit.form.DropDownButton({
+			var activeLayer = new dijit.form.DropDownButton({
 				label: "Active Edit Layer",
 				name: "programmatic2",
 				dropDown: menu,
-				id: "progButton"
+				id: "srd_activeLayer"
 			});
-			dojo.byId(this.srd_panel.id).appendChild(button.domNode);
+//			dojo.byId(this.srd_toolbar.id).appendChild(activeLayer.domNode);
+			this.srd_toolbar.addChild(activeLayer);
 			// END LAYER SELECT
 			//BEGIN ADD THE BUTTONS TO THE PANEL	
 			if(this.srd_selLayer != null ) {
@@ -615,15 +646,18 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			// BEGIN COLOR SELECT
 			var picker = new dijit.ColorPalette({ }, "somePicker" );
 			colorMenu.addChild(picker);
-			dojo.byId(this.srd_panel.id).appendChild(colorButton.domNode);
+//			dojo.byId(this.srd_toolbar.id).appendChild(colorButton.domNode);
+			this.srd_toolbar.addChild(colorButton);
 			//END COLOR SELECT
 
-			
 		}
-		this.srd_panel.activate();
 		menuItem.checked = true;
-
-		
+		this.srd_panel.activate();
+		this.srd_toolbar.startup();
+		var theSize = {w:"50%", h:"50%" };
+		this.srd_mapContent.resize(theSize);
+		this.map.updateSize();
+//		this.srd_toolbar.placeAt(dojo.body());		
 	} else {
 		if(this.srd_panel != null) {
 			this.srd_panel.deactivate();
@@ -631,6 +665,7 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 		menuItem.checked = false;
 	}
 	return;
+	}.bind(this) );
 }
 
 

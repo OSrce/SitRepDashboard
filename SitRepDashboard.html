@@ -4,7 +4,9 @@
 			@import "SR_Dojo/dijit/themes/tundra/tundra.css";
 			@import "SR_Dojo/dojo/resources/dojo.css";
 			@import "SR_Dojo/dojox/grid/resources/Grid.css";
-
+			@import "SR_Dojo_dojox/layout/resources/FloatingPane.css";
+			@import "SR_Dojo/dojox/layout/resources/ResizeHandle.css";
+			
 		  .dojoxGrid table {
  		   margin: 0;
   		}
@@ -33,6 +35,7 @@
                 z-index: 20000;
                 background-color: white;
             }
+
        .olControlPanel  {
 						display:block;
             float: right;
@@ -128,9 +131,11 @@
 			dojo.require("dojo.parser");
 			dojo.require("dijit.layout.ContentPane");
 			dojo.require("dijit.layout.BorderContainer");
+			dojo.require("dijit.layout.LayoutContainer");
 			dojo.require("dijit.form.Button");
 			dojo.require("dijit.ColorPalette");
 			dojo.require("dijit.MenuBar");
+			dojo.require("dojox.layout.FloatingPane");
 			dojo.require("dijit.PopupMenuBarItem");
 
 			dojo.require("dijit.layout.TabContainer");
