@@ -6,6 +6,7 @@
 			@import "SR_Dojo/dojox/grid/resources/Grid.css";
 			@import "SR_Dojo_dojox/layout/resources/FloatingPane.css";
 			@import "SR_Dojo/dojox/layout/resources/ResizeHandle.css";
+			@import "SR_Dojo/dojox/form/resources/UploaderFileList.css";
 			
 		  .dojoxGrid table {
  		   margin: 0;
@@ -39,9 +40,9 @@
        .olControlPanel  {
 						display:block;
             float: right;
-						width: 300px;
-						height: 100px;
-            margin: 5px;
+						width: 150px;
+						height: 150px;
+            margin: 0px;
 						right: 250px;
 						background-color:gray;
         }
@@ -118,6 +119,17 @@
             width: 24px;
 						height: 24px; 
 				}
+        .olControlPanel	.olControlSelectFeatureItemActive  { 
+            background-image: url(SR_Openlayers/theme/default/img/pan_on.png);
+           	width: 24px;
+						height: 24px; 
+				}
+        .olControlPanel	.olControlSelectFeatureItemInactive { 
+            background-image: url(SR_Openlayers/theme/default/img/pan_off.png);
+            width: 24px;
+						height: 24px; 
+				}
+
 
 
 		</style>	

@@ -31,6 +31,7 @@ function srd_layer( ) {
 		this.url = null;
 		this.numZoomLevels = null;
 		this.attribution = "";
+		this.editable = false;
 
 		// NEED TO CHANGE THIS!
 		this.runFromServer = false;
@@ -156,10 +157,12 @@ srd_layer.prototype.loadData = function( ) {
 				visibility: this.visibility,
 				styleMap: this.srd_styleMap,
 				strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy],
-				projection: new OpenLayers.Projection("EPSG:4326"),
+//				projection: new OpenLayers.Projection("EPSG:4326"),
+				projection: new OpenLayers.Projection("EPSG:900913"),
 				protocol: new OpenLayers.Protocol.WFS({
 				version: "1.1.0",
-				srsName: "EPSG:4326",
+//				srsName: "EPSG:4326",
+				srsName: "EPSG:900913",
 				url: "http://SitRepGIS.local/geoserver/wfs",
 				featureNS :  "http://SitRepGIS.local/",
 				featureType: this.name

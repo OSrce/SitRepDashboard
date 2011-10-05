@@ -72,6 +72,20 @@ On load :
 ------------------------
 
 
+2011-09-27 :
+
+For saving layers as files on the clients computer, we need to add the 
+the following to the server config or .htaccess file :
+
+application/gml+xml			gml
+
+or
+
+AddType application/gml+xml .gml
+ 
+This way the browers will "know" what to do with the file when we hand
+it to them.
+
 
 
 

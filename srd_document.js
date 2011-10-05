@@ -3,6 +3,13 @@
 //dojo.require("dojo.store.LocalStorage");
 dojo.require("dojox.storage.LocalStorageProvider");
 dojo.require("dojo.date.locale");
+//dojo.require("dojox.encoding.base64");
+//dojo.require("dojox.form.uploader.plugins.Flash");
+dojo.require("dojox.form.Uploader");
+dojo.require("dojox.form.uploader.FileList");
+dojo.require("dijit.Dialog");
+
+
 
 srd_document.prototype.loadFromLocalStore = function() {
 //	this.srd_localStore.clear("srd");	
@@ -23,6 +30,7 @@ function srd_document() {
 	//THE UI VARS
 	this.srd_container = null;
 	this.srd_menuBar = null;
+	this.srd_saveMenu = null;
 	this.srd_mapContent = null;
 	this.srd_adminContent = null;
 	this.srd_dataContent = null;
@@ -457,10 +465,11 @@ srd_document.prototype.srd_createWhiteboard = function() {
             datePattern: theFrmt
         });
 	wbLayer.layertype = "Vector";
-	wbLayer.format = "WFST";
+	wbLayer.format = "GML";
 	
 	wbLayer.isBaseLayer = false;
 	wbLayer.visibility = true;
+	wbLayer.editable = true;
 
 	wbLayer.id = this.srd_layerArr.length;
 	this.srd_layerArr[wbLayer.id] = wbLayer;	
@@ -468,6 +477,12 @@ srd_document.prototype.srd_createWhiteboard = function() {
 	wbLayer.loadData();
 	wbLayer.addLayerToMap(this.map);
 	this.srd_selLayer = wbLayer;
+	this.srd_saveMenu.addChild(new dijit.MenuItem( { 
+			label: wbLayer.name,
+			onClick: function() { this.saveLayer(wbLayer.id) }.bind(this)
+	} ) );
+
+
 }
 
 
@@ -515,8 +530,31 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			}));
 			srd_fileMenu.addChild(new dijit.MenuItem({
 				label: "Open",
-				onClick: function() { alert("Place Open Here") }.bind(this)
+				onClick: function() { this.openFile() }.bind(this)
 			}));
+			srd_fileMenu.addChild(new dijit.MenuItem({
+				label: "Save Project",
+				onClick: function() { alert("Future Function - Save Project") }.bind(this)
+			}));
+			this.srd_saveMenu = new dijit.Menu( );
+//			this.srd_saveMenu.addChild(new dijit.MenuItem( { 
+//				label: "List of Editable Layers",
+//				disabled: true
+//			} ) );
+			for( tmpId in this.srd_layerArr) {
+				if(this.srd_layerArr[tmpId].editable == true) {
+					this.srd_saveMenu.addChild(new dijit.MenuItem( { 
+						label: this.srd_layerArr[tmpId].name,
+						onClick: function() { this.saveLayer(tmpId) }.bind(this)
+					} ) );
+				}
+			}	
+			srd_fileMenu.addChild(new dijit.PopupMenuItem({
+				label: "Save Layer",
+				popup:this.srd_saveMenu
+			}));
+//			srd_fileMenu.startup();
+
 			//// Edit Menu ////
 			var srd_editMenu = new dijit.Menu({});
 			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
@@ -539,7 +577,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			});
 			srd_toolsMenu.addChild(editPanelMenuItem);
 				
-
+			this.srd_menuBar.startup();
 
 		}
 		
@@ -584,17 +622,14 @@ srd_document.prototype.srd_dataDisplay = function() {
 
 srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 	dojo.addOnLoad( function() {
-	menuItem = new dijit.CheckedMenuItem();
-	menuItem.checked = true;
 	if(menuItem.checked == true) {
-		if(this.srd_panel == null) {
+		if(this.srd_toolbar == null) {
 				//TESTING - THIS IS SILLY, FIND A dijit object that
 				// MAKE MORE SENSE TO CONTAIN panel, colorpicker and layerselect
 			
 			this.srd_toolbar = new dijit.layout.LayoutContainer({ 
 				style: "background-color:blue;width:150px;",
 				region: 'right'
-//				content: "Layer Edit Tools:<br>Active Layer :<div id='srd_activeLayer'></div><br>Color:<div id='srd_color'></div><br><div id='srd_tool_panel'></div>" 
 				}  );			
 			this.srd_container.addChild(this.srd_toolbar);
 			this.srd_container.resize();
@@ -613,13 +648,10 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			this.srd_toolbar.resize();
 			this.map.addControl(this.srd_panel);
 			// BEGIN LAYER SELECT	
-			var menu = new dijit.Menu({
-				style: "display: none;"
-			});
+			var layerMenu = new dijit.Menu({ });
 			var activeLayer = new dijit.form.DropDownButton({
 				label: "Active Edit Layer",
-				name: "programmatic2",
-				dropDown: menu,
+				dropDown: layerMenu,
 				id: "srd_activeLayer"
 			});
 //			dojo.byId(this.srd_toolbar.id).appendChild(activeLayer.domNode);
@@ -638,9 +670,8 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			var colorMenu = new dijit.Menu({});
 			var colorButton = new dijit.form.DropDownButton({
 				label: "COLOR",
-				name: "programmatic22",
 				dropDown: colorMenu,
-				id: "progButton2"
+				id: "srd_colorMenu"
 			});
 	
 			// BEGIN COLOR SELECT
@@ -650,17 +681,22 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			this.srd_toolbar.addChild(colorButton);
 			//END COLOR SELECT
 
+		} else {
+			this.srd_container.addChild(this.srd_toolbar);
+			this.srd_container.resize();
 		}
 		menuItem.checked = true;
 		this.srd_panel.activate();
-		this.srd_toolbar.startup();
-		var theSize = {w:"50%", h:"50%" };
-		this.srd_mapContent.resize(theSize);
-		this.map.updateSize();
+//		this.srd_toolbar.startup();
+//		var theSize = {w:"50%", h:"50%" };
+//		this.srd_mapContent.resize(theSize);
+//		this.map.updateSize();
 //		this.srd_toolbar.placeAt(dojo.body());		
 	} else {
 		if(this.srd_panel != null) {
-			this.srd_panel.deactivate();
+	//		this.srd_panel.deactivate();
+			this.srd_container.removeChild(this.srd_toolbar);
+			this.srd_container.resize();
 		}
 		menuItem.checked = false;
 	}
@@ -668,8 +704,36 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 	}.bind(this) );
 }
 
+srd_document.prototype.saveLayer = function( layerId ) {
+	var formatGml = new OpenLayers.Format.GML();
+	var test = formatGml.write(this.srd_layerArr[layerId].layer.features);
+	console.log("TEST="+test);
+//	var theHead = "data:application/gml+xml;charset=utf-8;base64,";
+	var theHead = "data:application/gml+xml,";
+	document.location.href = theHead + test;
+	
+	
+}
 
+srd_document.prototype.openFile = function() {
+	var fileSelDialog = new dijit.Dialog( {
+			style: "width: 300px",
+//			content: '<input name="uploadedfile" multiple="true" type="file" id="uploader" dojoType="dojox.form.Uploader" label="Select Which Files you wish to load" />WhichFilesYouWant<div id="files" dojoType="dojox.form.uploader.FileList"  uploaderId="uploader"></div>'
 
+		});
+
+	dijit.byId(fileSelDialog).appendChild(myUploader);
+var myUploader = new dojox.form.Uploader({label:"Programmatic Uploader", multiple:true, uploadOnSelect:true });
+
+var list = new dojox.form.uploader.FileList({uploader:uploader});
+
+//	fileSelDialog.addChild( new dojox.form.Uploader() );
+//	fileSelDialog.addChild( new dojox.form.uploader.FileList()  );
+
+//	fileSelDialog.startup();	
+	fileSelDialog.show();	
+	
+}
 
 
 
