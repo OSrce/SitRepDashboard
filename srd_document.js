@@ -624,9 +624,6 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 	dojo.addOnLoad( function() {
 	if(menuItem.checked == true) {
 		if(this.srd_toolbar == null) {
-				//TESTING - THIS IS SILLY, FIND A dijit object that
-				// MAKE MORE SENSE TO CONTAIN panel, colorpicker and layerselect
-			
 			this.srd_toolbar = new dijit.layout.LayoutContainer({ 
 				style: "background-color:blue;width:150px;",
 				region: 'right'
@@ -648,10 +645,37 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			this.srd_toolbar.resize();
 			this.map.addControl(this.srd_panel);
 			// BEGIN LAYER SELECT	
+			var activeLayerName = new dijit.layout.ContentPane({
+				content:"Editing Palette<br>Layer: "
+			});
+			this.srd_toolbar.addChild(activeLayerName);
 			var layerMenu = new dijit.Menu({ });
+			for( tmpId in this.srd_layerArr) {
+				if(this.srd_layerArr[tmpId].editable == true) {
+						layerMenu.addChild(new dijit.MenuItem( { 
+						label: this.srd_layerArr[tmpId].name,
+						onClick: function() { this.selLayer = this.srd_layerArr[tmpId]  }.bind(this)
+					} ) );
+					// CHECK TO SEE IF selected Layer is null, if so,
+					// make the selLayer the last editable layer in the arr
+					if(this.srd_selLayer == null) {
+						this.srd_selLayer = this.srd_layerArr[tmpId];
+					}
+				}
+			}
+			
+			// AT THIS POINT, if there is it least 1 editable layer, selLayer will NOT
+			// be null so if it is it means we don't have ANY editable layers to
+			// choose from.
+			if(this.srd_selLayer == null ) {
+				// TODO :
+				// MAKE IT SO THAT ALL EDIT CONTROLS ARENT SELECTABLE.
+			}
+	
 			var activeLayer = new dijit.form.DropDownButton({
-				label: "Active Edit Layer",
+				label: this.srd_selLayer.name,
 				dropDown: layerMenu,
+				style: "position:relative",
 				id: "srd_activeLayer"
 			});
 //			dojo.byId(this.srd_toolbar.id).appendChild(activeLayer.domNode);
@@ -666,21 +690,39 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			// END ADDING BUTTONS TO THE PANEL
 			console.log("Added the Edit Panel!");	
 
+			var strokeColorName = new dijit.layout.ContentPane({
+				content:"Stroke Color: "
+			});
+			this.srd_toolbar.addChild(strokeColorName);
+			this.srd_colorBox = new dijit.form.TextBox( {
+				style : "background-color:#0000FF;width:1.5em;",
+			}, "colorBox");
 
 			var colorMenu = new dijit.Menu({});
-			var colorButton = new dijit.form.DropDownButton({
-				label: "COLOR",
+			this.colorButton = new dijit.form.DropDownButton({
+				label: "<div id='srd_colorBox'></div>",
 				dropDown: colorMenu,
+				style: "position:relative;",
 				id: "srd_colorMenu"
 			});
-	
+//			console.log("srd_toolbar can focus:"+this.colorButton.isFocusable() );	
 			// BEGIN COLOR SELECT
-			var picker = new dijit.ColorPalette({ }, "somePicker" );
+			var picker = new dijit.ColorPalette({
+				onChange: function(val) { 
+//					alert(val); 
+					this.colorButton.closeDropDown();
+					this.srd_colorBox.attr("style", "background-color:"+val );
+			  }.bind(this)
+			 }, "somePicker" );
 			colorMenu.addChild(picker);
 //			dojo.byId(this.srd_toolbar.id).appendChild(colorButton.domNode);
-			this.srd_toolbar.addChild(colorButton);
-			//END COLOR SELECT
+			this.srd_toolbar.addChild(this.colorButton);
+			this.srd_colorBox.placeAt("srd_colorBox");
 
+			//END COLOR SELECT
+		} else {
+			this.srd_container.addChild(this.srd_toolbar);
+			this.srd_container.resize();
 		} else {
 			this.srd_container.addChild(this.srd_toolbar);
 			this.srd_container.resize();
@@ -695,8 +737,11 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 	} else {
 		if(this.srd_panel != null) {
 	//		this.srd_panel.deactivate();
-			this.srd_container.removeChild(this.srd_toolbar);
+//			this.srd_container.removeChild(this.srd_toolbar);
+			this.srd_toolbar.destroyRecursive();
 			this.srd_container.resize();
+			this.srd_toolbar = null;
+
 		}
 		menuItem.checked = false;
 	}
@@ -717,10 +762,9 @@ srd_document.prototype.saveLayer = function( layerId ) {
 
 srd_document.prototype.openFile = function() {
 	var fileSelDialog = new dijit.Dialog( {
-			style: "width: 300px",
+			style: "width: 300px"
 //			content: '<input name="uploadedfile" multiple="true" type="file" id="uploader" dojoType="dojox.form.Uploader" label="Select Which Files you wish to load" />WhichFilesYouWant<div id="files" dojoType="dojox.form.uploader.FileList"  uploaderId="uploader"></div>'
-
-		});
+		} );
 
 	dijit.byId(fileSelDialog).appendChild(myUploader);
 var myUploader = new dojox.form.Uploader({label:"Programmatic Uploader", multiple:true, uploadOnSelect:true });
@@ -735,6 +779,10 @@ var list = new dojox.form.uploader.FileList({uploader:uploader});
 	
 }
 
+//	fileSelDialog.startup();	
+	fileSelDialog.show();	
+	
+}
 
 
 
