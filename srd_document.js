@@ -695,7 +695,7 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			});
 			this.srd_toolbar.addChild(strokeColorName);
 			this.srd_colorBox = new dijit.form.TextBox( {
-				style : "background-color:#0000FF;width:1.5em;",
+				style : "background-color:#0000FF;width:1.5em;"
 			}, "colorBox");
 
 			var colorMenu = new dijit.Menu({});
@@ -720,9 +720,6 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			this.srd_colorBox.placeAt("srd_colorBox");
 
 			//END COLOR SELECT
-		} else {
-			this.srd_container.addChild(this.srd_toolbar);
-			this.srd_container.resize();
 		} else {
 			this.srd_container.addChild(this.srd_toolbar);
 			this.srd_container.resize();
@@ -778,12 +775,6 @@ var list = new dojox.form.uploader.FileList({uploader:uploader});
 	fileSelDialog.show();	
 	
 }
-
-//	fileSelDialog.startup();	
-	fileSelDialog.show();	
-	
-}
-
 
 
 
