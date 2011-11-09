@@ -12,11 +12,13 @@ dojo.require("dijit.Dialog");
 
 
 srd_document.prototype.loadFromLocalStore = function() {
-//	this.srd_localStore.clear("srd");	
+	//BEGIN CLEAR STORE LINE - DEBUG ONLY
+	this.srd_localStore.clear("srd");	
+	//END CLEAR STORE LINE - DEBUG ONLY
 	var tmpStaticVals = this.srd_localStore.get("staticVals","srd"); 
 	for(var tmpVal in tmpStaticVals) {
 		this.setValue(tmpVal,tmpStaticVals[tmpVal] );
-//		console.log("Loading Values: "+tmpVal+", "+tmpStaticVals[tmpVal]);
+		console.log("Loading Values: "+tmpVal+", "+tmpStaticVals[tmpVal]);
 	}
 	for(var i=1;i<this.staticVals.layerCount; i++) {
 		this.srd_layerArr[i] = new srd_layer();
@@ -279,6 +281,7 @@ this.map.setOptions(
 var lonlat = new OpenLayers.LonLat(this.staticVals.start_lon, this.staticVals.start_lat).transform(this.map.displayProjection, this.map.projection);
 this.map.setCenter( lonlat, this.staticVals.start_zoom ); 
 
+console.log("Should be displaying Map at this point!");
 
 
 // Adding the Control for the Layer select 
@@ -426,6 +429,7 @@ var drawLayer = whiteboard.layer;
 //						}, "layerEditSelect"
 //					);
 
+	console.log("END map_init function");
 }
 /// END map_init Function
 
@@ -709,7 +713,8 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			// BEGIN COLOR SELECT
 			var picker = new dijit.ColorPalette({
 				onChange: function(val) { 
-//					alert(val); 
+					alert(val);
+					this.srd_selLayer.srd_featureAttributes.strokeColor = val; 
 					this.colorButton.closeDropDown();
 					this.srd_colorBox.attr("style", "background-color:"+val );
 			  }.bind(this)

@@ -61,6 +61,24 @@ function srd_layer( ) {
 			select	:	null
 		}
 
+		this.srd_featureAttributes = {
+			fillColor: '#00F000',
+			fillOpacity: 0.5,
+			strokeColor : '#00FF00',
+			strokeOpacity : 1,
+			pointRadius: 6
+		}
+		
+		this.srd_customFeatureAttributes = {
+			fillColor: '${fillColor}',
+			fillOpacity: '${fillOpacity}',
+			strokeColor : '${strokeColor}',
+			strokeOpacity : '${strokeOpacity}',
+			pointRadius: '${pointRadius}'
+		}	
+
+
+
 }
 
 srd_layer.prototype.copyValuesFromLayer = function(the_srd_layer) {
@@ -116,8 +134,24 @@ srd_layer.prototype.loadData = function( ) {
 			this.srd_styleMap = new OpenLayers.StyleMap();
 		}
 		var tmpSymbolizer = this.srd_styleMap.styles["default"].defaultStyle;
-		var mainRule = new OpenLayers.Rule( { symbolizer: tmpSymbolizer} );
-		this.srd_styleMap.styles["default"].addRules( [mainRule] );
+		var mainRule = new OpenLayers.Rule( {
+			elseFilter: true,
+			symbolizer: tmpSymbolizer} );
+
+		var customRule = new OpenLayers.Rule( {
+			filter: new OpenLayers.Filter.Comparison( {
+				type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
+				property: 'customStyle',
+				value: null
+			}),
+			symbolizer: this.srd_customFeatureAttributes
+		} );
+
+
+		this.srd_styleMap.styles["default"].addRules( [mainRule, customRule] );
+
+
+
 // END MESSY STYLE RULE CODE
 
 
@@ -129,13 +163,16 @@ srd_layer.prototype.loadData = function( ) {
 //					projection:		this.projection,
 					projection:		new OpenLayers.Projection(this.projection),
 					visibility:		this.visibility, 
-					styleMap:			this.srd_styleMap
-				} );
+					styleMap:			this.srd_styleMap,
+					preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this) 
+				}  );
 				this.layer.loadGML();	
 			} else {
 				this.layer = new OpenLayers.Layer.Vector(this.name, {
 					isBaseLayer:	this.isBaseLayer,
 //					projection:		this.projection,
+//
+					preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this), 
 					projection:		new OpenLayers.Projection(this.projection),
 					visibility:		this.visibility,
 					styleMap:			this.srd_styleMap,
@@ -163,13 +200,15 @@ srd_layer.prototype.loadData = function( ) {
 				version: "1.1.0",
 //				srsName: "EPSG:4326",
 				srsName: "EPSG:900913",
-				url: "http://SitRepGIS.local/geoserver/wfs",
-				featureNS :  "http://SitRepGIS.local/",
-				featureType: this.name
+				url: "https://sitrep.local/geoserver/wfs",
+				featureNS :  "https://sitrep.local/",
+				featureType: this.name,
 //				geometryName: "the_geom",
 //				extractAttributes: true,
-        })
+				preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this)
+        } )
     }); 
+
 		}
 
 //		this.modifyControl = new OpenLayers.Control.ModifyFeature(this.layer,
@@ -177,7 +216,7 @@ srd_layer.prototype.loadData = function( ) {
 //		this.map.addControl(this.modifyControl);
 //		this.modifyControl.activate();
 
-
+	
 //// BEGIN controller initialize ////
 
 		this.srd_drawControls.point = new OpenLayers.Control.DrawFeature( this.layer,
@@ -208,6 +247,7 @@ srd_layer.prototype.loadData = function( ) {
 					}
 				}.bind(this)
 			} );
+
 	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer,
 		{onSelect: this.onFeatureSelect, onUnselect: this.onFeatureUnselect});
 
@@ -223,6 +263,27 @@ srd_layer.prototype.loadData = function( ) {
 	return 0;
 }; 
 //// END srd_loadData  function
+
+
+
+// DEFINE preFeatureInsert for Dynamic Layers so that we can add appropriate styling
+srd_layer.prototype.srd_preFeatureInsert = function(feature) {
+	if( this.editable == true) {
+//		if( feature.style == null ) {
+//			feature.style = new OpenLayers.Style(
+//				 this.srd_styleMap.styles["default"].defaultStyle	
+				{}
+//			);	
+//	}
+		feature.attributes.customStyle = true;
+		feature.attributes.strokeColor = this.srd_featureAttributes.strokeColor;
+		for(var styleAttribute in this.srd_featureAttributes) {
+			feature.attributes[styleAttribute] = this.srd_featureAttributes[styleAttribute];
+		}
+//		alert("Feature is going to be added with strokeColor = "+feature.style.strokeColor);
+	}
+}
+
 
 
 

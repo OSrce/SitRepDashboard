@@ -23,7 +23,7 @@
 <!-- BASE LAYERS -->
 		<layer>
 			<id>1</id>
-			<name>SitRep GIS</name>	
+			<name>SitRep GIS Main</name>	
 			<layertype>XYZ</layertype>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>true</visibility>
