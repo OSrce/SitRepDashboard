@@ -2,10 +2,13 @@
 
 function srd_editPalette () {
 	this.layoutContainer = new dijit.layout.LayoutContainer( {
-		style: "background-color:yellow;"
+		style: "background-color:yellow;height:200px",
+		region: 'bottom'
 	} ); 
 
-	
+	this.controlArray = {};
+
+	this.layoutContainer.startup();	
 
 }
 
@@ -13,41 +16,53 @@ function srd_editPalette () {
 
 
 srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,conObject) {
-	switch(conType) {
-	
-	case "colorPicker" :
-		var colorNameCP = new dijit.layout.ContentPane({
-			content: theName+": "
-		});
-		this.layoutContainer.addChild(colorNameCP);
-		var colorBox = new dijit.form.TextBox( {
-			style : "background-color:"+this.srd_selLayer.srd_featureAttributes[theColorType]+";width:1.5em;"
-			}, "colorBox");
+	dojo.addOnLoad(function() {
+		switch(conType) {
+		case "featureTypePicker" :
+		
 
-		var colorMenu = new dijit.Menu({});
-		var colorButton = new dijit.form.DropDownButton({
-			label: "<div id='srd_colorBox'></div>",
-			dropDown: colorMenu,
-			style: "position:relative;",
-			id: "srd_"+theName
+		break;
+		case "colorPicker" :
+			if(this.controlArray[conName] == null) {
+				this.controlArray[conName] = {};
+			}
+			var colorNameCP = new dijit.layout.ContentPane({
+				content: conDisplayName+": ",
+				region:'top'
 			});
-		var picker = new dijit.ColorPalette({
-			onChange: function(val,colorButton,colorBox) { 
-				this.srd_selLayer.srd_featureAttributes[theColorType] = val; 
-				colorButton.closeDropDown();
-				colorBox.attr("style", "background-color:"+val );
-			}.bind(this)
-		}, "somePicker" );
-		colorMenu.addChild(picker);
-		this.srd_toolbar.addChild( colorButton );
-		colorBox.placeAt("srd_"+theName);
-
-	break;
-	}
+			this.controlArray[conName].colorNameCP = colorNameCP; 
+			this.layoutContainer.addChild(colorNameCP);
+			var colorBox = new dijit.form.TextBox( {
+				style : "background-color:"+conObject[conName]+";width:1.5em;"
+				}, "colorBox");
+			this.controlArray[conName].colorBox = colorBox;
 	
-
-
-
+			var colorMenu = new dijit.Menu({});
+			this.controlArray[conName].colorMenu = colorMenu;
+			var colorButton = new dijit.form.DropDownButton({
+	//			label: "<div id='srd_'"+conName+"></div>",
+				dropDown: colorMenu,
+				style: "position:relative;",
+				region:'top',
+				id: "srd_"+conName
+				});
+			this.controlArray[conName].colorButton = colorButton;
+			var picker = new dijit.ColorPalette({
+				onChange: function(val) { 
+					conObject[conName] = val; 
+					this.controlArray[conName].colorButton.closeDropDown();
+					this.controlArray[conName].colorBox.attr("style", "background-color:"+val );
+				}.bind(this)
+			}, "thePicker" );
+			colorMenu.addChild(picker);
+			this.layoutContainer.addChild( colorButton );
+			colorBox.placeAt(colorButton);
+		
+		break;
+		}
+		this.layoutContainer.resize();
+	}.bind(this)  );
+	
 
 }
 

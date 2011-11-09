@@ -495,12 +495,17 @@ srd_document.prototype.srd_displayMenuBar = function() {
 		if(this.srd_container == null) {
 			var srd_jsDisabled = dojo.byId("srd_jsDisabled");
 			dojo.style(srd_jsDisabled, "display", "none");
-			this.srd_container = new dijit.layout.BorderContainer(
-				{ style: "height:100%;width:100%;margin:0px;padding:0px;border:0px;" }, 'srd_container' );
+			this.srd_container = new dijit.layout.BorderContainer( { 
+					liveSplitters: "true",
+					design: "headline",
+					style: "height:100%;width:100%;margin:0px;padding:0px;border:0px;",
+//				style: "height:100%;width:100%;", 
+				id: 'srd_container' }, 'srd_container' );
 			this.srd_container.placeAt("theSrdDoc");
+			this.srd_container.startup();
 		}
 		if(this.srd_menuBar == null) {
-			this.srd_menuBar = new dijit.MenuBar({region: 'top' } );	
+			this.srd_menuBar = new dijit.MenuBar({splitter: false, region: 'top' } );	
 			//// ICON in LEFT CORNER ////
 			this.srd_menuBar.addChild(new dijit.MenuBarItem( {
 				label: '<img src="img/NYPD_Seal_Tiny.png" height="20" width="16">' } ) );
@@ -601,8 +606,9 @@ srd_document.prototype.srd_mapDisplay = function() {
 	dojo.addOnLoad(function() {
 		if(this.srd_mapContent == null) {
 			this.srd_mapContent = new dijit.layout.ContentPane(
-	      {  style: "background-color:white", region: 'center', content: '<div id="srd_docContent" class="map"></div>' }, 'center');
+	      {  splitter: 'false', style: "background-color:white;border:0;margin:0;padding:0;", region: 'center', content: '<div id="srd_docContent" class="map"></div>' }, 'srd_center');
 		}
+
 		this.srd_container.addChild(this.srd_mapContent);
 	}.bind(this) );
 
@@ -626,33 +632,45 @@ srd_document.prototype.srd_dataDisplay = function() {
 
 srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 	dojo.addOnLoad( function() {
-	if(menuItem.checked == true) {
-		if(this.srd_toolbar == null) {
-			this.srd_toolbar = new dijit.layout.LayoutContainer({ 
-				style: "background-color:gray;width:150px;border:3px",
-				region: 'right'
-				}  );			
-			this.srd_container.addChild(this.srd_toolbar);
-			this.srd_container.resize();
+		if(menuItem.checked == true) {
+			if(this.srd_toolbar == null) {
+				this.srd_toolbar = new dijit.layout.BorderContainer({ 
+//					style: "background-color:gray;width:150px;border:3px",
+					style: "background-color:gray;width:150px;",
+					region: 'right',
+					splitter: 'true' 
+				}  );		
+				this.srd_container.addChild(this.srd_toolbar);
+				this.srd_container.resize();
 
-			var cp_tool_panel = new dijit.layout.ContentPane({
+/*
+				var cp_tool_panel = new dijit.layout.ContentPane({
 					region: 'bottom',
 					style: "height:100px",
-//					id: "srd_tool_panel",
 					content:"<div id='srd_tool_panel' class='olControlPanel' ></div>" } );
 
-			this.srd_toolbar.addChild(cp_tool_panel);
+				this.srd_toolbar.addChild(cp_tool_panel);
 
 			this.srd_panel = new OpenLayers.Control.Panel( { div: dojo.byId('srd_tool_panel')  } );
-//			this.srd_panel = new OpenLayers.Control.Panel(  );
-
-			this.srd_toolbar.resize();
 			this.map.addControl(this.srd_panel);
-			// BEGIN LAYER SELECT	
+*/
+			this.srd_toolbar.resize();
+
+
+			// BEGIN LAYER SELECT
+			var editPaletteTop = new dijit.layout.BorderContainer( {
+				style:"height:100px;background-colior:yellow",
+				region: 'top',
+				splitter: false
+			} );
+			
+
 			var activeLayerName = new dijit.layout.ContentPane({
-				content:"Editing Palette<br>Layer: "
+				content:"Editing Palette<br>Layer: ",
+				region: 'top'
+//				style:'height:30px;
 			});
-			this.srd_toolbar.addChild(activeLayerName);
+			editPaletteTop.addChild(activeLayerName);
 			var layerMenu = new dijit.Menu({ });
 			for( tmpId in this.srd_layerArr) {
 				if(this.srd_layerArr[tmpId].editable == true) {
@@ -680,61 +698,24 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 				label: this.srd_selLayer.name,
 				dropDown: layerMenu,
 				style: "position:relative",
-				id: "srd_activeLayer"
+				id: "srd_activeLayer",
+				region:'top'
+
 			});
-//			dojo.byId(this.srd_toolbar.id).appendChild(activeLayer.domNode);
-			this.srd_toolbar.addChild(activeLayer);
+			editPaletteTop.addChild(activeLayer);
+			editPaletteTop.startup();
+			this.srd_toolbar.addChild(editPaletteTop);
 			// END LAYER SELECT
-			//BEGIN ADD THE BUTTONS TO THE PANEL	
-			if(this.srd_selLayer != null ) {
-				for( var theCon in this.srd_selLayer.srd_drawControls) {
-					this.srd_panel.addControls([ this.srd_selLayer.srd_drawControls[theCon] ]);
-				}
-			}
-			// END ADDING BUTTONS TO THE PANEL
-			console.log("Added the Edit Panel!");	
 
-			// BEGIN STROKE COLOR SELECT
-			var strokeColorName = new dijit.layout.ContentPane({
-				content:"Stroke Color: "
-			});
-			this.srd_toolbar.addChild(strokeColorName);
-			this.srd_colorBox = new dijit.form.TextBox( {
-				style : "background-color:"+this.srd_selLayer.srd_featureAttributes.strokeColor+";width:1.5em;"
-			}, "colorBox");
-
-			var colorMenu = new dijit.Menu({});
-			this.colorButton = new dijit.form.DropDownButton({
-				label: "<div id='srd_colorBox'></div>",
-				dropDown: colorMenu,
-				style: "position:relative;",
-				id: "srd_colorMenu"
-			});
-//			console.log("srd_toolbar can focus:"+this.colorButton.isFocusable() );	
-			var picker = new dijit.ColorPalette({
-				onChange: function(val) { 
-//					alert(val);
-					this.srd_selLayer.srd_featureAttributes.strokeColor = val; 
-					this.colorButton.closeDropDown();
-					this.srd_colorBox.attr("style", "background-color:"+val );
-			  }.bind(this)
-			 }, "somePicker" );
-			colorMenu.addChild(picker);
-//			dojo.byId(this.srd_toolbar.id).appendChild(colorButton.domNode);
-			this.srd_toolbar.addChild(this.colorButton);
-			this.srd_colorBox.placeAt("srd_colorBox");
-			//END STROKE COLOR SELECT
-
-			this.createColorSelect("Fill Color","fillColor");
-
-
+			this.srd_toolbar.addChild(this.srd_selLayer.editPalette.layoutContainer)
 
 		} else {
 			this.srd_container.addChild(this.srd_toolbar);
 			this.srd_container.resize();
 		}
 		menuItem.checked = true;
-		this.srd_panel.activate();
+//		this.srd_panel.activate();
+
 //		this.srd_toolbar.startup();
 //		var theSize = {w:"50%", h:"50%" };
 //		this.srd_mapContent.resize(theSize);

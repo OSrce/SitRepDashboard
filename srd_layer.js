@@ -37,6 +37,7 @@ function srd_layer( ) {
 		this.runFromServer = false;
 // End section in settings.xml (for now).	
 
+		this.editPalette = null;
 
 		this.selectControl = null;
 		this.selectedFeatures = null;
@@ -254,6 +255,17 @@ srd_layer.prototype.loadData = function( ) {
 /////////////////////////////////////////////
 	}
 	// END IF VECTOR
+
+
+	if(this.editable == true ) {
+		if(this.editPalette == null ) {
+			this.editPalette = new srd_editPalette();
+			this.editPalette.addControl("colorPicker","Stroke Color","strokeColor",this.srd_featureAttributes);	
+			this.editPalette.addControl("colorPicker","Fill Color","fillColor",this.srd_featureAttributes);	
+		}
+	}
+
+
 
 	//Adding the Control to allow for points to be selected and moved 
 //	this.dragControl = new OpenLayers.Control.DragFeature( this.layer ); 
