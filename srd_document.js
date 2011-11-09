@@ -629,7 +629,7 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 	if(menuItem.checked == true) {
 		if(this.srd_toolbar == null) {
 			this.srd_toolbar = new dijit.layout.LayoutContainer({ 
-				style: "background-color:blue;width:150px;",
+				style: "background-color:gray;width:150px;border:3px",
 				region: 'right'
 				}  );			
 			this.srd_container.addChild(this.srd_toolbar);
@@ -694,12 +694,13 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			// END ADDING BUTTONS TO THE PANEL
 			console.log("Added the Edit Panel!");	
 
+			// BEGIN STROKE COLOR SELECT
 			var strokeColorName = new dijit.layout.ContentPane({
 				content:"Stroke Color: "
 			});
 			this.srd_toolbar.addChild(strokeColorName);
 			this.srd_colorBox = new dijit.form.TextBox( {
-				style : "background-color:#0000FF;width:1.5em;"
+				style : "background-color:"+this.srd_selLayer.srd_featureAttributes.strokeColor+";width:1.5em;"
 			}, "colorBox");
 
 			var colorMenu = new dijit.Menu({});
@@ -710,10 +711,9 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 				id: "srd_colorMenu"
 			});
 //			console.log("srd_toolbar can focus:"+this.colorButton.isFocusable() );	
-			// BEGIN COLOR SELECT
 			var picker = new dijit.ColorPalette({
 				onChange: function(val) { 
-					alert(val);
+//					alert(val);
 					this.srd_selLayer.srd_featureAttributes.strokeColor = val; 
 					this.colorButton.closeDropDown();
 					this.srd_colorBox.attr("style", "background-color:"+val );
@@ -723,8 +723,12 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 //			dojo.byId(this.srd_toolbar.id).appendChild(colorButton.domNode);
 			this.srd_toolbar.addChild(this.colorButton);
 			this.srd_colorBox.placeAt("srd_colorBox");
+			//END STROKE COLOR SELECT
 
-			//END COLOR SELECT
+			this.createColorSelect("Fill Color","fillColor");
+
+
+
 		} else {
 			this.srd_container.addChild(this.srd_toolbar);
 			this.srd_container.resize();
@@ -782,6 +786,33 @@ var list = new dojox.form.uploader.FileList({uploader:uploader});
 }
 
 
+srd_document.prototype.createColorSelect = function(theName,theColorType) {
+	var colorNameCP = new dijit.layout.ContentPane({
+		content: theName+": "
+	});
+	this.srd_toolbar.addChild(colorNameCP);
+	var colorBox = new dijit.form.TextBox( {
+		style : "background-color:"+this.srd_selLayer.srd_featureAttributes[theColorType]+";width:1.5em;"
+		}, "colorBox");
 
-
+	var colorMenu = new dijit.Menu({});
+	var colorButton = new dijit.form.DropDownButton({
+		label: "<div id='srd_colorBox'></div>",
+		dropDown: colorMenu,
+		style: "position:relative;",
+		id: "srd_"+theName
+		});
+	var picker = new dijit.ColorPalette({
+		onChange: function(val,colorButton,colorBox) { 
+			this.srd_selLayer.srd_featureAttributes[theColorType] = val; 
+			colorButton.closeDropDown();
+			colorBox.attr("style", "background-color:"+val );
+		}.bind(this)
+	}, "somePicker" );
+	colorMenu.addChild(picker);
+	this.srd_toolbar.addChild( colorButton );
+	colorBox.placeAt("srd_"+theName);
+}
+//END createColorSelect
+	
 
