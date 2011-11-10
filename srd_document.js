@@ -682,10 +682,11 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 					// make the selLayer the last editable layer in the arr
 					if(this.srd_selLayer == null) {
 						this.srd_selLayer = this.srd_layerArr[tmpId];
+	
 					}
 				}
 			}
-			
+				
 			// AT THIS POINT, if there is it least 1 editable layer, selLayer will NOT
 			// be null so if it is it means we don't have ANY editable layers to
 			// choose from.
@@ -693,6 +694,7 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 				// TODO :
 				// MAKE IT SO THAT ALL EDIT CONTROLS ARENT SELECTABLE.
 			}
+
 	
 			var activeLayer = new dijit.form.DropDownButton({
 				label: this.srd_selLayer.name,

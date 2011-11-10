@@ -2,7 +2,7 @@
 
 function srd_editPalette () {
 	this.layoutContainer = new dijit.layout.LayoutContainer( {
-		style: "background-color:yellow;height:200px",
+		style: "background-color:light-gray;height:200px",
 		region: 'bottom'
 	} ); 
 
@@ -10,16 +10,72 @@ function srd_editPalette () {
 
 	this.layoutContainer.startup();	
 
+	this.drawControlArr = null;
+	this.selCon = null;
+
+	this.drawControlLabelArr =  {
+		point: { label: "Add Points", img: "SR_OpenLayers/theme/default/img/draw_point_off.png" },
+		line: { label: "Add Lines", img: "SR_OpenLayers/theme/default/img/draw_line_off.png" },
+		polygon: { label: "Add Polygons", img: "SR_OpenLayers/theme/default/img/draw_polygon_off.png" },
+		remove: { label: "Remove Features", img: "SR_OpenLayers/theme/default/img/remove_point_off.png" },
+		select: { label: "Select Features", img: "SR_OpenLayers/theme/default/img/pan_off.png" }
+	}	
+
 }
 
 
+srd_editPalette.prototype.activateDrawControl = function(theDrawCon) {
+	this.selCon = theDrawCon;
+	for(tmpDrawCon in this.drawControlArr) {
+		if( tmpDrawCon == theDrawCon ) {
+			this.drawControlArr[tmpDrawCon].activate();
+			this.controlArray.activeControl.drawControlButton.attr("label","<img src="+this.drawControlLabelArr[theDrawCon].img+" /img>");
+		} else {
+			this.drawControlArr[tmpDrawCon].deactivate();
+		}
+	}
+}
 
 
 srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,conObject) {
 	dojo.addOnLoad(function() {
 		switch(conType) {
-		case "featureTypePicker" :
+		case "activeControlPicker" :
+			if(this.controlArray[conName] == null) {
+				this.controlArray[conName] = {};
+			}
+			var conLabelCP = new dijit.layout.ContentPane({
+				content: conDisplayName+": ",
+				region:'top'
+			});
+			this.controlArray[conName].conLabelCP = conLabelCP; 
+			this.layoutContainer.addChild(conLabelCP);
 		
+			this.drawControlArr = conObject;
+			if(this.selCon == null) {
+				this.selCon = "select";
+			}
+			var drawControlMenu = new dijit.Menu({});
+			this.controlArray[conName].drawControlMenu = drawControlMenu;
+			var drawControlButton = new dijit.form.DropDownButton({
+				label: "<img src="+this.drawControlLabelArr[this.selCon].img+" /img>",
+				dropDown: drawControlMenu,
+				style: "position:relative;",
+				region:'top'
+				});
+			this.controlArray[conName].drawControlButton = drawControlButton;
+			for( var theDrawCon in conObject) {
+						
+					drawControlMenu.addChild(   new dijit.MenuItem( {
+					label: "<img src="+this.drawControlLabelArr[theDrawCon].img+" /img> "+this.drawControlLabelArr[theDrawCon].label,
+					theDrawCon: theDrawCon,
+					editPalette : this,
+					onClick: function(evt) { 
+						this.editPalette.activateDrawControl(this.theDrawCon);
+					} 
+				} ) );
+			}
+			this.layoutContainer.addChild( drawControlButton );
 
 		break;
 		case "colorPicker" :
@@ -43,8 +99,8 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 	//			label: "<div id='srd_'"+conName+"></div>",
 				dropDown: colorMenu,
 				style: "position:relative;",
-				region:'top',
-				id: "srd_"+conName
+				region:'top'
+//				id: "srd_"+conName
 				});
 			this.controlArray[conName].colorButton = colorButton;
 			var picker = new dijit.ColorPalette({

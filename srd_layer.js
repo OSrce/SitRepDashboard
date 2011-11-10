@@ -107,6 +107,11 @@ srd_layer.prototype.getLayer = function() {
 srd_layer.prototype.addLayerToMap = function(theMap) {
 	this.map = theMap; 
 	this.map.addLayer( this.layer );
+	if(this.editable) {
+		for( theCon in this.srd_drawControls) {
+			this.map.addControl(this.srd_drawControls[theCon]);
+		}
+	}
 }
 
 
@@ -257,9 +262,12 @@ srd_layer.prototype.loadData = function( ) {
 	// END IF VECTOR
 
 
+
+
 	if(this.editable == true ) {
 		if(this.editPalette == null ) {
 			this.editPalette = new srd_editPalette();
+			this.editPalette.addControl("activeControlPicker","Edit Mode","activeControl",this.srd_drawControls);
 			this.editPalette.addControl("colorPicker","Stroke Color","strokeColor",this.srd_featureAttributes);	
 			this.editPalette.addControl("colorPicker","Fill Color","fillColor",this.srd_featureAttributes);	
 		}
@@ -622,7 +630,11 @@ srd_layer.prototype.copyStyle = function(theStyleName,theStyle) {
 
 }
 
-
+/*
+srd_layer.prototype.activate = function() {
+	for( theCon in this.srd_drawControls) {
+		theCon.
+*/
 
 
 
