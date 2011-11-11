@@ -86,6 +86,19 @@ AddType application/gml+xml .gml
 This way the browers will "know" what to do with the file when we hand
 it to them.
 
+------------------------
+
+2011-11-11 :
+
+Migrated to GIT (from svn) see "git log" for most notes.
+Removed SR_Openlayers from repo.
+Need to manually included the following :
+Dojo Version 1.6 :
+copy "dojo", "dijit" and "dojox" folder to SR_Dojo.
+
+OpenLayers 2.11 :
+copy "OpenLayers.js", "img" and "theme" fodlers to SR_OpenLayers
+
 
 
 

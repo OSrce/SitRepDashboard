@@ -2,13 +2,11 @@
 
 function srd_editPalette () {
 	this.layoutContainer = new dijit.layout.LayoutContainer( {
-		style: "background-color:light-gray;height:400px",
+		style: "height:400px;margin:0px;padding:0px;border:0px;",
 		region: 'top'
 	} );
 
 	this.controlArray = {};
-
-	this.layoutContainer.startup();	
 
 	this.drawControlArr = null;
 	this.srd_featureAttributes = null;
@@ -113,28 +111,32 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 			this.controlArray[conName].colorNameCP = colorNameCP; 
 			this.layoutContainer.addChild(colorNameCP);
 			var colorBox = new dijit.form.TextBox( {
-				style : "background-color:"+conObject[conName]+";width:1.5em;"
-				}, "colorBox");
+				readOnly: true,
+				style : "background:"+conObject[conName]+";width:1.5em;"
+				} );
 			this.controlArray[conName].colorBox = colorBox;
 	
-			var colorMenu = new dijit.Menu({});
-			this.controlArray[conName].colorMenu = colorMenu;
+			this.srd_featureAttributes = conObject;
+			var picker = new dijit.ColorPalette({
+				value: conObject[conName],
+				editPalette: this,
+				conName: conName,
+				onChange: function(evt) { 
+					if(this.editPalette.controlArray[conName].colorButton != null) {
+						this.editPalette.srd_featureAttributes[conName] = this.value; 
+						this.editPalette.controlArray[conName].colorButton.closeDropDown();
+						this.editPalette.controlArray[conName].colorBox.attr("style", "background:"+this.value );
+					}
+				}
+			} );
+
 			var colorButton = new dijit.form.DropDownButton({
-	//			label: "<div id='srd_'"+conName+"></div>",
-				dropDown: colorMenu,
+				dropDown: picker,
 				style: "position:relative;",
 				region:'top'
-//				id: "srd_"+conName
 				});
 			this.controlArray[conName].colorButton = colorButton;
-			var picker = new dijit.ColorPalette({
-				onChange: function(val) { 
-					conObject[conName] = val; 
-					this.controlArray[conName].colorButton.closeDropDown();
-					this.controlArray[conName].colorBox.attr("style", "background-color:"+val );
-				}.bind(this)
-			}, "thePicker" );
-			colorMenu.addChild(picker);
+	
 			this.layoutContainer.addChild( colorButton );
 			colorBox.placeAt(colorButton);
 		

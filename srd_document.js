@@ -637,7 +637,7 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			if(this.srd_toolbar == null) {
 				this.srd_toolbar = new dijit.layout.BorderContainer({ 
 //					style: "background-color:gray;width:150px;border:3px",
-					style: "background-color:gray;width:150px;",
+					style: "width:150px;",
 					region: 'right',
 					splitter: 'true' 
 				}  );		
@@ -660,7 +660,8 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 
 			// BEGIN LAYER SELECT
 			var editPaletteTop = new dijit.layout.BorderContainer( {
-				style:"height:100px;background-color:yellow",
+//				style:"height:100px;background-color:yellow",
+				style:"height:60px;",
 				region: 'top',
 				splitter: false
 			} );
@@ -668,7 +669,8 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 
 			var activeLayerName = new dijit.layout.ContentPane({
 				content:"Editing Palette<br>Layer: ",
-				region: 'top'
+				region: 'top',
+				style:'margin:0px;padding:0px;border:0px;'
 //				style:'height:30px;
 			});
 			editPaletteTop.addChild(activeLayerName);

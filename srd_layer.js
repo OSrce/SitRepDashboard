@@ -176,8 +176,8 @@ srd_layer.prototype.loadData = function( ) {
 
 // END MESSY STYLE RULE CODE
 
-
 		if(this.format == "GML" ) {
+			this.runFromServer = true;
 			if( this.runFromServer == false ) {
 				console.log("Create GML Layer="+this.name+"===");
 				this.layer = new OpenLayers.Layer.GML(this.name, this.url, { 
@@ -188,8 +188,24 @@ srd_layer.prototype.loadData = function( ) {
 					styleMap:			this.srd_styleMap,
 					preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this) 
 				}  );
+
+				
 				this.layer.loadGML();	
+
 			} else {
+
+				var layerProtocol = null;
+				if(this.editable == true) {
+						layerProtocol = new OpenLayers.Protocol.HTTP( {
+							format:		new OpenLayers.Format.GML()
+						} );
+				} else {
+						layerProtocol = new OpenLayers.Protocol.HTTP( {
+							url:			this.url,
+							format:		new OpenLayers.Format.GML()
+						} );
+				}	
+
 				this.layer = new OpenLayers.Layer.Vector(this.name, {
 					isBaseLayer:	this.isBaseLayer,
 //					projection:		this.projection,
@@ -199,10 +215,7 @@ srd_layer.prototype.loadData = function( ) {
 					visibility:		this.visibility,
 					styleMap:			this.srd_styleMap,
 					strategies:		[new OpenLayers.Strategy.Fixed()],
-					protocol: 		new OpenLayers.Protocol.HTTP( {
-						url:			this.url,
-						format:		new OpenLayers.Format.GML()
-					} )
+					protocol:			layerProtocol
 				} );
 			}
 		} else if(this.format == "WFST" ) {
