@@ -8,6 +8,7 @@ dojo.require("dojo.date.locale");
 dojo.require("dojox.form.Uploader");
 dojo.require("dojox.form.uploader.FileList");
 dojo.require("dijit.Dialog");
+dojo.require("dijit.form.Textarea");
 
 
 
@@ -508,7 +509,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			this.srd_menuBar = new dijit.MenuBar({splitter: false, region: 'top' } );	
 			//// ICON in LEFT CORNER ////
 			this.srd_menuBar.addChild(new dijit.MenuBarItem( {
-				label: '<img src="img/NYPD_Seal_Tiny.png" height="20" width="16">' } ) );
+				label: '<img src="img/SR_Icon.png" height="20" width="16">' } ) );
 			//// SitRep MENU /////	
 			var srd_sitrepMenu = new dijit.Menu({});
 			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
@@ -659,7 +660,7 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 
 			// BEGIN LAYER SELECT
 			var editPaletteTop = new dijit.layout.BorderContainer( {
-				style:"height:100px;background-colior:yellow",
+				style:"height:100px;background-color:yellow",
 				region: 'top',
 				splitter: false
 			} );

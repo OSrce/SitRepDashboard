@@ -67,7 +67,15 @@ function srd_layer( ) {
 			fillOpacity: 0.5,
 			strokeColor : '#00FF00',
 			strokeOpacity : 1,
-			pointRadius: 6
+			pointRadius: 6,
+			label: 'TestLabel',
+			fontColor: '#00FF00',
+			fontSize: '14px',
+			fontFamily: 'Courier New, monospace',
+			fontWeight: 'bold',
+			labelAlign: 'rt',
+			labelXOffset: '0',
+			labelYOffset: '0'
 		}
 		
 		this.srd_customFeatureAttributes = {
@@ -75,7 +83,15 @@ function srd_layer( ) {
 			fillOpacity: '${fillOpacity}',
 			strokeColor : '${strokeColor}',
 			strokeOpacity : '${strokeOpacity}',
-			pointRadius: '${pointRadius}'
+			pointRadius: '${pointRadius}',
+			label: '${label}',
+			fontColor: '${strokeColor}',
+			fontSize: '14px',
+			fontFamily: 'Courier New, monospace',
+			fontWeight: 'bold',
+			labelAlign: 'rt',
+			labelXOffset: '0',
+			labelYOffset: '0'
 		}	
 
 
@@ -268,6 +284,7 @@ srd_layer.prototype.loadData = function( ) {
 		if(this.editPalette == null ) {
 			this.editPalette = new srd_editPalette();
 			this.editPalette.addControl("activeControlPicker","Edit Mode","activeControl",this.srd_drawControls);
+			this.editPalette.addControl("editText","Feature Label","label",this.srd_featureAttributes);
 			this.editPalette.addControl("colorPicker","Stroke Color","strokeColor",this.srd_featureAttributes);	
 			this.editPalette.addControl("colorPicker","Fill Color","fillColor",this.srd_featureAttributes);	
 		}
@@ -301,6 +318,19 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 			feature.attributes[styleAttribute] = this.srd_featureAttributes[styleAttribute];
 		}
 //		alert("Feature is going to be added with strokeColor = "+feature.style.strokeColor);
+
+//		if( FEATURE SHOW LABEL == TRUE) {
+/*				feature.attributes.label = this.srd_featureAttributes.featureLabel;
+				feature.attributes.fontColor = this.srd_featureAttributes.fontColor;
+				feature.attributes.fontSize = this.srd_featureAttributes.fontSize;
+				feature.attributes.fontFamily = this.srd_featureAttributes.fontFamily;
+				feature.attributes.fontWeight = this.srd_featureAttributes.fontWeight;
+				feature.attributes.labelAlign = this.srd_featureAttributes.labelAlign;
+				feature.attributes.labelXOffset = this.srd_featureAttributes.labelXOffset;
+				feature.attributes.labelYOffset = this.srd_featureAttributes.labelYOffset;
+*/
+//		}
+
 	}
 }
 

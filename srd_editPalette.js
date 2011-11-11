@@ -2,15 +2,16 @@
 
 function srd_editPalette () {
 	this.layoutContainer = new dijit.layout.LayoutContainer( {
-		style: "background-color:light-gray;height:200px",
-		region: 'bottom'
-	} ); 
+		style: "background-color:light-gray;height:400px",
+		region: 'top'
+	} );
 
 	this.controlArray = {};
 
 	this.layoutContainer.startup();	
 
 	this.drawControlArr = null;
+	this.srd_featureAttributes = null;
 	this.selCon = null;
 
 	this.drawControlLabelArr =  {
@@ -77,6 +78,29 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 			}
 			this.layoutContainer.addChild( drawControlButton );
 
+		break;
+		case "editText" :
+			this.srd_featureAttributes = conObject;
+			if(this.controlArray[conName] == null) {
+				this.controlArray[conName] = {};
+			}
+			var textNameCP = new dijit.layout.ContentPane({
+				content: conDisplayName+": ",
+				region:'top'
+			});
+			this.controlArray[conName].textNameCP = textNameCP; 
+			this.layoutContainer.addChild(textNameCP);
+			var editTextarea = new dijit.form.Textarea( {
+				value: conObject[conName],
+				region: 'top',
+				editPalette: this,
+				conName: conName,
+				onChange: function(evt) { this.editPalette.srd_featureAttributes[conName] = this.value; }
+				} );
+			this.controlArray[conName].editTextarea = editTextarea;
+			this.layoutContainer.addChild(editTextarea);	
+			
+			
 		break;
 		case "colorPicker" :
 			if(this.controlArray[conName] == null) {
