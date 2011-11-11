@@ -5,6 +5,7 @@ dojo.require("dojox.storage.LocalStorageProvider");
 dojo.require("dojo.date.locale");
 //dojo.require("dojox.encoding.base64");
 //dojo.require("dojox.form.uploader.plugins.Flash");
+dojo.require("dijit.form.Form");
 dojo.require("dojox.form.Uploader");
 dojo.require("dojox.form.uploader.FileList");
 dojo.require("dijit.Dialog");
@@ -506,7 +507,11 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			this.srd_container.startup();
 		}
 		if(this.srd_menuBar == null) {
-			this.srd_menuBar = new dijit.MenuBar({splitter: false, region: 'top' } );	
+			this.srd_menuBar = new dijit.MenuBar( { 
+				splitter: false,
+				region: 'top',
+				style: "margin:0px;padding:0px;"
+			} );	
 			//// ICON in LEFT CORNER ////
 			this.srd_menuBar.addChild(new dijit.MenuBarItem( {
 				label: '<img src="img/SR_Icon.png" height="20" width="16">' } ) );
@@ -607,7 +612,7 @@ srd_document.prototype.srd_mapDisplay = function() {
 	dojo.addOnLoad(function() {
 		if(this.srd_mapContent == null) {
 			this.srd_mapContent = new dijit.layout.ContentPane(
-	      {  splitter: 'false', style: "background-color:white;border:0;margin:0;padding:0;", region: 'center', content: '<div id="srd_docContent" class="map"></div>' }, 'srd_center');
+	      {  splitter: 'false', style: "background-color:white;border:0px;margin:0px;padding:0px;", region: 'center', content: '<div id="srd_docContent" class="map"></div>' }, 'srd_center');
 		}
 
 		this.srd_container.addChild(this.srd_mapContent);
@@ -754,20 +759,32 @@ srd_document.prototype.saveLayer = function( layerId ) {
 
 srd_document.prototype.openFile = function() {
 	var fileSelDialog = new dijit.Dialog( {
-			style: "width: 300px"
-//			content: '<input name="uploadedfile" multiple="true" type="file" id="uploader" dojoType="dojox.form.Uploader" label="Select Which Files you wish to load" />WhichFilesYouWant<div id="files" dojoType="dojox.form.uploader.FileList"  uploaderId="uploader"></div>'
+			style: "width: 400px",
+			content:"<div id='test1'></div><div id='test2'></div>"
 		} );
 
-	dijit.byId(fileSelDialog).appendChild(myUploader);
-var myUploader = new dojox.form.Uploader({label:"Programmatic Uploader", multiple:true, uploadOnSelect:true });
+	var openFileForm = new dijit.form.Form( { 
+			action:'test.html',
+			method: 'post'
+		} );
+		openFileForm.placeAt('test1');	
 
-var list = new dojox.form.uploader.FileList({uploader:uploader});
+	var myUploader = new dojox.form.Uploader({label:"Select Layers to Upload", multiple:true, uploadOnSelect:true });
+	var list = new dojox.form.uploader.FileList({uploader:myUploader});
 
-//	fileSelDialog.addChild( new dojox.form.Uploader() );
-//	fileSelDialog.addChild( new dojox.form.uploader.FileList()  );
+		var oFSubmit = new dijit.form.Button( {
+			label : 'Upload!'
+		} );
+	
 
-//	fileSelDialog.startup();	
+		openFileForm.domNode.appendChild(list.domNode);
+		openFileForm.domNode.appendChild(myUploader.domNode);
+		openFileForm.domNode.appendChild(oFSubmit.domNode);
+
+
 	fileSelDialog.show();	
+
+
 	
 }
 
