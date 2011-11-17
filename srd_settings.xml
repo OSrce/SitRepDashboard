@@ -41,9 +41,9 @@
 			<visibility>false</visibility>
 			<projection>EPSG:4326</projection>
 			<sphericalMercator>true</sphericalMercator>
-			<url>[	http://a.tile.openstreetmap.org/${z}/${x}/${y}.png,
-							http://b.tile.openstreetmap.org/${z}/${x}/${y}.png,
-							http://c.tile.openstreetmap.org/${z}/${x}/${y}.png]</url>
+			<url>[http://a.tile.openstreetmap.org/${z}/${x}/${y}.png,
+						http://b.tile.openstreetmap.org/${z}/${x}/${y}.png,
+						http://c.tile.openstreetmap.org/${z}/${x}/${y}.png]</url>
 			<numZoomLevels>19</numZoomLevels>
 			<attribution>OSM Data</attribution>
 		</layer>
@@ -56,9 +56,9 @@
 			<visibility>false</visibility>
 			<projection>EPSG:4326</projection>
 			<sphericalMercator>true</sphericalMercator>
-			<url>[	http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png,
-							http://otile2.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png,
-							http://otile3.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png ]</url>
+			<url>[http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png,
+						http://otile2.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png,
+						http://otile3.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png ]</url>
 			<numZoomLevels>19</numZoomLevels>
 			<attribution>Mapquest Data</attribution>
 		</layer>

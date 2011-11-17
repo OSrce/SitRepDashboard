@@ -195,12 +195,13 @@ srd_layer.prototype.loadData = function( ) {
 			} else {
 
 				var layerProtocol = null;
-				if(this.editable == true) {
+				if(this.url == null || this.url == "") {
 						layerProtocol = new OpenLayers.Protocol.HTTP( {
 							format:		new OpenLayers.Format.GML()
 						} );
 				} else {
 						layerProtocol = new OpenLayers.Protocol.HTTP( {
+							readWithPOST: true,
 							url:			this.url,
 							format:		new OpenLayers.Format.GML()
 						} );
@@ -217,6 +218,12 @@ srd_layer.prototype.loadData = function( ) {
 					strategies:		[new OpenLayers.Strategy.Fixed()],
 					protocol:			layerProtocol
 				} );
+
+//				console.log("Lazy Load");
+//				this.layer.protocol = layerProtocol;
+//				this.layer.refresh();
+
+
 			}
 		} else if(this.format == "WFST" ) {
 			this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
@@ -620,6 +627,9 @@ srd_layer.prototype.setValue = function(varName, varValue) {
 		case "numZoomLevels" :
 			this[varName] = Number(varValue);
 			break;
+//		case "url" :
+//			this[varName] = varValue;
+//			break;
 		default :
 			this[varName] = String(varValue);
 	}
