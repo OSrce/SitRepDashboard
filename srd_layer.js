@@ -197,13 +197,19 @@ srd_layer.prototype.loadData = function( ) {
 				var layerProtocol = null;
 				if(this.url == null || this.url == "") {
 						layerProtocol = new OpenLayers.Protocol.HTTP( {
-							format:		new OpenLayers.Format.GML()
+							format:		new OpenLayers.Format.GML( {
+								featureType: "feature",
+								featureNS: "http://example.com/feature" 
+							} )	
 						} );
 				} else {
 						layerProtocol = new OpenLayers.Protocol.HTTP( {
 							readWithPOST: true,
 							url:			this.url,
-							format:		new OpenLayers.Format.GML()
+							format:		new OpenLayers.Format.GML( {
+								featureType: "feature",
+								featureNS: "http://example.com/feature" 
+							} )	
 						} );
 				}	
 
@@ -213,6 +219,7 @@ srd_layer.prototype.loadData = function( ) {
 //
 					preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this), 
 					projection:		new OpenLayers.Projection(this.projection),
+					units:				"degrees",
 					visibility:		this.visibility,
 					styleMap:			this.srd_styleMap,
 					strategies:		[new OpenLayers.Strategy.Fixed()],

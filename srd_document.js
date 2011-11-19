@@ -490,7 +490,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 	}
 	tmpLayer.layertype = "Vector";
 	tmpLayer.format = "GML";
-	
+	tmpLayer.projection = this.staticVals.default_projection;
 	tmpLayer.isBaseLayer = false;
 	tmpLayer.visibility = true;
 	tmpLayer.editable = true;
@@ -512,30 +512,37 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 
 //CALLED WHEN CREATING NEW LAYERS FROM SELECTED FILES.
 srd_document.prototype.srd_createOpenedLayers = function() {
-//					this.srd_doc.srd_uploader.upload();
+					var retVal = this.srd_uploader.upload();
 //					this.srd_doc.test = this.srd_doc.srd_uploader.inputNode.files[0].mozFullPath;	
 						// We want to get the Layer Name and Layer URL (local file).
 						// we will then create a new layer and add it to this.layerArr
 					
 //					alert("Creating Layers from selected Files.");
-		this.srd_uploader.getFileList();	
-		console.log("FILE NAME:"+ this.srd_uploader.inputNode.files[0].name);
-		console.log("FILE PATH:"+ this.srd_uploader.inputNode.files[0].mozFullPath);
-		console.log("FILE Type:"+ this.srd_uploader.inputNode.files[0].type);
+//		this.srd_uploader.getFileList();	
+//		console.log("FILE NAME:"+ this.srd_uploader.inputNode.files[0].name);
+//		console.log("FILE PATH:"+ this.srd_uploader.inputNode.files[0].mozFullPath);
+//		console.log("FILE Type:"+ this.srd_uploader.inputNode.files[0].type);
 	
-		var theName = "TEST5";
+//		var theName = this.srd_uploader.inputNode.files[0].name;
+
+		console.log("TEST==="+this.srd_uploader.inputNode.files );
+	
+	
+//		var theName = retVal.name;
+//		console.log("name==="+retVal.name);
+		var theName = "test3.gml";	 
+
+		var theUrl = "/srd_uploads/"+theName;
 //		var test = 'c:\\JON_LOCAL\\TO_SORT\\test5.gml';
 		console.log("TEST="+test);
 
-		var returnVal =  this.srd_uploader.submit(this.openFileForm);
-		console.log(returnVal);
 //		theUrl = window.URL.createObjectURL(this.srd_uploader.inputNode.files[0]);
 
 //			fileTest = new File();
 		
 //		dojo.xhrGet({ url:theUrl });
 //
-//		this.srd_createLayer(theName,theUrl);					
+		this.srd_createLayer(theName,theUrl);					
 		
 }
 
@@ -794,21 +801,26 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 }
 
 srd_document.prototype.saveLayer = function( layerId ) {
-	var formatGml = new OpenLayers.Format.GML();
+	var formatGml = new OpenLayers.Format.GML( { 
+			'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
+			'externalProjection' : new OpenLayers.Projection("EPSG:4326")
+	});
 	var test = formatGml.write(this.srd_layerArr[layerId].layer.features);
-//	console.log("TEST="+test);
+	console.log("TEST="+test);
 //	var theHead = "data:application/gml+xml;charset=utf-8;base64,";
-	var theHead = "data:application/gml+xml,";
+	var theHead = "data:application/gml+xml;base64,";
+//	var theHead = "data:application/gml+xml,";
 	document.location.href = theHead + test;
 	
 	
 }
 
 srd_document.prototype.openFile = function() {
-	if(this.fileSelDialog != null) {
-		this.fileSelDialog.show();
-		return;
-	}
+//	dojo.addOnLoad(function() {
+		if(this.fileSelDialog != null) {
+			this.fileSelDialog.show();
+			return;
+		}
 
 	this.fileSelDialog = new dijit.Dialog( {
 			style: "width: 400px",
@@ -825,7 +837,10 @@ srd_document.prototype.openFile = function() {
 	this.srd_uploader = new dojox.form.Uploader( { 
 		label:"Select Layers to Upload",
 		multiple:true,
-		uploadOnSelect:true,
+//		uploadUrl: "/SitRepDashboard/UploadFile.php",
+//		url: "/SitRepDashboard/UploadFile.php",
+//		force: "flash",
+		uploadOnSelect:false,
 		onComplete: function(evt) {
 			alert("Completed file upload!");
 		},
@@ -839,8 +854,8 @@ srd_document.prototype.openFile = function() {
 		var oFSubmit = new dijit.form.Button( {
 			label : 'Upload!',
 			srd_doc: this,
-			type: 'submit'
-/*			onClick: 
+//			type: 'submit'
+			onClick: 
 				function(evt) {
 //					this.srd_doc.srd_uploader.upload();
 
@@ -850,17 +865,21 @@ srd_document.prototype.openFile = function() {
 					this.srd_doc.fileSelDialog.hide();
 
 				}
-*/
+
 		} );
 	
-
+		
 		this.openFileForm.domNode.appendChild(this.srd_fileList.domNode);
 		this.openFileForm.domNode.appendChild(this.srd_uploader.domNode);
 		this.openFileForm.domNode.appendChild(oFSubmit.domNode);
 
+		this.openFileForm.startup();
+		this.srd_uploader.startup();
+		
+
 	this.fileSelDialog.show();	
 
-
+//	} );
 	
 }
 
