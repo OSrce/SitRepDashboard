@@ -339,10 +339,12 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 				{}
 //			);	
 //	}
-		feature.attributes.customStyle = true;
-		feature.attributes.strokeColor = this.srd_featureAttributes.strokeColor;
-		for(var styleAttribute in this.srd_featureAttributes) {
-			feature.attributes[styleAttribute] = this.srd_featureAttributes[styleAttribute];
+		if(feature.attributes.customStyle == null) {
+			feature.attributes.customStyle = true;
+			feature.attributes.strokeColor = this.srd_featureAttributes.strokeColor;
+			for(var styleAttribute in this.srd_featureAttributes) {
+				feature.attributes[styleAttribute] = this.srd_featureAttributes[styleAttribute];
+			}
 		}
 //		alert("Feature is going to be added with strokeColor = "+feature.style.strokeColor);
 

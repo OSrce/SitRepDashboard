@@ -7,11 +7,16 @@ dojo.require("dojo.date.locale");
 dojo.require("dijit.form.Form");
 dojo.require("dojox.form.Uploader");
 dojo.require("dojox.form.uploader.FileList");
-//dojo.require("dojox.form.uploader.plugins.IFrame");
-//dojo.require("dojox.form.uploader.plugins.Flash");
-dojo.require("dojox.form.uploader.plugins.HTML5");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.form.Textarea");
+
+if(dojo.isIE) {
+	dojo.require("dojox.form.uploader.plugins.IFrame");
+} else if(dojo.isKhtml) {
+	dojo.require("dojox.form.uploader.plugins.HTML5");
+} else {
+	dojo.require("dojox.form.uploader.plugins.Flash");
+}
 
 
 
@@ -819,7 +824,6 @@ srd_document.prototype.saveLayer = function( layerId ) {
 		},
 		load: function(result) {
 			console.log("Sent file: "+this.content.fileName);
-			alert("test");
 			document.location.href = "UploadLayer.php?fileName="+this.content.fileName;
 		}
 	} );
