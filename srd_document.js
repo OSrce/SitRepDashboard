@@ -7,9 +7,9 @@ dojo.require("dojo.date.locale");
 dojo.require("dijit.form.Form");
 dojo.require("dojox.form.Uploader");
 dojo.require("dojox.form.uploader.FileList");
-dojo.require("dojox.form.uploader.plugins.IFrame");
+//dojo.require("dojox.form.uploader.plugins.IFrame");
 //dojo.require("dojox.form.uploader.plugins.Flash");
-//dojo.require("dojox.form.uploader.plugins.HTML5");
+dojo.require("dojox.form.uploader.plugins.HTML5");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.form.Textarea");
 
@@ -44,9 +44,9 @@ function srd_document() {
 
 	this.fileSelDialog = null; 
 	this.srd_uploader = null;
+	this.oFSubmit = null;
 	this.srd_fileList = null;
 	this.openFileForm = null;
-	this.test = null;
 
 	//THE OpenLayers VARS
 	this.map = null;
@@ -874,59 +874,49 @@ srd_document.prototype.openFile = function() {
 
 	this.srd_uploader = new dojox.form.Uploader( { 
 		id: "uploader",
+		type: 'file',
+		name: 'uploadedfile',
 		label:"Select Layers to Upload",
 		multiple:true,
-//		uploadUrl: "/SitRepDashboard/UploadFile.php",
-		url: "/SitRepDashboard/UploadFile.php",
-//		force: "flash",
-		uploadOnSelect:true,
+//		uploadOnSelect:true,
+		srd_doc: this,
 		onComplete: function(evt) {
-			alert("Completed file upload!");
-			if(evt.name != null) {
-				var theName = evt.name;
-				var theUrl = "/srd_uploads/"+theName;
-				console.log("File uploaded! "+theName);	
-				this.srd_createLayer(theName,theUrl);					
+//			alert("Completed file upload!");
+			for(var fileArr in evt) {
+				if(evt[fileArr].name != null) {
+					var theName = evt[fileArr].name;
+					var theUrl = "/srd_uploads/"+theName;
+//				console.log("File uploaded! "+theName);	
+					this.srd_doc.srd_createLayer(theName,theUrl);					
+				}
 			}
 		},
 		onError: function(evt) {
 			alert("File upload error!");
 		}
 
-	});
-	this.srd_fileList = new dojox.form.uploader.FileList({uploader: this.srd_uploader } );
+	}  );
+	this.srd_fileList = new dojox.form.uploader.FileList({uploader: this.srd_uploader }  );
 
 		var oFSubmit = new dijit.form.Button( {
 			label : 'Upload!',
 			type  : 'button',
-			onClick: function() {
-//				alert("TEST");
-				dijit.byId("uploader").upload();
-			}	
-//			srd_doc: this,
-//			type: 'submit'
-/*			onClick: function(evt) {
+			srd_doc: this,
+			onClick: function(evt) {
 					console.log("Clicked the Upload Button!");
-					dijit.byId("uploader").upload();
-//					this.srd_doc.srd_uploader.upload();					
-					console.log("test1");
+					this.srd_doc.srd_uploader.upload();					
 //					this.srd_doc.srd_createOpenedLayers();
 					this.srd_doc.fileSelDialog.hide();
 
 				}
-*/
 
-		} );
-	
+
+		});
 		
 		this.openFileForm.domNode.appendChild(this.srd_fileList.domNode);
 		this.openFileForm.domNode.appendChild(this.srd_uploader.domNode);
 		this.openFileForm.domNode.appendChild(oFSubmit.domNode);
-		this.srd_uploader.startup();
-
 		this.openFileForm.startup();
-		this.srd_uploader.startup();
-		
 
 	this.fileSelDialog.show();	
 
