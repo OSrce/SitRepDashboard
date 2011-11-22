@@ -9,6 +9,7 @@ dojo.require("dojox.form.Uploader");
 dojo.require("dojox.form.uploader.FileList");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.HorizontalSlider");
 
 if(dojo.isIE) {
 	dojo.require("dojox.form.uploader.plugins.IFrame");
@@ -794,12 +795,13 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 //		this.map.updateSize();
 //		this.srd_toolbar.placeAt(dojo.body());		
 	} else {
-		if(this.srd_panel != null) {
+		if(this.srd_toolbar != null) {
 	//		this.srd_panel.deactivate();
-//			this.srd_container.removeChild(this.srd_toolbar);
-			this.srd_toolbar.destroyRecursive();
+			this.srd_container.removeChild(this.srd_toolbar);
+//			this.srd_toolbar.destroyRecursive();
 			this.srd_container.resize();
-			this.srd_toolbar = null;
+//			delete this.srd_toolbar;
+//			this.srd_toolbar = null;
 
 		}
 		menuItem.checked = false;

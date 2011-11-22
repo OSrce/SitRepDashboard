@@ -2,7 +2,7 @@
 
 function srd_editPalette () {
 	this.layoutContainer = new dijit.layout.LayoutContainer( {
-		style: "height:400px;margin:0px;padding:0px;border:0px;",
+		style: "height:750px;margin:0px;padding:0px;border:0px;",
 		region: 'top'
 	} );
 
@@ -140,6 +140,32 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 			this.layoutContainer.addChild( colorButton );
 			colorBox.placeAt(colorButton);
 		
+		break;
+		case "editSlider" :
+			this.srd_featureAttributes = conObject;
+			if(this.controlArray[conName] == null) {
+				this.controlArray[conName] = {};
+			}
+			var textNameCP = new dijit.layout.ContentPane({
+				content: conDisplayName+": ",
+				region:'top'
+			});
+			this.controlArray[conName].textNameCP = textNameCP; 
+			this.layoutContainer.addChild(textNameCP);
+			var editSlider = new dijit.form.HorizontalSlider( {
+				value: conObject[conName],
+				region: 'top',
+				minimum: 0,
+				maximum: 1,
+				intermediateChanges: true,
+				editPalette: this,
+				conName: conName,
+				onChange: function(evt) { this.editPalette.srd_featureAttributes[conName] = this.value; }
+				} );
+			this.controlArray[conName].editSlider = editSlider;
+
+			this.layoutContainer.addChild(editSlider);	
+
 		break;
 		}
 		this.layoutContainer.resize();

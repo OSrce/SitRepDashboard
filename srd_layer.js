@@ -67,9 +67,10 @@ function srd_layer( ) {
 			fillOpacity: 0.5,
 			strokeColor : '#00FF00',
 			strokeOpacity : 1,
-			pointRadius: 6,
+			strokeWidth: '1',
+			pointRadius: '6',
 			label: 'TestLabel',
-			fontColor: '#00FF00',
+			fontColor: '#000000',
 			fontSize: '14px',
 			fontFamily: 'Courier New, monospace',
 			fontWeight: 'bold',
@@ -83,10 +84,11 @@ function srd_layer( ) {
 			fillOpacity: '${fillOpacity}',
 			strokeColor : '${strokeColor}',
 			strokeOpacity : '${strokeOpacity}',
+			strokeWidth : '${strokeWidth}',
 			pointRadius: '${pointRadius}',
 			label: '${label}',
-			fontColor: '${strokeColor}',
-			fontSize: '14px',
+			fontColor: '${fontColor}',
+			fontSize: '${fontSize}',
 			fontFamily: 'Courier New, monospace',
 			fontWeight: 'bold',
 			labelAlign: 'rt',
@@ -312,8 +314,22 @@ srd_layer.prototype.loadData = function( ) {
 			this.editPalette = new srd_editPalette();
 			this.editPalette.addControl("activeControlPicker","Edit Mode","activeControl",this.srd_drawControls);
 			this.editPalette.addControl("editText","Feature Label","label",this.srd_featureAttributes);
+			this.editPalette.addControl("colorPicker","Font Color","fontColor",this.srd_featureAttributes);	
+			this.editPalette.addControl("editText","Font Size","fontSize",this.srd_featureAttributes);	
+			this.editPalette.addControl("editText","Point Radius","pointRadius",this.srd_featureAttributes);	
 			this.editPalette.addControl("colorPicker","Stroke Color","strokeColor",this.srd_featureAttributes);	
+			this.editPalette.addControl("editSlider","Stroke Opacity","strokeOpacity",this.srd_featureAttributes); 
+			this.editPalette.addControl("editText","Stroke Width","strokeWidth",this.srd_featureAttributes);	
 			this.editPalette.addControl("colorPicker","Fill Color","fillColor",this.srd_featureAttributes);	
+			this.editPalette.addControl("editSlider","Fill Opacity","fillOpacity",this.srd_featureAttributes); 
+
+			//Some of the attributes that are a little more fun!
+			this.editPalette.addControl("editText","Notes","notes",this.srd_featureAttributes);	
+			this.editPalette.addControl("editText","Start Time","startTime",this.srd_featureAttributes);	
+			this.editPalette.addControl("editText","End Time","endTime",this.srd_featureAttributes);	
+			this.editPalette.addControl("editText","Last Edited","lastEditTime",this.srd_featureAttributes);	
+
+
 		}
 	}
 
@@ -333,32 +349,12 @@ srd_layer.prototype.loadData = function( ) {
 // DEFINE preFeatureInsert for Dynamic Layers so that we can add appropriate styling
 srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 	if( this.editable == true) {
-//		if( feature.style == null ) {
-//			feature.style = new OpenLayers.Style(
-//				 this.srd_styleMap.styles["default"].defaultStyle	
-				{}
-//			);	
-//	}
 		if(feature.attributes.customStyle == null) {
 			feature.attributes.customStyle = true;
-			feature.attributes.strokeColor = this.srd_featureAttributes.strokeColor;
 			for(var styleAttribute in this.srd_featureAttributes) {
 				feature.attributes[styleAttribute] = this.srd_featureAttributes[styleAttribute];
 			}
 		}
-//		alert("Feature is going to be added with strokeColor = "+feature.style.strokeColor);
-
-//		if( FEATURE SHOW LABEL == TRUE) {
-/*				feature.attributes.label = this.srd_featureAttributes.featureLabel;
-				feature.attributes.fontColor = this.srd_featureAttributes.fontColor;
-				feature.attributes.fontSize = this.srd_featureAttributes.fontSize;
-				feature.attributes.fontFamily = this.srd_featureAttributes.fontFamily;
-				feature.attributes.fontWeight = this.srd_featureAttributes.fontWeight;
-				feature.attributes.labelAlign = this.srd_featureAttributes.labelAlign;
-				feature.attributes.labelXOffset = this.srd_featureAttributes.labelXOffset;
-				feature.attributes.labelYOffset = this.srd_featureAttributes.labelYOffset;
-*/
-//		}
 
 	}
 }
