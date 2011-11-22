@@ -7,9 +7,9 @@ dojo.require("dojo.date.locale");
 dojo.require("dijit.form.Form");
 dojo.require("dojox.form.Uploader");
 dojo.require("dojox.form.uploader.FileList");
-//dojo.require("dojox.form.uploader.plugins.HTML5");
 dojo.require("dojox.form.uploader.plugins.IFrame");
 //dojo.require("dojox.form.uploader.plugins.Flash");
+//dojo.require("dojox.form.uploader.plugins.HTML5");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.form.Textarea");
 
@@ -512,7 +512,11 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 
 //CALLED WHEN CREATING NEW LAYERS FROM SELECTED FILES.
 srd_document.prototype.srd_createOpenedLayers = function() {
-					var retVal = this.srd_uploader.upload();
+//					this.srd_uploader.getFileList();
+//					console.log("test2");
+//					var retVal = this.srd_uploader.upload();
+//					console.log("test3");
+
 //					this.srd_doc.test = this.srd_doc.srd_uploader.inputNode.files[0].mozFullPath;	
 						// We want to get the Layer Name and Layer URL (local file).
 						// we will then create a new layer and add it to this.layerArr
@@ -525,16 +529,15 @@ srd_document.prototype.srd_createOpenedLayers = function() {
 	
 //		var theName = this.srd_uploader.inputNode.files[0].name;
 
-		console.log("TEST==="+this.srd_uploader.inputNode.files );
+//		console.log("TEST==="+this.srd_uploader.inputNode.files );
 	
 	
-//		var theName = retVal.name;
 //		console.log("name==="+retVal.name);
-		var theName = "test3.gml";	 
-
-		var theUrl = "/srd_uploads/"+theName;
+//			var theName = "test3.gml";	 
+//			var theName = retVal.name;
+//			var theUrl = "/srd_uploads/"+theName;
 //		var test = 'c:\\JON_LOCAL\\TO_SORT\\test5.gml';
-		console.log("TEST="+test);
+//		console.log("TEST="+test);
 
 //		theUrl = window.URL.createObjectURL(this.srd_uploader.inputNode.files[0]);
 
@@ -542,7 +545,7 @@ srd_document.prototype.srd_createOpenedLayers = function() {
 		
 //		dojo.xhrGet({ url:theUrl });
 //
-		this.srd_createLayer(theName,theUrl);					
+//		this.srd_createLayer(theName,theUrl);					
 		
 }
 
@@ -806,12 +809,47 @@ srd_document.prototype.saveLayer = function( layerId ) {
 			'externalProjection' : new OpenLayers.Projection("EPSG:4326")
 	});
 	var test = formatGml.write(this.srd_layerArr[layerId].layer.features);
-	console.log("TEST="+test);
-//	var theHead = "data:application/gml+xml;charset=utf-8;base64,";
-	var theHead = "data:application/gml+xml;base64,";
-//	var theHead = "data:application/gml+xml,";
-	document.location.href = theHead + test;
-	
+
+ 	dojo.xhrPost( { 
+		url: "UploadLayer.php",
+		content: {
+			fileName: this.srd_layerArr[layerId].name,
+			localSave:true,
+			layerData: test
+		},
+		load: function(result) {
+			console.log("Sent file: "+this.content.fileName);
+			alert("test");
+			document.location.href = "UploadLayer.php?fileName="+this.content.fileName;
+		}
+	} );
+
+/*
+	if(this.openFileForm != null) {
+		delete this.openFileForm;
+	}
+
+	this.openFileForm = new dijit.form.Form( { 
+			action:'UploadLayer.php',
+			method: 'post',
+			encType:"multipart/form-data"
+		} );
+//	this.openFileForm.appendTo( dojo.body() );	
+		console.log("ok so far");
+		dojo.body().appendChild(this.openFileForm.domNode);
+		console.log("test2");
+		fileNameWidget = dojo.create("input",
+											{ type:"hidden",name:"fileName",value:this.srd_layerArr[layerId].name});
+		this.openFileForm.domNode.appendChild(fileNameWidget.domNode);
+		
+		layerDataWidget = dojo.create("input",
+											{ type:"hidden",name:"layerData",value:test},
+											this.openFileForm);
+		console.log("test3");
+		this.openFileForm.submit();	
+		console.log("test4");
+*/
+
 	
 }
 
@@ -828,21 +866,28 @@ srd_document.prototype.openFile = function() {
 		} );
 
 	this.openFileForm = new dijit.form.Form( { 
-			action:'UploadFile.php',
+			action:'/SitRepDashboard/UploadFile.php',
 			method: 'post',
 			encType:"multipart/form-data"
 		} );
 	this.openFileForm.placeAt('test1');	
 
 	this.srd_uploader = new dojox.form.Uploader( { 
+		id: "uploader",
 		label:"Select Layers to Upload",
 		multiple:true,
 //		uploadUrl: "/SitRepDashboard/UploadFile.php",
-//		url: "/SitRepDashboard/UploadFile.php",
+		url: "/SitRepDashboard/UploadFile.php",
 //		force: "flash",
-		uploadOnSelect:false,
+		uploadOnSelect:true,
 		onComplete: function(evt) {
 			alert("Completed file upload!");
+			if(evt.name != null) {
+				var theName = evt.name;
+				var theUrl = "/srd_uploads/"+theName;
+				console.log("File uploaded! "+theName);	
+				this.srd_createLayer(theName,theUrl);					
+			}
 		},
 		onError: function(evt) {
 			alert("File upload error!");
@@ -853,18 +898,23 @@ srd_document.prototype.openFile = function() {
 
 		var oFSubmit = new dijit.form.Button( {
 			label : 'Upload!',
-			srd_doc: this,
+			type  : 'button',
+			onClick: function() {
+//				alert("TEST");
+				dijit.byId("uploader").upload();
+			}	
+//			srd_doc: this,
 //			type: 'submit'
-			onClick: 
-				function(evt) {
-//					this.srd_doc.srd_uploader.upload();
-
-						this.srd_doc.srd_createOpenedLayers();
+/*			onClick: function(evt) {
 					console.log("Clicked the Upload Button!");
-						
+					dijit.byId("uploader").upload();
+//					this.srd_doc.srd_uploader.upload();					
+					console.log("test1");
+//					this.srd_doc.srd_createOpenedLayers();
 					this.srd_doc.fileSelDialog.hide();
 
 				}
+*/
 
 		} );
 	
@@ -872,6 +922,7 @@ srd_document.prototype.openFile = function() {
 		this.openFileForm.domNode.appendChild(this.srd_fileList.domNode);
 		this.openFileForm.domNode.appendChild(this.srd_uploader.domNode);
 		this.openFileForm.domNode.appendChild(oFSubmit.domNode);
+		this.srd_uploader.startup();
 
 		this.openFileForm.startup();
 		this.srd_uploader.startup();
