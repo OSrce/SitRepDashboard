@@ -1,16 +1,4 @@
 
-//dojo.require("dojo.store.Memory");
-//dojo.require("dojo.store.LocalStorage");
-dojo.require("dojox.storage.LocalStorageProvider");
-dojo.require("dojo.date.locale");
-//dojo.require("dojox.encoding.base64");
-dojo.require("dijit.form.Form");
-dojo.require("dojox.form.Uploader");
-dojo.require("dojox.form.uploader.FileList");
-dojo.require("dijit.Dialog");
-dojo.require("dijit.form.Textarea");
-dojo.require("dijit.form.HorizontalSlider");
-
 if(dojo.isIE) {
 	dojo.require("dojox.form.uploader.plugins.IFrame");
 } else if(dojo.isKhtml) {

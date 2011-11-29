@@ -1,13 +1,7 @@
 <html>
 	<head>
 		<style type="text/css">	
-			@import "SR_Dojo/dijit/themes/tundra/tundra.css";
-			@import "SR_Dojo/dojo/resources/dojo.css";
-			@import "SR_Dojo/dojox/grid/resources/Grid.css";
-			@import "SR_Dojo/dojox/layout/resources/FloatingPane.css";
-			@import "SR_Dojo/dojox/layout/resources/ResizeHandle.css";
-			@import "SR_Dojo/dojox/form/resources/UploaderFileList.css";
-			
+
 		  .dojoxGrid table {
  		   margin: 0;
   		}
@@ -16,6 +10,8 @@
 		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>SitRep</title>
+
+		<link rel="stylesheet" href="SR_Dojo/srd/srd_style.css" type="text/css" />
 		<link rel="stylesheet" href="SR_OpenLayers/theme/default/style.css" type="text/css" />
 
 				<!--.olControlPanel  DESCRIBES THE PANEL ITSELF -->
@@ -132,32 +128,18 @@
 
 
 		</style>	
-		<script type="text/javascript" src="SR_Dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+
+		<script type="text/javascript" src="SR_Dojo/dojo/dojo.js" ></script>
+		<script type="text/javascript" src="SR_Dojo/dojo/srd_dojo.js" ></script>
+
 		<script src="SR_OpenLayers/OpenLayers.js"></script>
+
 		<script src="srd_editPalette.js"></script>
 		<script src="srd_layer.js"></script>
 		<script src="srd_edit.js"></script>
 		<script src="srd_document.js"></script>
 
 		<script type="text/javascript">
-			dojo.require("dojo.parser");
-			dojo.require("dijit.layout.ContentPane");
-			dojo.require("dijit.layout.BorderContainer");
-			dojo.require("dijit.layout.LayoutContainer");
-			dojo.require("dijit.form.Button");
-			dojo.require("dijit.ColorPalette");
-			dojo.require("dijit.MenuBar");
-			dojo.require("dojox.layout.FloatingPane");
-			dojo.require("dijit.PopupMenuBarItem");
-
-			dojo.require("dijit.layout.TabContainer");
-			dojo.require("dijit.TitlePane");
-	    dojo.require("dojox.grid.DataGrid");
-	    dojo.require("dojo.store.Memory");
-			dojo.require("dojo.data.ObjectStore");
-
-			dojo.require("dojox.data.XmlStore");
-			dojo.require("dijit.form.FilteringSelect");
 			function srd_init() {
 					var theSrdDoc = document.getElementById('theSrdDoc');
 //					theSrdDoc = new srd_document();

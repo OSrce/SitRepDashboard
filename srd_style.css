@@ -1,5 +1,11 @@
 
-
+			@import "dijit/themes/tundra/tundra.css";
+			@import "dojo/resources/dojo.css";
+			@import "dojox/grid/resources/Grid.css";
+			@import "dojox/layout/resources/FloatingPane.css";
+			@import "dojox/layout/resources/ResizeHandle.css";
+			@import "dojox/form/resources/UploaderFileList.css";
+			
 
 
 html, body {
