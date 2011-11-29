@@ -11,8 +11,8 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>SitRep</title>
 
-		<link rel="stylesheet" href="SR_Dojo/srd/srd_style.css" type="text/css" />
-		<link rel="stylesheet" href="SR_OpenLayers/theme/default/style.css" type="text/css" />
+		<link rel="stylesheet" href="lib/SR_Dojo/srd/srd_style.css" type="text/css" />
+		<link rel="stylesheet" href="lib/SR_OpenLayers/theme/default/style.css" type="text/css" />
 
 				<!--.olControlPanel  DESCRIBES THE PANEL ITSELF -->
 				<!-- olControlPanel div  DESCRIBES THE ELE IN THE PANEL (DEFAULTS) -->
@@ -32,112 +32,17 @@
                 background-color: white;
             }
 
-       .olControlPanel  {
-						display:block;
-            float: right;
-						width: 150px;
-						height: 150px;
-            margin: 0px;
-						right: 250px;
-						background-color:gray;
-        }
-       .olControlPanel  div {
-						display:block;
-            float: right;
-            margin: 5px;
-            width: 24px;
-            height: 24px;
-						top: 50px;
-						right: 0px;
-						background-color:blue;
-        }
-        .olControlNavigationItemActive { 
-            background-image: url("SR_OpenLayers/theme/default/img/editing_tool_bar.png");
-            background-repeat: no-repeat;
-            background-position: -103px -23px; 
-        }
-        .olControlNavigationItemInactive { 
-            background-image: url("SR_OpenLayers/theme/default/img/editing_tool_bar.png");
-            background-repeat: no-repeat;
-            background-position: -103px -0px; 
-        }
-
-        .olControlPanel .olControlDrawFeaturePointItemInactive { 
-            background-image: url("SR_OpenLayers/theme/default/img/draw_point_off.png");
-            width: 24px;
-						height: 24px; 
-        }
-        .olControlPanel .olControlDrawFeaturePointItemActive { 
-            background-image: url("SR_OpenLayers/theme/default/img/draw_point_on.png");
-            width: 24px;
-						height: 24px; 
-        }
-
-        .olControlPanel .olControlDrawFeaturePathItemInactive { 
-            background-image: url("SR_OpenLayers/theme/default/img/draw_line_off.png");
-            width: 24px;
-						height: 24px; 
-        }
-        .olControlPanel .olControlDrawFeaturePathItemActive { 
-            background-image: url("SR_OpenLayers/theme/default/img/draw_line_on.png");
-            width: 24px;
-						height: 24px; 
-        }
-
-        .olControlPanel .olControlDrawFeaturePolygonItemInactive { 
-            background-image: url("SR_OpenLayers/theme/default/img/draw_polygon_off.png");
-            width: 24px;
-						height: 24px; 
-        }
-        .olControlPanel .olControlDrawFeaturePolygonItemActive { 
-            background-image: url("SR_OpenLayers/theme/default/img/draw_polygon_on.png");
-            width: 24px;
-						height: 24px; 
-       	}
-        .olControlModifyFeatureItemActive { 
-            background-image: url(SR_OpenLayers/theme/default/img/move_feature_on.png);
-            width: 24px;
-						height: 24px; 
-      	}
-        .olControlModifyFeatureItemInactive { 
-            background-image: url(SR_OpenLayers/theme/default/img/move_feature_off.png);
-            width: 24px;
-						height: 24px; 
-				}
-        .olControlPanel	.olControlDeleteItemActive  { 
-            background-image: url(SR_OpenLayers/theme/default/img/remove_point_on.png);
-           	width: 24px;
-						height: 24px; 
-				}
-        .olControlPanel	.olControlDeleteItemInactive { 
-            background-image: url(SR_OpenLayers/theme/default/img/remove_point_off.png);
-            width: 24px;
-						height: 24px; 
-				}
-        .olControlPanel	.olControlSelectFeatureItemActive  { 
-            background-image: url(SR_OpenLayers/theme/default/img/pan_on.png);
-           	width: 24px;
-						height: 24px; 
-				}
-        .olControlPanel	.olControlSelectFeatureItemInactive { 
-            background-image: url(SR_OpenLayers/theme/default/img/pan_off.png);
-            width: 24px;
-						height: 24px; 
-				}
-
-
-
 		</style>	
 
-		<script type="text/javascript" src="SR_Dojo/dojo/dojo.js" ></script>
-		<script type="text/javascript" src="SR_Dojo/dojo/srd_dojo.js" ></script>
+		<script type="text/javascript" src="lib/SR_Dojo/dojo/dojo.js" ></script>
+		<script type="text/javascript" src="lib/SR_Dojo/dojo/srd_dojo.js" ></script>
 
-		<script src="SR_OpenLayers/OpenLayers.js"></script>
+		<script src="lib/SR_OpenLayers/OpenLayers.js"></script>
 
-		<script src="srd_editPalette.js"></script>
-		<script src="srd_layer.js"></script>
-		<script src="srd_edit.js"></script>
-		<script src="srd_document.js"></script>
+		<script src="lib/srd_js/srd_editPalette.js"></script>
+		<script src="lib/srd_js/srd_layer.js"></script>
+		<script src="lib/srd_js/srd_edit.js"></script>
+		<script src="lib/srd_js/srd_document.js"></script>
 
 		<script type="text/javascript">
 			function srd_init() {
