@@ -69,7 +69,7 @@ function srd_layer( ) {
 			strokeOpacity : 1,
 			strokeWidth: '1',
 			pointRadius: '6',
-			label: 'TestLabel',
+			label: 'Test Label',
 			fontColor: '#000000',
 			fontSize: '14px',
 			fontFamily: 'Courier New, monospace',
@@ -96,6 +96,29 @@ function srd_layer( ) {
 			labelYOffset: '0'
 		}	
 
+//		this.srd_customSelectFeatureAttributes = Object.create(this.srd_customFeatureAttributes);
+		this.srd_customSelectFeatureAttributes = {
+			fillColor: '${fillColor}',
+			fillOpacity: '${fillOpacity}',
+			strokeColor : '${strokeColor}',
+			strokeOpacity : '${strokeOpacity}',
+			strokeWidth : '${strokeWidth}',
+			pointRadius: '${pointRadius}',
+			label: '${label}',
+			fontColor: '${fontColor}',
+			fontSize: '${fontSize}',
+			fontFamily: 'Courier New, monospace',
+			fontWeight: 'bold',
+			labelAlign: 'rt',
+			labelXOffset: '0',
+			labelYOffset: '0'
+		}	
+
+
+
+
+		this.srd_customSelectFeatureAttributes.label = '**${label}**';
+//		this.srd_customSelectFeatureAttributes.label = '${label}';
 
 
 }
@@ -171,8 +194,17 @@ srd_layer.prototype.loadData = function( ) {
 			symbolizer: this.srd_customFeatureAttributes
 		} );
 
+		var customSelectRule = new OpenLayers.Rule( {
+			filter: new OpenLayers.Filter.Comparison( {
+				type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
+				property: 'customStyle',
+				value: null
+			}),
+			symbolizer: this.srd_customSelectFeatureAttributes
+		} );
 
 		this.srd_styleMap.styles["default"].addRules( [mainRule, customRule] );
+		this.srd_styleMap.styles["select"].addRules( [ customSelectRule] );
 
 
 
@@ -299,8 +331,13 @@ srd_layer.prototype.loadData = function( ) {
 				}.bind(this)
 			} );
 
-	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer,
-		{onSelect: this.onFeatureSelect, onUnselect: this.onFeatureUnselect});
+	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer, {
+		onSelect: function(theFeature) { 
+			this.onFeatureSelect(theFeature) 
+		}.bind(this), 
+		onUnselect: function(theFeature) { 
+			this.onFeatureUnselect(theFeature) }.bind(this)
+		} );
 
 /////////////////////////////////////////////
 	}
@@ -311,7 +348,7 @@ srd_layer.prototype.loadData = function( ) {
 
 	if(this.editable == true ) {
 		if(this.editPalette == null ) {
-			this.editPalette = new srd_editPalette();
+			this.editPalette = new srd_editPalette(this);
 			this.editPalette.addControl("activeControlPicker","Edit Mode","activeControl",this.srd_drawControls);
 			this.editPalette.addControl("editText","Feature Label","label",this.srd_featureAttributes);
 			this.editPalette.addControl("colorPicker","Font Color","fontColor",this.srd_featureAttributes);	
@@ -361,80 +398,29 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 
 
 
+// BEGIN FUNC onFeatureSelect
+srd_layer.prototype.onFeatureSelect = function(theFeature) {
+	console.log("Feature selected: "+theFeature.attributes.fillColor);
+	this.editPalette.setFeatureAttributes( theFeature.attributes);
+	this.selectedFeature = theFeature;
+}
+//END FUNC onFeatureSelect
 
-srd_layer.prototype.turnOnEvents = function () {
-	this.layer.events.on( {
-		"featureselected": function(e) { onFeatureSelect(e, this); },
-		"featureunselected": function(e) {onFeatureUnselect(e, this); },
-		"loadend": function(e) { loadDataGrid(e, this); }, 
-		"featureadded": function(e) { featureAdded(e,this); },
-		scope: this 
-	} );
-	if(this.tmpLayer != null) {
+// BEGIN FUNC onFeatureUnselect
+srd_layer.prototype.onFeatureUnselect = function(theFeature) {
+	console.log("Feature unselected: "+theFeature.fid);
+	this.editPalette.setFeatureAttributes( this.srd_featureAttributes );
+	this.selectedFeature = null;
+}
+//END FUNC onFeatureSelect
 
-	this.tmpLayer.events.on( {
-		"loadend": function(e) { loadWFS(e, this); }, 
-		scope: this 
-	} );
-	
+srd_layer.prototype.updateLayer = function() {
+	if(this.selectedFeature != null) {
+		this.layer.drawFeature(this.selectedFeature);
 	}
-
-};
-
-
-// BEGIN GLOBAL FUNC onFeatureSelect
-onFeatureSelect = function(evt, the_srd_layer) {
-	if(theSelectedControl != selectControl) {
-		return 0;
-	}
-	this.selFeature = evt.feature;
-/*	var postNum = selFeature.attributes.Post_Number;
-	var patrolBoro = selFeature.attributes['Patrol_Boro']; 
-	var postDesc = selFeature.attributes['Post_Description'];
-	var postLat = selFeature.attributes['Lat'];
-	var postLon = selFeature.attributes['Lon'];
-*/
-	var theAttString = "";
-	for(var propName in this.selFeature.attributes ) {
-		theAttString += propName+": "+this.selFeature.attributes[propName]+"<br>";
-	}
-	popup = new OpenLayers.Popup.FramedCloud("chicken", 
-		selFeature.geometry.getBounds().getCenterLonLat(),
-		null,
-		"<div style='font-size:.8em'>"+theAttString+"</div>",
-		null, true );  
-	selFeature.popup = popup;
-	
-	this.map.addPopup(popup);
-
-		if( this.selFeature.attributes.srd_status == 'Default') {
-			this.selFeature.attributes.srd_status = 'Pending';
-		} else  if( this.selFeature.attributes.srd_status == 'Pending') {
-			this.selFeature.attributes.srd_status = 'Clear';
-		} else  if( this.selFeature.attributes.srd_status == 'Clear') {
-			this.selFeature.attributes.srd_status = 'Default';
-		} else {
-			this.selFeature.attributes.srd_status = 'Default';
-		}
-		the_srd_layer.layer.redraw();
-
-};
-//END GLOBAL FUNC onFeatureSelect
+}
 
 
-
-//DEV TESTING -- changed this.map to the_srd_layer.map and 
-// added if not null's for both vars.
-//BEGIN GLOBAL FUNC onFeatureUnselect
-onFeatureUnselect = function(evt, the_srd_layer) {
-	var feature = evt.feature;
-	if( the_srd_layer != null && feature.popup != null ) {
-		the_srd_layer.map.removePopup(feature.popup);
-		feature.popup.destroy();
-		feature.popup = null;
-	}
-};    
-//END GLOBAL FUNC onFeatureUnselect
 
 //NO LONGER CALLED...
 loadWFS = function(evt, the_srd_layer) {

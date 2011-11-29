@@ -1,6 +1,6 @@
 
 
-function srd_editPalette () {
+function srd_editPalette (theSrdLayer) {
 	this.layoutContainer = new dijit.layout.LayoutContainer( {
 		style: "height:750px;margin:0px;padding:0px;border:0px;",
 		region: 'top'
@@ -11,6 +11,7 @@ function srd_editPalette () {
 	this.drawControlArr = null;
 	this.srd_featureAttributes = null;
 	this.selCon = null;
+	this.srd_layer = theSrdLayer;	
 
 	this.drawControlLabelArr =  {
 		point: { label: "Add Points", img: "SR_OpenLayers/theme/default/img/draw_point_off.png" },
@@ -23,12 +24,42 @@ function srd_editPalette () {
 }
 
 
-srd_editPalette.prototype.activateDrawControl = function(theDrawCon) {
-	this.selCon = theDrawCon;
+srd_editPalette.prototype.setFeatureAttributes = function (theAttributes) {
+	if(theAttributes != this.srd_featureAttributes) {
+		this.srd_featureAttributes = theAttributes;
+		for(conId in this.controlArray) {
+//			console.log("conId:"+conId);
+			switch(this.controlArray[conId].conType) {
+			case "editText" :
+				this.controlArray[conId].editTextarea.set("value", this.srd_featureAttributes[conId]);
+			break;
+			case "colorPicker" :
+				this.controlArray[conId].colorBox.attr("style", "background:"+this.srd_featureAttributes[conId] );
+			break;
+			case "editSlider" :
+				this.controlArray[conId].editSlider.set("value",this.srd_featureAttributes[conId] );
+			break;
+			}	
+		}
+	}
+}
+
+
+srd_editPalette.prototype.deactivateDrawControls = function() {
 	for(tmpDrawCon in this.drawControlArr) {
-		if( tmpDrawCon == theDrawCon ) {
+		this.drawControlArr[tmpDrawCon].deactivate();
+	}
+}	
+
+
+srd_editPalette.prototype.activateDrawControl = function(theDrawCon ) {
+	if(theDrawCon != null) {
+		this.selCon = theDrawCon;
+	}
+	for(tmpDrawCon in this.drawControlArr) {
+		if( tmpDrawCon == this.selCon ) {
 			this.drawControlArr[tmpDrawCon].activate();
-			this.controlArray.activeControl.drawControlButton.attr("label","<img src="+this.drawControlLabelArr[theDrawCon].img+" /img>");
+			this.controlArray.activeControl.drawControlButton.attr("label","<img src="+this.drawControlLabelArr[this.selCon].img+" /img>");
 		} else {
 			this.drawControlArr[tmpDrawCon].deactivate();
 		}
@@ -38,11 +69,12 @@ srd_editPalette.prototype.activateDrawControl = function(theDrawCon) {
 
 srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,conObject) {
 	dojo.addOnLoad(function() {
+		if(this.controlArray[conName] == null) {
+			this.controlArray[conName] = {};
+			this.controlArray[conName].conType = conType;
+		}
 		switch(conType) {
 		case "activeControlPicker" :
-			if(this.controlArray[conName] == null) {
-				this.controlArray[conName] = {};
-			}
 			var conLabelCP = new dijit.layout.ContentPane({
 				content: conDisplayName+": ",
 				region:'top'
@@ -79,9 +111,6 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 		break;
 		case "editText" :
 			this.srd_featureAttributes = conObject;
-			if(this.controlArray[conName] == null) {
-				this.controlArray[conName] = {};
-			}
 			var textNameCP = new dijit.layout.ContentPane({
 				content: conDisplayName+": ",
 				region:'top'
@@ -93,17 +122,17 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 				region: 'top',
 				editPalette: this,
 				conName: conName,
-				onChange: function(evt) { this.editPalette.srd_featureAttributes[conName] = this.value; }
-				} );
+				onChange: function(evt) { 
+					this.editPalette.srd_featureAttributes[conName] = this.value; 
+					this.editPalette.srd_layer.updateLayer();
+				}
+			} );
 			this.controlArray[conName].editTextarea = editTextarea;
 			this.layoutContainer.addChild(editTextarea);	
 			
 			
 		break;
 		case "colorPicker" :
-			if(this.controlArray[conName] == null) {
-				this.controlArray[conName] = {};
-			}
 			var colorNameCP = new dijit.layout.ContentPane({
 				content: conDisplayName+": ",
 				region:'top'
@@ -126,6 +155,7 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 						this.editPalette.srd_featureAttributes[conName] = this.value; 
 						this.editPalette.controlArray[conName].colorButton.closeDropDown();
 						this.editPalette.controlArray[conName].colorBox.attr("style", "background:"+this.value );
+						this.editPalette.srd_layer.updateLayer();
 					}
 				}
 			} );
@@ -143,9 +173,6 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 		break;
 		case "editSlider" :
 			this.srd_featureAttributes = conObject;
-			if(this.controlArray[conName] == null) {
-				this.controlArray[conName] = {};
-			}
 			var textNameCP = new dijit.layout.ContentPane({
 				content: conDisplayName+": ",
 				region:'top'
@@ -160,8 +187,11 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 				intermediateChanges: true,
 				editPalette: this,
 				conName: conName,
-				onChange: function(evt) { this.editPalette.srd_featureAttributes[conName] = this.value; }
-				} );
+				onChange: function(evt) { 
+					this.editPalette.srd_featureAttributes[conName] = this.value;
+					this.editPalette.srd_layer.updateLayer();
+				}
+			} );
 			this.controlArray[conName].editSlider = editSlider;
 
 			this.layoutContainer.addChild(editSlider);	

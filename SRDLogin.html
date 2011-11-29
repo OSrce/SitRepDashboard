@@ -4,7 +4,6 @@
 			@import "SR_Dojo/dijit/themes/tundra/tundra.css";
 			@import "SR_Dojo/dojo/resources/dojo.css";
 			@import "SR_Dojo/dojox/grid/resources/Grid.css";
-			@import "SR_Dojo/dojox/grid/resources/{{ theme }}Grid.css";
 
 		  .dojoxGrid table {
  		   margin: 0;
@@ -15,19 +14,21 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>SitRep Login Page</title>
 		<link rel="stylesheet" href="SR_OpenLayers/theme/default/style.css" type="text/css" />
-		<link rel="stylesheet" href="SR_OpenLayers/style.css" type="text/css" />
-		<style type="text/css">
-			html, body, #srd_docContent {
-				margin: 0;
-				width: 100%;
-				height: 100%;
-			}
-		</style>
+		
+	<link rel="stylesheet" href="srd_style.css" type="text/css" />
+			
 		<!-- Dojo toolkit main include -->
-		<script type="text/javascript" src="/libs/dojo-1.4.1/dojo/dojo.js"> 
+		<script type="text/javascript" src="SR_Dojo/dojo/dojo.js"> 
 		</script>
 		<script src="srd_document.js"></script> 
 		<script type="text/javascript">
+			dojo.require("dijit.layout.ContentPane");
+			dojo.require("dijit.layout.BorderContainer");
+			function srd_login() {
+
+
+
+			}
 			/**
 			 * Executes login server action and shows 
 			 * a result or performs a redirect.
@@ -41,14 +42,19 @@
 		</script>
 	</head>
 	<body class="tundra" onload="srd_login()">
-		<form>
-		<h1>SitRep Dashboard Login</h1>
-		<table>
-			<tr><td>Login:</td><td><input id="login" /></td></tr>
-			<tr><td>Password:</td><td><input id="password" /></td></tr>
-		</table>
-		<button onclick="login(this);">Login</button>
-		</form>
+		<div dojoType="dijit.layout.LayoutContainer" id="srd_loginContainer">
+			<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="background:gray;width:100%;height:100%;" id="loginPane">	
+				<form>
+					<img style="height:50px;width:50px;" src="img/NYPD_Seal_Tiny.png"/>
+					<h1>SitRep Login</h1>
+					<table>
+						<tr><td>Login:</td><td><input id="login" /></td></tr>
+						<tr><td>Password:</td><td><input id="password" /></td></tr>
+					</table>
+					<button onclick="login(this);">Login</button>
+				</form>
+			</div>
+		</div>
 	</body>
 </html>
 

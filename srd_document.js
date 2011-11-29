@@ -48,6 +48,9 @@ function srd_document() {
 	this.srd_adminContent = null;
 	this.srd_dataContent = null;
 
+	this.srd_layerEditMenu = null;
+	this.srd_layerEditMenuDropDown = null;
+	
 	this.fileSelDialog = null; 
 	this.srd_uploader = null;
 	this.oFSubmit = null;
@@ -507,52 +510,19 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 
 	tmpLayer.loadData();
 	tmpLayer.addLayerToMap(this.map);
-	this.srd_selLayer = tmpLayer;
+//	this.srd_selLayer = tmpLayer;
 	this.srd_saveMenu.addChild(new dijit.MenuItem( { 
 			label: tmpLayer.name,
 			onClick: function() { this.saveLayer(tmpLayer.id) }.bind(this)
 	} ) );
+	if(this.srd_layerEditMenu != null) {
+		this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
+				label: tmpLayer.name,
+				onClick: function() { this.srd_selectEditLayer( tmpLayer.id );  }.bind(this)
+		} ) );
+	}
 
 
-}
-
-//CALLED WHEN CREATING NEW LAYERS FROM SELECTED FILES.
-srd_document.prototype.srd_createOpenedLayers = function() {
-//					this.srd_uploader.getFileList();
-//					console.log("test2");
-//					var retVal = this.srd_uploader.upload();
-//					console.log("test3");
-
-//					this.srd_doc.test = this.srd_doc.srd_uploader.inputNode.files[0].mozFullPath;	
-						// We want to get the Layer Name and Layer URL (local file).
-						// we will then create a new layer and add it to this.layerArr
-					
-//					alert("Creating Layers from selected Files.");
-//		this.srd_uploader.getFileList();	
-//		console.log("FILE NAME:"+ this.srd_uploader.inputNode.files[0].name);
-//		console.log("FILE PATH:"+ this.srd_uploader.inputNode.files[0].mozFullPath);
-//		console.log("FILE Type:"+ this.srd_uploader.inputNode.files[0].type);
-	
-//		var theName = this.srd_uploader.inputNode.files[0].name;
-
-//		console.log("TEST==="+this.srd_uploader.inputNode.files );
-	
-	
-//		console.log("name==="+retVal.name);
-//			var theName = "test3.gml";	 
-//			var theName = retVal.name;
-//			var theUrl = "/srd_uploads/"+theName;
-//		var test = 'c:\\JON_LOCAL\\TO_SORT\\test5.gml';
-//		console.log("TEST="+test);
-
-//		theUrl = window.URL.createObjectURL(this.srd_uploader.inputNode.files[0]);
-
-//			fileTest = new File();
-		
-//		dojo.xhrGet({ url:theUrl });
-//
-//		this.srd_createLayer(theName,theUrl);					
-		
 }
 
 srd_document.prototype.srd_displayMenuBar = function() {
@@ -742,12 +712,12 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 //				style:'height:30px;
 			});
 			editPaletteTop.addChild(activeLayerName);
-			var layerMenu = new dijit.Menu({ });
+			this.srd_layerEditMenu = new dijit.Menu({ });
 			for( tmpId in this.srd_layerArr) {
 				if(this.srd_layerArr[tmpId].editable == true) {
-						layerMenu.addChild(new dijit.MenuItem( { 
+						this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
 						label: this.srd_layerArr[tmpId].name,
-						onClick: function() { this.selLayer = this.srd_layerArr[tmpId]  }.bind(this)
+						onClick: function() { this.srd_selectEditLayer( tmpId );  }.bind(this)
 					} ) );
 					// CHECK TO SEE IF selected Layer is null, if so,
 					// make the selLayer the last editable layer in the arr
@@ -767,20 +737,22 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			}
 
 	
-			var activeLayer = new dijit.form.DropDownButton({
+			this.srd_layerEditMenuDropDown = new dijit.form.DropDownButton({
 				label: this.srd_selLayer.name,
-				dropDown: layerMenu,
+				dropDown: this.srd_layerEditMenu,
 				style: "position:relative",
 				id: "srd_activeLayer",
 				region:'top'
 
 			});
-			editPaletteTop.addChild(activeLayer);
+			editPaletteTop.addChild(this.srd_layerEditMenuDropDown);
 			editPaletteTop.startup();
 			this.srd_toolbar.addChild(editPaletteTop);
 			// END LAYER SELECT
 
 			this.srd_toolbar.addChild(this.srd_selLayer.editPalette.layoutContainer)
+
+			this.srd_selectEditLayer(this.srd_selLayer.id);
 
 		} else {
 			this.srd_container.addChild(this.srd_toolbar);
@@ -872,7 +844,7 @@ srd_document.prototype.openFile = function() {
 		} );
 
 	this.openFileForm = new dijit.form.Form( { 
-			action:'/SitRepDashboard/UploadFile.php',
+			action:'UploadFile.php',
 			method: 'post',
 			encType:"multipart/form-data"
 		} );
@@ -893,6 +865,7 @@ srd_document.prototype.openFile = function() {
 					var theName = evt[fileArr].name;
 					var theUrl = "/srd_uploads/"+theName;
 //				console.log("File uploaded! "+theName);	
+					theName = theName.replace('.gml','');
 					this.srd_doc.srd_createLayer(theName,theUrl);					
 				}
 			}
@@ -911,7 +884,6 @@ srd_document.prototype.openFile = function() {
 			onClick: function(evt) {
 					console.log("Clicked the Upload Button!");
 					this.srd_doc.srd_uploader.upload();					
-//					this.srd_doc.srd_createOpenedLayers();
 					this.srd_doc.fileSelDialog.hide();
 
 				}
@@ -931,33 +903,31 @@ srd_document.prototype.openFile = function() {
 }
 
 
-srd_document.prototype.createColorSelect = function(theName,theColorType) {
-	var colorNameCP = new dijit.layout.ContentPane({
-		content: theName+": "
-	});
-	this.srd_toolbar.addChild(colorNameCP);
-	var colorBox = new dijit.form.TextBox( {
-		style : "background-color:"+this.srd_selLayer.srd_featureAttributes[theColorType]+";width:1.5em;"
-		}, "colorBox");
-
-	var colorMenu = new dijit.Menu({});
-	var colorButton = new dijit.form.DropDownButton({
-		label: "<div id='srd_colorBox'></div>",
-		dropDown: colorMenu,
-		style: "position:relative;",
-		id: "srd_"+theName
-		});
-	var picker = new dijit.ColorPalette({
-		onChange: function(val,colorButton,colorBox) { 
-			this.srd_selLayer.srd_featureAttributes[theColorType] = val; 
-			colorButton.closeDropDown();
-			colorBox.attr("style", "background-color:"+val );
-		}.bind(this)
-	}, "somePicker" );
-	colorMenu.addChild(picker);
-	this.srd_toolbar.addChild( colorButton );
-	colorBox.placeAt("srd_"+theName);
+srd_document.prototype.srd_selectEditLayer = function( theId ) {
+//	console.log("srd_selectEditLayer Called:"+theId);
+	if(theId == this.srd_selLayer.id) {
+		return;
+	}
+	if(this.srd_selLayer != null) {
+		this.srd_toolbar.removeChild(this.srd_selLayer.editPalette.layoutContainer);
+		this.srd_selLayer.editPalette.deactivateDrawControls();
+	}	
+	this.srd_selLayer = this.srd_layerArr[theId];
+	this.srd_toolbar.addChild(this.srd_selLayer.editPalette.layoutContainer);
+	this.srd_layerEditMenuDropDown.set("label",this.srd_selLayer.name);
+	this.srd_selLayer.editPalette.activateDrawControl();
+//	console.log("srd_selectEditLayer Finished");
 }
-//END createColorSelect
-	
+
+
+
+
+
+
+
+
+
+
+
+
 
