@@ -99,6 +99,20 @@ copy "dojo", "dijit" and "dojox" folder to SR_Dojo.
 OpenLayers 2.11 :
 copy "OpenLayers.js", "img" and "theme" fodlers to SR_OpenLayers
 
+--------------------------------------------------
+
+After file reorg :
+
+To build custom SR_Dojo :
+in dojo- src dir :
+
+mkdir srd
+cp /var/www/html/SitRepDashboard/srd_buildFiles/srd_style.css srd/.
+
+
+cd util/buildscripts
+
+./build.sh profile=srd_dojo action=release releaseName=SR_Dojo cssOptimize=comments.keepLines
 
 
 

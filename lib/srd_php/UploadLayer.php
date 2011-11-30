@@ -5,7 +5,7 @@ if(isset( $_GET["fileName"])  ){
 		header('Content-type: application/gml');
 		header('Content-Disposition: attachment; filename="'.$fileName.'"');
 
-		$fileName = "../srd_uploads/".$_GET["fileName"].".gml";
+		$fileName = "../../../srd_uploads/".$_GET["fileName"].".gml";
 		readfile($fileName);
 }
 
@@ -19,7 +19,7 @@ if( isset( $_POST["fileName"] ) ) {
 
 	} else {
 */
-		$fileName = "../srd_uploads/".$_POST["fileName"].".gml";
+		$fileName = "../../../srd_uploads/".$_POST["fileName"].".gml";
 		$fileHandle = fopen($fileName,"w");
 		fwrite($fileHandle, $_POST["layerData"] );
 		fclose($fileHandle);

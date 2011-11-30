@@ -26,7 +26,7 @@ function trace($txt, $isArray=false){
 	// this is helpful on a remote server if you don't
 	//have access to the log files
 	//
-	$log = new cLOG("../srd_uploads/upload.txt", false);
+	$log = new cLOG("../../../srd_uploads/upload.txt", false);
 	//$log->clear();
 	if($isArray){
 		$log->printr($txt);
@@ -46,8 +46,8 @@ trace("---------------------------------------------------------");
 //	EDIT ME: According to your local directory structure.
 // 	NOTE: Folders must have write permissions
 //
-$upload_path = "../srd_uploads/"; 	// where image will be uploaded, relative to this file
-$download_path = "../srd_uploads/";	// same folder as above, but relative to the HTML file
+$upload_path = "../../../srd_uploads/"; 	// where image will be uploaded, relative to this file
+$download_path = "../../../srd_uploads/";	// same folder as above, but relative to the HTML file
 
 //
 // 	NOTE: maintain this path for JSON services
