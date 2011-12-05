@@ -29,40 +29,10 @@
 			<visibility>true</visibility>
 			<projection>EPSG:4326</projection>
 			<sphericalMercator>true</sphericalMercator>
-			<url>"https://demo.sitrep.org/mq_tiles/${z}/${x}/${y}.png"</url>
-			<numZoomLevels>19</numZoomLevels>
+			<url>"https://wjoc-sr.nypd.finest/mq_tiles/${z}/${x}/${y}.png"</url>
+			<numZoomLevels>5</numZoomLevels>
+			<maxZoomLevel>1</maxZoomLevel>
 		</layer>
-
-		<layer>
-			<id>2</id>
-			<name>OSM - from openstreetmap.org</name>	
-			<layertype>XYZ</layertype>
-			<isBaseLayer>true</isBaseLayer>
-			<visibility>false</visibility>
-			<projection>EPSG:4326</projection>
-			<sphericalMercator>true</sphericalMercator>
-			<url>["http://a.tile.openstreetmap.org/${z}/${x}/${y}.png",
-						"http://b.tile.openstreetmap.org/${z}/${x}/${y}.png",
-						"http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"]</url>
-			<numZoomLevels>19</numZoomLevels>
-			<attribution>OSM Data</attribution>
-		</layer>
-
-		<layer>
-			<id>3</id>
-			<name>MapQuest - from mapquest.org</name>	
-			<layertype>XYZ</layertype>
-			<isBaseLayer>true</isBaseLayer>
-			<visibility>false</visibility>
-			<projection>EPSG:4326</projection>
-			<sphericalMercator>true</sphericalMercator>
-			<url>["http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
-						"http://otile2.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
-						"http://otile3.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png" ]</url>
-			<numZoomLevels>19</numZoomLevels>
-			<attribution>Mapquest Data</attribution>
-		</layer>
-
 
 <!-- OVERLAY LAYERS -->
 
@@ -158,6 +128,38 @@
 
 		<layer>
 			<id>8</id>
+			<name>NY County Boundaries</name>	
+			<isBaseLayer>false</isBaseLayer>
+			<layertype>Vector</layertype>
+			<format>GML</format>
+			<url>sr_data_public/NYCountyBoundaries.gml</url>
+			<projection>EPSG:4326</projection>
+			<visibility>false</visibility>
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#00FFFF</fillColor>
+					<fillOpacity>0.4</fillOpacity>
+					<strokeColor>#000000</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+					<strokeWidth>6</strokeWidth>
+					<label>${NAME}</label>
+					<labelAlign>cc</labelAlign>
+					<fontColor>#0000FF</fontColor>
+					<fontOpacity>0.9</fontOpacity>
+					<fontFamily>Arial</fontFamily>
+					<fontSize>14</fontSize>
+				</Style>
+			</StyleMap>	
+		</layer>
+
+
+
+
+
+		<layer>
+			<id>9</id>
 			<name>NYPD Sectors</name>	
 			<isBaseLayer>false</isBaseLayer>
 			<layertype>Vector</layertype>
