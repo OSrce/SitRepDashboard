@@ -184,6 +184,33 @@
 				</Style>
 			</StyleMap>	
 		</layer>
+		<layer>
+			<id>10</id>
+			<name>ConEd Electric Grid</name>	
+			<isBaseLayer>false</isBaseLayer>
+			<layertype>Vector</layertype>
+			<format>GML</format>
+			<url>sr_data_private/ConEd_CityWide.gml</url>
+			<projection>EPSG:4326</projection>
+			<visibility>false</visibility>
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#00F000</fillColor>
+					<fillOpacity>0.1</fillOpacity>
+					<strokeColor>#003000</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+					<label>${area_name}</label>
+					<labelAlign>cc</labelAlign>
+					<fontColor>#000000</fontColor>
+					<fontOpacity>1</fontOpacity>
+					<fontFamily>Arial</fontFamily>
+					<fontSize>14</fontSize>
+				</Style>
+			</StyleMap>	
+		</layer>
+
 
 
 
