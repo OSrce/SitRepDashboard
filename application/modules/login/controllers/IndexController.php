@@ -24,15 +24,25 @@ class Login_IndexController extends Zend_Controller_Action {
 	}
 
 	public function loginAction() {
-		$opt=array( 'custom' => array( $this->_options['auth']['timeout'] ) );
-		$form = new Login_Form_login($opt);
+		echo "TEST 000000\n\n\n<br><br>";
+		$opt=array( 'custom' => array( 'timeout' => $this->_options['auth']['timeout'] ) );
+
+
+		echo "TEST 011000\n\n\n<br><br>";
+		$form = new Login_Form_Login($opt);
+
+		echo "TEST 010000\n\n\n<br><br>";
 		if( !$form->isValid($this->getRequest()->getPost() ) ) {
 			$this->view->form = $form;
 			return $this->render('login');
 		}
+
+		echo "TEST 100000\n\n\n<br><br>";
 		$options = array();
 		$options['username'] = $this->getRequest()->getParam('username');
 		$options['password'] = $this->getRequest()->getParam('password');
+
+		echo "TEST 200000\n\n\n<br><br>";
 		$auth = Zend_Auth::getInstance();
 		$db = $this->getInvokeArg('bootstrap')->getResource('db');
 		$user = new Login_Model_Users($db);
@@ -42,6 +52,7 @@ class Login_IndexController extends Zend_Controller_Action {
 		}
 		// ELES DONT WORRY ABOUT RIGHT NOW - ONLY LDAP.
 		
+		echo "TEST 300000\n\n\n<br><br>";
 		if($result->isValid() ) {
 			$role_id = $user->getRoleId($options['username'] );
 			$data = array( 

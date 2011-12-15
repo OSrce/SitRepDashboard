@@ -26,7 +26,6 @@ class Login_Form_Login extends Zend_Form
 				'timeout' => $this->_timeout,
 				)
 		);	
-
 	
 		$this->addElement(
 			'text','username', array(
