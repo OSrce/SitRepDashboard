@@ -1,0 +1,32 @@
+
+
+
+DB name : sr_data
+
+tables:
+
+sr_session
+sr_users
+sr_groups
+sr_users_acl
+sr_groups_acl
+
+
+create table sr_session ( 
+					id char(32),
+					modified int,
+					lifetime int,
+					data text,
+					PRIMARY KEY (id)
+);
+
+
+
+
+
+
+
+
+
+
+
