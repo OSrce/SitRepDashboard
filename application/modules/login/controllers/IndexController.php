@@ -24,45 +24,50 @@ class Login_IndexController extends Zend_Controller_Action {
 	}
 
 	public function loginAction() {
-		echo "TEST 000000\n\n\n<br><br>";
 		$opt=array( 'custom' => array( 'timeout' => $this->_options['auth']['timeout'] ) );
 
 
-		echo "TEST 011000\n\n\n<br><br>";
 		$form = new Login_Form_Login($opt);
 
-		echo "TEST 010000\n\n\n<br><br>";
 		if( !$form->isValid($this->getRequest()->getPost() ) ) {
 			$this->view->form = $form;
 			return $this->render('login');
 		}
 
-		echo "TEST 100000\n\n\n<br><br>";
 		$options = array();
 		$options['username'] = $this->getRequest()->getParam('username');
 		$options['password'] = $this->getRequest()->getParam('password');
 
-		echo "TEST 200000\n\n\n<br><br>";
 		$auth = Zend_Auth::getInstance();
 		$db = $this->getInvokeArg('bootstrap')->getResource('db');
-		$user = new Login_Model_Users($db);
-		if ($user->isLdapUser($options['username'] ) ) {
+//		$user = new Login_Model_Users($db);
+//		if ($user->isLdapUser($options['username'] ) ) {
 			$options['ldap'] = $this->_options['ldap'];
 			$authAdapter = Login_Auth::_getAdapter('ldap', $options);
-		}
+//		}
 		// ELES DONT WORRY ABOUT RIGHT NOW - ONLY LDAP.
-		
-		echo "TEST 300000\n\n\n<br><br>";
+		$result = $auth->authenticate($authAdapter);
+
 		if($result->isValid() ) {
-			$role_id = $user->getRoleId($options['username'] );
+			echo "USER IS VALID!";
+			$this->_helper->flashMessenger->addMessage("User Authenticated!.");
+/*			$role_id = $user->getRoleId($options['username'] );
 			$data = array( 
 				'username' => $options['username'],
 				'id_role' => $role_id
 			);
+
 			$auth->getStorage()->write($data);
-			$this->_redirect('/home');
+*/
+//			$this->_redirect('/home');
 		} else {
-			$this->_helper->flashMessenger->addMessage("Authentication error.");
+			$logger = new Zend_Log();
+			$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/ldap.log"));
+			$messages = $result->getMessages();
+			foreach ($messages as $i => $message) {
+				$logger->log("LDAP : $message",Zend_Log::DEBUG);
+			}
+			$this->_helper->flashMessenger->addMessage("Authentication error:");
 			$this->_redirect('/login');
 		}
 

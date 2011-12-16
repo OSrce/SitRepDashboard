@@ -117,7 +117,14 @@ cd util/buildscripts
 
 
 
+------------- FOR ZEND TO WORK 
 
+yum update php
+yum install php-xml
+yum install php-pear-PHPUnit
+
+yum install php-pgsql
+yum install php-ldap
 
 
 

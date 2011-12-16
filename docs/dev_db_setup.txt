@@ -1,16 +1,6 @@
 
 
-
-DB name : sr_data
-
-tables:
-
-sr_session
-sr_users
-sr_groups
-sr_users_acl
-sr_groups_acl
-
+CREATE DATABASE sr_data;
 
 CREATE TABLE sr_session ( 
 	id char(32),
@@ -27,6 +17,7 @@ CREATE TABLE sr_users (
 	firstname VARCHAR[40],
 	lastname VARCHAR[40],
 	title VARCHAR[40],
+	email VARCHAR[128],
 	last_login int,
 	PRIMARY KEY (uid)
 );
