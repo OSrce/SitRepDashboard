@@ -27,7 +27,22 @@
           <controllersDirectory/>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
-          <modelsDirectory/>
+          <modelsDirectory>
+            <dbTableDirectory>
+              <dbTableFile dbTableName="Users"/>
+              <dbTableFile dbTableName="Groups"/>
+              <dbTableFile dbTableName="Permissions"/>
+              <dbTableFile dbTableName="Modules"/>
+            </dbTableDirectory>
+            <modelFile modelName="Users"/>
+            <modelFile modelName="UsersMapper"/>
+            <modelFile modelName="Groups"/>
+            <modelFile modelName="GroupsMapper"/>
+            <modelFile modelName="Permissions"/>
+            <modelFile modelName="PermissionsMapper"/>
+            <modelFile modelName="Modules"/>
+            <modelFile modelName="ModulesMapper"/>
+          </modelsDirectory>
           <viewsDirectory>
             <viewScriptsDirectory/>
             <viewHelpersDirectory/>

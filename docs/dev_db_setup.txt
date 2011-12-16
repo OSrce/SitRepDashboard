@@ -39,10 +39,12 @@ CREATE TABLE sr_groups (
 );
 
 CREATE TYPE resType AS ENUM ('module','layer');
+CREATE TYPE entType AS ENUM ('user','group');
 CREATE TYPE permitType AS ENUM ('allow','deny');
 
 CREATE TABLE sr_acl_permissions (
 	permission_id SERIAL NOT NULL,
+	entity_type entType NOT NULL,
 	entity_id INT NOT NULL,
 	resource_type resType NOT NULL,
 	resource_id INT NOT NULL,
