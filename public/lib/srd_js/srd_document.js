@@ -278,8 +278,9 @@ srd_document.prototype.map_init = function() {
 				new OpenLayers.Control.PanZoomBar(),
 				new OpenLayers.Control.Attribution(),
 				new OpenLayers.Control.KeyboardDefaults()
-			],
-			numZoomLevels: 6 
+			]
+//			resolutions: [272989.386733,136494.693366,68247.3466832,34123.6733416,17061.8366708,8530.9183354,4265.4591677,2132.72958385,1000,500,250,125   ]
+//			maxResolution: 0.175 
 		} );
 	}
 ////////////////////////

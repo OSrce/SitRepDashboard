@@ -30,6 +30,9 @@ function srd_layer( ) {
 		this.sphericalMercator = null;
 		this.url = null;
 		this.numZoomLevels = null;
+		this.zoomOffset = null;
+		this.minZoomLevel = null;
+		this.maxZoomLevel = null;
 		this.attribution = "";
 		this.editable = false;
 
@@ -185,6 +188,7 @@ srd_layer.prototype.loadData = function( ) {
 //				'http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
 			this.url,
 			{
+				numZoomLevels:	this.numZoomLevels,
 				attribution:				"<img src='lib/img/SitRepLogo_Tiny.png' height='25' width='60'><br> "+this.attribution,
 				sphericalMercator: 	this.sphericalMercator
 			} 
@@ -656,7 +660,10 @@ srd_layer.prototype.setValue = function(varName, varValue) {
 				this[varName] = Boolean(false);
 			}
 			break;
+		case "minZoomLevel" :
+		case "maxZoomLevel" :
 		case "numZoomLevels" :
+		case "zoomOffset" :
 			this[varName] = Number(varValue);
 			break;
 		default :

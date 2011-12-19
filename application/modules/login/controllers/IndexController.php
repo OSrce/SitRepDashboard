@@ -46,9 +46,9 @@ class Login_IndexController extends Zend_Controller_Action {
 			$authAdapter = Login_Auth::_getAdapter('ldap', $options);
 //		}
 		// ELES DONT WORRY ABOUT RIGHT NOW - ONLY LDAP.
-		$result = $auth->authenticate($authAdapter);
 
-
+//TESING ONLY - NEED TO INCLUDE BELOW.
+//		$result = $auth->authenticate($authAdapter);
 //		if($result->isValid() ) {
 			if(1 == 1) {
 			echo "USER IS VALID!";

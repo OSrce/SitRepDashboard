@@ -30,8 +30,7 @@
 			<projection>EPSG:4326</projection>
 			<sphericalMercator>true</sphericalMercator>
 			<url>"https://demo.sitrep.org/mq_tiles/${z}/${x}/${y}.png"</url>
-			<numZoomLevels>5</numZoomLevels>
-			<maxZoomLevel>1</maxZoomLevel>
+			<numZoomLevels>25</numZoomLevels>
 		</layer>
 
 		<layer>
