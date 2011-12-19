@@ -375,7 +375,7 @@ srd_layer.prototype.loadData = function( ) {
 	}
 	// END IF VECTOR
 
-	console.log("End if Vector");
+//	console.log("End if Vector");
 
 
 	if(this.isBaseLayer == false ) {

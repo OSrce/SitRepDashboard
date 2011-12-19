@@ -10,7 +10,6 @@ function srd_editPalette (theSrdLayer) {
 //	this.layoutContainer = new dijit.layout.LayoutContainer( {
 	this.layoutContainer = new dojox.layout.ExpandoPane( {
 		style: "height:750px;margin:0px;border:9px;padding:9px;margin-right:16px;overflow:auto;",
-		class: 'myForm',
 		region: 'top',
 		title: "Edit Tools"
 	} );
@@ -162,7 +161,6 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 				region: 'top',
 //				style: 'width:50%;',
 //				style: 'width:100%;margin:2px;border:2px;padding:2px;',
-				class: 'myField',
 				editPalette: this,
 				conName: conName,
 				onChange: function(evt) { 
@@ -187,7 +185,6 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 				value: conObject[conName],
 //				style: 'width:100px;',
 //				style: 'width:100%;margin:2px;border:2px;padding:2px;',
-				class: 'myField third',
 				editPalette: this,
 				conName: conName,
 				onChange: function(evt) { 

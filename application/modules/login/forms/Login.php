@@ -34,10 +34,9 @@ class Login_Form_Login extends Zend_Form
 				'filters' => array('StringTrim')
 			) 
 		);
-	
 		$this->addElement(
 			'password','password',array(
-				'label' => 'Password3:',
+				'label' => 'Password:',
 				'required' => true
 			)
 		);

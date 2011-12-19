@@ -16,7 +16,7 @@ srd_document.prototype.loadFromLocalStore = function() {
 	var tmpStaticVals = this.srd_localStore.get("staticVals","srd"); 
 	for(var tmpVal in tmpStaticVals) {
 		this.setValue(tmpVal,tmpStaticVals[tmpVal] );
-		console.log("Loading Values: "+tmpVal+", "+tmpStaticVals[tmpVal]);
+//		console.log("Loading Values: "+tmpVal+", "+tmpStaticVals[tmpVal]);
 	}
 	for(var i=1;i<this.staticVals.layerCount; i++) {
 		this.srd_layerArr[i] = new srd_layer();
