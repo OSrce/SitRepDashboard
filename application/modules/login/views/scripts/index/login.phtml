@@ -1,10 +1,27 @@
+<html>
+	<head>
+		<title>SitRep Login Page</title>
+		<link rel="stylesheet" href="lib/SR_Dojo/srd/srd_style.css" type="text/css" />
+		<script type="text/javascript" src="lib/SR_Dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+		<script type="text/javascript" src="lib/SR_Dojo/dojo/srd_dojo.js" djConfig="parseOnLoad: true"></script>
+
+    <script type="text/javascript">
+			dojo.require("dijit.Dialog");
+			dojo.require("dijit.layout.ContentPane");
+			function srd_login() {
+				dijit.byId("loginDialog").show();
+			}
+			
+		</script>
+	</head>
+	<body class="tundra" onload="srd_login()">
+
 <?php
 
-
-
-
 ?>
-<h2>Login2:</h2>
+<div id="loginDialog"  dojoType="dijit.Dialog" closable=false>
+<div dojoType="dijit.layout.ContentPane" title="Login" style="background:grey;width:400;height:300;" >
+<h2>Login:</h2>
 <?php
 	if(!empty($this->message) ) {
 		echo '<font color="red">';
@@ -16,3 +33,9 @@
 						 ->setMethod('post');
 	echo $this->form;
 ?>
+</div>
+<div>
+
+
+	</body>
+</html>
