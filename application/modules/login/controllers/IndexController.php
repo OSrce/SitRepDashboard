@@ -40,12 +40,13 @@ class Login_IndexController extends Zend_Controller_Action {
 
 		$auth = Zend_Auth::getInstance();
 		$db = $this->getInvokeArg('bootstrap')->getResource('db');
+			// User always ldap == true for now.
 //		$user = new Login_Model_Users($db);
 //		if ($user->isLdapUser($options['username'] ) ) {
 			$options['ldap'] = $this->_options['ldap'];
 			$authAdapter = Login_Auth::_getAdapter('ldap', $options);
 //		}
-		// ELES DONT WORRY ABOUT RIGHT NOW - ONLY LDAP.
+			// ELES DONT WORRY ABOUT RIGHT NOW - ONLY LDAP.
 
 //TESING ONLY - NEED TO INCLUDE BELOW.
 //		$result = $auth->authenticate($authAdapter);
