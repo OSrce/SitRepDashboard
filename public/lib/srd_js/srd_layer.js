@@ -279,6 +279,7 @@ srd_layer.prototype.loadData = function( ) {
 					units:				"degrees",
 					visibility:		this.visibility,
 					styleMap:			this.srd_styleMap,
+//					strategies:		[new OpenLayers.Strategy.BBOX(), new OpenLayers.Strategy.Save( {auto: true}) ],
 					strategies:		[new OpenLayers.Strategy.Fixed()],
 					protocol:			layerProtocol
 				} );

@@ -127,6 +127,14 @@ yum install php-pgsql
 yum install php-ldap
 
 
+-------------
+
+PRINT JS NOTES:
+Look into:
+- http://code.google.com/p/phantomjs/wiki/FAQ
+
+
+
 
 
 

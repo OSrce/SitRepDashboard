@@ -152,7 +152,6 @@ srd_document.prototype.loadDefaults = function() {
 			this.errorOnLoad(errScope);
 		}.bind(this)
 	});
-
 }
 
 
