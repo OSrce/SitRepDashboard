@@ -1,6 +1,6 @@
 
 
-CREATE DATABASE sr_data;
+CREATE DATABASE sr_data WITH TEMPLATE template_postgis;
 
 CREATE TABLE sr_session ( 
 	id char(32),
@@ -13,18 +13,18 @@ CREATE TABLE sr_session (
 CREATE TABLE sr_users ( 
 	uid int NOT NULL,
 	gid int NOT NULL,
-	username VARCHAR[40] NOT NULL,
-	firstname VARCHAR[40],
-	lastname VARCHAR[40],
-	title VARCHAR[40],
-	email VARCHAR[128],
+	username VARCHAR(40) NOT NULL,
+	firstname VARCHAR(40),
+	lastname VARCHAR(40),
+	title VARCHAR(40),
+	email VARCHAR(128),
 	last_login int,
 	PRIMARY KEY (uid)
 );
 
 CREATE TABLE sr_groups (
 	gid int NOT NULL,
-	groupname VARCHAR[40],
+	groupname VARCHAR(40),
 	parent_gid int,
 	PRIMARY KEY (gid)
 );
@@ -47,26 +47,80 @@ CREATE TABLE sr_acl_permissions (
 
 create TABLE sr_modules (
 	id SERIAL NOT NULL,
-	name VARCHAR[128] NOT NULL,
+	name VARCHAR(128) NOT NULL,
 	PRIMARY KEY(id)
 );
 
 CREATE TYPE layer_type AS ENUM ('XYZ','Vector','WFS','GeoRSS');
-CREATE TYPE layer_format AS ENUM ('GML','WFST');
+CREATE TYPE layer_format AS ENUM ('GML','WFST','WKT');
 CREATE TABLE sr_layers (
 	id SERIAL NOT NULL,
-	name VARCHAR[128] NOT NULL,
+	name VARCHAR(128) NOT NULL,
 	type LAYER_TYPE,
 	format LAYER_FORMAT,
 	isBaseLayer BOOLEAN,
-	projection VARCHAR[16],
+	projection VARCHAR(16),
 	visibility BOOLEAN NOT NULL DEFAULT TRUE,
 	sphericalMercator BOOLEAN NOT NULL DEFAULT FALSE,
-	url VARCHAR[128],
+	url VARCHAR(128),
 	numZoomLevels int,
-	attribution VARCHAR[128],
+	attribution VARCHAR(128),
+	defaultStyle int,
+	dataTable VARCHAR(128) NOT NULL,
 	PRIMARY KEY(id)
 );
+
+CREATE TABLE sr_styles (
+	id SERIAL NOT NULL,
+	name VARCHAR(128) NOT NULL,
+	label VARCHAR(128),
+	fillColor VARCHAR(32),
+	fillOpacity INT,
+	strokeColor VARCHAR(32),
+	strokeOpacity INT,
+	strokeWidth INT,
+	pointRadius INT,
+	fontColor VARCHAR(32),
+	fontFamily VARCHAR(64),
+	fontWidth VARCHAR(32),
+	labelAlign VARCHAR(32),
+	labelXOffset INT,
+	labelYOffset INT,	
+	externalGraphic VARCHAR(128),
+	graphicWidth INT,
+	graphicHeight INT,
+	graphicOpacity INT,
+	rotation INT,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE sr_style_presets (
+	id SERIAL NOT NULL,
+	name VARCHAR(128) NOT NULL DEFAULT '',
+	style_id int NOT NULL,
+	layer_id int NOT NULL DEFAULT 0,
+	group_id int NOT NULL DEFAULT 0,
+	user_id int NOT NULL DEFAULT 0,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE sr_layer_static_data (
+	layer_id INT NOT NULL,
+	feature_id BIGINT NOT NULL,
+	feature_style INT,	
+	PRIMARY KEY ( layer_id, feature_id ) 
+);
+
+SELECT AddGeometryColumn('sr_layer_static_data','sr_geom',4326,'GEOMETRY',2);
+
+CREATE TABLE sr_layer_dynamic_data (
+	layer_id INT NOT NULL,
+	feature_id BIGINT NOT NULL,
+	feature_style INT,	
+	PRIMARY KEY ( layer_id, feature_id ) 
+);
+
+SELECT AddGeometryColumn('sr_layer_dynamic_data','sr_geom',4326,'GEOMETRY',4);
 
 
 

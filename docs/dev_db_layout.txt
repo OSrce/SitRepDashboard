@@ -1,0 +1,43 @@
+sr_data=# \d
+                           List of relations
+ Schema |                 Name                 |   Type   |    Owner    
+--------+--------------------------------------+----------+-------------
+ public | geography_columns                    | view     | sitrepadmin
+ public | geometry_columns                     | table    | sitrepadmin
+ public | spatial_ref_sys                      | table    | sitrepadmin
+ public | sr_acl_permissions                   | table    | sitrepadmin
+ public | sr_acl_permissions_permission_id_seq | sequence | sitrepadmin
+ public | sr_groups                            | table    | sitrepadmin
+ public | sr_layer_static_data                 | table    | sitrepadmin
+ public | sr_layers                            | table    | sitrepadmin
+ public | sr_layers_id_seq                     | sequence | sitrepadmin
+ public | sr_modules                           | table    | sitrepadmin
+ public | sr_modules_id_seq                    | sequence | sitrepadmin
+ public | sr_session                           | table    | sitrepadmin
+ public | sr_style                             | table    | sitrepadmin
+ public | sr_style_id_seq                      | sequence | sitrepadmin
+ public | sr_users                             | table    | sitrepadmin
+(15 rows)
+
+
+
+sr_data=# \d sr_users;
+           Table "public.sr_users"
+   Column   |        Type         | Modifiers 
+------------+---------------------+-----------
+ uid        | integer             | not null
+ gid        | integer             | not null
+ username   | character varying[] | not null
+ firstname  | character varying[] | 
+ lastname   | character varying[] | 
+ title      | character varying[] | 
+ email      | character varying[] | 
+ last_login | integer             | 
+Indexes:
+    "sr_users_pkey" PRIMARY KEY, btree (uid)
+
+
+
+
+
+

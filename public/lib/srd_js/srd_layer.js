@@ -20,21 +20,23 @@ function srd_layer( ) {
 
 
 // All of the values from the settings.xml file:
-		this.name = null;
-		this.id = null;
-		this.layertype = null;
-		this.format = null;
-		this.isBaseLayer = null;
-		this.projection = null;
-		this.visibility = null;
-		this.sphericalMercator = null;
-		this.url = null;
-		this.numZoomLevels = null;
-		this.zoomOffset = null;
-		this.minZoomLevel = null;
-		this.maxZoomLevel = null;
-		this.attribution = "";
-		this.editable = false;
+		this.options = {
+			name : null,
+			id : null,
+			layertype : null,
+			format : null,
+			isBaseLayer : null,
+			projection : null,
+			visibility : null,
+			sphericalMercator : null,
+			url : null,
+			numZoomLevels : null,
+			zoomOffset : null,
+			minZoomLevel : null,
+			maxZoomLevel : null,
+			attribution : "",
+			editable : false
+		}
 
 		// NEED TO CHANGE THIS!
 		this.runFromServer = false;
@@ -102,7 +104,7 @@ function srd_layer( ) {
 			fontSize: '${fontSize}',
 			fontFamily: 'Courier New, monospace',
 			fontWeight: 'bold',
-			labelAlign: 'rt',
+			labelAlign: '${labelAlign}',
 			labelXOffset: '0',
 			labelYOffset: '0',
 			externalGraphic: '${externalGraphic}',
@@ -167,7 +169,7 @@ srd_layer.prototype.getLayer = function() {
 srd_layer.prototype.addLayerToMap = function(theMap) {
 	this.map = theMap; 
 	this.map.addLayer( this.layer );
-	if(this.editable) {
+	if(this.options.editable) {
 		for( theCon in this.srd_drawControls) {
 			this.map.addControl(this.srd_drawControls[theCon]);
 		}
@@ -180,22 +182,22 @@ srd_layer.prototype.addLayerToMap = function(theMap) {
 srd_layer.prototype.loadData = function( ) { 
 //srd_layer.prototype.loadData = function(type, name, source, settings ) { 
 
-	if( this.layertype == "XYZ" ) {
-		console.log("XYZ Layer Created : "+this.name+":::"+this.url+":::");
+	if( this.options.layertype == "XYZ" ) {
+		console.log("XYZ Layer Created : "+this.options.name+":::"+this.options.url+":::");
 		this.layer = new OpenLayers.Layer.XYZ ( 
-			this.name,
+			this.options.name,
 //				"test",
 //				'http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
-			this.url,
+			this.options.url,
 			{
-				numZoomLevels:	this.numZoomLevels,
-				attribution:				"<img src='lib/img/SitRepLogo_Tiny.png' height='25' width='60'><br> "+this.attribution,
-				sphericalMercator: 	this.sphericalMercator
+				numZoomLevels:	this.options.numZoomLevels,
+				attribution:				"<img src='lib/img/SitRepLogo_Tiny.png' height='25' width='60'><br> "+this.options.attribution,
+				sphericalMercator: 	this.options.sphericalMercator
 			} 
 		);
-	} else if (this.layertype == "Vector" ) {
+	} else if (this.options.layertype == "Vector" ) {
 
-	console.log("Vector Layer created:"+this.name);
+	console.log("Vector Layer created:"+this.options.name);
 // BEGIN MESSY STYLE RULE CODE
 		if(this.srd_styleMap == null) {
 			this.srd_styleMap = new OpenLayers.StyleMap();
@@ -229,18 +231,18 @@ srd_layer.prototype.loadData = function( ) {
 		this.srd_styleMap.styles["select"].addRules( [ customSelectRule] );
 
 
-
+//console.log("End Messy Rule code");
 // END MESSY STYLE RULE CODE
 
-		if(this.format == "GML" ) {
+		if(this.options.format == "GML" ) {
 			this.runFromServer = true;
 			if( this.runFromServer == false ) {
-				console.log("Create GML Layer="+this.name+"===");
-				this.layer = new OpenLayers.Layer.GML(this.name, this.url, { 
-					isBaseLayer:	this.isBaseLayer,
-//					projection:		this.projection,
-					projection:		new OpenLayers.Projection(this.projection),
-					visibility:		this.visibility, 
+				console.log("Create GML Layer="+this.options.name+"===");
+				this.layer = new OpenLayers.Layer.GML(this.options.name, this.options.url, { 
+					isBaseLayer:	this.options.isBaseLayer,
+//					projection:		this.options.projection,
+					projection:		new OpenLayers.Projection(this.options.projection),
+					visibility:		this.options.visibility, 
 					styleMap:			this.srd_styleMap,
 					preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this) 
 				}  );
@@ -249,9 +251,9 @@ srd_layer.prototype.loadData = function( ) {
 				this.layer.loadGML();	
 
 			} else {
-
+//console.log("Running from server");
 				var layerProtocol = null;
-				if(this.url == null || this.url == "") {
+				if(this.options.url == null || this.options.url == "") {
 						layerProtocol = new OpenLayers.Protocol.HTTP( {
 							format:		new OpenLayers.Format.GML( {
 								featureType: "feature",
@@ -261,7 +263,7 @@ srd_layer.prototype.loadData = function( ) {
 				} else {
 						layerProtocol = new OpenLayers.Protocol.HTTP( {
 							readWithPOST: true,
-							url:			this.url,
+							url:			this.options.url,
 							format:		new OpenLayers.Format.GML( {
 								featureType: "feature",
 								featureNS: "http://example.com/feature" 
@@ -269,15 +271,15 @@ srd_layer.prototype.loadData = function( ) {
 						} );
 				}	
 
-	//			console.log("Create GML Layer Run From Server="+this.name+"===");
-				this.layer = new OpenLayers.Layer.Vector(this.name, {
-					isBaseLayer:	this.isBaseLayer,
-//					projection:		this.projection,
+//			console.log("Create GML Layer Run From Server="+this.options.name+"===");
+				this.layer = new OpenLayers.Layer.Vector(this.options.name, {
+					isBaseLayer:	this.options.isBaseLayer,
+//					projection:		this.options.projection,
 //
 					preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this), 
-					projection:		new OpenLayers.Projection(this.projection),
+					projection:		new OpenLayers.Projection(this.options.projection),
 					units:				"degrees",
-					visibility:		this.visibility,
+					visibility:		this.options.visibility,
 					styleMap:			this.srd_styleMap,
 //					strategies:		[new OpenLayers.Strategy.BBOX(), new OpenLayers.Strategy.Save( {auto: true}) ],
 					strategies:		[new OpenLayers.Strategy.Fixed()],
@@ -296,9 +298,9 @@ srd_layer.prototype.loadData = function( ) {
 			this.saveStrategy.events.register("fail", '', showFailureMsg);	
 //		this.refreshStrategy = new OpenLayers.Strategy.Refresh({force: true, interval: 10000});
 
-			this.layer = new OpenLayers.Layer.Vector(this.name, {
-				isBaseLayer: this.isBaseLayer,
-				visibility: this.visibility,
+			this.layer = new OpenLayers.Layer.Vector(this.options.name, {
+				isBaseLayer: this.options.isBaseLayer,
+				visibility: this.options.visibility,
 				styleMap: this.srd_styleMap,
 				strategies: [ new OpenLayers.Strategy.Fixed(), this.saveStrategy],
 //				projection: new OpenLayers.Projection("EPSG:4326"),
@@ -309,7 +311,7 @@ srd_layer.prototype.loadData = function( ) {
 				srsName: "EPSG:900913",
 				url: "https://sitrep.local/geoserver/wfs",
 				featureNS :  "https://sitrep.local/",
-				featureType: this.name,
+				featureType: this.options.name,
 //				geometryName: "the_geom",
 //				extractAttributes: true,
 				preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this)
@@ -346,7 +348,7 @@ srd_layer.prototype.loadData = function( ) {
 				title: "Delete",
 				displayClass: "olControlDelete",
 				onSelect: function (theFeat) {
-					if (confirm('Are you sure you want to delete this feature from Overlay : '+this.name+'?')) {
+					if (confirm('Are you sure you want to delete this feature from Overlay : '+this.options.name+'?')) {
 						theFeat.state = OpenLayers.State.DELETE;
 						if( !theFeat.attributes.gid) {
 							this.layer.removeFeatures([theFeat]);
@@ -379,11 +381,11 @@ srd_layer.prototype.loadData = function( ) {
 //	console.log("End if Vector");
 
 
-	if(this.isBaseLayer == false ) {
+	if(this.options.isBaseLayer == false ) {
 		if(this.editPalette == null ) {
 			this.editPalette = new srd_editPalette(this);
 //			console.log("finished making editPal");
-			if(this.editable == true) {
+			if(this.options.editable == true) {
 				this.editPalette.addControl("activeControlPicker","Edit Mode","activeControl",this.srd_drawControls);
 			}
 			this.editPalette.addControl("editText","Feature Label","label",this.srd_featureAttributes);
@@ -427,7 +429,7 @@ srd_layer.prototype.loadData = function( ) {
 
 // DEFINE preFeatureInsert for Dynamic Layers so that we can add appropriate styling
 srd_layer.prototype.srd_preFeatureInsert = function(feature) {
-	if( this.editable == true) {
+	if( this.options.editable == true) {
 		if(feature.attributes.customStyle == null) {
 			feature.attributes.customStyle = true;
 			for(var styleAttribute in this.srd_featureAttributes) {
@@ -656,23 +658,23 @@ srd_layer.prototype.setValue = function(varName, varValue) {
 		case "visibility" :
 		case "isBaseLayer" :
 			if(String(varValue).toUpperCase() == "TRUE" ) {
-				this[varName] = Boolean(true);
+				this.options[varName] = Boolean(true);
 			} else {
-				this[varName] = Boolean(false);
+				this.options[varName] = Boolean(false);
 			}
 			break;
 		case "minZoomLevel" :
 		case "maxZoomLevel" :
 		case "numZoomLevels" :
 		case "zoomOffset" :
-			this[varName] = Number(varValue);
+			this.options[varName] = Number(varValue);
 			break;
 		default :
 			try{
-				this[varName] = dojo.fromJson(varValue);
+				this.options[varName] = dojo.fromJson(varValue);
 			} catch(error) {
 
-				this[varName] = String(varValue);
+				this.options[varName] = String(varValue);
 			}
 //			this[varName] = dojo.fromJson(varValue);
 
@@ -682,7 +684,7 @@ srd_layer.prototype.setValue = function(varName, varValue) {
 }
 
 srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
-//	console.log(":::"+this.name+":::setStyleProperty name="+styleName+", varName="+varName+", varVal="+varValue);	
+//	console.log(":::"+this.options.name+":::setStyleProperty name="+styleName+", varName="+varName+", varVal="+varValue);	
 //	return 0;
 	switch( String(varName) ) {
 		// COLORS :
@@ -728,7 +730,7 @@ srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
 srd_layer.prototype.createStyle = function(styleName) {
 //	console.log("CREATE STYLE CALLED="+styleName);
 	if(this.srd_styleMap == null) {
-//		console.log("New StyleMap Created for Layer="+this.name);
+//		console.log("New StyleMap Created for Layer="+this.options.name);
 		this.srd_styleMap = new OpenLayers.StyleMap();
 	}
 	var tmpStyleName = String(styleName);
@@ -752,10 +754,28 @@ srd_layer.prototype.activate = function() {
 */
 
 
+// BEGIN UPLOAD LAYER TO SERVER.
+srd_layer.prototype.uploadLayer = function() {
+	var uploadData = {
+		options: this.options,
+		styles: "test",
+		features: "test2"
+	}
+	var xhrArgs =  {
+		url: "/Layer/CreateLayer/",
+		postData: dojo.toJson(uploadData),
+		handleAs: 'json',
+		load: function(data) {
+			//WHAT to do when we're done sending data.
+		},
+		error: function(error) {
+			//What to do if it failed.
+		}
+	}
+	var deferred = dojo.xhrPost(xhrArgs);
 
-
-
-
+}
+// END uploadLayer
 
 
 

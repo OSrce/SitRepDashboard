@@ -212,7 +212,7 @@ srd_document.prototype.defaultSettingsLoaded = function(items,request) {
 //			 	CODE TO iterate through the layer variables and assign the values.
 					// FOR EACH <layer attribute> in <layer>
 					for(var k=0;k < tmpLayerAtts.length;k++) {
-						if( tmpLayerAtts[k] in tmpSrdLayer) {
+						if( tmpLayerAtts[k] in tmpSrdLayer.options) {
 //							console.log(":::: Atts="+tmpLayerAtts[k]+":::"+this.srd_xmlStore.getValues(theLayerItem,tmpLayerAtts[k])+":::");
 								tmpSrdLayer.setValue( [tmpLayerAtts[k]],  this.srd_xmlStore.getValue(theLayerItem,tmpLayerAtts[k] ) );
 							//TIME TO IMPORT StyleMap data into srd_layer
@@ -236,8 +236,8 @@ srd_document.prototype.defaultSettingsLoaded = function(items,request) {
 							}
 						}										
 					}
-					this.srd_layerArr[tmpSrdLayer.id] = tmpSrdLayer;
-					this.srd_localStore.put(tmpSrdLayer.id,tmpSrdLayer,this.storePutHandler,"srdLayer");
+					this.srd_layerArr[tmpSrdLayer.options.id] = tmpSrdLayer;
+					this.srd_localStore.put(tmpSrdLayer.options.id,tmpSrdLayer,this.storePutHandler,"srdLayer");
 					tmpSrdLayer = null;
 				}
 			}	
@@ -501,7 +501,7 @@ srd_document.prototype.srd_createWhiteboard = function() {
 	
 srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 	var tmpLayer = new srd_layer();
-	tmpLayer.name = theName;
+	tmpLayer.options.name = theName;
 	if(theUrl != "") {
 		tmpLayer.url = theUrl;
 	}
@@ -520,12 +520,12 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 	tmpLayer.addLayerToMap(this.map);
 //	this.srd_selLayer = tmpLayer;
 	this.srd_saveMenu.addChild(new dijit.MenuItem( { 
-			label: tmpLayer.name,
+			label: tmpLayer.options.name,
 			onClick: function() { this.saveLayer(tmpLayer.id) }.bind(this)
 	} ) );
 	if(this.srd_layerEditMenu != null) {
 		this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
-				label: tmpLayer.name,
+				label: tmpLayer.options.name,
 				onClick: function() { this.srd_selectEditLayer( tmpLayer.id );  }.bind(this)
 		} ) );
 	}
@@ -619,7 +619,8 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			}) );
 			srd_editMenu.addChild(new dijit.MenuItem({
 				label: "TEST1",
-				onClick: function() { alert("Place TEST Here") }.bind(this)
+//				onClick: function() { alert("Place TEST Here") }.bind(this)
+				onClick: function() { this.srd_layerArr[5].uploadLayer(); }.bind(this)
 			}));
 			//// Tools Menu ////
 			var srd_toolsMenu = new dijit.Menu({});
@@ -722,9 +723,9 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 			editPaletteTop.addChild(activeLayerName);
 			this.srd_layerEditMenu = new dijit.Menu({ });
 			for( tmpId in this.srd_layerArr) {
-				if(this.srd_layerArr[tmpId].isBaseLayer == false) {
+				if(this.srd_layerArr[tmpId].options.isBaseLayer == false) {
 						this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
-						label: this.srd_layerArr[tmpId].name,
+						label: this.srd_layerArr[tmpId].options.name,
 						srd_doc: this,
 						tmpId: tmpId,
 						onClick: function() { this.srd_doc.srd_selectEditLayer( this.tmpId );  }
@@ -748,7 +749,7 @@ srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 
 	
 			this.srd_layerEditMenuDropDown = new dijit.form.DropDownButton({
-				label: this.srd_selLayer.name,
+				label: this.srd_selLayer.options.name,
 				dropDown: this.srd_layerEditMenu,
 //				style: "width:inherit;position:relative",
 				id: "srd_activeLayer",
@@ -926,7 +927,7 @@ srd_document.prototype.srd_selectEditLayer = function( theId ) {
 	}	
 	this.srd_selLayer = this.srd_layerArr[theId];
 	this.srd_selLayer.editPalette.addToContainer(this.srd_toolbar);
-	this.srd_layerEditMenuDropDown.set("label",this.srd_selLayer.name);
+	this.srd_layerEditMenuDropDown.set("label",this.srd_selLayer.options.name);
 	this.srd_selLayer.editPalette.activateDrawControl();
 //	console.log("srd_selectEditLayer Finished");
 }

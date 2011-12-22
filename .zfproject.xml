@@ -98,7 +98,16 @@
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
           <modelsDirectory>
-            <dbTableDirectory enabled="false"/>
+            <dbTableDirectory>
+              <dbTableFile dbTableName="Feature"/>
+              <dbTableFile dbTableName="Preset"/>
+              <dbTableFile dbTableName="Style"/>
+              <dbTableFile dbTableName="Layer"/>
+            </dbTableDirectory>
+            <modelFile modelName="Feature"/>
+            <modelFile modelName="Layer"/>
+            <modelFile modelName="Style"/>
+            <modelFile modelName="Preset"/>
           </modelsDirectory>
           <viewsDirectory>
             <viewScriptsDirectory>
