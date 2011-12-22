@@ -1,6 +1,7 @@
 <?php
 
-class Login_Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
+class Login_Bootstrap extends Zend_Application_Module_Bootstrap {
+
 
 }
 

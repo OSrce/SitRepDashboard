@@ -762,7 +762,7 @@ srd_layer.prototype.uploadLayer = function() {
 		features: "test2"
 	}
 	var xhrArgs =  {
-		url: "/Layer/CreateLayer/",
+		url: "/layer/Createlayer/",
 		postData: dojo.toJson(uploadData),
 		handleAs: 'json',
 		load: function(data) {
