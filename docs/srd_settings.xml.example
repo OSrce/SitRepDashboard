@@ -23,20 +23,20 @@
 <!-- BASE LAYERS -->
 		<layer>
 			<id>1</id>
-			<name>SitRep GIS</name>	
-			<layertype>XYZ</layertype>
+			<name>SitRep</name>	
+			<type>XYZ</type>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>true</visibility>
 			<projection>EPSG:4326</projection>
 			<sphericalMercator>true</sphericalMercator>
-			<url>"https://demo.sitrep.org/mq_tiles/${z}/${x}/${y}.png"</url>
-			<numZoomLevels>25</numZoomLevels>
+			<url>"https://wjoc-sr.nypd.finest/sr_tiles/${z}/${x}/${y}.png"</url>
+			<numZoomLevels>30</numZoomLevels>
 		</layer>
 
 		<layer>
 			<id>2</id>
 			<name>OSM - from openstreetmap.org</name>	
-			<layertype>XYZ</layertype>
+			<type>XYZ</type>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>false</visibility>
 			<projection>EPSG:4326</projection>
@@ -51,7 +51,7 @@
 		<layer>
 			<id>3</id>
 			<name>MapQuest - from mapquest.org</name>	
-			<layertype>XYZ</layertype>
+			<type>XYZ</type>
 			<isBaseLayer>true</isBaseLayer>
 			<visibility>false</visibility>
 			<projection>EPSG:4326</projection>
@@ -73,7 +73,7 @@
 			<id>4</id>
 			<name>NYPD Precincts</name>	
 			<isBaseLayer>false</isBaseLayer>
-			<layertype>Vector</layertype>
+			<type>Vector</type>
 			<format>GML</format>
 			<url>sr_data_public/NYPD_PctBoundaries.gml</url>
 			<projection>EPSG:4326</projection>
@@ -85,13 +85,13 @@
 					<fillOpacity>0</fillOpacity>
 					<strokeColor>#0000FF</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
-					<pointRadius>6</pointRadius>
+					<strokeWidth>3</strokeWidth>
 					<label>${PctName}</label>
 					<labelAlign>cc</labelAlign>
 					<fontColor>#0000FF</fontColor>
 					<fontOpacity>0.9</fontOpacity>
 					<fontFamily>Arial</fontFamily>
-					<fontSize>14</fontSize>
+					<fontSize>30</fontSize>
 				</Style>
 			</StyleMap>	
 		</layer>
@@ -100,7 +100,7 @@
 			<id>5</id>
 			<name>MTA Subway Routes</name>	
 			<isBaseLayer>false</isBaseLayer>
-			<layertype>Vector</layertype>
+			<type>Vector</type>
 			<format>GML</format>
 			<url>sr_data_public/MTA_SubwayRoutes.gml</url>
 			<projection>EPSG:4326</projection>
@@ -109,6 +109,7 @@
 				<Style>
 					<name>default</name>
 					<fillColor>#0F0050</fillColor>
+					<strokeWidth>3</strokeWidth>
 					<fillOpacity>0.5</fillOpacity>
 					<strokeColor>${COLOR}</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
@@ -121,7 +122,7 @@
 			<id>6</id>
 			<name>MTA Subway Stations</name>	
 			<isBaseLayer>false</isBaseLayer>
-			<layertype>Vector</layertype>
+			<type>Vector</type>
 			<format>GML</format>
 			<url>sr_data_public/MTA_SubwayStations.gml</url>
 			<projection>EPSG:4326</projection>
@@ -142,7 +143,7 @@
 			<id>7</id>
 			<name>LIRR Routes</name>	
 			<isBaseLayer>false</isBaseLayer>
-			<layertype>Vector</layertype>
+			<type>Vector</type>
 			<format>GML</format>
 			<url>sr_data_public/LIRR_Routes.gml</url>
 			<projection>EPSG:4326</projection>
@@ -154,6 +155,7 @@
 					<fillOpacity>0.2</fillOpacity>
 					<strokeColor>#700F00</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
+					<strokeWidth>3</strokeWidth>
 					<pointRadius>6</pointRadius>
 				</Style>
 			</StyleMap>	
@@ -163,7 +165,7 @@
 			<id>8</id>
 			<name>NY County Boundaries</name>	
 			<isBaseLayer>false</isBaseLayer>
-			<layertype>Vector</layertype>
+			<type>Vector</type>
 			<format>GML</format>
 			<url>sr_data_public/NYCountyBoundaries.gml</url>
 			<projection>EPSG:4326</projection>
@@ -187,15 +189,11 @@
 			</StyleMap>	
 		</layer>
 
-
-
-
-
 		<layer>
 			<id>9</id>
 			<name>NYPD Sectors</name>	
 			<isBaseLayer>false</isBaseLayer>
-			<layertype>Vector</layertype>
+			<type>Vector</type>
 			<format>GML</format>
 			<url>sr_data_private/NYPD_SectorBoundaries.gml</url>
 			<projection>EPSG:4326</projection>
@@ -221,7 +219,7 @@
 			<id>10</id>
 			<name>ConEd Electric Grid</name>	
 			<isBaseLayer>false</isBaseLayer>
-			<layertype>Vector</layertype>
+			<type>Vector</type>
 			<format>GML</format>
 			<url>sr_data_private/ConEd_CityWide.gml</url>
 			<projection>EPSG:4326</projection>
@@ -233,6 +231,7 @@
 					<fillOpacity>0.1</fillOpacity>
 					<strokeColor>#003000</strokeColor>
 					<strokeOpacity>1</strokeOpacity>
+					<strokeWidth>3</strokeWidth>
 					<pointRadius>6</pointRadius>
 					<label>${area_name}</label>
 					<labelAlign>cc</labelAlign>
@@ -243,6 +242,60 @@
 				</Style>
 			</StyleMap>	
 		</layer>
+		<layer>
+			<id>11</id>
+			<name>NYC DOT Cameras</name>	
+			<isBaseLayer>false</isBaseLayer>
+			<type>Vector</type>
+			<format>GML</format>
+			<url>sr_data_public/NYC_DOT_Cameras.gml</url>
+			<projection>EPSG:4326</projection>
+			<visibility>false</visibility>
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#00F000</fillColor>
+					<fillOpacity>0.1</fillOpacity>
+					<strokeColor>#003000</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+					<label>${name}</label>
+					<labelAlign>cc</labelAlign>
+					<fontColor>#000000</fontColor>
+					<fontOpacity>1</fontOpacity>
+					<fontFamily>Arial</fontFamily>
+					<fontSize>14</fontSize>
+				</Style>
+			</StyleMap>	
+		</layer>
+		<layer>
+			<id>12</id>
+			<name>DAS Cameras</name>	
+			<isBaseLayer>false</isBaseLayer>
+			<type>Vector</type>
+			<format>GML</format>
+			<url>sr_data_private/DAS_CAMERAS_Ver1.gml</url>
+			<projection>EPSG:4326</projection>
+			<visibility>false</visibility>
+			<StyleMap>
+				<Style>
+					<name>default</name>
+					<fillColor>#00F000</fillColor>
+					<fillOpacity>0.1</fillOpacity>
+					<strokeColor>#003000</strokeColor>
+					<strokeOpacity>1</strokeOpacity>
+					<pointRadius>6</pointRadius>
+					<label>${name}</label>
+					<labelAlign>cc</labelAlign>
+					<fontColor>#000000</fontColor>
+					<fontOpacity>1</fontOpacity>
+					<fontFamily>Arial</fontFamily>
+					<fontSize>14</fontSize>
+				</Style>
+			</StyleMap>	
+		</layer>
+
+
 
 
 

@@ -6,6 +6,7 @@ class Layer_IndexController extends Zend_Controller_Action
     public function init()
     {
         /* Initialize action controller here */
+				
     }
 
     public function indexAction()
@@ -14,12 +15,12 @@ class Layer_IndexController extends Zend_Controller_Action
 				echo "index test";
     }
 
-    public function createLayerAction()
+    public function createlayerAction()
     {
         echo "create layer";
     }
 
-    public function deleteLayerAction()
+    public function deletelayerAction()
     {
         echo "delete layer";
     }

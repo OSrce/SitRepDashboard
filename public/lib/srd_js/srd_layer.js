@@ -23,7 +23,7 @@ function srd_layer( ) {
 		this.options = {
 			name : null,
 			id : null,
-			layertype : null,
+			type : null,
 			format : null,
 			isBaseLayer : null,
 			projection : null,
@@ -182,7 +182,7 @@ srd_layer.prototype.addLayerToMap = function(theMap) {
 srd_layer.prototype.loadData = function( ) { 
 //srd_layer.prototype.loadData = function(type, name, source, settings ) { 
 
-	if( this.options.layertype == "XYZ" ) {
+	if( this.options.type == "XYZ" ) {
 		console.log("XYZ Layer Created : "+this.options.name+":::"+this.options.url+":::");
 		this.layer = new OpenLayers.Layer.XYZ ( 
 			this.options.name,
@@ -195,7 +195,7 @@ srd_layer.prototype.loadData = function( ) {
 				sphericalMercator: 	this.options.sphericalMercator
 			} 
 		);
-	} else if (this.options.layertype == "Vector" ) {
+	} else if (this.options.type == "Vector" ) {
 
 	console.log("Vector Layer created:"+this.options.name);
 // BEGIN MESSY STYLE RULE CODE
@@ -765,6 +765,7 @@ srd_layer.prototype.uploadLayer = function() {
 		url: "/layer/Createlayer/",
 		postData: dojo.toJson(uploadData),
 		handleAs: 'json',
+		headers: { 'Content-Type' : 'application/json' }, 
 		load: function(data) {
 			//WHAT to do when we're done sending data.
 		},

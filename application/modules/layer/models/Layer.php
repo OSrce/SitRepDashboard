@@ -1,6 +1,6 @@
 <?php
 
-class Layer_Model_Layer
+class Layer_Model_Layer extends Zend_Db_Table_Row_Abstract
 {
 
 

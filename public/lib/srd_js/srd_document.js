@@ -503,16 +503,16 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 	var tmpLayer = new srd_layer();
 	tmpLayer.options.name = theName;
 	if(theUrl != "") {
-		tmpLayer.url = theUrl;
+		tmpLayer.options.url = theUrl;
 	}
-	tmpLayer.layertype = "Vector";
-	tmpLayer.format = "GML";
-	tmpLayer.projection = this.staticVals.default_projection;
-	tmpLayer.isBaseLayer = false;
-	tmpLayer.visibility = true;
-	tmpLayer.editable = true;
+	tmpLayer.options.type = "Vector";
+	tmpLayer.options.format = "GML";
+	tmpLayer.options.projection = this.staticVals.default_projection;
+	tmpLayer.options.isBaseLayer = false;
+	tmpLayer.options.visibility = true;
+	tmpLayer.options.editable = true;
 
-	tmpLayer.id = this.srd_layerArr.length;
+	tmpLayer.options.id = this.srd_layerArr.length;
 	this.srd_layerArr[tmpLayer.id] = tmpLayer;	
 	this.staticVals.layerCount++;
 

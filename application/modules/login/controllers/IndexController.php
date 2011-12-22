@@ -10,6 +10,12 @@ class Login_IndexController extends Zend_Controller_Action {
 	}
 
 	public function indexAction() {
+
+//		$db = $this->getInvokeArg('bootstrap')->getResource('db');
+//		$user = new Login_Model_DbTable_Users($db);
+//		$userMap 
+
+
 		$flash = $this->_helper->getHelper('flashMessenger');
 		if( $flash->hasMessages() ) {
 			$this->view->message = $flash->getMessages();
