@@ -31,7 +31,6 @@ function srd_layer( ) {
 			sphericalMercator : null,
 			url : null,
 			numZoomLevels : null,
-			zoomOffset : null,
 			minZoomLevel : null,
 			maxZoomLevel : null,
 			attribution : "",
@@ -380,11 +379,13 @@ srd_layer.prototype.loadData = function( ) {
 
 //	console.log("End if Vector");
 
+//	console.log("TEST5::"+this.srd_featureAttributes.tagName+":::");
 
 	if(this.options.isBaseLayer == false ) {
 		if(this.editPalette == null ) {
 			this.editPalette = new srd_editPalette(this);
 //			console.log("finished making editPal");
+
 			if(this.options.editable == true) {
 				this.editPalette.addControl("activeControlPicker","Edit Mode","activeControl",this.srd_drawControls);
 			}
@@ -409,7 +410,6 @@ srd_layer.prototype.loadData = function( ) {
 			this.editPalette.addControl("editText","Start Time","startTime",this.srd_featureAttributes);	
 			this.editPalette.addControl("editText","End Time","endTime",this.srd_featureAttributes);	
 			this.editPalette.addControl("editText","Last Edited","lastEditTime",this.srd_featureAttributes);	
-
 
 		}
 	}
@@ -658,15 +658,14 @@ srd_layer.prototype.setValue = function(varName, varValue) {
 		case "visibility" :
 		case "isBaseLayer" :
 			if(String(varValue).toUpperCase() == "TRUE" ) {
-				this.options[varName] = Boolean(true);
+				this.options[varName] = 1; //Boolean(true);
 			} else {
-				this.options[varName] = Boolean(false);
+				this.options[varName] = 0; //Boolean(false);
 			}
 			break;
 		case "minZoomLevel" :
 		case "maxZoomLevel" :
 		case "numZoomLevels" :
-		case "zoomOffset" :
 			this.options[varName] = Number(varValue);
 			break;
 		default :
@@ -758,8 +757,8 @@ srd_layer.prototype.activate = function() {
 srd_layer.prototype.uploadLayer = function() {
 	var uploadData = {
 		options: this.options,
-		styles: "test",
-		features: "test2"
+		styles: this.srd_featureAttributes,
+		features: this.layer.features
 	}
 	var xhrArgs =  {
 		url: "/layer/Createlayer/",

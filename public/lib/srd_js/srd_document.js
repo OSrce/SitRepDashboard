@@ -513,7 +513,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 	tmpLayer.options.editable = true;
 
 	tmpLayer.options.id = this.srd_layerArr.length;
-	this.srd_layerArr[tmpLayer.id] = tmpLayer;	
+	this.srd_layerArr[tmpLayer.options.id] = tmpLayer;	
 	this.staticVals.layerCount++;
 
 	tmpLayer.loadData();
@@ -620,7 +620,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			srd_editMenu.addChild(new dijit.MenuItem({
 				label: "TEST1",
 //				onClick: function() { alert("Place TEST Here") }.bind(this)
-				onClick: function() { this.srd_layerArr[5].uploadLayer(); }.bind(this)
+				onClick: function() { this.srd_layerArr[13].uploadLayer(); }.bind(this)
 			}));
 			//// Tools Menu ////
 			var srd_toolsMenu = new dijit.Menu({});

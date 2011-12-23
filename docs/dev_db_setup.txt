@@ -58,15 +58,21 @@ CREATE TABLE sr_layers (
 	name VARCHAR(128) NOT NULL,
 	type LAYER_TYPE,
 	format LAYER_FORMAT,
-	isBaseLayer BOOLEAN,
+	isBaseLayer BOOLEAN NOT NULL DEFAULT FALSE,
 	projection VARCHAR(16),
 	visibility BOOLEAN NOT NULL DEFAULT TRUE,
 	sphericalMercator BOOLEAN NOT NULL DEFAULT FALSE,
 	url VARCHAR(128),
-	numZoomLevels int,
+	numZoomLevels INT,
+	minZoomLevel INT,
+	maxZoomLevel INT,
 	attribution VARCHAR(128),
 	defaultStyle int,
 	dataTable VARCHAR(128) NOT NULL,
+	created_on TIMESTAMP,
+	updated_on TIMESTAMP,
+	created_by INT,
+	updated_by INT,
 	PRIMARY KEY(id)
 );
 
@@ -91,6 +97,10 @@ CREATE TABLE sr_styles (
 	graphicHeight INT,
 	graphicOpacity INT,
 	rotation INT,
+	created_on TIMESTAMP,
+	updated_on TIMESTAMP,
+	created_by INT,
+	updated_by INT,
 	PRIMARY KEY(id)
 );
 
@@ -108,6 +118,7 @@ CREATE TABLE sr_layer_static_data (
 	layer_id INT NOT NULL,
 	feature_id BIGINT NOT NULL,
 	feature_style INT,	
+	feature_data TEXT,
 	PRIMARY KEY ( layer_id, feature_id ) 
 );
 
@@ -117,10 +128,13 @@ CREATE TABLE sr_layer_dynamic_data (
 	layer_id INT NOT NULL,
 	feature_id BIGINT NOT NULL,
 	feature_style INT,	
+	feature_data TEXT,
+	feature_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	feature_end TIMESTAMP,
 	PRIMARY KEY ( layer_id, feature_id ) 
 );
 
-SELECT AddGeometryColumn('sr_layer_dynamic_data','sr_geom',4326,'GEOMETRY',4);
+SELECT AddGeometryColumn('sr_layer_dynamic_data','sr_geom',4326,'GEOMETRY',3);
 
 
 
