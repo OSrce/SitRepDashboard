@@ -52,7 +52,7 @@ class Login_IndexController extends Zend_Controller_Action {
 			$options['ldap'] = $this->_options['ldap'];
 			$authAdapter = Login_Auth::_getAdapter('ldap', $options);
 //		}
-			// ELES DONT WORRY ABOUT RIGHT NOW - ONLY LDAP.
+			// ELSE DONT WORRY ABOUT RIGHT NOW - ONLY LDAP.
 
 //TESING ONLY - NEED TO INCLUDE BELOW.
 //		$result = $auth->authenticate($authAdapter);
