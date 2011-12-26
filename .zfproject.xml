@@ -72,32 +72,17 @@
             <viewFiltersDirectory/>
           </viewsDirectory>
         </moduleDirectory>
-        <moduleDirectory moduleName="layer">
+        <moduleDirectory moduleName="srdata">
           <apisDirectory enabled="false"/>
           <configsDirectory enabled="false"/>
           <controllersDirectory>
             <controllerFile controllerName="Index">
               <actionMethod actionName="index"/>
             </controllerFile>
-            <controllerFile controllerName="CreateLayer">
+            <controllerFile controllerName="Layer">
               <actionMethod actionName="index"/>
             </controllerFile>
-            <controllerFile controllerName="DeleteLayer">
-              <actionMethod actionName="index"/>
-            </controllerFile>
-            <controllerFile controllerName="CreateFeature">
-              <actionMethod actionName="index"/>
-            </controllerFile>
-            <controllerFile controllerName="DeleteFeature">
-              <actionMethod actionName="index"/>
-            </controllerFile>
-            <controllerFile controllerName="EditFeature">
-              <actionMethod actionName="index"/>
-            </controllerFile>
-            <controllerFile controllerName="Test">
-              <actionMethod actionName="index"/>
-            </controllerFile>
-            <controllerFile controllerName="Createlayer">
+            <controllerFile controllerName="Feature">
               <actionMethod actionName="index"/>
             </controllerFile>
           </controllersDirectory>
@@ -105,10 +90,10 @@
           <layoutsDirectory enabled="false"/>
           <modelsDirectory>
             <dbTableDirectory>
-              <dbTableFile dbTableName="Feature"/>
-              <dbTableFile dbTableName="Preset"/>
-              <dbTableFile dbTableName="Style"/>
-              <dbTableFile dbTableName="Layer"/>
+              <dbTableFile dbTableName="Features"/>
+              <dbTableFile dbTableName="Presets"/>
+              <dbTableFile dbTableName="Styles"/>
+              <dbTableFile dbTableName="Layers"/>
             </dbTableDirectory>
             <modelFile modelName="Feature"/>
             <modelFile modelName="Layer"/>
@@ -120,25 +105,10 @@
               <viewControllerScriptsDirectory forControllerName="Index">
                 <viewScriptFile forActionName="index"/>
               </viewControllerScriptsDirectory>
-              <viewControllerScriptsDirectory forControllerName="CreateLayer">
+              <viewControllerScriptsDirectory forControllerName="Layer">
                 <viewScriptFile forActionName="index"/>
               </viewControllerScriptsDirectory>
-              <viewControllerScriptsDirectory forControllerName="DeleteLayer">
-                <viewScriptFile forActionName="index"/>
-              </viewControllerScriptsDirectory>
-              <viewControllerScriptsDirectory forControllerName="CreateFeature">
-                <viewScriptFile forActionName="index"/>
-              </viewControllerScriptsDirectory>
-              <viewControllerScriptsDirectory forControllerName="DeleteFeature">
-                <viewScriptFile forActionName="index"/>
-              </viewControllerScriptsDirectory>
-              <viewControllerScriptsDirectory forControllerName="EditFeature">
-                <viewScriptFile forActionName="index"/>
-              </viewControllerScriptsDirectory>
-              <viewControllerScriptsDirectory forControllerName="Test">
-                <viewScriptFile forActionName="index"/>
-              </viewControllerScriptsDirectory>
-              <viewControllerScriptsDirectory forControllerName="Createlayer">
+              <viewControllerScriptsDirectory forControllerName="Feature">
                 <viewScriptFile forActionName="index"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>

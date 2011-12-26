@@ -495,7 +495,7 @@ srd_document.prototype.srd_createWhiteboard = function() {
             selector: "date",
             datePattern: theFrmt
         });
-	var url ="";
+	var url ="https://wjoc-sr.nypd.finest/srdata/feature";
 	this.srd_createLayer(name,url);
 }
 	

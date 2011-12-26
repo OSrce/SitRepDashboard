@@ -1,6 +1,6 @@
 <?php
 
-class Layer_CreatelayerController extends Zend_Controller_Action
+class Srdata_LayerController extends Zend_Controller_Action
 {
 
     public function init()
@@ -10,6 +10,11 @@ class Layer_CreatelayerController extends Zend_Controller_Action
 
     public function indexAction()
     {
+	
+		}
+
+    public function createAction()
+    {
 			date_default_timezone_set("America/New_York");
 			$logger = new Zend_Log();
 			$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
@@ -18,7 +23,7 @@ class Layer_CreatelayerController extends Zend_Controller_Action
 			$theJSON = Zend_Json::decode( $thePostData  );
 
 			$db = $this->getInvokeArg('bootstrap')->getResource('db');	
-			$layersTable = new Layer_Model_DbTable_Layers($db);
+			$layersTable = new Srdata_Model_DbTable_Layers($db);
 
 
 			// LAYER OPTIONS DATA FOR sr_layers			

@@ -263,10 +263,11 @@ srd_layer.prototype.loadData = function( ) {
 						layerProtocol = new OpenLayers.Protocol.HTTP( {
 							readWithPOST: true,
 							url:			this.options.url,
-							format:		new OpenLayers.Format.GML( {
-								featureType: "feature",
-								featureNS: "http://example.com/feature" 
-							} )	
+//							format:		new OpenLayers.Format.GML( {
+//								featureType: "feature",
+//								featureNS: "http://example.com/feature" 
+//							} )	
+							format: new OpenLayers.Format.GeoJSON( { } )
 						} );
 				}	
 
@@ -280,8 +281,8 @@ srd_layer.prototype.loadData = function( ) {
 					units:				"degrees",
 					visibility:		this.options.visibility,
 					styleMap:			this.srd_styleMap,
-//					strategies:		[new OpenLayers.Strategy.BBOX(), new OpenLayers.Strategy.Save( {auto: true}) ],
-					strategies:		[new OpenLayers.Strategy.Fixed()],
+					strategies:		[new OpenLayers.Strategy.BBOX(), new OpenLayers.Strategy.Save( {auto: true}) ],
+//					strategies:		[new OpenLayers.Strategy.Fixed()],
 					protocol:			layerProtocol
 				} );
 
@@ -761,7 +762,7 @@ srd_layer.prototype.uploadLayer = function() {
 		features: this.layer.features
 	}
 	var xhrArgs =  {
-		url: "/layer/Createlayer/",
+		url: "/srdata/Layer/Create",
 		postData: dojo.toJson(uploadData),
 		handleAs: 'json',
 		headers: { 'Content-Type' : 'application/json' }, 
