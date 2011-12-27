@@ -134,7 +134,15 @@ Look into:
 - http://code.google.com/p/phantomjs/wiki/FAQ
 
 
+---------------
 
+For postgis to be able to use ST_GeomFromGeoJSON :
+
+yum install json-c json-c-devel
+
+wget postgis.refractions.net/download/postgis-2.0.0SVN.tar.gz .
+
+./configure --with-jsondir=/usr/include/json
 
 
 

@@ -37,8 +37,16 @@ class Srdata_LayerController extends Zend_Controller_Action
 				if( is_null( $layerOptions[$layerOption] ) ) {
 					unset($layerOptions[$layerOption] );
 				}
+				if( is_bool( $layerOptions[$layerOption] ) ) {
+					if( $layerOptions[$layerOption] == false ) {
+						$layerOptions[$layerOption] = 0;
+					} elseif ($layerOptions[$layerOption] == true) {
+						$layerOptions[$layerOption] = 1;
+					}	
+				}		
 			}
 
+			$logger->log("Layer Options: ".print_r($layerOptions,true), Zend_Log::DEBUG);
 			// LAYER STYLE DATA FOR sr_styles
 			$layerStyles = array_change_key_case($theJSON["styles"], CASE_LOWER);
 			unset($layerStyles['tagname']);
@@ -52,8 +60,8 @@ class Srdata_LayerController extends Zend_Controller_Action
 
 
 			try {
-				$layersTable->insert($layerOptions);
-				$logger->log( "Layer Options: ".print_r($layerOptions, true) , Zend_Log::DEBUG);
+				$retVal = $layersTable->insert($layerOptions);
+				$logger->log( "Layer Created with ID:".$retVal." with Options: ".print_r($layerOptions, true) , Zend_Log::DEBUG);
 			} catch(Zend_DB_Statement_Exception $theExcept) {
 				$theError = $theExcept->getMessage();
 				$logger->log("CreateLayer Failed : ".$theError, Zend_Log::DEBUG);

@@ -506,7 +506,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 		tmpLayer.options.url = theUrl;
 	}
 	tmpLayer.options.type = "Vector";
-	tmpLayer.options.format = "GML";
+	tmpLayer.options.format = "GeoJSON";
 	tmpLayer.options.projection = this.staticVals.default_projection;
 	tmpLayer.options.isBaseLayer = false;
 	tmpLayer.options.visibility = true;

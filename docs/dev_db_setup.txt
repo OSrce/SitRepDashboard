@@ -1,6 +1,7 @@
 
 
 CREATE DATABASE sr_data WITH TEMPLATE template_postgis;
+\c sr_data;
 
 CREATE TABLE sr_session ( 
 	id char(32),
@@ -135,6 +136,11 @@ CREATE TABLE sr_layer_dynamic_data (
 );
 
 SELECT AddGeometryColumn('sr_layer_dynamic_data','sr_geom',4326,'GEOMETRY',3);
+
+
+
+
+
 
 
 

@@ -36,6 +36,8 @@ function srd_layer( ) {
 			attribution : "",
 			editable : false
 		}
+		
+		this.featureCount = 0;
 
 		// NEED TO CHANGE THIS!
 		this.runFromServer = false;
@@ -263,11 +265,11 @@ srd_layer.prototype.loadData = function( ) {
 						layerProtocol = new OpenLayers.Protocol.HTTP( {
 							readWithPOST: true,
 							url:			this.options.url,
-//							format:		new OpenLayers.Format.GML( {
-//								featureType: "feature",
-//								featureNS: "http://example.com/feature" 
-//							} )	
-							format: new OpenLayers.Format.GeoJSON( { } )
+							format:		new OpenLayers.Format.GML( {
+								featureType: "feature",
+								featureNS: "http://example.com/feature" 
+							} )	
+//							format: new OpenLayers.Format.GeoJSON( { } )
 						} );
 				}	
 
@@ -290,9 +292,40 @@ srd_layer.prototype.loadData = function( ) {
 //				this.layer.protocol = layerProtocol;
 //				this.layer.refresh();
 
-
 			}
-		} else if(this.format == "WFST" ) {
+
+		} else if(this.options.format == "GeoJSON" ) {
+
+				var layerProtocol = null;
+				if(this.options.url == null || this.options.url == "") {
+						layerProtocol = new OpenLayers.Protocol.HTTP( {
+//							url: "/srdata/layer",
+							params: { layer_id : this.options.id },
+							readWithPOST: true,
+							format: new OpenLayers.Format.GeoJSON( { } )
+						} );
+				} else {
+						layerProtocol = new OpenLayers.Protocol.HTTP( {
+							readWithPOST: true,
+							headers: { layer_id : this.options.id },
+							params: { layer_id : this.options.id },
+							url:			this.options.url,
+							format: new OpenLayers.Format.GeoJSON( { } ),
+						} );
+				}	
+			console.log("Create GeoJSON Layer Run From Server="+this.options.name+"===");
+				this.layer = new OpenLayers.Layer.Vector(this.options.name, {
+					isBaseLayer:	this.options.isBaseLayer,
+					preFeatureInsert: function(feature) {this.srd_preFeatureInsert(feature);}.bind(this), 
+					projection:		new OpenLayers.Projection(this.options.projection),
+					units:				"degrees",
+					visibility:		this.options.visibility,
+					styleMap:			this.srd_styleMap,
+					strategies:		[new OpenLayers.Strategy.BBOX(), new OpenLayers.Strategy.Save( {auto: true}) ],
+					protocol:			layerProtocol
+				} );
+
+		} else if(this.options.format == "WFST" ) {
 			this.saveStrategy = new OpenLayers.Strategy.Save( ); //{ auto: true } );
  			this.saveStrategy.events.register("success", '', showSuccessMsg);
 			this.saveStrategy.events.register("fail", '', showFailureMsg);	
@@ -437,8 +470,9 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 				feature.attributes[styleAttribute] = this.srd_featureAttributes[styleAttribute];
 			}
 		}
-
 	}
+	this.featureCount++;
+	feature.fid = this.featureCount;
 }
 
 
@@ -759,7 +793,7 @@ srd_layer.prototype.uploadLayer = function() {
 	var uploadData = {
 		options: this.options,
 		styles: this.srd_featureAttributes,
-		features: this.layer.features
+//		features: this.layer.features
 	}
 	var xhrArgs =  {
 		url: "/srdata/Layer/Create",
