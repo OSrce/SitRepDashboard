@@ -60,13 +60,13 @@ class Srdata_FeatureController extends Zend_Controller_Action
 				}
 
 			} elseif ($requestType == "create") {
-			// BEGIN CREATE FEATURES (FEATURE INSERT INTO LAYER)
-			$thePostData = $this->getRequest()->getRawBody();
-			$postObject = Zend_Json::decode( $thePostData  );
-
-			$db = $this->getInvokeArg('bootstrap')->getResource('db');	
-			$layersTable = new Srdata_Model_DbTable_Layers($db);
-			$featuresTable = new Srdata_Model_DbTable_Features($db);
+				// BEGIN CREATE FEATURES (FEATURE INSERT INTO LAYER)
+				$thePostData = $this->getRequest()->getRawBody();
+				$postObject = Zend_Json::decode( $thePostData  );
+	
+				$db = $this->getInvokeArg('bootstrap')->getResource('db');	
+				$layersTable = new Srdata_Model_DbTable_Layers($db);
+				$featuresTable = new Srdata_Model_DbTable_Features($db);
 
 			// LAYER OPTIONS DATA FOR sr_layers			
 //			$layerOptions = array_change_key_case($theJSON["options"], CASE_LOWER);
@@ -90,9 +90,50 @@ class Srdata_FeatureController extends Zend_Controller_Action
 							$logger->log("Create Feature Failed : ".$theError, Zend_Log::DEBUG);
 						}
 					}
+				} elseif( array_key_exists("type", $postObject) && $postObject["type"] == "Feature" ) { 				
+						$featureObject = $postObject;
+//						$logger->log( "Create Feature: ".print_r($featureObject, true) , Zend_Log::DEBUG);
+						$theFeat = array();
+						$theFeat["layer_id"] = $layerId;
+//						if($featureObject["id"] > 0 ) {
+							$theFeat["feature_id"] = $featureObject["id"];
+//						} else {
+//							$theFeat["feature_id"] = 1;
+//						}
+						$theFeat["feature_style"] = 0;
+//						$theFeat["feature_data"] = "TEST"; //Zend_Json::encode($featureObject["properties"]);
+						$theFeat["feature_data"] = Zend_Json::encode($featureObject["properties"]);
+						$theFeat["sr_geom"] = $featureObject["geometry"];
 
-				}				
+						$logger->log( "Create Feature: ".print_r($theFeat["feature_id"], true) , Zend_Log::DEBUG);
+						$logger->log("sr_geom coord size :".count( $theFeat["sr_geom"]["coordinates"] ) , Zend_Log::DEBUG);
+
+						try {
+//							$queryString = "INSERT INTO sr_layer_static_data ( layer_id, feature_id, sr_geom) VALUES ( 5, 5, SetSRID( ST_GeomFromGeoJSON('".Zend_Json::encode($theFeat["sr_geom"]) ." '), 4326) );";
+							$queryString = "INSERT INTO sr_layer_static_data ( layer_id, feature_id, feature_style, feature_data,sr_geom) VALUES (?, ?, ?, ?, SetSRID( ST_GeomFromGeoJSON( ? ), 4326) )";
+							$logger->log( "Prepped query string:".strlen($queryString), Zend_Log::DEBUG);
+								$statement = $db->prepare($queryString);
+								$statement->bindParam(1,$theFeat["layer_id"] );
+								$statement->bindParam(2,$theFeat["feature_id"] );
+								$statement->bindParam(3,$theFeat["feature_style"] );
+								$statement->bindParam(4,$theFeat["feature_data"] );
+								$statement->bindParam(5,Zend_Json::encode($theFeat["sr_geom"]));
+//								$statement->bindParam(1,Zend_Json::encode($theFeat["sr_geom"]),PDO::PARAM_LOB);
+								$retVal = $statement->execute();
+
+//							$retVal = $db->query($queryString);
+
+//							$retVal = $featuresTable->insert($theFeat);
+							echo "{ \"inserted\" : ".Zend_Json::encode($retVal) ."}";
+//						$logger->log( "Inserted Feature with id:".print_r($retVal,true)." and data: ".print_r($theFeat, true) , Zend_Log::DEBUG);
+							$ret_val = $theFeat["feature_id"];
+							$logger->log( "Inserted Feature with id:".print_r($retVal,true), Zend_Log::DEBUG);
+						} catch(Zend_DB_Statement_Exception $theExcept) {
+							$theError = $theExcept->getMessage();
+							$logger->log("Create Feature Failed : ".$theError, Zend_Log::DEBUG);
+						}
 		
+			}	
 	
 			// END CREATE FEATURES (FEATURE INSERT INTO LAYER)
 

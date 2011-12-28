@@ -53,7 +53,7 @@ create TABLE sr_modules (
 );
 
 CREATE TYPE layer_type AS ENUM ('XYZ','Vector','WFS','GeoRSS');
-CREATE TYPE layer_format AS ENUM ('GML','WFST','WKT');
+CREATE TYPE layer_format AS ENUM ('GML','WFST','WKT','GeoJSON');
 CREATE TABLE sr_layers (
 	id SERIAL NOT NULL,
 	name VARCHAR(128) NOT NULL,
@@ -82,21 +82,23 @@ CREATE TABLE sr_styles (
 	name VARCHAR(128) NOT NULL,
 	label VARCHAR(128),
 	fillColor VARCHAR(32),
-	fillOpacity INT,
+	fillOpacity REAL,
 	strokeColor VARCHAR(32),
-	strokeOpacity INT,
+	strokeOpacity REAL,
 	strokeWidth INT,
 	pointRadius INT,
 	fontColor VARCHAR(32),
+	fontSize INT,
 	fontFamily VARCHAR(64),
-	fontWidth VARCHAR(32),
+	fontWeight VARCHAR(32),
+	fontOpacity REAL,
 	labelAlign VARCHAR(32),
 	labelXOffset INT,
 	labelYOffset INT,	
 	externalGraphic VARCHAR(128),
 	graphicWidth INT,
 	graphicHeight INT,
-	graphicOpacity INT,
+	graphicOpacity REAL,
 	rotation INT,
 	created_on TIMESTAMP,
 	updated_on TIMESTAMP,

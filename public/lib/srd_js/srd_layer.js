@@ -207,7 +207,7 @@ srd_layer.prototype.loadData = function( ) {
 
 		var mainRule = new OpenLayers.Rule( {
 			elseFilter: true,
-			symbolizer: this.srd_featureAttributes} );
+			symbolizer: this.srd_featureAttributes } );
 //			symbolizer: tmpSymbolizer} );
 
 		var customRule = new OpenLayers.Rule( {
@@ -296,21 +296,24 @@ srd_layer.prototype.loadData = function( ) {
 
 		} else if(this.options.format == "GeoJSON" ) {
 
-				var layerProtocol = null;
+				this.layerProtocol = null;
 				if(this.options.url == null || this.options.url == "") {
-						layerProtocol = new OpenLayers.Protocol.HTTP( {
+						this.layerProtocol = new OpenLayers.Protocol.HTTP( {
 //							url: "/srdata/layer",
 							params: { layer_id : this.options.id },
 							readWithPOST: true,
 							format: new OpenLayers.Format.GeoJSON( { } )
 						} );
 				} else {
-						layerProtocol = new OpenLayers.Protocol.HTTP( {
+						this.layerProtocol = new OpenLayers.Protocol.HTTP( {
 							readWithPOST: true,
 							headers: { layer_id : this.options.id },
 							params: { layer_id : this.options.id },
 							url:			this.options.url,
-							format: new OpenLayers.Format.GeoJSON( { } ),
+							format: new OpenLayers.Format.GeoJSON( {
+//								'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
+//								'externalProjection' : new OpenLayers.Projection("EPSG:4326")
+							 } ),
 						} );
 				}	
 			console.log("Create GeoJSON Layer Run From Server="+this.options.name+"===");
@@ -322,7 +325,7 @@ srd_layer.prototype.loadData = function( ) {
 					visibility:		this.options.visibility,
 					styleMap:			this.srd_styleMap,
 					strategies:		[new OpenLayers.Strategy.BBOX(), new OpenLayers.Strategy.Save( {auto: true}) ],
-					protocol:			layerProtocol
+					protocol:			this.layerProtocol
 				} );
 
 		} else if(this.options.format == "WFST" ) {
@@ -793,7 +796,6 @@ srd_layer.prototype.uploadLayer = function() {
 	var uploadData = {
 		options: this.options,
 		styles: this.srd_featureAttributes,
-//		features: this.layer.features
 	}
 	var xhrArgs =  {
 		url: "/srdata/Layer/Create",
@@ -802,6 +804,54 @@ srd_layer.prototype.uploadLayer = function() {
 		headers: { 'Content-Type' : 'application/json' }, 
 		load: function(data) {
 			//WHAT to do when we're done sending data.
+			console.log("Finished Uploading Layer Info :"+data.id);
+			var oldOptions = this.options;
+			var oldLayer = this.layer;
+
+	
+			this.layer = null;
+			this.options = null;
+			this.options = data;
+			this.loadData();
+			console.log("oldLayer has :"+oldLayer.features.length+" : of features");
+			var headers =  {
+				'Content-Type' : 'application/json', 
+				'layer_id' : this.options.id,
+				'sr_requestType' : 'create'
+			}
+//			for(var i=0;i<1;i++) {
+			for(var i=0;i<oldLayer.features.length;i++) {
+			
+				this.layerProtocol.create(oldLayer.features[i], { 'headers': headers  }  );
+			}
+//		this.map.removeLayer(this.layer);
+
+			this.addLayerToMap(this.map);
+		}.bind(this),
+		error: function(error) {
+			//What to do if it failed.
+		}
+	}
+	var deferred = dojo.xhrPost(xhrArgs);
+
+}
+// END uploadLayer
+
+// BEGIN UPLOAD LAYER DATA TO SERVER.
+srd_layer.prototype.uploadData = function() {
+	var uploadData = {
+		options: this.options,
+		styles: this.srd_featureAttributes,
+	}
+	var xhrArgs =  {
+		url: "/srdata/Layer/Create",
+		postData: dojo.toJson(uploadData),
+		handleAs: 'json',
+		headers: { 'Content-Type' : 'application/json' }, 
+		load: function(data) {
+			//WHAT to do when we're done sending data.
+			console.log("Finished Uploading Layer Info :"+data);
+
 		},
 		error: function(error) {
 			//What to do if it failed.
@@ -811,6 +861,50 @@ srd_layer.prototype.uploadLayer = function() {
 
 }
 // END uploadLayer
+
+
+
+
+// BEGIN DOWNLOAD LAYER STYLES FROM SERVER.
+srd_layer.prototype.downloadStyles = function() {
+	var requestData = {
+		layer_id : this.options.id
+	}
+	var xhrArgs =  {
+		url: "/srdata/Layer/Readstyles",
+		postData: dojo.toJson(requestData),
+		handleAs: 'json',
+		headers: { 'Content-Type' : 'application/json' }, 
+		load: function(data) {
+			//WHAT to do when we're done sending data.
+			
+		}.bind(this),
+		error: function(error) {
+			//What to do if it failed.
+		}
+	}
+	var deferred = dojo.xhrPost(xhrArgs);
+
+}
+// END uploadLayer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

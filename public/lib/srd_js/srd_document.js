@@ -277,7 +277,10 @@ srd_document.prototype.map_init = function() {
 				new OpenLayers.Control.PanZoomBar(),
 				new OpenLayers.Control.Attribution(),
 				new OpenLayers.Control.KeyboardDefaults()
-			]
+			],
+				projection : "EPSG:4326",
+				displayProjection: "EPSG:4326",
+				units : 'degrees'
 //			resolutions: [272989.386733,136494.693366,68247.3466832,34123.6733416,17061.8366708,8530.9183354,4265.4591677,2132.72958385,1000,500,250,125   ]
 //			maxResolution: 0.175 
 		} );
@@ -285,19 +288,36 @@ srd_document.prototype.map_init = function() {
 ////////////////////////
 ///// LAYER CREATION ////
 
+/*this.map.setOptions( 
+//	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
+	{ projection :  new OpenLayers.Projection("EPSG:4326") ,
+	displayProjection : new OpenLayers.Projection("EPSG:4326") }
+);
+*/
+
+
 // Iterate through each srd_layer and call loadData and addLayerToMap)
 
 for(var i in this.srd_layerArr ) {
 //	console.log("Loading Layer:"+this.srd_layerArr[i].name+":::");
 	this.srd_layerArr[i].loadData();
 	this.srd_layerArr[i].addLayerToMap(this.map);
+
+	// BEGIN ADD layer to uploadMenu
+	this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
+			label: this.srd_layerArr[i].options.name,
+			srd_doc: this,
+			tmpId: i,
+			onClick: function() { this.srd_doc.srd_layerArr[this.tmpId].uploadLayer() }
+	} ) );
+	// END ADD LAYER TO uploadMenu
+
 }
 
-this.map.setOptions( 
-	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
-	displayProjection : new OpenLayers.Projection("EPSG:4326") }
-);
-var lonlat = new OpenLayers.LonLat(this.staticVals.start_lon, this.staticVals.start_lat).transform(this.map.displayProjection, this.map.projection);
+
+var googleProjection = new OpenLayers.Projection("EPSG:900913");
+var mapProjection = new OpenLayers.Projection("EPSG:4326");
+var lonlat = new OpenLayers.LonLat(this.staticVals.start_lon, this.staticVals.start_lat).transform( mapProjection, googleProjection  );
 this.map.setCenter( lonlat, this.staticVals.start_zoom ); 
 
 console.log("Should be displaying Map at this point!");
@@ -619,8 +639,8 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			}) );
 			srd_editMenu.addChild(new dijit.MenuItem({
 				label: "TEST1",
-//				onClick: function() { alert("Place TEST Here") }.bind(this)
-				onClick: function() { this.srd_layerArr[13].uploadLayer(); }.bind(this)
+				onClick: function() { alert("Place TEST Here") }.bind(this)
+//				onClick: function() { this.srd_layerArr[13].uploadLayer(); }.bind(this)
 			}));
 			//// Tools Menu ////
 			var srd_toolsMenu = new dijit.Menu({});
@@ -633,6 +653,20 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				onClick: function() { this.srd_toggleEditPanel(editPanelMenuItem); }.bind(this)
 			});
 			srd_toolsMenu.addChild(editPanelMenuItem);
+			// BEGIN UPLOAD LAYER MENU
+			this.srd_uploadMenu = new dijit.Menu( );
+			for( tmpId in this.srd_layerArr) {
+					this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
+						label: this.srd_layerArr[tmpId].name,
+						onClick: function() { this.srd_layerArr[tmpId].uploadLayer() }.bind(this)
+					} ) );
+			}	
+			srd_toolsMenu.addChild(new dijit.PopupMenuItem({
+				label: "Upload Layer to Server",
+				popup:this.srd_uploadMenu
+			}));
+			// END UPLOAD LAYER MENU
+
 				
 			this.srd_menuBar.startup();
 

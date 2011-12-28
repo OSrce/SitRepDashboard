@@ -1,3 +1,20 @@
+
+sr_users :
+	id == tax
+
+sr_groups :
+	id == cmdcode
+
+sr_layers :
+dd	id < 1000 reserved.
+	1001 <= id <= 9999 Static Layers
+	10000 <= id <   Dynamic Layers.
+
+
+
+
+
+
 sr_data=# \d
                            List of relations
  Schema |                 Name                 |   Type   |    Owner    
