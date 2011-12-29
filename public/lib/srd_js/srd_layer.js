@@ -7,6 +7,8 @@
 //
 //////////////////////////////
 
+
+dojo.require("dojox.timing.Sequence");
 //OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
 
 //srd_layer constructor 
@@ -310,9 +312,10 @@ srd_layer.prototype.loadData = function( ) {
 							headers: { layer_id : this.options.id },
 							params: { layer_id : this.options.id },
 							url:			this.options.url,
+							callback: function(resp ) { this.crudComplete(resp) }.bind(this),
 							format: new OpenLayers.Format.GeoJSON( {
-//								'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
-//								'externalProjection' : new OpenLayers.Projection("EPSG:4326")
+								'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
+								'externalProjection' : new OpenLayers.Projection("EPSG:4326")
 							 } ),
 						} );
 				}	
@@ -805,25 +808,21 @@ srd_layer.prototype.uploadLayer = function() {
 		load: function(data) {
 			//WHAT to do when we're done sending data.
 			console.log("Finished Uploading Layer Info :"+data.id);
-			var oldOptions = this.options;
-			var oldLayer = this.layer;
-
+			this.oldOptions = this.options;
+			this.oldLayer = this.layer;
 	
 			this.layer = null;
 			this.options = null;
 			this.options = data;
 			this.loadData();
-			console.log("oldLayer has :"+oldLayer.features.length+" : of features");
+			console.log("oldLayer has :"+this.oldLayer.features.length+" : of features");
 			var headers =  {
 				'Content-Type' : 'application/json', 
 				'layer_id' : this.options.id,
 				'sr_requestType' : 'create'
 			}
-//			for(var i=0;i<1;i++) {
-			for(var i=0;i<oldLayer.features.length;i++) {
-			
-				this.layerProtocol.create(oldLayer.features[i], { 'headers': headers  }  );
-			}
+			this.loadAllFeatures = 1;
+			this.createFeature(this.oldLayer.features[0], {'headers':headers} );
 //		this.map.removeLayer(this.layer);
 
 			this.addLayerToMap(this.map);
@@ -889,14 +888,49 @@ srd_layer.prototype.downloadStyles = function() {
 // END uploadLayer
 
 
+// BEGIN crudComplete SERVER.
+srd_layer.prototype.crudComplete = function(resp) {
+	if(resp.requestType == "create") {
+		var respObj = {inserted : false};
+		if( resp != null && resp.priv != null && resp.priv.responseText != null ) {
+			try {			
+				respObj = dojo.fromJson(resp.priv.responseText);	
+			} catch(e) {
+				respObj.inserted = false;
+			}
+		}
+		var headers =  {
+			'Content-Type' : 'application/json', 
+			'layer_id' : this.options.id,
+			'sr_requestType' : 'create'
+		}
+	
+		console.log("crudComplete ="+resp.reqFeatures.fid+":::"+resp.priv.responseText);
+//		if(resp.code == OpenLayers.Protocol.Response.FAILURE || respObj.inserted != true) {
+//		if(resp.code != OpenLayers.Protocol.Response.SUCCESS || respObj.inserted != true) {
+		if(resp.code != OpenLayers.Protocol.Response.SUCCESS || respObj.inserted != true) {
+			console.log("Create feature FAILED!, retrying in 1 sec.");
+			var options = {'headers': headers};
+			seq = new dojox.timing.Sequence();
+			var funcs = [ {
+			func: [ this.createFeature, this, resp.reqFeatures, options], pauseBefore: 2000 } ];
+//			seq.go([{pauseBefore:1000}], function() { this.layerProtocol.create(resp.reqFeatures, options)}.bind(this)  );		
+			seq.go(funcs);
+		} else {
+			var featIter = resp.reqFeatures.fid;
+			if(this.loadAllFeatures == 1 && featIter < this.oldLayer.features.length ) {
+				this.createFeature(this.oldLayer.features[featIter], {headers: headers});
+			}
+		}
+	}
+}
+// END crudComplete SERVER.
 
-
-
-
-
-
-
-
+srd_layer.prototype.createFeature = function(theFeat,options) {
+	console.log("Create Feature Called for "+theFeat.fid);
+	console.log("theOptions="+options.headers.layer_id);
+	this.layerProtocol.create(theFeat,options);
+}
 
 
 

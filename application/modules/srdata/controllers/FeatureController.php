@@ -19,6 +19,9 @@ class Srdata_FeatureController extends Zend_Controller_Action
 			// TODO: NEED TO DETERMINE WHAT LAYER ID WE ARE DEALING WITH.
 			// TODO: NEED TO DETERMINE IF THIS IS READ OR CREATE!
 			$layerId = $this->getRequest()->getHeader('layer_id');
+			if($layerId < 0) {
+				exit(-1);
+			}
 			$requestType = $this->getRequest()->getHeader('sr_requestType');	
 
 			$logger->log("Feature Class Called: Request Type: ".$requestType,Zend_Log::DEBUG);
@@ -109,7 +112,24 @@ class Srdata_FeatureController extends Zend_Controller_Action
 						$logger->log("sr_geom coord size :".count( $theFeat["sr_geom"]["coordinates"] ) , Zend_Log::DEBUG);
 
 						try {
-//							$queryString = "INSERT INTO sr_layer_static_data ( layer_id, feature_id, sr_geom) VALUES ( 5, 5, SetSRID( ST_GeomFromGeoJSON('".Zend_Json::encode($theFeat["sr_geom"]) ." '), 4326) );";
+							$theFeat["layer_id"] = 1;
+
+							$queryString = "INSERT INTO sr_layer_static_data ( layer_id, feature_id, feature_style, feature_data, sr_geom) VALUES ( ";
+							$queryString = $queryString.$theFeat["layer_id"].",";
+							$queryString = $queryString.$theFeat["feature_id"].",";
+							$queryString = $queryString.$theFeat["feature_style"].",";
+							$queryString = $queryString."'".$theFeat["feature_data"]."',";
+							$queryString = $queryString."SetSRID( ST_GeomFromGeoJSON('".Zend_Json::encode($theFeat["sr_geom"]) ." '), 4326) );\n";
+					
+							$fileHandle = fopen("/tmp/SomeFile.sql", "a+");
+							fwrite($fileHandle,$queryString);
+							fclose($fileHandle);
+							$retVal = true;
+							echo "{ \"inserted\" : ".Zend_Json::encode($retVal) ."}";
+							exit(0);
+
+			
+
 							$queryString = "INSERT INTO sr_layer_static_data ( layer_id, feature_id, feature_style, feature_data,sr_geom) VALUES (?, ?, ?, ?, SetSRID( ST_GeomFromGeoJSON( ? ), 4326) )";
 							$logger->log( "Prepped query string:".strlen($queryString), Zend_Log::DEBUG);
 								$statement = $db->prepare($queryString);
@@ -132,15 +152,9 @@ class Srdata_FeatureController extends Zend_Controller_Action
 							$theError = $theExcept->getMessage();
 							$logger->log("Create Feature Failed : ".$theError, Zend_Log::DEBUG);
 						}
-		
-			}	
-	
+					}
 			// END CREATE FEATURES (FEATURE INSERT INTO LAYER)
-
-    }
-	
-	}
-
-
+    		}
+		}
 }
 
