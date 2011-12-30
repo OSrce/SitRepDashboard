@@ -4,7 +4,7 @@ class Srdata_Model_DbTable_Layers extends Zend_Db_Table_Abstract
 {
 
     protected $_name = 'sr_layers';
-		protected $_rowClass = 'Layer';
+		protected $_rowClass = 'Srdata_Model_Layer';
 
 		protected $_sequence = 'sr_layers_id_seq';
 

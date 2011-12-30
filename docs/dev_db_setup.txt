@@ -14,12 +14,14 @@ CREATE TABLE sr_session (
 CREATE TABLE sr_users ( 
 	uid int NOT NULL,
 	gid int NOT NULL,
-	username VARCHAR(40) NOT NULL,
+	username VARCHAR(128) NOT NULL,
 	firstname VARCHAR(40),
 	lastname VARCHAR(40),
 	title VARCHAR(40),
+	titlecode INT,
 	email VARCHAR(128),
-	last_login int,
+	dn VARCHAR(256),
+	last_login TIMESTAMP DEFAULT null,
 	PRIMARY KEY (uid)
 );
 
@@ -133,7 +135,7 @@ CREATE TABLE sr_layer_dynamic_data (
 	feature_style INT,	
 	feature_data TEXT,
 	feature_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	feature_end TIMESTAMP,
+	feature_end TIMESTAMP DEFAULT null,
 	PRIMARY KEY ( layer_id, feature_id ) 
 );
 

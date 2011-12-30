@@ -316,7 +316,7 @@ srd_layer.prototype.loadData = function( ) {
 							format: new OpenLayers.Format.GeoJSON( {
 								'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
 								'externalProjection' : new OpenLayers.Projection("EPSG:4326")
-							 } ),
+							 } )
 						} );
 				}	
 			console.log("Create GeoJSON Layer Run From Server="+this.options.name+"===");
@@ -798,7 +798,7 @@ srd_layer.prototype.activate = function() {
 srd_layer.prototype.uploadLayer = function() {
 	var uploadData = {
 		options: this.options,
-		styles: this.srd_featureAttributes,
+		styles: this.srd_featureAttributes
 	}
 	var xhrArgs =  {
 		url: "/srdata/Layer/Create",
@@ -840,7 +840,7 @@ srd_layer.prototype.uploadLayer = function() {
 srd_layer.prototype.uploadData = function() {
 	var uploadData = {
 		options: this.options,
-		styles: this.srd_featureAttributes,
+		styles: this.srd_featureAttributes
 	}
 	var xhrArgs =  {
 		url: "/srdata/Layer/Create",
