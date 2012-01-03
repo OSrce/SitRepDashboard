@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<title>SitRep Login Page</title>
+		<link rel="stylesheet" href="lib/SR_Dojo/srd/srd_style.css" type="text/css" />
+		<script type="text/javascript" src="lib/SR_Dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+		<script type="text/javascript" src="lib/SR_Dojo/dojo/srd_dojo.js" djConfig="parseOnLoad: true"></script>
+
+    <script type="text/javascript" djConfig="parseOnLoad: true" >
+			dojo.require("dijit.Dialog");
+			dojo.require("dijit.layout.ContentPane");
+			function srd_login() {
+				dojo.addOnLoad(function () {
+					dijit.byId('loginDialog').show();
+				} );
+			}
+			
+		</script>
+	</head>
+	<body class="tundra" onload="srd_login()">
+
+<?php
+
+?>
+	You have successfully authenticated but you are not authorized.
+
+	</body>
+</html>

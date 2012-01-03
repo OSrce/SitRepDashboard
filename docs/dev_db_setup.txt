@@ -32,19 +32,20 @@ CREATE TABLE sr_groups (
 	PRIMARY KEY (gid)
 );
 
-CREATE TYPE resType AS ENUM ('module','layer');
-CREATE TYPE entType AS ENUM ('user','group');
-CREATE TYPE permitType AS ENUM ('allow','deny');
+CREATE TYPE roleType AS ENUM ('uid','gid');
+CREATE TYPE resType AS ENUM ('module','layer','style');
+CREATE TYPE permitType AS ENUM ('deny', 'allow');
 
 CREATE TABLE sr_acl_permissions (
 	permission_id SERIAL NOT NULL,
-	entity_type entType NOT NULL,
-	entity_id INT NOT NULL,
+	role_type roleType NOT NULL,
+	role_id INT NOT NULL,
 	resource_type resType NOT NULL,
 	resource_id INT NOT NULL,
+	permission_create permitType NOT NULL DEFAULT 'deny',
 	permission_read permitType NOT NULL DEFAULT 'deny',
-	permission_write permitType NOT NULL DEFAULT 'deny',
-	permission_admin permitType NOT NULL DEFAULT 'deny',
+	permission_update permitType NOT NULL DEFAULT 'deny',
+	permission_delete permitType NOT NULL DEFAULT 'deny',
 	PRIMARY KEY (permission_id)
 );
 
