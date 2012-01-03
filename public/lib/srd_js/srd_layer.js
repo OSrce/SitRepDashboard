@@ -193,6 +193,7 @@ srd_layer.prototype.loadData = function( ) {
 //				'http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png',
 			this.options.url,
 			{
+//				projection:		new OpenLayers.Projection(this.options.projection),
 				numZoomLevels:	this.options.numZoomLevels,
 				attribution:				"<img src='lib/img/SitRepLogo_Tiny.png' height='25' width='60'><br> "+this.options.attribution,
 				sphericalMercator: 	this.options.sphericalMercator

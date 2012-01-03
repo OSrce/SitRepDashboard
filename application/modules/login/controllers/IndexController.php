@@ -126,20 +126,21 @@ class Login_IndexController extends Zend_Controller_Action {
 
 //		$this->_helper->flashMessenger->addMessage("User Authenticated!.");
 
-			$srd_session = new Zend_Session_Namespace("srd");
-			$srd_session->auth = true;
-			$srd_session->uid = $user->uid;	
-			$srd_session->gid = $user->gid;
+			// WE HAVE SUCCESSFULLY AUTHENICATED AND GOTTEN USER INFO FROM DB.
+			// NOW WE NEED TO STORE IT SOMEWHERE WHERE WE CAN PULL IT WHENEVER A USER REQUEST A PAGE.
+
+//			$srd_session = new Zend_Session_Namespace("srd");
+//			$srd_session->auth = true;
+//			$srd_session->uid = $user->uid;	
+//			$srd_session->gid = $user->gid;
 	
-
-/*			$role_id = $user->getRoleId($options['username'] );
 			$data = array( 
-				'username' => $options['username'],
-				'id_role' => $role_id
+				'username' => $user->username,
+				'uid' => $user->uid,
+				'gid' => $user->gid
 			);
-
 			$auth->getStorage()->write($data);
-*/
+
 			$this->_redirect('/home');
 		} else {
 			$messages = $result->getMessages();

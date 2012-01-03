@@ -1,0 +1,61 @@
+
+
+THIS ASSUME POSTGIS IS ALREADY INSTALLED (WITH template_postgis db) AND
+planet (or other) osm file ready for import into db (gis).
+
+
+######### GET, BUILD and INSTALL MAPNIK (C LIBRARY FOR RENDERING) ######
+wget https://github.com/downloads/mapnik/mapnik/mapnik-2.0.0.tar.bz2 
+tar -jxvf mapnik-2.0.0.tar.bz2
+cd mapnik-2.0.0
+./configure
+python scons/scons.py
+sudo python scons/scons.py install 
+cd /usr/local/lib64/
+sudo ln -s mapnik2 mapnik
+
+#######   GET osm2pgsql for osm file import into postgis db.
+cd OSM_SVN_REPO/applications/utils/export/osm2pgsql
+make clean
+./configure
+make
+sudo make install
+
+
+### MAKE SURE WE CAN LINK AGAINST ABOVE TWO PACKAGES:
+echo "/usr/local/lib64" >/etc/ld.so.conf.d/mapnik.conf
+echo "/usr/local/lib/osm2pgsql" >/etc/ld.so.conf.d/mapnik.conf
+
+
+###### GET, BUILD, and INSTALL mod_tile (with renderd) for tile rendering.
+cd OSM_SVN_REPO/applications/utils/mod_tile
+make clean
+make
+sudo make install
+
+
+
+
+##### LOAD THE planet file #########
+##### INTO BRAND NEW DB #########
+createdb gis -T template_postgis gis
+psql -d gis -f /usr/share/pgsql/contrib/_int.sql
+psql -d gis -f /usr/share/pgsql/contrib/postgis-2.0/legacy_compatibility_layer.sql
+
+
+
+osm2pgsql --proj 4326 tristate.osm.bz2osm.bz2
+
+osm2pgsql tristate.osm.bz2
+
+
+
+
+
+
+
+
+
+
+
+
