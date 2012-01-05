@@ -7,12 +7,13 @@ class Login_Acl extends Zend_Acl {
 	public function __construct($db,$uid,$gid) {
 	
 //		$this->loadRoles($db);
+		$this->the_db = $db;
 		$groupsTable = new Login_Model_DbTable_Groups($db);
-		$roleType = "UID";
+		$permissionsTable = new Login_Model_DbTable_Permissions($db);
+		$roleType = "uid";
 		$roleId = $uid;
-		$parentType = 'GID';
+		$parentType = 'gid';
 		$parentId = $gid;		
-		$this->_the_db = $db;
 
 		$this->loadRole($groupsTable,$roleType,$roleId,$parentType,$parentId);
 /*
@@ -33,30 +34,36 @@ class Login_Acl extends Zend_Acl {
 		$theRole = $roleType.':'.$roleId;
 		$theParentRole = $parentType.':'.$parentId;
 
-		date_default_timezone_set("America/New_York");
+/*		date_default_timezone_set("America/New_York");
 		$logger = new Zend_Log();
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
-		$logger->log("TEST5:".$theRole."===".$theParentRole,Zend_Log::DEBUG);	
+		$logger->log("loadRole Called::::".$theRole."===".$theParentRole,Zend_Log::DEBUG);	
+*/
 
 		if( is_null($parentId) ) {
 			if(!$this->hasRole($theRole) ) {
+//				$logger->log("loadRole: addRole ".$theRole,Zend_Log::DEBUG);	
 				$this->addRole(new Zend_Acl_Role($theRole) );
-				$logger->log("TEST6:".$theRole,Zend_Log::DEBUG);	
-//				$this->loadPermissions($theRole);
+				$this->loadPermissions($roleType,$roleId);
 			}
 		} else {
 			$ppRole = $groupsTable->getParentGroup($parentId);
-			$ppType = 'GID';
+			$ppType = $parentType;
 			if( is_null($ppRole) ) {
 				if(!$this->hasRole($theParentRole) ) {
+//					$logger->log("loadRole: addRole ".$theParentRole,Zend_Log::DEBUG);	
 					$this->addRole(new Zend_Acl_Role($theParentRole) );
-				$logger->log("TEST7:".$theParentRole,Zend_Log::DEBUG);	
+					$this->loadPermissions($parentType,$parentId);
 				}
+
+//				$logger->log("loadRole: addRole ".$theRole."===".$theParentRole,Zend_Log::DEBUG);	
 				$this->addRole(new Zend_Acl_Role($theRole),$theParentRole);
-				$logger->log("TEST8:".$theRole."===".$theParentRole,Zend_Log::DEBUG);	
-//				$this->loadPermissions($theRole,$theParentRole);
+				$this->loadPermissions($roleType,$roleId);
 			} else {
 				$this->loadRole($groupsTable,$ppType,$parentId,$ppType,$ppRole);
+//				$logger->log("loadRole: addRole ".$theRole."===".$theParentRole,Zend_Log::DEBUG);	
+				$this->addRole(new Zend_Acl_Role($theRole),$theParentRole);
+				$this->loadPermissions($roleType,$roleId);
 			}
 		}
 	}
@@ -110,30 +117,36 @@ class Login_Acl extends Zend_Acl {
 */
 
 	public function loadPermissions($roleType, $roleId,$parentId=null) {
-		if(empty($this->_the_db) ) {
+		if(empty($this->the_db) ) {
 			return false;
 		}
-		date_default_timezone_set("America/New_York");
+
+/*		date_default_timezone_set("America/New_York");
 		$logger = new Zend_Log();
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
+		$logger->log("GetPermissions For:".$roleType.":::".$roleId,Zend_Log::DEBUG);
+*/
 	
-		$permissions = new Login_Model_DbTable_Permissions($this->_the_db);
-		$allPermissions = $permissions->getPermissions($roleType,$role);
+		$permissionsTable = new Login_Model_DbTable_Permissions($this->the_db);
+		$allPermissions = $permissionsTable->getPermissions($roleType,$roleId);
 		foreach($allPermissions as $perm) {
-			$resType = $perm['resource_type'];
-			$resId = $perm['resource_id'];
+//			$logger->log("thePerm type= ".get_class($perm),Zend_Log::DEBUG);
+//			$logger->log("thePerm role_id= ".$perm->role_id,Zend_Log::DEBUG);
+			$resType = $perm->resource_type;
+			$resId = $perm->resource_id;
 			$theResource = $resType.':'.$resId;
-			$logger->log("TEST:".$theResource,Zend_Log::DEBUG);
+//			$logger->log("TheResource:".$theResource,Zend_Log::DEBUG);
 
 			if( ! $this->has($theResource) ) { 
 				$this->addResource(new Zend_Acl_Resource( $resType.":".$resId)  ); 
 			}
-			if ($perm['read'] == 1) {
+			if ($perm->permission_read == 'allow') {
+//				$logger->log("ACL Allow:".$theResource." FOR ".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resType.":".$resId , 'read' );
 			} else {
 				$this->deny($roleType.":".$roleId, $resType.":".$resId , 'read' );
 			}
-			if ($perm['create'] == 1) {
+			if ($perm->permission_create == 'allow') {
 				$this->allow($roleType.":".$roleId, $resType.":".$resId , 'create' );
 			} else {
 				$this->deny($roleType.":".$roleId, $resType.":".$resId , 'create' );

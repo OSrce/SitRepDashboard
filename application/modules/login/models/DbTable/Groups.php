@@ -9,11 +9,11 @@ class Login_Model_DbTable_Groups extends Zend_Db_Table_Abstract
 
 		public function getParentGroup( $theGid) {
 			$theGroups = $this->find($theGid);
-//			if( is_array( $theGroups ) ) {
-				return $theGroups[0]->parent_gid;
-//			} else {
-//				return null;
-//			}
+			if( count($theGroups) ) {
+				return $theGroups->current()->parent_gid;
+			} else {
+				return null;
+			}
 		}
 			
 

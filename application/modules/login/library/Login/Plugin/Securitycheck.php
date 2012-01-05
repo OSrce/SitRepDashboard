@@ -37,6 +37,12 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 
 				if( $this->_isAllowed($auth,$acl) ) {
 					$redirect=false;
+				} else {
+					// AUTHENTICATED BUT ACL DENIED :
+					$request->setModuleName('login');
+					$request->setControllerName('index');
+					$request->setActionName('notauthorized');
+					return;
 				}
 			} 
 		} else {
@@ -79,13 +85,21 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 	
 		$modulesTable = new Login_Model_DbTable_Modules($db);
 		$result = false;
+
+//		date_default_timezone_set("America/New_York");
+//    $logger = new Zend_Log();
+//    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
+		
 		foreach($resources as $res) {
 			$select = $modulesTable->select()->where('name = ?',$res);
 			$theModule = $modulesTable->fetchRow($select);
-			if( !is_null( $theModule) ) {
-				$theResource = "0:".$theModule->id;
-				if( $acl->has($res) ) {
-					$result = $acl->isAllowed("UID:".$this->_uid,$theResource, 'read');
+			if( count( $theModule) ) {
+				$theResource = "module:".$theModule->id;
+
+//		    $logger->log("Performing ACL Check:".$theResource,Zend_Log::DEBUG);
+				if( $acl->has($theResource) ) {
+					$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'read');
+//		    	$logger->log("ACL Result:".$result,Zend_Log::DEBUG);
 				}
 			}
 		}
