@@ -38,7 +38,7 @@ class Srdata_FeatureController extends Zend_Controller_Action
 				
 				$selectLayer = $featuresTable->select();
 				$selectLayer->from( 'sr_layer_static_data',array('feature_style',
-					'feature_id', 'geojson_geom' => new Zend_Db_Expr("ST_AsGeoJSON(sr_geom)")  ) );
+					'feature_id', 'feature_data', 'geojson_geom' => new Zend_Db_Expr("ST_AsGeoJSON(sr_geom)")  ) );
 
 				$selectLayer->where("layer_id = $layerId");
 				try {
@@ -50,9 +50,10 @@ class Srdata_FeatureController extends Zend_Controller_Action
 								echo ",";
 							} else { $firstRow = 0; }
 //						$logger->log( print_r($feature,true) , Zend_Log::DEBUG);
-							echo '{"type":"Feature","properties": {';
-							echo '"featureStyle":'.$feature->feature_style;
-							echo '},"id":'.$feature->feature_id.',';
+							echo '{"type":"Feature",';
+							echo '"properties":'.$feature->feature_data.',';
+//							echo '"featureStyle":'.$feature->feature_style.',';
+							echo '"id":'.$feature->feature_id.',';
 							echo '"geometry":'.$feature->geojson_geom;
 							echo '}';
 					}

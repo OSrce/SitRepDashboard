@@ -30,7 +30,7 @@ class Home_IndexController extends Zend_Controller_Action
     {
 
 			$staticVals = array( 
-				'default_projection' => '"EPSG:4326"',
+				'default_projection' => 'EPSG:4326',
 				'start_lat' => 40.714,
 				'start_lon' => -73.998,
 				'start_zoom' => 10,
@@ -57,9 +57,8 @@ class Home_IndexController extends Zend_Controller_Action
 
 			echo "<script>\n";
 			// BEGIN LOAD STATIC VALS INTO CLIENTS JS.			
-			foreach($staticVals as $pref => $prefVal) {
-				echo "srd.staticVals.".$pref."=".$prefVal.";\n";
-			}
+			echo "srd.staticVals = ";
+			echo Zend_Json::encode($staticVals)."\n";
 			// END LOAD STATIC VALS
 
 			// BEGIN LOAD srdLayerArr data :

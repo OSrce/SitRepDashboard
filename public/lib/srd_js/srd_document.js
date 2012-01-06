@@ -124,7 +124,9 @@ srd_document.prototype.srd_init = function() {
 		this.loadDefaults();
 	} else {	
 		//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
-		this.map_init();
+		dojo.addOnLoad(function() {
+			this.map_init();
+		}.bind(this) );
 		//TESTING ONLY
 //		this.srd_createWhiteboard();
 //		this.srd_toggleEditPanel(null);
@@ -267,7 +269,6 @@ srd_document.prototype.defaultSettingsLoaded = function(items,request) {
 		console.log("Putting staticVals in localstore!");
 		this.srd_localStore.put("staticVals", this.staticVals,this.storePutHandler,"srd");
 
-
 		this.map_init();
 }
 
@@ -284,8 +285,8 @@ srd_document.prototype.map_init = function() {
 				new OpenLayers.Control.KeyboardDefaults()
 			],
 				projection : "EPSG:900913",
-				displayProjection: "EPSG:4326",
-				units : 'degrees'
+				displayProjection: "EPSG:4326"
+//				units : 'degrees'
 //			resolutions: [272989.386733,136494.693366,68247.3466832,34123.6733416,17061.8366708,8530.9183354,4265.4591677,2132.72958385,1000,500,250,125   ]
 //			maxResolution: 0.175 
 		} );
@@ -293,9 +294,10 @@ srd_document.prototype.map_init = function() {
 ////////////////////////
 ///// LAYER CREATION ////
 
-/*this.map.setOptions( 
-//	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
-	{ projection :  new OpenLayers.Projection("EPSG:4326") ,
+/*
+this.map.setOptions( 
+	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
+//	{ projection :  new OpenLayers.Projection("EPSG:4326") ,
 	displayProjection : new OpenLayers.Projection("EPSG:4326") }
 );
 */
@@ -324,7 +326,9 @@ for(var i in this.srd_layerArr ) {
 var googleProjection = new OpenLayers.Projection("EPSG:900913");
 var mapProjection = new OpenLayers.Projection("EPSG:4326");
 var lonlat = new OpenLayers.LonLat(this.staticVals.start_lon, this.staticVals.start_lat).transform( mapProjection, googleProjection  );
+
 this.map.setCenter( lonlat, this.staticVals.start_zoom ); 
+
 
 console.log("Should be displaying Map at this point!");
 
