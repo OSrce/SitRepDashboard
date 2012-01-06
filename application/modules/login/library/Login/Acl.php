@@ -121,11 +121,11 @@ class Login_Acl extends Zend_Acl {
 			return false;
 		}
 
-/*		date_default_timezone_set("America/New_York");
+		date_default_timezone_set("America/New_York");
 		$logger = new Zend_Log();
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
 		$logger->log("GetPermissions For:".$roleType.":::".$roleId,Zend_Log::DEBUG);
-*/
+
 	
 		$permissionsTable = new Login_Model_DbTable_Permissions($this->the_db);
 		$allPermissions = $permissionsTable->getPermissions($roleType,$roleId);
@@ -135,13 +135,13 @@ class Login_Acl extends Zend_Acl {
 			$resType = $perm->resource_type;
 			$resId = $perm->resource_id;
 			$theResource = $resType.':'.$resId;
-//			$logger->log("TheResource:".$theResource,Zend_Log::DEBUG);
+			$logger->log("TheResource:".$theResource,Zend_Log::DEBUG);
 
 			if( ! $this->has($theResource) ) { 
 				$this->addResource(new Zend_Acl_Resource( $resType.":".$resId)  ); 
 			}
 			if ($perm->permission_read == 'allow') {
-//				$logger->log("ACL Allow:".$theResource." FOR ".$resId,Zend_Log::DEBUG);
+				$logger->log("ACL Allow:".$theResource." FOR ".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resType.":".$resId , 'read' );
 			} else {
 				$this->deny($roleType.":".$roleId, $resType.":".$resId , 'read' );

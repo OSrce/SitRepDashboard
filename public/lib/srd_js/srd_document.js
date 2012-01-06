@@ -55,6 +55,7 @@ function srd_document() {
 
 	this.srd_toolbar = null;
 	
+	this.srd_styleArr = [];
 	this.srd_layerArr = [];
 
 	this.srd_selLayer = null;
@@ -95,22 +96,26 @@ srd_document.prototype.srd_init = function() {
 // load initial values and the first 'screen' we will see :
 // map, admin, or data.
 
-
-	// LOCAL STORAGE LOADING
-	// LOAD THE VALUES AND CHECK TO SEE THAT WE HAVE EVERYTHING
-	// WE NEED.  OTHERWISE, LOAD DEFAULTS FROM XML FILE.
-	this.srd_localStore = new dojox.storage.LocalStorageProvider({});
-	if( this.srd_localStore.isAvailable() ) {
-		this.srd_localStore.initialize();
-		if(this.srd_localStore.initialized == false ) {
-			console.log("Store is not initialed yet");
-			dojo.event.connect(dojox.storage.manager,
-                     "loaded", this.srd_localStore,
-                     this.storeIsInitialized);
-		} else {
-			console.log("Store Is Inited");
-			this.loadFromLocalStore();
+	if(this.staticVals.runFromServer == null ) {
+		// LOCAL STORAGE LOADING
+		// LOAD THE VALUES AND CHECK TO SEE THAT WE HAVE EVERYTHING
+		// WE NEED.  OTHERWISE, LOAD DEFAULTS FROM XML FILE.
+		this.srd_localStore = new dojox.storage.LocalStorageProvider({});
+		if( this.srd_localStore.isAvailable() ) {
+			this.srd_localStore.initialize();
+			if(this.srd_localStore.initialized == false ) {
+				console.log("Store is not initialed yet");
+				dojo.event.connect(dojox.storage.manager,
+ 	                    "loaded", this.srd_localStore,
+ 	                    this.storeIsInitialized);
+			} else {
+				console.log("Store Is Inited");
+				this.loadFromLocalStore();
+			}
 		}
+	} else if(this.staticVals.runFromServer == true) {
+		console.log("this.staticVals.start_lat == "+this.staticVals.start_lat); 
+		this.staticVals.docCount = 1;
 	}
 	this.srd_mapDisplay();
 	if(this.staticVals.docCount == null) {
@@ -304,12 +309,13 @@ for(var i in this.srd_layerArr ) {
 	this.srd_layerArr[i].addLayerToMap(this.map);
 
 	// BEGIN ADD layer to uploadMenu
-	this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
+/*	this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
 			label: this.srd_layerArr[i].options.name,
 			srd_doc: this,
 			tmpId: i,
 			onClick: function() { this.srd_doc.srd_layerArr[this.tmpId].uploadLayer() }
 	} ) );
+*/
 	// END ADD LAYER TO uploadMenu
 
 }

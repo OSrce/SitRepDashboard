@@ -70,6 +70,8 @@ function srd_layer( ) {
 			select	:	null
 		}
 
+		this.srd_styleArr = [];
+		
 		this.srd_featureAttributes = {
 			fillColor: '#777777',
 			fillOpacity: 0.5,
@@ -210,7 +212,7 @@ srd_layer.prototype.loadData = function( ) {
 
 		var mainRule = new OpenLayers.Rule( {
 			elseFilter: true,
-			symbolizer: this.srd_featureAttributes } );
+			symbolizer: this.srd_styleArr[this.options.defaultstyle] } );
 //			symbolizer: tmpSymbolizer} );
 
 		var customRule = new OpenLayers.Rule( {
@@ -315,8 +317,8 @@ srd_layer.prototype.loadData = function( ) {
 							url:			this.options.url,
 							callback: function(resp ) { this.crudComplete(resp) }.bind(this),
 							format: new OpenLayers.Format.GeoJSON( {
-								'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
-								'externalProjection' : new OpenLayers.Projection("EPSG:4326")
+//								'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
+//								'externalProjection' : new OpenLayers.Projection("EPSG:4326")
 							 } )
 						} );
 				}	

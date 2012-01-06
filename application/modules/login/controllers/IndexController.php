@@ -58,10 +58,10 @@ class Login_IndexController extends Zend_Controller_Action {
 		$options['ldap'] = $this->_options['ldap'];
 		$authAdapter = Login_Auth::_getAdapter('ldap', $options);
 
-//		$result = $auth->authenticate($authAdapter);
+		$result = $auth->authenticate($authAdapter);
 		
-//		if($result->isValid() ) {
-			if(1==1) {
+		if($result->isValid() ) {
+//			if(1==1) {
 			$logger->log("LDAP Results: ".print_r($result,true),Zend_Log::DEBUG);
 			// USER AUTH WAS SUCCESSFUL, NOW NEED TO SEE IF USER IN DB
 			$userTable = new Login_Model_DbTable_Users($db);
@@ -139,6 +139,7 @@ class Login_IndexController extends Zend_Controller_Action {
 				'username' => $user->username,
 				'uid' => $user->uid,
 				'gid' => $user->gid
+
 			);
 			$auth->getStorage()->write($data);
 
