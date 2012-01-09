@@ -116,6 +116,21 @@ class Login_IndexController extends Zend_Controller_Action {
 					if( array_key_exists("mail" , $ldapUserInfo) ) {
 						$user->email = $ldapUserInfo["mail"][0];
 					}
+					// DEFAULTS FOR USERS NOT IN DB :
+					$user->view_layout_x = 1;
+					$user->view_layout_y = 1;
+					//TODO : This should be pulled from options ini ...
+					$default_view_data = array( 
+						'0' => array(
+							'0' => array(
+								'type' 				=> 'map',
+								'start_lat'		=> 40.713,
+								'start_lon'		=> -73.996,
+								'start_zoom'	=> 12
+							)
+						)
+					);
+					$user->view_data = Zend_Json::encode($default_view_data);	
 					$user->save();
 
 				} catch( Zend_Ldap_Exception $zle) {
@@ -138,8 +153,12 @@ class Login_IndexController extends Zend_Controller_Action {
 			$data = array( 
 				'username' => $user->username,
 				'uid' => $user->uid,
-				'gid' => $user->gid
-
+				'gid' => $user->gid,
+				'lastname' => $user->lastname,
+				'title' => $user->title,
+				'view_layout_x' => $user->view_layout_x,
+				'view_layout_y' => $user->view_layout_y,
+				'view_data' => $user->view_data
 			);
 			$auth->getStorage()->write($data);
 

@@ -4,10 +4,10 @@ CREATE DATABASE sr_data WITH TEMPLATE template_postgis;
 \c sr_data;
 
 CREATE TABLE sr_session ( 
-	id char(32),
-	modified int,
-	lifetime int,
-	data text,
+	id CHAR(32),
+	modified INT,
+	lifetime INT,
+	data TEXT,
 	PRIMARY KEY (id)
 );
 
@@ -21,6 +21,9 @@ CREATE TABLE sr_users (
 	titlecode INT,
 	email VARCHAR(128),
 	dn VARCHAR(256),
+	view_layout_x INT,
+	view_layout_y INT,
+	view_data TEXT,
 	last_login TIMESTAMP DEFAULT null,
 	PRIMARY KEY (uid)
 );

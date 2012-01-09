@@ -20,8 +20,10 @@ class Home_IndexController extends Zend_Controller_Action
 				$user = $auth->getStorage()->read();
 				$this->_uid = $user['uid'];
 				$this->_gid = $user['gid'];
-			
-				
+
+				$this->_view_layout_x = $user['view_layout_x'];			
+				$this->_view_layout_y = $user['view_layout_y'];			
+				$this->_view_data = Zend_Json::decode( $user['view_data'] );	
 
 
 		 }
@@ -30,11 +32,14 @@ class Home_IndexController extends Zend_Controller_Action
     {
 
 			$staticVals = array( 
-				'default_projection' => 'EPSG:4326',
-				'start_lat' => 40.714,
-				'start_lon' => -73.998,
-				'start_zoom' => 10,
-				'runFromServer' => true
+//				'default_projection' => 'EPSG:4326',
+				'view_layout_x' =>	$this->_view_layout_x,
+				'view_layout_y' =>	$this->_view_layout_y,
+				'view_data' =>	$this->_view_data,
+//				'start_lat' => 40.714,
+//				'start_lon' => -73.998,
+//				'start_zoom' => 10,
+//				'runFromServer' => true
 			);
 
 //			$auth = Zend_Auth::getInstance();

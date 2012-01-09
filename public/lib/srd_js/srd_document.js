@@ -7,24 +7,7 @@ if(dojo.isIE) {
 	dojo.require("dojox.form.uploader.plugins.Flash");
 }
 
-
-
-srd_document.prototype.loadFromLocalStore = function() {
-	//BEGIN CLEAR STORE LINE - DEBUG ONLY
-	this.srd_localStore.clear("srd");	
-	//END CLEAR STORE LINE - DEBUG ONLY
-	var tmpStaticVals = this.srd_localStore.get("staticVals","srd"); 
-	for(var tmpVal in tmpStaticVals) {
-		this.setValue(tmpVal,tmpStaticVals[tmpVal] );
-//		console.log("Loading Values: "+tmpVal+", "+tmpStaticVals[tmpVal]);
-	}
-	for(var i=1;i<this.staticVals.layerCount; i++) {
-		this.srd_layerArr[i] = new srd_layer();
-		this.srd_layerArr[i].copyValuesFromLayer( this.srd_localStore.get(i,"srdLayer") );
-//		console.log("Loading Layer Settings from LocalStorage:"+this.srd_layerArr[i].name);
-	}
-	return 0;
-}
+dojo.require("dojox.layout.TableContainer");
 
 //srd_document CLASS 
 function srd_document() {
@@ -80,12 +63,21 @@ function srd_document() {
 			docCount: null,
 			single_user: null,
 			runFromServer: null,
-			default_projection: null,
-			start_lat: null,
-			start_lon: null,
-			start_zoom: null,
+//			default_projection: null,
+//			start_lat: null,
+//			start_lon: null,
+//			start_zoom: null,
+			view_layout_x: null,
+			view_layout_y: null,
+			view_data: null,
 			layerCount: null
 	};
+
+	// srd_document should have a list of sub-objects - srd_view
+	// maps, datagrids (spreadsheets), admin, empty, video, etc all should be 
+	// sub-classes of srd_view. srd_view's described in staticVals.view_data.
+	this.viewContainer = null; 
+	this.viewArr = null; 
 
 //	this.srd_init();	
 }
@@ -114,10 +106,41 @@ srd_document.prototype.srd_init = function() {
 			}
 		}
 	} else if(this.staticVals.runFromServer == true) {
-		console.log("this.staticVals.start_lat == "+this.staticVals.start_lat); 
+//		console.log("this.staticVals.start_lat == "+this.staticVals.start_lat); 
 		this.staticVals.docCount = 1;
 	}
-	this.srd_mapDisplay();
+
+
+	this.srd_displayMenuBar();
+	// ASSUME view_layer_x/y have been set and that settings are populated
+	// parse and init different views
+	this.viewContainer = new dojox.layout.TableContainer( {
+		cols: this.staticVals.view_layout_x,
+		region: 'center',
+		style: 'width:100%;height:100%;'
+	} );
+	this.srd_container.addChild(this.viewContainer);
+	var x = 0;
+	var y = 0;
+	this.viewArr = [];
+	for(var xPos in this.staticVals.view_data) {
+		var tmpViewYArr = [];
+		for(var yPos in this.staticVals.view_data[xPos] ) {
+			switch( this.staticVals.view_data[xPos][yPos].type ) {
+				case 'empty' :
+					tmpViewYArr[yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
+					break;
+				case 'map' :
+					tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
+					break;
+			}
+			this.viewArr[xPos] = tmpViewYArr;
+		}
+	}
+	this.srd_container.resize();	
+
+//	this.srd_mapDisplay();
+/*
 	if(this.staticVals.docCount == null) {
 		// Local Storage is empty, need to load from xml (defaults)
 		console.log( "LocalStore is empty, loading from xml");
@@ -130,11 +153,33 @@ srd_document.prototype.srd_init = function() {
 		//TESTING ONLY
 //		this.srd_createWhiteboard();
 //		this.srd_toggleEditPanel(null);
-
-
 	}
+*/
+
 }
 // END SRD_DOCUMENT CONSTRUCTOR
+
+// BEGIN: LOAD FROM LOCAL STORE
+srd_document.prototype.loadFromLocalStore = function() {
+	//BEGIN CLEAR STORE LINE - DEBUG ONLY
+	this.srd_localStore.clear("srd");	
+	//END CLEAR STORE LINE - DEBUG ONLY
+	var tmpStaticVals = this.srd_localStore.get("staticVals","srd"); 
+	for(var tmpVal in tmpStaticVals) {
+		this.setValue(tmpVal,tmpStaticVals[tmpVal] );
+//		console.log("Loading Values: "+tmpVal+", "+tmpStaticVals[tmpVal]);
+	}
+	for(var i=1;i<this.staticVals.layerCount; i++) {
+		this.srd_layerArr[i] = new srd_layer();
+		this.srd_layerArr[i].copyValuesFromLayer( this.srd_localStore.get(i,"srdLayer") );
+//		console.log("Loading Layer Settings from LocalStorage:"+this.srd_layerArr[i].name);
+	}
+	return 0;
+}
+
+// END: LOAD FROM LOCAL STORE
+
+
 
 srd_document.prototype.storePutHandler = function() {
 //	console.log("LocalStorage Put called!");
