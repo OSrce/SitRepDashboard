@@ -28,14 +28,16 @@ dojo.declare(
 			this.srd_doc = parent_srd_doc;
 			if(view_data.type == 'empty') {
 				this.containerStyle = 'height:100%;width:100%;background-color:gray;';
-			}
 			this.container = new dijit.layout.BorderContainer({
 				style: this.containerStyle,
 				region: 'center',
 			} ); 
 			
 			this.srd_doc.viewContainer.addChild(this.container);
-		}
+	
+
+			}
+	}
 
 
 	}

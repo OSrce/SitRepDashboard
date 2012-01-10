@@ -173,7 +173,9 @@ srd_layer.prototype.getLayer = function() {
 
 srd_layer.prototype.addLayerToMap = function(theMap) {
 	this.map = theMap; 
+	console.log("Adding Layer to Map...");
 	this.map.addLayer( this.layer );
+	console.log("Adding Cotnrols to Map...");
 	if(this.options.editable) {
 		for( theCon in this.srd_drawControls) {
 			this.map.addControl(this.srd_drawControls[theCon]);
@@ -420,9 +422,9 @@ srd_layer.prototype.loadData = function( ) {
 	}
 	// END IF VECTOR
 
-//	console.log("End if Vector");
+	console.log("End if Vector");
 
-//	console.log("TEST5::"+this.srd_featureAttributes.tagName+":::");
+	console.log("TEST5::"+this.srd_featureAttributes.tagName+":::");
 
 	if(this.options.isBaseLayer == false ) {
 		if(this.editPalette == null ) {
@@ -458,7 +460,7 @@ srd_layer.prototype.loadData = function( ) {
 	}
 
 
-//	console.log("end srd_loadData");
+	console.log("end srd_loadData");
 	//Adding the Control to allow for points to be selected and moved 
 //	this.dragControl = new OpenLayers.Control.DragFeature( this.layer ); 
 //	this.map.addControl(dragControl);

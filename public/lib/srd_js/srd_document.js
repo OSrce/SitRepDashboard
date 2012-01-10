@@ -7,7 +7,7 @@ if(dojo.isIE) {
 	dojo.require("dojox.form.uploader.plugins.Flash");
 }
 
-dojo.require("dojox.layout.TableContainer");
+dojo.require("dojox.layout.GridContainer");
 
 //srd_document CLASS 
 function srd_document() {
@@ -112,20 +112,31 @@ srd_document.prototype.srd_init = function() {
 
 
 	this.srd_displayMenuBar();
+//	this.srd_container.startup();
 	// ASSUME view_layer_x/y have been set and that settings are populated
 	// parse and init different views
-	this.viewContainer = new dojox.layout.TableContainer( {
-		cols: this.staticVals.view_layout_x,
+	this.centerPane = new dijit.layout.ContentPane( { 
 		region: 'center',
-		style: 'width:100%;height:100%;'
+		id: 'srd_centerPane'
 	} );
-	this.srd_container.addChild(this.viewContainer);
-	var x = 0;
-	var y = 0;
+	this.srd_container.addChild(this.centerPane);
+		this.viewContainer = new dojox.layout.GridContainer( {
+		nbZones: 1, //this.staticVals.view_layout_x,
+		nbColumns: 1,
+		isAutoOrganized: true
+//		style: "width:100%;height:100%;",
+	}  );
+	dojo.place(this.viewContainer.domNode, this.centerPane.domNode,'first');
+//	this.srd_container.addChild(this.viewContainer);
+	this.viewContainer.startup();
 	this.viewArr = [];
 	for(var xPos in this.staticVals.view_data) {
 		var tmpViewYArr = [];
 		for(var yPos in this.staticVals.view_data[xPos] ) {
+			this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
+			this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
+			this.staticVals.view_data[xPos][yPos].xDim = 4;
+			this.staticVals.view_data[xPos][yPos].yDim = 3;
 			switch( this.staticVals.view_data[xPos][yPos].type ) {
 				case 'empty' :
 					tmpViewYArr[yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
@@ -135,6 +146,10 @@ srd_document.prototype.srd_init = function() {
 					break;
 			}
 			this.viewArr[xPos] = tmpViewYArr;
+		
+			this.staticVals.view_data[xPos][yPos].xPos = 2;
+//			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
+//			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
 		}
 	}
 	this.srd_container.resize();	
@@ -614,18 +629,19 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			var srd_jsDisabled = dojo.byId("srd_jsDisabled");
 			dojo.style(srd_jsDisabled, "display", "none");
 			this.srd_container = new dijit.layout.BorderContainer( { 
-					liveSplitters: "true",
+					gutters: false,
+					splitter: "false",
 					design: "headline",
-					style: "height:100%;width:100%;margin:0px;padding:0px;border:0px;",
+//					style: "height:100%;width:100%;margin:0px;padding:0px;border:0px;overflow:hidden;",
 //				style: "height:100%;width:100%;", 
-				id: 'srd_container' }, 'srd_container' );
-			this.srd_container.placeAt("theSrdDoc");
+				 }, 'theSrdDoc' );
+//			this.srd_container.placeAt("theSrdDoc");
 			this.srd_container.startup();
 		}
 		if(this.srd_menuBar == null) {
 			this.srd_menuBar = new dijit.MenuBar( { 
 				splitter: false,
-				region: 'top',
+				'region': 'top',
 				style: "margin:0px;padding:0px;"
 			} );	
 			//// ICON in LEFT CORNER ////
