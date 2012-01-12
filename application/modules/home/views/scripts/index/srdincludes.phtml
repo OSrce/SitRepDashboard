@@ -1,17 +1,12 @@
 	<head>
-		<style type="text/css">	
-
-		  .dojoxGrid table {
- 		   margin: 0;
-  		}
-		</style>
-
 		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>SitRep</title>
 
 		<link rel="stylesheet" href="lib/SR_Dojo/dijit/themes/tundra/tundra.css" type="text/css" />
 		<link rel="stylesheet" href="lib/SR_Dojo/dojox/layout/resources/ExpandoPane.css" type="text/css" />
+		<link rel="stylesheet" href="lib/SR_Dojo/dojox/layout/resources/GridContainer.css" type="text/css" />
+		<link rel="stylesheet" href="lib/SR_Dojo/dojox/layout/resources/DndGridContainer.css" type="text/css" />
 		<link rel="stylesheet" href="lib/SR_Dojo/srd/form.css" type="text/css" />
 		<link rel="stylesheet" href="lib/SR_Dojo/srd/srd_style.css" type="text/css" />
 		<link rel="stylesheet" href="lib/SR_OpenLayers/theme/default/style.css" type="text/css" />
@@ -46,6 +41,10 @@
 						.dojoxExpandoClosed .dojoxExpandoTitleNode {
 							display:inline;
 						}
+			
+						.gridContainerZone {
+							margin: 0px;
+						}
 
 		</style>	
 
@@ -54,6 +53,7 @@
 
 		<script src="lib/SR_OpenLayers/OpenLayers.js"></script>
 
+		<script src="lib/srd_js/srd_gridContainer.js"></script>
 		<script src="lib/srd_js/srd_editPalette.js"></script>
 		<script src="lib/srd_js/srd_layer.js"></script>
 		<script src="lib/srd_js/srd_view.js"></script>

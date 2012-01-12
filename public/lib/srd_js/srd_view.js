@@ -26,20 +26,34 @@ dojo.declare(
 		constructor : function( view_data, parent_srd_doc) {
 			console.log("srd_view constructor called!");
 			this.srd_doc = parent_srd_doc;
-			if(view_data.type == 'empty') {
-				this.containerStyle = 'height:100%;width:100%;background-color:gray;';
+			this.xPos = view_data.xPos;
+			this.yPos = view_data.yPos;
+			this.xDim = view_data.xDim;
+			this.yDim = view_data.yDim;
+			this.width = 50; //Math.round(100 / this.xDim);
+			this.height = Math.round(100 / this.yDim);
+			this.containerStyle = 'width:100%; height:'+this.height+'%; background-color:black;';
 			this.container = new dijit.layout.BorderContainer({
-				style: this.containerStyle,
-				region: 'center',
-			} ); 
-			
-			this.srd_doc.viewContainer.addChild(this.container);
-	
+				style: this.containerStyle
+			} );	
+			this.srd_doc.viewContainer.addChild(this.container,this.xPos,this.yPos);
 
-			}
-	}
+		},
+		// RESIZE - USED FOR Y DIM SINCE ITS NOT HANDLED AUTOMATICALLY.
+		resize : function( view_data) {
+			this.xPos = view_data.xPos;
+			this.yPos = view_data.yPos;
+			this.xDim = view_data.xDim;
+			this.yDim = view_data.yDim;
+			this.width = 50; //Math.round(100 / this.xDim);
+			this.height = Math.round(100 / this.yDim);
+			this.containerStyle = 'width:100%; height:'+this.height+'%; background-color:black;';
+			this.container.set('style',this.containerStyle);
+			console.log('RESIZE CALLED: height: '+this.height);
+			this.container.resize();
 
-
+		}
+		
 	}
 );
 

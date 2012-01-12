@@ -22,34 +22,15 @@ dojo.declare(
 		//CONSTUCTOR
 		constructor : function( view_data, parent_srd_doc) {
 			console.log("srd_view_map constructor called!");
-			this.srd_doc = parent_srd_doc;
-			this.type = view_data.type;
 			this.start_lat = view_data.start_lat;
 			this.start_lon = view_data.start_lon;
 			this.start_zoom = view_data.start_zoom;
-			this.xPos = view_data.xPos;
-			this.yPos = view_data.yPos;
-			this.xDim = view_data.xDim;
-			this.yDim = view_data.yDim;
 			this.map = this.srd_doc.map;
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
-			this.width = 50; //Math.round(100 / this.xDim);
-			this.height = 50; //Math.round(100 / this.yDim);
-			if(view_data.type == "map") {
-//				this.containerStyle = 'width:'+this.width+'%; height:'+this.height+'%; background-color:blue;';
-				this.containerStyle = 'width:300px; height:300px; background-color:blue;';
-			}
-			this.container = new dijit.layout.BorderContainer({
-				style: this.containerStyle,
-				region: 'center',
-			} ); 
-
 			this.srd_mapContent = new dijit.layout.ContentPane(
 	     {  splitter: 'false', style: "background-color:white;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
 			this.container.addChild(this.srd_mapContent);
 			this.mapDiv = dojo.create("div",{ 'class':'map' }, this.srd_mapContent.domNode);
-//			this.srd_doc.viewContainer.addChild(this.srd_mapContent);
-			this.srd_doc.viewContainer.addChild(this.container,this.xPos,this.yPos);
 			this.map_init();
 		},
 		map_init : function() {

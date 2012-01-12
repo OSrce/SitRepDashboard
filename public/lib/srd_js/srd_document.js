@@ -113,6 +113,9 @@ srd_document.prototype.srd_init = function() {
 
 	this.srd_displayMenuBar();
 //	this.srd_container.startup();
+
+	dojo.addOnLoad(function() {
+
 	// ASSUME view_layer_x/y have been set and that settings are populated
 	// parse and init different views
 	this.centerPane = new dijit.layout.ContentPane( { 
@@ -120,23 +123,34 @@ srd_document.prototype.srd_init = function() {
 		id: 'srd_centerPane'
 	} );
 	this.srd_container.addChild(this.centerPane);
-		this.viewContainer = new dojox.layout.GridContainer( {
-		nbZones: 1, //this.staticVals.view_layout_x,
-		nbColumns: 1,
-		isAutoOrganized: true
+		this.viewContainer = new srd_gridContainer( {
+		nbZones: this.staticVals.view_layout_x,
+//		nbColumns: 2,
+		isAutoOrganized: true,
+		hasResizeableColumns : true
+//		style: "background-color:black;margin:0px;border:0px;padding:0px;"
 //		style: "width:100%;height:100%;",
 	}  );
 	dojo.place(this.viewContainer.domNode, this.centerPane.domNode,'first');
 //	this.srd_container.addChild(this.viewContainer);
 	this.viewContainer.startup();
 	this.viewArr = [];
-	for(var xPos in this.staticVals.view_data) {
+//	for(var xPos in this.staticVals.view_data) {
+		for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
+		if( !this.staticVals.view_data[xPos] ) {
+			this.staticVals.view_data[xPos] = [];
+		}
 		var tmpViewYArr = [];
-		for(var yPos in this.staticVals.view_data[xPos] ) {
+//		for(var yPos in this.staticVals.view_data[xPos] ) {
+		for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
+			if( !this.staticVals.view_data[xPos][yPos] ) {
+			this.staticVals.view_data[xPos][yPos] = [];
+				this.staticVals.view_data[xPos][yPos].type = 'empty';
+			}
 			this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
 			this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
-			this.staticVals.view_data[xPos][yPos].xDim = 4;
-			this.staticVals.view_data[xPos][yPos].yDim = 3;
+			this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
+			this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
 			switch( this.staticVals.view_data[xPos][yPos].type ) {
 				case 'empty' :
 					tmpViewYArr[yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
@@ -146,13 +160,21 @@ srd_document.prototype.srd_init = function() {
 					break;
 			}
 			this.viewArr[xPos] = tmpViewYArr;
-		
+/*		
+			this.staticVals.view_data[xPos][yPos].xPos = 1;
+			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
+
+			this.staticVals.view_data[xPos][yPos].yPos = 1;
+			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
 			this.staticVals.view_data[xPos][yPos].xPos = 2;
-//			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
-//			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
+			this.staticVals.view_data[xPos][yPos].yPos = 2;
+			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
+*/
 		}
 	}
 	this.srd_container.resize();	
+
+	}.bind(this) );
 
 //	this.srd_mapDisplay();
 /*
@@ -170,6 +192,7 @@ srd_document.prototype.srd_init = function() {
 //		this.srd_toggleEditPanel(null);
 	}
 */
+
 
 }
 // END SRD_DOCUMENT CONSTRUCTOR
@@ -631,7 +654,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			this.srd_container = new dijit.layout.BorderContainer( { 
 					gutters: false,
 					splitter: "false",
-					design: "headline",
+					design: "headline"
 //					style: "height:100%;width:100%;margin:0px;padding:0px;border:0px;overflow:hidden;",
 //				style: "height:100%;width:100%;", 
 				 }, 'theSrdDoc' );
@@ -713,6 +736,21 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				onClick: function() { alert("Place TEST Here") }.bind(this)
 //				onClick: function() { this.srd_layerArr[13].uploadLayer(); }.bind(this)
 			}));
+			//// View Menu ////
+			this.srd_viewMenu = new dijit.Menu({});
+			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+				label: "View",
+				popup: this.srd_viewMenu
+			}) );
+			this.srd_viewMenu.addChild(new dijit.MenuItem({
+				label: "Selected View: SomeView",
+				onClick: function() { alert("Place TEST Here") }.bind(this)
+			}));
+
+
+			
+	
+
 			//// Tools Menu ////
 			var srd_toolsMenu = new dijit.Menu({});
 			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
@@ -737,6 +775,42 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				popup:this.srd_uploadMenu
 			}));
 			// END UPLOAD LAYER MENU
+
+
+			//// Window Menu ////
+			this.srd_windowMenu = new dijit.Menu({});
+			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+				label: "Window",
+				popup: this.srd_windowMenu
+			}) );
+			// ROW SIZE MENU DROP DOWN
+			this.srd_windowRowMenu = new dijit.Menu();
+			for(var y=1;y<5;y++) {
+				this.srd_windowRowMenu.addChild( new dijit.MenuItem( {
+					label: y,
+					value: y,
+					srd_doc: this,
+					onClick: function() { this.srd_doc.srd_changeViewGridDimensions('y',this.value) }
+				} ) );
+			}
+			this.srd_windowMenu.addChild(new dijit.PopupMenuItem({
+				label: "View Rows: "+this.staticVals.view_layout_y,
+				popup:this.srd_windowRowMenu	
+			}));
+			// COLUMN SIZE MENU DROP DOWN
+			this.srd_windowColMenu = new dijit.Menu();
+			for(var x=1;x<5;x++) {
+				this.srd_windowColMenu.addChild( new dijit.MenuItem( {
+					label: x,
+					value: x,
+					srd_doc: this,
+					onClick: function() { this.srd_doc.srd_changeViewGridDimensions('x',this.value) }
+				} ) );
+			}
+			this.srd_windowMenu.addChild(new dijit.PopupMenuItem({
+				label: "View Columns: "+this.staticVals.view_layout_x,
+				popup:this.srd_windowColMenu	
+			}));
 
 				
 			this.srd_menuBar.startup();
@@ -1037,9 +1111,68 @@ srd_document.prototype.srd_selectEditLayer = function( theId ) {
 //	console.log("srd_selectEditLayer Finished");
 }
 
-
-
-
+srd_document.prototype.srd_changeViewGridDimensions = function(theDimType,theDim) {
+	console.log("changeViewGridDim called: "+theDimType+", val: "+theDim);
+	if(theDimType == 'x') {
+		if(theDim > this.staticVals.view_layout_x) {
+			this.viewContainer.setColumns(theDim);
+			for(var xPos=this.staticVals.view_layout_x;xPos<theDim;xPos++) {
+				if( !this.staticVals.view_data[xPos] ) {
+					this.staticVals.view_data[xPos] = [];
+				}
+				var tmpViewYArr = [];
+				for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
+					if( !this.staticVals.view_data[xPos][yPos] ) {
+						this.staticVals.view_data[xPos][yPos] = [];
+						this.staticVals.view_data[xPos][yPos].type = 'empty';
+					this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
+					this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
+					this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
+					this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
+						tmpViewYArr[yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
+					} else {
+						tmpViewYArr[yPos] = this.viewArr[xPos][yPos];
+					}
+				}
+				this.viewArr[xPos] = tmpViewYArr;
+			}
+		} else {
+			//PRESENT WARNING ABOUT LOSING VIEWS...
+		}
+		this.staticVals.view_layout_x = theDim;
+	} else if(theDimType == 'y') { 
+		if(theDim > this.staticVals.view_layout_y) {
+//			this.viewContainer.setColumns(theDim);
+			for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
+				if( !this.staticVals.view_data[xPos] ) {
+					this.staticVals.view_data[xPos] = [];
+				}
+				if( !this.viewArr[xPos] ) {
+					this.viewArr[xPos] = [];
+				}
+				for(var yPos=0;yPos<theDim;yPos++) {
+					if( !this.staticVals.view_data[xPos][yPos] ) {
+						this.staticVals.view_data[xPos][yPos] = [];
+						this.staticVals.view_data[xPos][yPos].type = 'empty';
+					}
+					this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
+					this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
+					this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
+					this.staticVals.view_data[xPos][yPos].yDim = theDim;
+					if(!this.viewArr[xPos][yPos]) {
+						this.viewArr[xPos][yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
+					} else {
+							this.viewArr[xPos][yPos].resize(this.staticVals.view_data[xPos][yPos]);
+					}
+				}
+			}
+		} else {
+			//PRESENT WARNING ABOUT LOSING VIEWS...
+		}
+		this.staticVals.view_layout_x = theDim;
+	}
+	this.srd_container.resize();
+}
 
 
 
