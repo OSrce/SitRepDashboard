@@ -81,12 +81,12 @@ function srd_document() {
 	this.selectedView = null; 
 
 	this.viewType =  {
-		empty 		: 'empty',
-		map 			: 'map',
-		datagrid 	: 'datagrid',
-		layergrid	:	'layergrid',
-		admin			:	'admin',
-		video			:	'video'
+		empty 		: 'srd_view',
+		map 			: 'srd_view_map',
+		datagrid 	: 'srd_view_datagrid',
+		layergrid	:	'srd_view_layergrid',
+		admin			:	'srd_view_admin',
+		video			:	'srd_view_video'
 	}
 
 	this.viewDefaults = {
@@ -168,33 +168,17 @@ srd_document.prototype.srd_init = function() {
 //		for(var yPos in this.staticVals.view_data[xPos] ) {
 		for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
 			if( !this.staticVals.view_data[xPos][yPos] ) {
-			this.staticVals.view_data[xPos][yPos] = [];
+				this.staticVals.view_data[xPos][yPos] = [];
 				this.staticVals.view_data[xPos][yPos].type = 'empty';
 			}
 			this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
 			this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
 			this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
 			this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
-			switch( this.staticVals.view_data[xPos][yPos].type ) {
-				case 'empty' :
-					tmpViewYArr[yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
-					break;
-				case 'map' :
-					tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
-					break;
-			}
-			this.viewArr[xPos] = tmpViewYArr;
-/*		
-			this.staticVals.view_data[xPos][yPos].xPos = 1;
-			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
 
-			this.staticVals.view_data[xPos][yPos].yPos = 1;
-			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
-			this.staticVals.view_data[xPos][yPos].xPos = 2;
-			this.staticVals.view_data[xPos][yPos].yPos = 2;
-			tmpViewYArr[yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
-*/
+			tmpViewYArr[yPos] = new window[ this.viewType[this.staticVals.view_data[xPos][yPos].type] ](this.staticVals.view_data[xPos][yPos], this);
 		}
+		this.viewArr[xPos] = tmpViewYArr;
 	}
 	this.srd_container.resize();	
 
@@ -1234,14 +1218,8 @@ srd_document.prototype.srd_changeViewType = function(theType) {
 		for(var theVar in this.viewDefaults[theType] ) {
 			this.staticVals.view_data[xPos][yPos][theVar] = this.viewDefaults[theType][theVar];
 		}
-		switch(theType) {
-		case 'empty' :
-			this.viewArr[xPos][yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
-			break;
-		case 'map' :
-			this.viewArr[xPos][yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
-			break;
-		}
+//      console.log( "NEW VIEW TYPE:"+this.viewType[theType] );
+			this.viewArr[xPos][yPos] = new window[ this.viewType[theType] ](this.staticVals.view_data[xPos][yPos], this);
 		this.selectedView = this.viewArr[xPos][yPos];
 		this.viewContainer.resize();
 	}
