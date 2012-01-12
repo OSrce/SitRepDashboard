@@ -9,7 +9,7 @@ dojo.declare(
 		// Minimum row width in percentage
 		minRowHeight: 20,
 		// Minimum child height in pixels
-		minChildHeight: 150,
+		minChildHeight: 150
 		
 
 

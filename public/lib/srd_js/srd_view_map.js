@@ -25,7 +25,7 @@ dojo.declare(
 			this.start_lat = view_data.start_lat;
 			this.start_lon = view_data.start_lon;
 			this.start_zoom = view_data.start_zoom;
-			this.map = this.srd_doc.map;
+//			this.map = this.srd_doc.map;
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_mapContent = new dijit.layout.ContentPane(
 	     {  splitter: 'false', style: "background-color:white;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );

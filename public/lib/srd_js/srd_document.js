@@ -78,6 +78,30 @@ function srd_document() {
 	// sub-classes of srd_view. srd_view's described in staticVals.view_data.
 	this.viewContainer = null; 
 	this.viewArr = null; 
+	this.selectedView = null; 
+
+	this.viewType =  {
+		empty 		: 'empty',
+		map 			: 'map',
+		datagrid 	: 'datagrid',
+		layergrid	:	'layergrid',
+		admin			:	'admin',
+		video			:	'video'
+	}
+
+	this.viewDefaults = {
+		empty : {
+			type : 'empty'
+		},
+		map 	: {
+			type : 'map',
+			start_lat : 40.713,
+			start_lon : -73.996,
+			start_zoom : 12
+		}
+	}
+
+
 
 //	this.srd_init();	
 }
@@ -742,11 +766,29 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				label: "View",
 				popup: this.srd_viewMenu
 			}) );
-			this.srd_viewMenu.addChild(new dijit.MenuItem({
-				label: "Selected View: SomeView",
-				onClick: function() { alert("Place TEST Here") }.bind(this)
+			var theLabel = "Selected View : ";
+			if(this.selectedView) {
+				theLabel = theLabel+this.data.type+" "+this.data.xPos+","+this.data.yPos;
+			}
+			this.srd_viewMenuSelected = new dijit.MenuItem({
+				label: theLabel
+			})
+			this.srd_viewMenu.addChild(this.srd_viewMenuSelected);
+			// VIEW TYPE MENU DROP DOWN
+			this.srd_viewTypeMenu = new dijit.Menu();
+			for(var theType in this.viewType) {
+				this.srd_viewTypeMenu.addChild( new dijit.MenuItem( {
+					label: theType,
+					value: theType,
+					srd_doc: this,
+					onClick: function() { this.srd_doc.srd_changeViewType(this.value) }
+				} ) );
+			}
+			this.srd_viewMenu.addChild(new dijit.PopupMenuItem({
+				label: "Change Type: ",
+				popup:this.srd_viewTypeMenu
 			}));
-
+	
 
 			
 	
@@ -1173,6 +1215,41 @@ srd_document.prototype.srd_changeViewGridDimensions = function(theDimType,theDim
 	}
 	this.srd_container.resize();
 }
+
+srd_document.prototype.srd_updateViewMenu = function() {
+	var theLabel = "Selected View : ";
+	if(this.selectedView) {
+		theLabel = theLabel+this.selectedView.data.type+" "+this.selectedView.data.xPos+","+this.selectedView.data.yPos;
+	}
+	this.srd_viewMenuSelected.set('label', theLabel);
+}
+
+
+srd_document.prototype.srd_changeViewType = function(theType) {
+	if(this.selectedView && this.selectedView.data.type != theType) {	
+		var xPos = this.selectedView.data.xPos;
+		var yPos = this.selectedView.data.yPos;
+		this.selectedView.destroy();
+		delete this.viewArr[xPos][yPos];
+		for(var theVar in this.viewDefaults[theType] ) {
+			this.staticVals.view_data[xPos][yPos][theVar] = this.viewDefaults[theType][theVar];
+		}
+		switch(theType) {
+		case 'empty' :
+			this.viewArr[xPos][yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
+			break;
+		case 'map' :
+			this.viewArr[xPos][yPos] = new srd_view_map(this.staticVals.view_data[xPos][yPos], this);
+			break;
+		}
+		this.selectedView = this.viewArr[xPos][yPos];
+		this.viewContainer.resize();
+	}
+}
+
+
+
+
 
 
 
