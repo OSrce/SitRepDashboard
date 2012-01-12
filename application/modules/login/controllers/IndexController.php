@@ -82,7 +82,7 @@ class Login_IndexController extends Zend_Controller_Action {
 					$logger->log("LDAP: getEntry Success :".print_r($ldapUserInfo, true),Zend_Log::DEBUG);
 
 					$user = $userTable->createRow();
-					$user->username = $options['username'];
+/*					$user->username = $options['username'];
 					$user->dn = $ldapUserInfo["dn"];
 					if( array_key_exists("nypdtaxid" , $ldapUserInfo) ) {
 						$user->uid = $ldapUserInfo["nypdtaxid"][0];
@@ -116,6 +116,26 @@ class Login_IndexController extends Zend_Controller_Action {
 					if( array_key_exists("mail" , $ldapUserInfo) ) {
 						$user->email = $ldapUserInfo["mail"][0];
 					}
+*/
+					$ldapInfoArr = $this->_options['srd']['userfromldap'];
+					foreach ($ldapInfoArr as $userVar => $ldapVar) {
+						if( $ldapVar != '' && array_key_exists($ldapVar , $ldapUserInfo) ) {
+							$logger->log("LDAP: $userVar, $ldapVar",Zend_Log::DEBUG);
+							$user[$userVar] = $ldapUserInfo[$ldapVar][0];
+						} elseif ( $userVar == 'uid' ) {
+							$nextUid = $userTable->fetchRow($userTable->select()->from('sr_users','MIN(uid)'));
+							if($nextUid->min > 0) {
+								$uid = -100;
+							} else {
+								$uid = $nextUid->min - 1;
+							}
+							$user->uid = $uid;
+						} elseif ( $userVar == 'gid' ) {
+							$user->gid = -1;
+						}	
+
+					}
+
 					// DEFAULTS FOR USERS NOT IN DB :
 					$user->view_layout_x = 1;
 					$user->view_layout_y = 1;

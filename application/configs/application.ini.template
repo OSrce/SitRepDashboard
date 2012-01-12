@@ -28,12 +28,12 @@ resources.db.params.password = ""
 resources.db.params.dbname = "sr_data"
 resources.db.isDefaultTableAdapter = true
 
-ldap.server1.host = 10.112.24.101
+ldap.server1.host = SOME_IP
 ldap.server1.port = 389
 ldap.server1.accountCanonicalForm  = 3
-ldap.server1.accountDomainName  = nypd.finest
-ldap.server1.accountDomainNameShort  = NYPDFINEST
-ldap.server1.baseDn = "DC=nypd,DC=finest"
+ldap.server1.accountDomainName  = some.domain
+ldap.server1.accountDomainNameShort  = SOMEDOMAIN
+ldap.server1.baseDn = "DC=some,DC=domain"
 
 
 resources.cachemanager.acl.frontend.name = Core

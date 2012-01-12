@@ -32,7 +32,8 @@ dojo.declare(
 			this.yDim = view_data.yDim;
 			this.width = 50; //Math.round(100 / this.xDim);
 			this.height = Math.round(100 / this.yDim);
-			this.containerStyle = 'width:100%; height:'+this.height+'%; background-color:black;';
+//			this.containerStyle = 'width:100%; height:'+this.height+'%;margin:0px;border:0px;padding:0px; background-color:black;';
+			this.containerStyle = 'width:100%; height:'+this.height+'%;background-color:black;';
 			this.container = new dijit.layout.BorderContainer({
 				style: this.containerStyle
 			} );	
