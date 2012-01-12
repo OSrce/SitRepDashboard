@@ -4,10 +4,10 @@ class Login_IndexController extends Zend_Controller_Action {
 	
 	private $options;
 
-
 	public function init() {
 		$this->_options = $this->getInvokeArg('bootstrap')->getOptions();
 
+		$this->view->srd_login_opts = $this->_options['srd']['login']; 
 	}
 
 	public function indexAction() {
@@ -82,8 +82,8 @@ class Login_IndexController extends Zend_Controller_Action {
 					$logger->log("LDAP: getEntry Success :".print_r($ldapUserInfo, true),Zend_Log::DEBUG);
 
 					$user = $userTable->createRow();
-/*					$user->username = $options['username'];
-					$user->dn = $ldapUserInfo["dn"];
+					$user->username = $options['username'];
+/*					$user->dn = $ldapUserInfo["dn"];
 					if( array_key_exists("nypdtaxid" , $ldapUserInfo) ) {
 						$user->uid = $ldapUserInfo["nypdtaxid"][0];
 					} else {

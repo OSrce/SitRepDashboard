@@ -26,7 +26,16 @@
 				<div dojoType="dijit.layout.ContentPane" style="width:20%;" region="left" ></div>
 				<div dojoType="dijit.layout.ContentPane" style="width:20%;" region="right" ></div>
 				<div dojoType="dijit.layout.ContentPane" style="height:90px;" region="top" >
-					<center><h1>SitRep Demo Server</h1></center>
+<?php
+				echo $this->srd_login_opts['leftimage'];
+				echo $this->srd_login_opts['rightimage'];
+
+?>
+					<center><h1>
+<?php	
+					echo $this->srd_login_opts['title'];	
+?>			
+					</h1></center>
 				
 				</div>
 				<div dojoType="dijit.layout.ContentPane" title="Login" style="background:grey;width:200;height:50;padding:0px" region="center">

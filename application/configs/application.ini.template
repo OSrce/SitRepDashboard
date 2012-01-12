@@ -35,15 +35,19 @@ ldap.server1.accountDomainName  = some.domain
 ldap.server1.accountDomainNameShort  = SOMEDOMAIN
 ldap.server1.baseDn = "DC=some,DC=domain"
 
-resources.srd.userfromldap.username = 'username'
-resources.srd.userfromldap.dn = 'dn'
-resources.srd.userfromldap.uid = 'nypdtaxid'
-resources.srd.userfromldap.gid = 'nypdcmdcode'
-resources.srd.userfromldap.title = 'title'
-resources.srd.userfromldap.titlecode = 'nypdtitlecode'
-resources.srd.userfromldap.lastname = 'sn'
-resources.srd.userfromldap.firstname = 'givenname'
-resources.srd.userfromldap.email = 'mail'
+srd.login.title = "SitRep Demo Server"
+srd.login.leftimage = 'IMG HERE'
+srd.login.rightimage = 'IMG HERE'
+
+srd.userfromldap.username = 'username'
+srd.userfromldap.dn = 'dn'
+srd.userfromldap.uid = 'nypdtaxid'
+srd.userfromldap.gid = 'nypdcmdcode'
+srd.userfromldap.title = 'title'
+srd.userfromldap.titlecode = 'nypdtitlecode'
+srd.userfromldap.lastname = 'sn'
+srd.userfromldap.firstname = 'givenname'
+srd.userfromldap.email = 'mail'
 
 resources.cachemanager.acl.frontend.name = Core
 resources.cachemanager.acl.frontend.customFrontendNaming = false
