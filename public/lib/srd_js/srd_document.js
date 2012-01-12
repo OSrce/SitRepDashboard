@@ -101,10 +101,8 @@ function srd_document() {
 		}
 	}
 
-
-
-//	this.srd_init();	
 }
+// END srd_document CLASS DEF
 
 // SRD_DOCUMENT CONSTRUCTOR
 srd_document.prototype.srd_init = function() {
@@ -183,24 +181,6 @@ srd_document.prototype.srd_init = function() {
 	this.srd_container.resize();	
 
 	}.bind(this) );
-
-//	this.srd_mapDisplay();
-/*
-	if(this.staticVals.docCount == null) {
-		// Local Storage is empty, need to load from xml (defaults)
-		console.log( "LocalStore is empty, loading from xml");
-		this.loadDefaults();
-	} else {	
-		//THIS FUNCTION CREATES THE MAP AND ALL THE LAYERS.
-		dojo.addOnLoad(function() {
-			this.map_init();
-		}.bind(this) );
-		//TESTING ONLY
-//		this.srd_createWhiteboard();
-//		this.srd_toggleEditPanel(null);
-	}
-*/
-
 
 }
 // END SRD_DOCUMENT CONSTRUCTOR
@@ -362,252 +342,6 @@ srd_document.prototype.defaultSettingsLoaded = function(items,request) {
 
 		this.map_init();
 }
-
-
-srd_document.prototype.map_init = function() {
-
-	if(this.map == null) {
-//		this.map = new OpenLayers.Map("srd_docContent", { 
-		this.map = new OpenLayers.Map("srd_docContent", { 
-			controls: [
-				new OpenLayers.Control.Navigation(),
-				new OpenLayers.Control.PanZoomBar(),
-				new OpenLayers.Control.Attribution(),
-				new OpenLayers.Control.KeyboardDefaults()
-			],
-				projection : "EPSG:900913",
-				displayProjection: "EPSG:4326"
-//				units : 'degrees'
-//			resolutions: [272989.386733,136494.693366,68247.3466832,34123.6733416,17061.8366708,8530.9183354,4265.4591677,2132.72958385,1000,500,250,125   ]
-//			maxResolution: 0.175 
-		} );
-	}
-////////////////////////
-///// LAYER CREATION ////
-
-/*
-this.map.setOptions( 
-	{ projection :  new OpenLayers.Projection("EPSG:900913") ,
-//	{ projection :  new OpenLayers.Projection("EPSG:4326") ,
-	displayProjection : new OpenLayers.Projection("EPSG:4326") }
-);
-*/
-
-
-// Iterate through each srd_layer and call loadData and addLayerToMap)
-
-for(var i in this.srd_layerArr ) {
-//	console.log("Loading Layer:"+this.srd_layerArr[i].name+":::");
-	this.srd_layerArr[i].loadData();
-	this.srd_layerArr[i].addLayerToMap(this.map);
-
-	// BEGIN ADD layer to uploadMenu
-/*	this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
-			label: this.srd_layerArr[i].options.name,
-			srd_doc: this,
-			tmpId: i,
-			onClick: function() { this.srd_doc.srd_layerArr[this.tmpId].uploadLayer() }
-	} ) );
-*/
-	// END ADD LAYER TO uploadMenu
-
-}
-
-
-var googleProjection = new OpenLayers.Projection("EPSG:900913");
-var mapProjection = new OpenLayers.Projection("EPSG:4326");
-var lonlat = new OpenLayers.LonLat(this.staticVals.start_lon, this.staticVals.start_lat).transform( mapProjection, googleProjection  );
-
-this.map.setCenter( lonlat, this.staticVals.start_zoom ); 
-
-
-console.log("Should be displaying Map at this point!");
-
-
-// Adding the Control for the Layer select 
-this.map.addControl(new OpenLayers.Control.LayerSwitcher() );
-//Adding control for tracking mouse movement 
-/*
-this.map.addControl(new OpenLayers.Control.MousePosition( {  
-	displayProjection: new OpenLayers.Projection("EPSG:4326")
-} ) );
-*/
-/*
-
-var sr_dynamicLayers = { 
-	"Whiteboard": whiteboard
-};
-
-var sr_dynamicLayer_layer = new Array();
-//for(var layerName in sr_dynamicLayers ) {
-//	alert('LayerName :'+layerName);
-//	sr_dynamicLayer_layer.push( sr_dynamicLayers{layerName} );
-//}
-
-for(var layerName in sr_dynamicLayers) {
-		sr_dynamicLayer_layer.push( sr_dynamicLayers[layerName].layer );
-}
-
-selectControl = new OpenLayers.Control.SelectFeature( 
-	sr_dynamicLayer_layer,
-	{
-		clickout: true, toggle: false,
-		multiple: false, hover: false,
-		toggleKey: "ctrlKey", // ctrl key removes from selection
-		multipleKey: "shiftKey" // shift key adds to selection
-	}
-);
-this.map.addControl(selectControl);
-//selectControl.activate();
-
-for(var layerName in sr_dynamicLayers ) {
-	sr_dynamicLayers[layerName].turnOnEvents();
-}
-
-//Add the events we wish to register
-//map.events.register("mousemove", map, function(e) {
-//	var position = this.events.getMousePosition(e);
-//	OpenLayers.Util.getElement("coords").innerHTML = position;
-//});
-
-
-
-var save = new OpenLayers.Control.Button({
-        title: "Save Changes",
-        trigger: function() {
-//            if(edit.feature) {
-//                edit.selectControl.unselectAll();
-//            }
-						for(var layerName in sr_dynamicLayers ) {
-							sr_dynamicLayers[layerName].saveStrategy.save();
-						}
-        },
-        displayClass: "olControlSaveFeatures"
-    });
-    panel.addControls([save  ]);
-    this.map.addControl(panel);
-*/
-
-
-/*
-editTools = new srd_edit(this.map, sr_dynamicLayers);
-editTools.loadEditTools();
-
-var  removeControl = new OpenLayers.Control.SelectFeature(
-										sr_dynamicLayer_layer, {
-												clickout: true,
-												toggle: false,
-												hover: false,
-												title: "Delete",
-												displayClass: "olControlDelete",
-												onSelect: function (theFeat) {
-													for(var layerName in sr_dynamicLayers ) {
-														if( sr_dynamicLayers[layerName].layer.getFeatureByFid(theFeat.fid) ) {
-														if (confirm('Are you sure you want to delete this feature from Overlay : '+layerName+'?')) {
-															theFeat.state = OpenLayers.State.DELETE;
-															if( !theFeat.attributes.gid) {
-																sr_dynamicLayers[layerName].layer.removeFeatures([theFeat]);
-															}
-//													} else {
-//														this.unselect(e.layer.feature);
-														}
-													}	
-
-													}	
-											}
-										} );
-
-
-var drawLayer = whiteboard.layer;
-   drawControls = {
-                    point: new OpenLayers.Control.DrawFeature( drawLayer,
-                                OpenLayers.Handler.Point),
-                    line: new OpenLayers.Control.DrawFeature( drawLayer,
-                                OpenLayers.Handler.Path),
-                    polygon: new OpenLayers.Control.DrawFeature( drawLayer,
-                                OpenLayers.Handler.Polygon),
-										remove: removeControl,
-										select: selectControl
-
-                };
-*/
-/*
-  removeControl.events.register("onSelect", function(e, ) {
-			if (confirm('Are you sure you want to delete this feature?')) {
-				e.layer.feature.state = OpenLayers.State.DELETE;
-//				drawLayer.removeFeatures([e.feature]);
-//				drawLayer.destroyFeatures([e.feature]);
-//				removeControl.deactivate();
-			} else {
-				removeControl.unselect(e.layer.feature);
-			}
-		});
-*/
-
-/*
-                for(var key in drawControls) {
-                    this.map.addControl(drawControls[key]);
-                }
-
-								theSelectedControl = selectControl;
-                document.getElementById('selectToggle').checked = true;
-
-*/
-
-					/// CODE IS A MESS, NEED TO FIX :
-					// use dojo.form.FilteringSelect to select which layer you want to have editing enabled on.
-
-
-//DEV-TESTING  commented out below section since not being used
-//right now.					
-//					var editLayerSelect = new dijit.form.FilteringSelect( {
-//						id: "layerEditSelect",
-//						name: "layerEditSel",
-//						value: "NONE SELECTED",
-//						store: srd_layerStore,
-//						searchAttr: "name"
-//						}, "layerEditSelect"
-//					);
-
-
-/*	console.log("KeyPress Connected!");
-	dojo.connect( dojo.byId("theSrdDoc"),
-								"onkeypress",
-								function( ) {
-										alert("Key Pressed!");
-								}
-							);
-*/
-
-	console.log("END map_init function");
-}
-/// END map_init Function
-
-/*
-// activate 
-function activateDrag() {
-	dragControl.activate();
-}
-
-  function toggleControl(element) {
-                for(key in drawControls) {
-                    var control = drawControls[key];
-                    if(element.value == key && element.checked) {
-                        control.activate();
-												theSelectedControl = control;
-                    } else {
-                        control.deactivate();
-                    }
-                }
-								panel.activate();
-//								if(element.value == "noneToggle") {
-//									selectControl.activate();
-//								}
-            }
-
-
-
-*/
 
 srd_document.prototype.srd_createWhiteboard = function() {
 	var theDate = new Date();
@@ -853,35 +587,6 @@ srd_document.prototype.srd_displayMenuBar = function() {
 	return;
 }
 
-srd_document.prototype.srd_mapDisplay = function() {
-	this.srd_displayMenuBar();
-
-	dojo.addOnLoad(function() {
-		if(this.srd_mapContent == null) {
-			this.srd_mapContent = new dijit.layout.ContentPane(
-	      {  splitter: 'false', style: "background-color:white;border:0px;margin:0px;padding:0px;", region: 'center', content: '<div id="srd_docContent" class="map"></div>' }, 'srd_center');
-		}
-
-		this.srd_container.addChild(this.srd_mapContent);
-	}.bind(this) );
-
-	return;
-}
-
-srd_document.prototype.srd_adminDisplay = function() {
-	this.srd_displayMenuBar();
-	
-	
-	return;
-}
-
-srd_document.prototype.srd_dataDisplay = function() {
-	this.srd_displayMenuBar();
-	
-
-	return;
-}
-
 
 srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
 	dojo.addOnLoad( function() {
@@ -1019,34 +724,6 @@ srd_document.prototype.saveLayer = function( layerId ) {
 			document.location.href = "lib/srd_php/UploadLayer.php?fileName="+this.content.fileName;
 		}
 	} );
-
-/*
-	if(this.openFileForm != null) {
-		delete this.openFileForm;
-	}
-
-	this.openFileForm = new dijit.form.Form( { 
-			action:'UploadLayer.php',
-			method: 'post',
-			encType:"multipart/form-data"
-		} );
-//	this.openFileForm.appendTo( dojo.body() );	
-		console.log("ok so far");
-		dojo.body().appendChild(this.openFileForm.domNode);
-		console.log("test2");
-		fileNameWidget = dojo.create("input",
-											{ type:"hidden",name:"fileName",value:this.srd_layerArr[layerId].name});
-		this.openFileForm.domNode.appendChild(fileNameWidget.domNode);
-		
-		layerDataWidget = dojo.create("input",
-											{ type:"hidden",name:"layerData",value:test},
-											this.openFileForm);
-		console.log("test3");
-		this.openFileForm.submit();	
-		console.log("test4");
-*/
-
-	
 }
 
 srd_document.prototype.openFile = function() {
@@ -1224,14 +901,6 @@ srd_document.prototype.srd_changeViewType = function(theType) {
 		this.viewContainer.resize();
 	}
 }
-
-
-
-
-
-
-
-
 
 
 
