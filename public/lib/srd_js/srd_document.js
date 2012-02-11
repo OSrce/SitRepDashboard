@@ -9,6 +9,9 @@ if(dojo.isIE) {
 
 dojo.require("dojox.layout.GridContainer");
 
+dojo.require("dojox.data.QueryReadStore");
+
+
 //srd_document CLASS 
 function srd_document() {
 	//THE UI VARS
@@ -572,7 +575,22 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				popup:this.srd_windowColMenu	
 			}));
 
-				
+			this.srsearch_store = new dojox.data.QueryReadStore( {
+				url: "/srsearch/index"
+			} );
+
+			// LIVE SEARCH IN MENUBAR
+			this.srsearch_box = new dijit.form.ComboBox( {
+				name: "srsearch",
+				placeHolder: "Search for something",
+				store: this.srsearch_store,
+				onChange: function() {
+					dojo.byId("value").innerHTML = dijit.byId("srsearch").get("value");
+				}
+			} );
+			this.srd_menuBar.addChild(this.srsearch_box);
+
+			//END PLACING MENU ITEMS, LETS FIRE UP THE MENUBAR!				
 			this.srd_menuBar.startup();
 
 		}
