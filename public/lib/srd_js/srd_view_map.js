@@ -96,8 +96,16 @@ dojo.declare(
 			this.map.addControl(new OpenLayers.Control.LayerSwitcher() );
 
 				console.log("END map_init function");
-		}
+		},
+		goToPoint : function(lat, lon) {
+			console.log ("Go To Point called: lat="+lat+", lon="+lon);
+			var googleProjection = new OpenLayers.Projection("EPSG:900913");
+			var mapProjection = new OpenLayers.Projection("EPSG:4326");
+			var lonlat = new OpenLayers.LonLat(lon, lat).transform( mapProjection, googleProjection  );
 
+
+			this.map.panTo(lonlat);
+		}
 	}
 );
 

@@ -133,7 +133,9 @@
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
           <modelsDirectory>
-            <dbTableDirectory enabled="false"/>
+            <dbTableDirectory>
+              <dbTableFile dbTableName="Search"/>
+            </dbTableDirectory>
           </modelsDirectory>
           <viewsDirectory>
             <viewScriptsDirectory>

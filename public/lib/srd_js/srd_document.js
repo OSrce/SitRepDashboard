@@ -10,6 +10,21 @@ if(dojo.isIE) {
 dojo.require("dojox.layout.GridContainer");
 
 dojo.require("dojox.data.QueryReadStore");
+dojo.require("dojox.data.JsonRestStore");
+dojo.require("dojo.store.DataStore");
+dojo.require("dojo.store.JsonRest");
+
+dojo.provide("ComboBoxReadStore");
+dojo.declare(
+	"ComboBoxReadStore",
+	dojox.data.QueryReadStore,
+	{
+		fetch:function(request) {
+			request.serverQuery = {q:request.query.name};
+			return this.inherited("fetch", arguments);
+		}
+	}
+);
 
 
 //srd_document CLASS 
@@ -575,21 +590,51 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				popup:this.srd_windowColMenu	
 			}));
 
-			this.srsearch_store = new dojox.data.QueryReadStore( {
-				url: "/srsearch/index"
+/*			var theSchema = {
+				"type" : "object",
+				"properties" : {
+					"items" :
+					"rating" : { "type": "number"},
+					"addy" : { "type": "string"},
+					"lat" : { "type": "number"},
+					"lon" : { "type": "number"},
+				}
+			}
+*/
+
+			this.srsearch_store = new dojox.data.JsonRestStore ( {
+//				schema : theSchema,
+				target: "/srsearch/index",
+				syncMode:true
+//			this.srsearch_store = new dojox.data.QueryReadStore( {
+// 			this.srsearch_store = new ComboBoxReadStore( {
+//				url: "/srsearch/index"
 			} );
 
 			// LIVE SEARCH IN MENUBAR
 			this.srsearch_box = new dijit.form.ComboBox( {
-				name: "srsearch",
+				id: "srsearch",
 				placeHolder: "Search for something",
 				store: this.srsearch_store,
+				searchAttr: "addy",
+				srd_doc: this,
+				autoComplete: false,
+//				selectOnClick: true,
+				searchDelay: 1000,
+				queryExpr: "${0}",
 				onChange: function() {
-					dojo.byId("value").innerHTML = dijit.byId("srsearch").get("value");
+//						this.value = this.displayedValue;
+						console.log("Search Text Clicked:"+this.store.getValue(this.item, "lat") );
+						var lat = this.store.getValue(this.item, "lat");	
+						var lon = this.store.getValue(this.item, "lon");	
+						if(this.srd_doc.selectedView == null) {
+							this.srd_doc.selectedView = this.viewArr[0][0];
+						}
+						this.srd_doc.selectedView.goToPoint(lat,lon);
 				}
 			} );
 			this.srd_menuBar.addChild(this.srsearch_box);
-
+			this.srsearch_box.startup();
 			//END PLACING MENU ITEMS, LETS FIRE UP THE MENUBAR!				
 			this.srd_menuBar.startup();
 
