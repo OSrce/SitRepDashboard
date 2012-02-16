@@ -49,6 +49,33 @@ osm2pgsql --proj 4326 tristate.osm.bz2osm.bz2
 osm2pgsql tristate.osm.bz2
 
 
+########################################
+To extract partial osm file and then load that (ie. tristate area only)
+
+Full Tristate :
+
+top=42.305 left=-75.047 right=-71.762 bottom=40.052
+
+Min X(Lon) : -75.047
+Min Y(Lat) : 40.052
+Max X :	-71.762
+Max Y : 42.305
+
+
+date; time bzcat /media/sf_SitRepRelated/planet-latest.osm.bz2 | ./package/bin/osmosis --read-xml enableDateParsing=no file=- --bounding-box top=42.305 left=-75.047 right=-71.762 bottom=40.052 --write-xml file=- | bzip2 > /media/sf_VBOX_SHARED/tristate.osm.bz2; date
+
+
+
+date; time osm2pgsql --append -m -s -d gis -C 1000 ct.osm.bz2; date;time osm2pgsql --append -m -s -d gis -C 1000 ny_partial.osm.bz2;date; time osm2pgsql --append -m -s -d gis -C 1000 nj_partial.osm.bz2; date;
+
+
+
+date; time osm2pgsql -m -s -d gis -C 1000 /media/sf_VBOX_SHARED/tristate.osm.bz2; date
+
+
+
+
+
 
 
 
