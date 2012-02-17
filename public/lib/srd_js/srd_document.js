@@ -193,6 +193,7 @@ srd_document.prototype.srd_init = function() {
 			this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
 
 			tmpViewYArr[yPos] = new window[ this.viewType[this.staticVals.view_data[xPos][yPos].type] ](this.staticVals.view_data[xPos][yPos], this);
+			this.selectedView = tmpViewYArr[yPos];
 		}
 		this.viewArr[xPos] = tmpViewYArr;
 	}
@@ -674,7 +675,9 @@ srd_document.prototype.srd_toggleLocationTracking = function(menuItem) {
 			
 
 		}
-		// TODO : NEED TO FIX TO GRAB SELECTED / SANITY CHECK.
+		if(this.selectedView == null) {
+			this.selectedView = this.viewArr[0][0];
+		}
 		this.selectedView.toggleLocationTracking(menuItem.checked);
 	return;
 	}.bind(this) );
@@ -989,7 +992,7 @@ srd_document.prototype.srd_changeViewType = function(theType) {
 		for(var theVar in this.viewDefaults[theType] ) {
 			this.staticVals.view_data[xPos][yPos][theVar] = this.viewDefaults[theType][theVar];
 		}
-//      console.log( "NEW VIEW TYPE:"+this.viewType[theType] );
+      console.log( "NEW VIEW TYPE:"+this.viewType[theType]+"xPos="+xPos+",yPos="+yPos);
 			this.viewArr[xPos][yPos] = new window[ this.viewType[theType] ](this.staticVals.view_data[xPos][yPos], this);
 		this.selectedView = this.viewArr[xPos][yPos];
 		this.viewContainer.resize();
