@@ -535,13 +535,26 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				label: "Tools",
 				popup: srd_toolsMenu
 			}) );
-			var editPanelMenuItem =new dijit.CheckedMenuItem({
-				label: "Show Edit Toolbar",
-				onClick: function() { this.srd_toggleEditPanel(editPanelMenuItem); }.bind(this)
-			});
-			srd_toolsMenu.addChild(editPanelMenuItem);
+			// Toggle for Edit Toolbar
+			srd_toolsMenu.addChild(
+				new dijit.CheckedMenuItem({
+					label: "Edit Toolbar",
+					srd_doc: this,
+					onClick: function() { this.srd_doc.srd_toggleEditPanel(this); }
+				}) 
+			);
+			// Toggle for Location Tracking
+			srd_toolsMenu.addChild(
+				new dijit.CheckedMenuItem({
+					label: "Display Location",
+					srd_doc: this,
+					onClick: function() { this.srd_doc.srd_toggleLocationTracking(this); }
+				}) 
+			);
+	
+
 			// BEGIN UPLOAD LAYER MENU
-			this.srd_uploadMenu = new dijit.Menu( );
+/*			this.srd_uploadMenu = new dijit.Menu( );
 			for( tmpId in this.srd_layerArr) {
 					this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
 						label: this.srd_layerArr[tmpId].name,
@@ -552,6 +565,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				label: "Upload Layer to Server",
 				popup:this.srd_uploadMenu
 			}));
+*/
 			// END UPLOAD LAYER MENU
 
 
@@ -602,13 +616,13 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			}
 */
 
-			this.srsearch_store = new dojox.data.JsonRestStore ( {
+//			this.srsearch_store = new dojox.data.JsonRestStore ( {
 //				schema : theSchema,
-				target: "/srsearch/index",
-				syncMode:true
-//			this.srsearch_store = new dojox.data.QueryReadStore( {
+//				target: "/srsearch/index",
+//				syncMode:true
+			this.srsearch_store = new dojox.data.QueryReadStore( {
 // 			this.srsearch_store = new ComboBoxReadStore( {
-//				url: "/srsearch/index"
+				url: "/srsearch/index"
 			} );
 
 			// LIVE SEARCH IN MENUBAR
@@ -649,6 +663,23 @@ srd_document.prototype.srd_displayMenuBar = function() {
 	}.bind(this) );
 	return;
 }
+
+srd_document.prototype.srd_toggleLocationTracking = function(menuItem) {
+	dojo.addOnLoad( function() {
+		if(menuItem.checked == true) {
+			console.log("Enabling Location Tracking");
+		// ELSE menuItem is NOT CHECKED :
+		} else {
+			console.log("Disabling Location Tracking");
+			
+
+		}
+		// TODO : NEED TO FIX TO GRAB SELECTED / SANITY CHECK.
+		this.selectedView.toggleLocationTracking(menuItem.checked);
+	return;
+	}.bind(this) );
+}
+
 
 
 srd_document.prototype.srd_toggleEditPanel = function(menuItem) {

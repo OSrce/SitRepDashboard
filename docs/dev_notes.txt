@@ -151,6 +151,16 @@ ComboBox?
 dojox.data.QueryReadStore
 
 
+----------------------
+NY Counties
+county shp file = tl_2010_36_county00.shp
+---------
+Bronx = 36005
+New York = 36061
+Kings = 36047
+Queens = 36081
+Richmond = 36085
+
 
 
 
