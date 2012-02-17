@@ -99,6 +99,8 @@ dojo.declare(
 			var lonlat = new OpenLayers.LonLat(this.start_lon, this.start_lat).transform( mapProjection, googleProjection  );
 
 			this.map.setCenter( lonlat, this.start_zoom ); 
+			this.map.zoomTo( 10 ); 
+			this.goToPoint(this.start_lat, this.start_lon);
 
 
 			console.log("Should be displaying Map at this point!");
@@ -124,6 +126,7 @@ dojo.declare(
 						{},
 						{ fillColor: '#000', fillOpacity: '0.1', strokeWidth: '0' }
 					);
+					console.log("Position Logged, Heading="+e.position.coords.heading);
 					this.geolocateLayer.addFeatures([
 						new OpenLayers.Feature.Vector(
 							e.point,

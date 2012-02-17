@@ -20,6 +20,8 @@ class Home_IndexController extends Zend_Controller_Action
 				$user = $auth->getStorage()->read();
 				$this->_uid = $user['uid'];
 				$this->_gid = $user['gid'];
+				$this->_title = $user['title'];
+				$this->_lastname = $user['lastname'];
 
 				$this->_view_layout_x = $user['view_layout_x'];			
 				$this->_view_layout_y = $user['view_layout_y'];			
@@ -36,6 +38,8 @@ class Home_IndexController extends Zend_Controller_Action
 				'view_layout_x' =>	$this->_view_layout_x,
 				'view_layout_y' =>	$this->_view_layout_y,
 				'view_data' =>	$this->_view_data,
+				'user_title' => $this->_title,
+				'user_lastname' => $this->_lastname,
 //				'start_lat' => 40.714,
 //				'start_lon' => -73.998,
 //				'start_zoom' => 10,

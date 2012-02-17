@@ -650,6 +650,20 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			} );
 			this.srd_menuBar.addChild(this.srsearch_box);
 			this.srsearch_box.startup();
+			//END SEARCH BAR
+			
+			//BEGIN USERNAME / Logout Options
+			this.srd_userMenu = new dijit.Menu({});
+			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+				label: "Log Out", //this.staticVals.user_title+" "+this.staticVals.user_lastname,
+				popup: this.srd_userMenu
+			}) );
+			this.srd_userMenu.addChild( new dijit.MenuItem( {
+				label: "Log Out: "+this.staticVals.user_lastname,
+				srd_doc: this,
+				onClick: function() { this.srd_doc.logout() }
+			} ) );
+
 			//END PLACING MENU ITEMS, LETS FIRE UP THE MENUBAR!				
 			this.srd_menuBar.startup();
 
@@ -998,6 +1012,15 @@ srd_document.prototype.srd_changeViewType = function(theType) {
 		this.viewContainer.resize();
 	}
 }
+
+// FUNCTION TO DO ANY CLEAN UP NEEDED 
+// THEN REDIRECT TO /login/logout
+srd_document.prototype.logout = function() {	
+	console.log("Logging Out User : "+this.staticVals.user_lastname);
+	window.location.href = "/login/index/logout";	
+
+}
+
 
 
 

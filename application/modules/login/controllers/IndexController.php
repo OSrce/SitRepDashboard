@@ -8,6 +8,10 @@ class Login_IndexController extends Zend_Controller_Action {
 		$this->_options = $this->getInvokeArg('bootstrap')->getOptions();
 
 		$this->view->srd_login_opts = $this->_options['srd']['login']; 
+
+		// Tell browser to store cookie to remember_me_seconds duration
+		Zend_Session::rememberMe();
+
 	}
 
 	public function indexAction() {
@@ -21,6 +25,11 @@ class Login_IndexController extends Zend_Controller_Action {
 		$logger = new Zend_Log();
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/ldap.log"));
 	
+		$auth = Zend_Auth::getInstance();
+		if( $auth->getIdentity() ) {
+			return $this->_redirect('/home');
+		}
+
 		$flash = $this->_helper->getHelper('flashMessenger');
 		if( $flash->hasMessages() ) {
 			$this->view->message = $flash->getMessages();
@@ -35,14 +44,18 @@ class Login_IndexController extends Zend_Controller_Action {
 	}
 
 	public function loginAction() {
-		$opt=array( 'custom' => array( 'timeout' => $this->_options['auth']['timeout'] ) );
+		$auth = Zend_Auth::getInstance();
+		if( $auth->getIdentity() ) {
+			return $this->_redirect('/home');
+		}
 
+		$opt=array( 'custom' => array( 'timeout' => $this->_options['auth']['timeout'] ) );
 
 		$form = new Login_Form_Login($opt);
 
 		if( !$form->isValid($this->getRequest()->getPost() ) ) {
 			$this->view->form = $form;
-			return $this->render('login');
+			$this->render('login');
 		}
 
 		date_default_timezone_set("America/New_York");
@@ -53,7 +66,6 @@ class Login_IndexController extends Zend_Controller_Action {
 		$options['username'] = $this->getRequest()->getParam('username');
 		$options['password'] = $this->getRequest()->getParam('password');
 
-		$auth = Zend_Auth::getInstance();
 		$db = $this->getInvokeArg('bootstrap')->getResource('db');
 		$options['ldap'] = $this->_options['ldap'];
 		$authAdapter = Login_Auth::_getAdapter('ldap', $options);
@@ -178,9 +190,14 @@ class Login_IndexController extends Zend_Controller_Action {
 				'title' => $user->title,
 				'view_layout_x' => $user->view_layout_x,
 				'view_layout_y' => $user->view_layout_y,
-				'view_data' => $user->view_data
+				'view_data' => $user->view_data,
+				'hostname' => gethostbyaddr($_SERVER['REMOTE_ADDR'])
 			);
 			$auth->getStorage()->write($data);
+
+			//IF "Keep me logged in" == checked
+			Zend_Session::getSaveHandler()->setLifetime('864001');
+
 
 			$this->_redirect('/home');
 		} else {
@@ -197,6 +214,13 @@ class Login_IndexController extends Zend_Controller_Action {
 
 
 	public function logoutAction() {
+		
+		$auth = Zend_Auth::getInstance();
+		$identity = $auth->getIdentity();
+		if($identity != null) {
+			$auth->clearIdentity();
+		}
+		$this->_redirect('/login');
 
 	}
 	
