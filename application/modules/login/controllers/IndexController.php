@@ -65,6 +65,7 @@ class Login_IndexController extends Zend_Controller_Action {
 		$options = array();
 		$options['username'] = $this->getRequest()->getParam('username');
 		$options['password'] = $this->getRequest()->getParam('password');
+		$options['keeploggedin'] = $this->getRequest()->getParam('keeploggedin');
 
 		$db = $this->getInvokeArg('bootstrap')->getResource('db');
 		$options['ldap'] = $this->_options['ldap'];
@@ -196,8 +197,10 @@ class Login_IndexController extends Zend_Controller_Action {
 			$auth->getStorage()->write($data);
 
 			//IF "Keep me logged in" == checked
-			Zend_Session::getSaveHandler()->setLifetime('864001');
-
+			if( $options['keeploggedin']) {
+				$logger->log("Remembermeseconds:".$this->view->srd_login_opts['remembermeseconds'],Zend_Log::DEBUG);
+				Zend_Session::getSaveHandler()->setLifetime( $this->view->srd_login_opts['remembermeseconds'] );
+			}
 
 			$this->_redirect('/home');
 		} else {
