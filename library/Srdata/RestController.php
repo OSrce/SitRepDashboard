@@ -1,27 +1,28 @@
 <?php
 
-class Srdata_UsersController extends Srdata_RestController
+class Srdata_RestController extends Zend_Rest_Controller
 {
+		protected $db;
+		protected $restTable;
 
     public function init()
     {
 			date_default_timezone_set("America/New_York");
 			$this->logger = new Zend_Log();
-			$this->logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_user.log"));
+			$this->logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_rest.log"));
 
 			$this->db = $this->getInvokeArg('bootstrap')->getResource('db');
-			$this->usersTable = new Srdata_Model_DbTable_Users($this->db);
+//			$this->restTable = new Srdata_Model_DbTable_Users($this->db);
 
 			$this->_helper->viewRenderer->setNoRender(true);
-
-			$this->logger->log("User Class Inited. ", Zend_Log::DEBUG);	
+			$this->logger->log("REST Class Inited. ", Zend_Log::DEBUG);	
 
     }
 
     public function indexAction()
     {
 			$this->logger->log("User Get (Index) Action Called: ", Zend_Log::DEBUG);	
-			$rows = $this->usersTable->fetchAll();
+			$rows = $this->restTable->fetchAll();
 			print Zend_Json::encode($rows->toArray());
 
     }
