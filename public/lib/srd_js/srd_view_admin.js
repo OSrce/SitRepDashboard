@@ -28,7 +28,7 @@ dojo.declare(
 					target: "/srdata/Users/"
 				} );
 				var theStruct = [
-					{ name: "Feature ID", field:"fid", width: "50px" }
+					{ name: "User ID", field:"uid", width: "50px" }
 				];
 
 /*				for(var dataType in this.srd_selLayer.layer.features[0].data) {

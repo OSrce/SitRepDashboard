@@ -91,6 +91,18 @@
             <controllerFile controllerName="Users">
               <actionMethod actionName="index"/>
             </controllerFile>
+            <controllerFile controllerName="Sessions">
+              <actionMethod actionName="index"/>
+            </controllerFile>
+            <controllerFile controllerName="Groups">
+              <actionMethod actionName="index"/>
+            </controllerFile>
+            <controllerFile controllerName="Modules">
+              <actionMethod actionName="index"/>
+            </controllerFile>
+            <controllerFile controllerName="Permissions">
+              <actionMethod actionName="index"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -101,6 +113,10 @@
               <dbTableFile dbTableName="Styles"/>
               <dbTableFile dbTableName="Layers"/>
               <dbTableFile dbTableName="Users"/>
+              <dbTableFile dbTableName="Groups"/>
+              <dbTableFile dbTableName="Sessions"/>
+              <dbTableFile dbTableName="Permissions"/>
+              <dbTableFile dbTableName="Modules"/>
             </dbTableDirectory>
             <modelFile modelName="Feature"/>
             <modelFile modelName="Layer"/>
@@ -123,6 +139,18 @@
                 <viewScriptFile forActionName="index"/>
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Users">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Sessions">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Groups">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Modules">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Permissions">
                 <viewScriptFile forActionName="index"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>

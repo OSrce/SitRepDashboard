@@ -160,6 +160,16 @@ New York = 36061
 Kings = 36047
 Queens = 36081
 Richmond = 36085
+-----------------------
+
+Enable CRUD calls from Dojo JsonRest Stores involves tying this to
+Zend_Controller_Router_Rewrite
+
+NEED TO CHANCE APACHE CONF :
+-- already done - check srd_ssl RewriteEngine etc.
+------------------------
+
+
 
 
 
