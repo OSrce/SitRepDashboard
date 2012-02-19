@@ -88,6 +88,9 @@
             <controllerFile controllerName="Error">
               <actionMethod actionName="index"/>
             </controllerFile>
+            <controllerFile controllerName="Users">
+              <actionMethod actionName="index"/>
+            </controllerFile>
           </controllersDirectory>
           <formsDirectory enabled="false"/>
           <layoutsDirectory enabled="false"/>
@@ -97,11 +100,13 @@
               <dbTableFile dbTableName="Presets"/>
               <dbTableFile dbTableName="Styles"/>
               <dbTableFile dbTableName="Layers"/>
+              <dbTableFile dbTableName="Users"/>
             </dbTableDirectory>
             <modelFile modelName="Feature"/>
             <modelFile modelName="Layer"/>
             <modelFile modelName="Style"/>
             <modelFile modelName="Preset"/>
+            <modelFile modelName="User"/>
           </modelsDirectory>
           <viewsDirectory>
             <viewScriptsDirectory>
@@ -115,6 +120,9 @@
                 <viewScriptFile forActionName="index"/>
               </viewControllerScriptsDirectory>
               <viewControllerScriptsDirectory forControllerName="Error">
+                <viewScriptFile forActionName="index"/>
+              </viewControllerScriptsDirectory>
+              <viewControllerScriptsDirectory forControllerName="Users">
                 <viewScriptFile forActionName="index"/>
               </viewControllerScriptsDirectory>
             </viewScriptsDirectory>
