@@ -20,6 +20,9 @@ resources.frontController.plugins = "Login_Plugin_Securitycheck"
 auth.salt = "aklsdjflkjaskl;fj"
 auth.timeout = 60
 
+routes.rest.type = Zend_Rest_Route
+routes.rest.defaults.controller = object
+routes.rest.srdata = Users
 
 resources.db.adapter = "pdo_pgsql"
 resources.db.params.host = "localhost"
@@ -35,6 +38,7 @@ ldap.server1.accountDomainName  = some.domain
 ldap.server1.accountDomainNameShort  = SOMEDOMAIN
 ldap.server1.baseDn = "DC=some,DC=domain"
 
+srd.login.remembermeseconds = 86500
 srd.login.title = "SitRep Demo Server"
 srd.login.leftimage = 'IMG HERE'
 srd.login.rightimage = 'IMG HERE'
