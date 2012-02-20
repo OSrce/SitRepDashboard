@@ -203,6 +203,23 @@ srd_layer.prototype.loadData = function( ) {
 				sphericalMercator: 	this.options.sphericalMercator
 			} 
 		);
+	} else if (this.options.type == "WMS" ) {
+		console.log("WMS Layer Created : "+this.options.name+":::"+this.options.url+":::");
+		this.layer = new OpenLayers.Layer.WMS ( 
+			this.options.name,
+			this.options.url,
+			{
+				// TESTING ONLY
+				layers: "nexrad-n0r-wmst",
+				transparent : "true",
+				format : 'image/png',
+				srs: 'EPSG:900913'
+			},
+			{
+				isBaseLayer:	this.options.isBaseLayer
+//				visibility:		this.options.visibility 
+ 			}
+		);
 	} else if (this.options.type == "Vector" ) {
 
 	console.log("Vector Layer created:"+this.options.name);
@@ -418,13 +435,13 @@ srd_layer.prototype.loadData = function( ) {
 
 
 
+	console.log("End if Vector");
+	console.log("TEST5::"+this.srd_featureAttributes.tagName+":::");
 /////////////////////////////////////////////
 	}
 	// END IF VECTOR
 
-	console.log("End if Vector");
 
-	console.log("TEST5::"+this.srd_featureAttributes.tagName+":::");
 
 	if(this.options.isBaseLayer == false ) {
 		if(this.editPalette == null ) {

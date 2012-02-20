@@ -58,7 +58,7 @@ create TABLE sr_modules (
 	PRIMARY KEY(id)
 );
 
-CREATE TYPE layer_type AS ENUM ('XYZ','Vector','WFS','GeoRSS');
+CREATE TYPE layer_type AS ENUM ('XYZ','Vector','WFS','GeoRSS','WMS');
 CREATE TYPE layer_format AS ENUM ('GML','WFST','WKT','GeoJSON');
 CREATE TABLE sr_layers (
 	id SERIAL NOT NULL,

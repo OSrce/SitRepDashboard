@@ -151,11 +151,26 @@ srd_document.prototype.srd_init = function() {
 	}
 
 
-	this.srd_displayMenuBar();
+
+
+
+
 //	this.srd_container.startup();
 
 	dojo.addOnLoad(function() {
+		if(this.srd_container == null) {
+			var srd_jsDisabled = dojo.byId("srd_jsDisabled");
+			dojo.style(srd_jsDisabled, "display", "none");
+			this.srd_container = new dijit.layout.BorderContainer( { 
+					gutters: false,
+					splitter: "false",
+					design: "headline"
+				 }, 'theSrdDoc' );
+			this.srd_container.startup();
+		}
+	}.bind(this) );
 
+	dojo.addOnLoad(function() {
 	// ASSUME view_layer_x/y have been set and that settings are populated
 	// parse and init different views
 	this.centerPane = new dijit.layout.ContentPane( { 
@@ -200,6 +215,8 @@ srd_document.prototype.srd_init = function() {
 	this.srd_container.resize();	
 
 	}.bind(this) );
+
+	this.srd_displayMenuBar();
 
 }
 // END SRD_DOCUMENT CONSTRUCTOR
@@ -409,19 +426,6 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 
 srd_document.prototype.srd_displayMenuBar = function() {
 	dojo.addOnLoad(function() {
-		if(this.srd_container == null) {
-			var srd_jsDisabled = dojo.byId("srd_jsDisabled");
-			dojo.style(srd_jsDisabled, "display", "none");
-			this.srd_container = new dijit.layout.BorderContainer( { 
-					gutters: false,
-					splitter: "false",
-					design: "headline"
-//					style: "height:100%;width:100%;margin:0px;padding:0px;border:0px;overflow:hidden;",
-//				style: "height:100%;width:100%;", 
-				 }, 'theSrdDoc' );
-//			this.srd_container.placeAt("theSrdDoc");
-			this.srd_container.startup();
-		}
 		if(this.srd_menuBar == null) {
 			this.srd_menuBar = new dijit.MenuBar( { 
 				splitter: false,
@@ -433,22 +437,10 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				label: '<img src="lib/img/SR_Icon.png" height="20" width="16">' } ) );
 			//// SitRep MENU /////	
 			var srd_sitrepMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+			this.srd_menuBar.addChild(new dijit.MenuBarItem({
 				label: "SitRep",
-				popup: srd_sitrepMenu
 			}) );
-			srd_sitrepMenu.addChild(new dijit.MenuItem({
-				label: "Map Screen",
-				onClick: function() {this.srd_mapDisplay() }.bind(this)
-			}));
-			srd_sitrepMenu.addChild(new dijit.MenuItem({
-				label: "Admin Screen",
-				onClick: function() { this.srd_adminDisplay() }.bind(this)
-			}));
-			srd_sitrepMenu.addChild(new dijit.MenuItem({
-				label: "Data Screen",
-				onClick: function() { this.srd_dataDisplay() }.bind(this)
-			}));
+
 			//// File Menu ////
 			var srd_fileMenu = new dijit.Menu({});
 			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
@@ -505,7 +497,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			}) );
 			var theLabel = "Selected View : ";
 			if(this.selectedView) {
-				theLabel = theLabel+this.data.type+" "+this.data.xPos+","+this.data.yPos;
+				theLabel = theLabel+this.selectedView.data.type+" "+this.selectedView.data.xPos+","+this.selectedView.data.yPos;
 			}
 			this.srd_viewMenuSelected = new dijit.MenuItem({
 				label: theLabel
@@ -525,9 +517,15 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				label: "Change Type: ",
 				popup:this.srd_viewTypeMenu
 			}));
-	
+			///// END View Menu ////	
 
-			
+			//// Data Menu ////
+			this.srd_dataMenu = new dijit.Menu({});
+			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+				label: "Data",
+				popup: this.srd_dataMenu
+			}) );
+			/// END Data Menu
 	
 
 			//// Tools Menu ////
@@ -553,9 +551,9 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				}) 
 			);
 	
-
+/*
 			// BEGIN UPLOAD LAYER MENU
-/*			this.srd_uploadMenu = new dijit.Menu( );
+			this.srd_uploadMenu = new dijit.Menu( );
 			for( tmpId in this.srd_layerArr) {
 					this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
 						label: this.srd_layerArr[tmpId].name,
@@ -566,9 +564,8 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				label: "Upload Layer to Server",
 				popup:this.srd_uploadMenu
 			}));
-*/
 			// END UPLOAD LAYER MENU
-
+*/
 
 			//// Window Menu ////
 			this.srd_windowMenu = new dijit.Menu({});
@@ -605,6 +602,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 				popup:this.srd_windowColMenu	
 			}));
 
+
 /*			var theSchema = {
 				"type" : "object",
 				"properties" : {
@@ -621,6 +619,7 @@ srd_document.prototype.srd_displayMenuBar = function() {
 //				schema : theSchema,
 //				target: "/srsearch/index",
 //				syncMode:true
+
 			this.srsearch_store = new dojox.data.QueryReadStore( {
 // 			this.srsearch_store = new ComboBoxReadStore( {
 				url: "/srsearch/index"
@@ -669,11 +668,12 @@ srd_document.prototype.srd_displayMenuBar = function() {
 
 		}
 		
-		// GET RID OF ALL WIDGETS ON SCREEN
+/*		// GET RID OF ALL WIDGETS ON SCREEN
 		var widgetArr = this.srd_container.getChildren();
 		for(var i=0;i<widgetArr.length;i++) {
 			this.srd_container.removeChild(widgetArr[i]);
 		}
+*/
 		this.srd_container.addChild(this.srd_menuBar);
 	}.bind(this) );
 	return;

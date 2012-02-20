@@ -21,18 +21,12 @@ dojo.declare(
 		container : null,
 		selected : null,
 		containerStyle : null,
-
+		dataMenu : null,
 		//CONSTUCTOR
 		constructor : function( view_data, parent_srd_doc) {
 			console.log("srd_view constructor called!");
 			this.srd_doc = parent_srd_doc;
 			this.data = view_data;
-//			this.type = view_data.type;
-//			this.xPos = view_data.xPos;
-//			this.yPos = view_data.yPos;
-//			this.xDim = view_data.xDim;
-//			this.yDim = view_data.yDim;
-//			this.width = 50; //Math.round(100 / this.xDim);
 			this.data.height = Math.round(100 / this.data.yDim);
 //			this.containerStyle = 'width:100%; height:'+this.height+'%;margin:0px;border:0px;padding:0px; background-color:black;';
 			this.containerStyle = 'width:100%; height:'+this.data.height+'%;background-color:black;';
@@ -41,6 +35,7 @@ dojo.declare(
 			} );	
 			this.srd_doc.viewContainer.addChild(this.container,this.data.xPos,this.data.yPos);
 			dojo.connect(this.container, 'onClick',this, 'srd_select');
+			
 		},
 		destroy : function() {
 			console.log("Destroy View called!");
@@ -61,7 +56,7 @@ dojo.declare(
 			this.container.set('style',this.containerStyle);
 			console.log('RESIZE CALLED: height: '+this.data.height);
 			this.container.resize();
-
+			this.dataMenu = new dijit.Menu( {} );
 		},
 		
 		srd_select : function(event) {
