@@ -131,6 +131,49 @@ dojo.declare(
 							{ name: "Updated By", field:"updated_by", width: "50px" }
 						]
 					} ]  ,
+					"Styles": [ {
+						defaultCell: { width: 10, editable: true },
+						cells: [
+							{ name: "ID", field:"id", width: "50px" },
+							{ name: "Name", field:"name", width: "50px" },
+							{ name: "Label", field:"label", width: "50px" },
+							{ name: "Fill Color", field:"fillcolor", width: "50px" },
+							{ name: "Fill Opacity", field:"fillopacity", width: "50px" },
+							{ name: "Stroke Color", field:"strokecolor", width: "50px" },
+							{ name: "Stroke Opacity", field:"strokeopacity", width: "50px" },
+							{ name: "Stroke Width", field:"strokewidth", width: "50px" },
+							{ name: "Point Radius", field:"pointradius", width: "50px" },
+							{ name: "Font Color", field:"fontcolor", width: "50px" },
+							{ name: "Font Size", field:"fontsize", width: "50px" },
+							{ name: "Font Family", field:"fontfamily", width: "50px" },
+							{ name: "Font Weight", field:"fontweight", width: "50px" },
+							{ name: "Font Opacity", field:"fontopacity", width: "50px" },
+							{ name: "Label Align", field:"labelalign", width: "50px" },
+							{ name: "Label X Offset", field:"labelxoffset", width: "50px" },
+							{ name: "Label Y Offset", field:"labelyoffset", width: "50px" },
+							{ name: "External Graphic", field:"externalgraphic", width: "50px" },
+							{ name: "Graphic Width", field:"graphicwidth", width: "50px" },
+							{ name: "Graphic Height", field:"graphicheight", width: "50px" },
+							{ name: "Graphic Opacity", field:"graphicopacity", width: "50px" },
+							{ name: "rotation", field:"rotation", width: "50px" },
+							{ name: "Created On", field:"created_on", width: "50px" },
+							{ name: "Created By", field:"created_by", width: "50px" },
+							{ name: "Updated On", field:"updated_on", width: "50px" },
+							{ name: "Updated By", field:"updated_by", width: "50px" }
+						]
+					} ],
+					"Style Presets": [ {
+						defaultCell: { width: 10, editable: true },
+						cells: [
+							{ name: "ID", field:"id", width: "50px" },
+							{ name: "Name", field:"name", width: "50px" },
+							{ name: "Style ID", field:"style_id", width: "50px" },
+							{ name: "Layer ID", field:"layer_id", width: "50px" },
+							{ name: "Group ID", field:"group_id", width: "50px" },
+							{ name: "User ID", field:"user_id", width: "50px" }
+							]
+					} ]
+	
 					
 				}
 

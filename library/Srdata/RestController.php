@@ -5,6 +5,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		protected $tableName; 
 		protected $db;
 		protected $restTable;
+		protected $idName;
 
     public function init()
     {
@@ -35,7 +36,8 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$this->logger->log($this->tableName." Get (READ) Action Called: ", Zend_Log::DEBUG);	
 			$id = $this->_getParam('id');
 			$select = $this->restTable->select();
-			$select->where('id=?',$id);
+			$idName = $this->idName;
+			$select->where("$idName=?",$id);
 			$rows = $this->restTable->fetchAll($select);
 			print Zend_Json::encode($rows->toArray());
 		}
@@ -50,7 +52,16 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		// PUT Action === UPDATE
 		public function putAction() 
 		{
-			$this->logger->log($this->tableName." Put (UPDATE) Action Called: ", Zend_Log::DEBUG);	
+			$this->logger->log($this->tableName." Put (UPDATE) Action Called: ", Zend_Log::DEBUG);
+			$id = $this->_getParam('id');
+			$idName = $this->idName;
+			$where = $this->restTable->getAdapter()->quoteInto("$idName=?",$id);
+			$data = Zend_Json::decode($this->getRequest()->getRawBody() );
+			$this->boolToString($data);
+			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
+			$this->restTable->update($data, $where);
+
+			$this->getResponse()->setHttpResponseCode(204);
 		}
 
 		// DELETE Action === DELETE
@@ -60,6 +71,28 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 
 		}
 
+		public function boolToString( &$var )
+		{
+			if( is_array( $var ) ) {
+				foreach($var as $key=> $val) {
+					if( is_bool($val) ) {
+						if($val) {
+							$var[$key] = "true";
+						} else {
+							$var[$key] = "false";
+						}	
+					}
+				}
+			} else {
+				if( is_bool($var) ) {
+					if($var) {
+						$var = "true";
+					} else {
+						$var = "false";
+					}	
+				}
+			}
+		}
 
 
 }
