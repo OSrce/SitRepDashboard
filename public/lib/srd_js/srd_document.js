@@ -33,9 +33,10 @@ function srd_document() {
 	this.srd_container = null;
 	this.srd_menuBar = null;
 	this.srd_saveMenu = null;
-	this.srd_mapContent = null;
-	this.srd_adminContent = null;
-	this.srd_dataContent = null;
+
+//	this.srd_mapContent = null;
+//	this.srd_adminContent = null;
+//	this.srd_dataContent = null;
 
 	this.srd_layerEditMenu = null;
 	this.srd_layerEditMenuDropDown = null;
@@ -47,7 +48,7 @@ function srd_document() {
 	this.openFileForm = null;
 
 	//THE OpenLayers VARS
-	this.map = null;
+//	this.map = null;
 	this.editTools = null;
 	this.selectControl = null;
 	this.drawControls = null;
@@ -376,7 +377,7 @@ srd_document.prototype.defaultSettingsLoaded = function(items,request) {
 		console.log("Putting staticVals in localstore!");
 		this.srd_localStore.put("staticVals", this.staticVals,this.storePutHandler,"srd");
 
-		this.map_init();
+//		this.map_init();
 }
 
 srd_document.prototype.srd_createWhiteboard = function() {
@@ -386,7 +387,7 @@ srd_document.prototype.srd_createWhiteboard = function() {
             selector: "date",
             datePattern: theFrmt
         });
-	var url ="https://wjoc-sr.nypd.finest/srdata/feature";
+	var url ="/srdata/Features/5000";
 	this.srd_createLayer(name,url);
 }
 	
@@ -403,12 +404,16 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 	tmpLayer.options.visibility = true;
 	tmpLayer.options.editable = true;
 
+	//BAD - NEED TO REQUEST ID FROM SERVER, CANT PICK ARBITRARILY
 	tmpLayer.options.id = this.srd_layerArr.length;
+
 	this.srd_layerArr[tmpLayer.options.id] = tmpLayer;	
 	this.staticVals.layerCount++;
 
 	tmpLayer.loadData();
-	tmpLayer.addLayerToMap(this.map);
+	//BAD!!!!!!! TESTING ONLY!!!
+	tmpLayer.addLayerToMap(this.selectedView.map);
+	//END BAD
 //	this.srd_selLayer = tmpLayer;
 	this.srd_saveMenu.addChild(new dijit.MenuItem( { 
 			label: tmpLayer.options.name,
@@ -520,13 +525,13 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			///// END View Menu ////	
 
 			//// Data Menu ////
-			this.srd_dataMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+			this.srd_dataMenuPopup = new dijit.PopupMenuBarItem({
 				label: "Data",
-				popup: this.srd_dataMenu
-			}) );
+				popup: this.selectedView.dataMenu
+			} );
+			this.srd_menuBar.addChild(this.srd_dataMenuPopup);
 			/// END Data Menu
-	
+			this.srd_dataMenu = this.srd_viewMenu;	
 
 			//// Tools Menu ////
 			var srd_toolsMenu = new dijit.Menu({});

@@ -321,11 +321,12 @@ srd_layer.prototype.loadData = function( ) {
 		} else if(this.options.format == "GeoJSON" ) {
 
 				this.layerProtocol = null;
+				this.options.url =null;
 				if(this.options.url == null || this.options.url == "") {
 						this.layerProtocol = new OpenLayers.Protocol.HTTP( {
-//							url: "/srdata/layer",
-							params: { layer_id : this.options.id },
-							readWithPOST: true,
+							url: "/srdata/Features/"+this.options.id,
+//							params: { layer_id : this.options.id },
+//							readWithPOST: true,
 							format: new OpenLayers.Format.GeoJSON( { } )
 						} );
 				} else {

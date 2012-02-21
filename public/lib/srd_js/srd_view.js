@@ -36,6 +36,7 @@ dojo.declare(
 			this.srd_doc.viewContainer.addChild(this.container,this.data.xPos,this.data.yPos);
 			dojo.connect(this.container, 'onClick',this, 'srd_select');
 			
+			this.dataMenu = new dijit.Menu( {} );
 		},
 		destroy : function() {
 			console.log("Destroy View called!");
@@ -56,7 +57,6 @@ dojo.declare(
 			this.container.set('style',this.containerStyle);
 			console.log('RESIZE CALLED: height: '+this.data.height);
 			this.container.resize();
-			this.dataMenu = new dijit.Menu( {} );
 		},
 		
 		srd_select : function(event) {
@@ -68,6 +68,7 @@ dojo.declare(
 			this.srd_doc.srd_updateViewMenu();
 			this.containerStyle = 'background-color:grey;';
 			this.container.set('style',this.containerStyle);
+			this.srd_doc.srd_dataMenu = this.dataMenu;
 		},
 		srd_unselect : function() {
 			this.containerStyle = 'background-color:black;';

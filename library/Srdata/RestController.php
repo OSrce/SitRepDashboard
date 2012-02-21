@@ -20,32 +20,43 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 
     }
 
+		// GET (Index) Action === READ ALL fetchAll
     public function indexAction()
     {
-			$this->logger->log($this->tableName." Get (Index) Action Called: ", Zend_Log::DEBUG);	
+			$this->logger->log($this->tableName." Index (READ ALL)  Action Called: ", Zend_Log::DEBUG);	
 			$rows = $this->restTable->fetchAll();
 			print Zend_Json::encode($rows->toArray());
 
     }
 
+		// GET Action === READ SPECIFIC ROW
 		public function getAction() 
 		{
-
-
+			$this->logger->log($this->tableName." Get (READ) Action Called: ", Zend_Log::DEBUG);	
+			$id = $this->_getParam('id');
+			$select = $this->restTable->select();
+			$select->where('id=?',$id);
+			$rows = $this->restTable->fetchAll($select);
+			print Zend_Json::encode($rows->toArray());
 		}
 
+		// POST Action === CREATE
 		public function postAction() 
 		{
+			$this->logger->log($this->tableName." Post (CREATE) Action Called: ", Zend_Log::DEBUG);	
 
 		}
 
+		// PUT Action === UPDATE
 		public function putAction() 
 		{
+			$this->logger->log($this->tableName." Put (UPDATE) Action Called: ", Zend_Log::DEBUG);	
 		}
 
+		// DELETE Action === DELETE
 		public function deleteAction() 
 		{
-			$this->logger->log($this->tableName." Delete Action Called: ", Zend_Log::DEBUG);	
+			$this->logger->log($this->tableName." Delete (DELETE) Action Called: ", Zend_Log::DEBUG);	
 
 		}
 
