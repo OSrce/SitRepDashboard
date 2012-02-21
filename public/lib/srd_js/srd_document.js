@@ -13,6 +13,7 @@ dojo.require("dojox.data.QueryReadStore");
 dojo.require("dojox.data.JsonRestStore");
 dojo.require("dojo.store.DataStore");
 dojo.require("dojo.store.JsonRest");
+dojo.require("dojo.store.Cache");
 
 dojo.provide("ComboBoxReadStore");
 dojo.declare(

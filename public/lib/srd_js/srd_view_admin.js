@@ -16,6 +16,7 @@ dojo.declare(
 		srd_layerArr : null,
 		srd_selLayer : null,
 		srd_store		 : null,
+		srd_dataStore		 : null,
 		srd_datagrid : null,
 	
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
@@ -55,12 +56,15 @@ dojo.declare(
 				this.dataMenu.addChild(new dijit.MenuItem( {
 					label: "Upload Changes",
 					srd_view: this,
-					onClick: function() { this.srd_view.srd_datagrid.store.save(); } 
+					onClick: function() { this.srd_view.srd_dataStore.save(); } 
 				} ) );
 			
-				this.srd_store = new dojo.store.JsonRest( { 
-					target: this.tableList[this.selectedTable]
-				} );
+				this.srd_store = new dojo.store.Cache(
+					dojo.store.JsonRest({ 
+						target: this.tableList[this.selectedTable]
+					} ),
+					dojo.store.Memory() 
+				);
 				var gridCellsDijit = dojox.grid.cells;
 				this.srd_structList = { 
 					"Users": [
@@ -142,8 +146,9 @@ dojo.declare(
 					} );
 				}
 */
+				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
 				this.srd_datagrid = new dojox.grid.DataGrid( {
-					store: dataStore = dojo.data.ObjectStore({ objectStore: this.srd_store}),
+					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
 					region : 'center'
 				} );
@@ -155,13 +160,18 @@ dojo.declare(
 			if(this.selectedTable != selTable) {
 			console.log( "Selected Table called: "+selTable);	
 				this.selectedTable = selTable;
-				delete this_srd_datagrid;
+				delete this.srd_datagrid;
+				delete this.srd_dataStore;
 				delete this.srd_store;
-				this.srd_store = new dojo.store.JsonRest( { 
-					target: this.tableList[this.selectedTable]
-				} );
+				this.srd_store = new dojo.store.Cache(
+					dojo.store.JsonRest({ 
+						target: this.tableList[this.selectedTable]
+					} ),
+					dojo.store.Memory() 
+				);
+				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
 				this.srd_datagrid = new dojox.grid.DataGrid( {
-					store: dataStore = dojo.data.ObjectStore({ objectStore: this.srd_store}),
+					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
 					region : 'center'
 				} );
