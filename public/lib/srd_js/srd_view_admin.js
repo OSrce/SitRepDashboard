@@ -52,12 +52,22 @@ dojo.declare(
 					label: "Selected Table: ",
 					popup: this.selectedDataMenu
 				} ) );
-				//TESTING TESTING - doesnt work yet.
 				this.dataMenu.addChild(new dijit.MenuItem( {
 					label: "Upload Changes",
 					srd_view: this,
 					onClick: function() { this.srd_view.srd_dataStore.save(); } 
 				} ) );
+				this.dataMenu.addChild(new dijit.MenuItem( {
+					label: "Create New Item",
+					srd_view: this,
+					onClick: function() { this.srd_view.createItem(); } 
+				} ) );
+				this.dataMenu.addChild(new dijit.MenuItem( {
+					label: "Delete Selected",
+					srd_view: this,
+					onClick: function() { this.srd_view.deleteSelectedItems(); } 
+				} ) );
+	
 			
 				this.srd_store = new dojo.store.Cache(
 					dojo.store.JsonRest({ 
@@ -134,7 +144,11 @@ dojo.declare(
 					"Styles": [ {
 						defaultCell: { width: 10, editable: true },
 						cells: [
-							{ name: "ID", field:"id", width: "50px" },
+							{ hidden: true, field:"id" },
+							//TESTING TESTING --- NEED TO FIX!!!!
+							{ name: "ID", field:"grid_id", width: "50px", formatter: 
+								function(data) { return data.id;  }
+							 },
 							{ name: "Name", field:"name", width: "50px" },
 							{ name: "Label", field:"label", width: "50px" },
 							{ name: "Fill Color", field:"fillcolor", width: "50px" },
@@ -198,6 +212,20 @@ dojo.declare(
 				this.container.addChild(this.srd_datagrid);
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
 		
+		},
+		deleteSelectedItems: function() {
+			var items = this.srd_datagrid.selection.getSelected();
+			if(items.length) {
+				dojo.forEach(items,function(selectedItem) {
+					if(selectedItem !== null) {
+						this.srd_dataStore.deleteItem(selectedItem);
+					}
+				}.bind(this) );
+			}
+		},
+		createItem: function() {
+			var item = {'id': 0 };
+			this.srd_dataStore.newItem(item);
 		},
 		selectTable: function( selTable) {
 			if(this.selectedTable != selTable) {

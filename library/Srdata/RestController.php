@@ -46,6 +46,8 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		public function postAction() 
 		{
 			$this->logger->log($this->tableName." Post (CREATE) Action Called: ", Zend_Log::DEBUG);	
+			
+
 
 		}
 
@@ -68,6 +70,14 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		public function deleteAction() 
 		{
 			$this->logger->log($this->tableName." Delete (DELETE) Action Called: ", Zend_Log::DEBUG);	
+
+			$id = $this->_getParam('id');
+			$idName = $this->idName;
+			$where = $this->restTable->getAdapter()->quoteInto("$idName=?",$id);
+			$this->restTable->delete($where);
+
+			// SHOULD CHECK TO SEE IF DELETE WAS SUCCESSFUL BEFORE RETURNING No Content (204).			
+			$this->getResponse()->setHttpResponseCode(204);
 
 		}
 
