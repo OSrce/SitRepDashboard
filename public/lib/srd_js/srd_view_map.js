@@ -55,8 +55,9 @@ dojo.declare(
 						new OpenLayers.Control.KeyboardDefaults(),
 						this.geolocateControl
 					],
-					projection : "EPSG:900913",
-					displayProjection: "EPSG:4326"
+//					projection : "EPSG:900913",
+//					displayProjection: "EPSG:4326"
+					maxExtent : new OpenLayers.Bounds(-20037508,-20037508, 20037508, 20037508)
 				} );
 				this.map.render( this.mapDiv  ); 
 				console.log("DONE CREATING MAP!!!!");
@@ -65,11 +66,11 @@ dojo.declare(
 			///// LAYER CREATION ////
 
 
-			this.map.setOptions( 
+/*			this.map.setOptions( 
 				{ projection :  new OpenLayers.Projection("EPSG:900913") ,
 					displayProjection : new OpenLayers.Projection("EPSG:4326") }
 				);
-
+*/
 
 
 			// Iterate through each srd_layer and call loadData and addLayerToMap)

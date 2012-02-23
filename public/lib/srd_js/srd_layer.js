@@ -213,11 +213,13 @@ srd_layer.prototype.loadData = function( ) {
 				layers: "nexrad-n0r-wmst",
 				transparent : "true",
 				format : 'image/png',
-				srs: 'EPSG:900913'
+				srs: 'EPSG:4326'
 			},
 			{
-				isBaseLayer:	this.options.isBaseLayer
+				isBaseLayer:	this.options.isBaseLayer,
+				projection:		new OpenLayers.Projection(this.options.projection)
 //				visibility:		this.options.visibility 
+				
  			}
 		);
 	} else if (this.options.type == "Vector" ) {
