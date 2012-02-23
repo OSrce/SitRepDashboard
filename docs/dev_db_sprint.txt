@@ -1,0 +1,34 @@
+
+# table for 911 CALLS FOR SERVICE
+
+CREATE TABLE sr_cfs (
+  cfs_date DATE NOT NULL,
+	cfs_letter CHAR NOT NULL,
+  cfs_num INT  NOT NULL,
+  cfs_pct INT NOT NULL,
+  cfs_sector CHAR NOT NULL,
+	cfs_addr VARCHAR(128),
+	cfs_cross1 VARCHAR(128),
+	cfs_cross2 VARCHAR(128),
+	cfs_code INT NOT NULL,
+	cfs_codesupp VARCHAR(128),
+	cfs_priority INT,
+	cfs_opstrack BOOL,
+	cfs_opstrack_date TIMESTAMP,
+	cfs_finaldis INT,
+	cfs_finaldissupp VARCHAR(32),
+	cfs_finaldisdate TIMESTAMP,
+	cfs_finaldisunit VARCHAR(16),
+	cfs_dup BOOL,
+	cfs_dupletter CHAR,
+	cfs_dupnum INT,
+	cfs_geocoded BOOL,
+	cfs_body TEXT,
+	PRIMARY KEY (cfs_date, cfs_letter, cfs_num)
+);
+
+SELECT AddGeometryColumn('sr_cfs','sr_geom',4326,'GEOMETRY',3);
+
+
+
+

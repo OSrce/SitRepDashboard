@@ -144,11 +144,12 @@ dojo.declare(
 					"Styles": [ {
 						defaultCell: { width: 10, editable: true },
 						cells: [
-							{ hidden: true, field:"id" },
+							{ name: "ID", field:"id", width: "50px" },
+//							{ hidden: true, field:"id" },
 							//TESTING TESTING --- NEED TO FIX!!!!
-							{ name: "ID", field:"grid_id", width: "50px", formatter: 
-								function(data) { return data.id;  }
-							 },
+//							{ name: "ID", field:"grid_id", width: "50px", formatter: 
+//								function(data) { return data.id;  }
+//							 },
 							{ name: "Name", field:"name", width: "50px" },
 							{ name: "Label", field:"label", width: "50px" },
 							{ name: "Fill Color", field:"fillcolor", width: "50px" },
