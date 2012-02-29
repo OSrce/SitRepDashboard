@@ -213,12 +213,13 @@ srd_layer.prototype.loadData = function( ) {
 				layers: "nexrad-n0r-wmst",
 				transparent : "true",
 				format : 'image/png',
+				time : '2012-02-28T17:00:00',
 				srs: 'EPSG:4326'
 			},
 			{
 				isBaseLayer:	this.options.isBaseLayer,
-				projection:		new OpenLayers.Projection(this.options.projection)
-//				visibility:		this.options.visibility 
+				projection:		new OpenLayers.Projection(this.options.projection),
+				visibility:		this.options.visibility 
 				
  			}
 		);

@@ -444,8 +444,8 @@ srd_document.prototype.srd_displayMenuBar = function() {
 			//// SitRep MENU /////	
 			var srd_sitrepMenu = new dijit.Menu({});
 			this.srd_menuBar.addChild(new dijit.MenuBarItem({
-				label: "SitRep",
-			}) );
+				label: "SitRep" 
+			} ) );
 
 			//// File Menu ////
 			var srd_fileMenu = new dijit.Menu({});

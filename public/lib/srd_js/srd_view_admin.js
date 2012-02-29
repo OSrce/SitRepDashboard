@@ -34,7 +34,7 @@ dojo.declare(
 					"Sessions" : "/srdata/Sessions/",
 					"Layers" : "/srdata/Layers/",
 					"Styles" : "/srdata/Styles/",
-					"Style Presets" : "/srdata/Stylepresets/",
+					"Style Presets" : "/srdata/Stylepresets/"
 				}
 				this.selectedTable = "Users";
 				this.selectedDataMenu = new dijit.Menu();
