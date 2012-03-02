@@ -152,6 +152,11 @@ srd_document.prototype.srd_init = function() {
 		this.staticVals.docCount = 1;
 	}
 
+	/// TESTING UGLY JUST TO MAKE SURE selLayer isn't NULL.	
+	for(var key in this.srd_layerArr) {
+		this.srd_selLayer = this.srd_layerArr[key];
+	}
+
 
 
 
@@ -406,7 +411,8 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 	tmpLayer.options.editable = true;
 
 	//BAD - NEED TO REQUEST ID FROM SERVER, CANT PICK ARBITRARILY
-	tmpLayer.options.id = this.srd_layerArr.length;
+//	tmpLayer.options.id = this.srd_layerArr.length;
+	tmpLayer.options.id = 20000;
 
 	this.srd_layerArr[tmpLayer.options.id] = tmpLayer;	
 	this.staticVals.layerCount++;
