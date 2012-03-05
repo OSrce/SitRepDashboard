@@ -33,8 +33,16 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$select = $this->restTable->select();
 
 			// TO SUPPORT SORTING Look for sort param
-			$tableSort = $this->_getAllParams();	
-/*			$sortArr = explode(',',$tableSort);
+			$tableSort = "";
+			$paramArr = $this->_getAllParams();	
+			foreach($paramArr as $key=> $val) {
+				if( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
+					$tableSort = $keyArr[1];
+					continue;
+				}
+			}
+			$sortArr = explode(',',$tableSort);
+//			$this->logger->log("TEST2: $tableSort\n".print_r($sortArr,true), Zend_Log::DEBUG);	
 			if( is_array( $sortArr ) ) {
 				foreach($sortArr as $key=> $val) {
 					if( preg_match( "/^\_(.*)/", $val, $valArr) ) {
@@ -44,8 +52,10 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 					}
 				}
 			}
-*/
-			$this->logger->log("TEST: ".print_r($tableSort,true), Zend_Log::DEBUG);	
+			$select->order($sortArr);
+
+
+//			$this->logger->log("TEST: ".print_r($sortArr,true), Zend_Log::DEBUG);	
 			
 
 			// TO SUPPORT PAGINATION WE NEED TO LOOK FOR RANGE = VAR and TRANSLATE IT TO
