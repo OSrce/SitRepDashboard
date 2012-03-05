@@ -34,7 +34,8 @@ dojo.declare(
 					"Sessions" : "/srdata/Sessions/",
 					"Layers" : "/srdata/Layers/",
 					"Styles" : "/srdata/Styles/",
-					"Style Presets" : "/srdata/Stylepresets/"
+					"Style Presets" : "/srdata/Stylepresets/",
+					"Calls for service - SPRINT" : "/srdata/Cfs/"
 				}
 				this.selectedTable = "Users";
 				this.selectedDataMenu = new dijit.Menu();
@@ -187,8 +188,36 @@ dojo.declare(
 							{ name: "Group ID", field:"group_id", width: "50px" },
 							{ name: "User ID", field:"user_id", width: "50px" }
 							]
+					} ],
+					"Calls for service - SPRINT": [ {
+						defaultCell: { width: 10, editable: true },
+						cells: [
+							{ name: "Date", field:"cfs_date", width: "80px" },
+							{ name: "Time", field:"cfs_timecreated", width: "50px" },
+							{ name: "Job Let", field:"cfs_letter", width: "50px" },
+							{ name: "Job #", field:"cfs_num", width: "50px" },
+							{ name: "Precinct", field:"cfs_pct", width: "50px" },
+							{ name: "Sector", field:"cfs_sector", width: "50px" },
+							{ name: "Address", field:"cfs_addr", width: "100px" },
+							{ name: "Cross St 1", field:"cfs_cross1", width: "50px" },
+							{ name: "Cross St 2", field:"cfs_cross2", width: "50px" },
+							{ name: "Signal", field:"cfs_code", width: "50px", formatter:function(data) {
+									if(data) { return "10-"+data} else { return ''; } }
+						  },
+							{ name: "Signal Info", field:"cfs_codesupp", width: "50px" },
+							{ name: "Time Assigned", field:"cfs_timeassigned", width: "50px" },
+							{ name: "Priority", field:"cfs_priority", width: "50px" },
+							{ name: "Ops Tracking", field:"cfs_opstrack", width: "50px" },
+							{ name: "Ops Tracking Date", field:"cfs_opstrack_date", width: "50px" },
+							{ name: "Final Disposition", field:"cfs_finaldis", width: "50px" },
+							{ name: "Final Disposition Info", field:"cfs_finaldissupp", width: "50px" },
+							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "50px" },
+							{ name: "Final Disposition Unit", field:"cfs_finaldisunit", width: "50px" },
+							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px" },
+
+							{ name: "Body of Job", field:"cfs_body", width: "250px" }
+							]
 					} ]
-	
 					
 				}
 

@@ -6,6 +6,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		protected $db;
 		protected $restTable;
 		protected $idName;
+		protected $theRequest;
 
     public function init()
     {
@@ -16,6 +17,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 //			$this->db = $this->getInvokeArg('bootstrap')->getResource('db');
 //			$this->restTable = new Srdata_Model_DbTable_Users($this->db);
 
+			$this->theRequest = $this->getRequest();
 			$this->_helper->viewRenderer->setNoRender(true);
 			$this->logger->log("REST Class: ".$this->tableName." Inited. ", Zend_Log::DEBUG);	
 
@@ -24,8 +26,41 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		// GET (Index) Action === READ ALL fetchAll
     public function indexAction()
     {
-			$this->logger->log($this->tableName." Index (READ ALL)  Action Called: ", Zend_Log::DEBUG);	
-			$rows = $this->restTable->fetchAll();
+
+			$countRows = "SELECT COUNT(*) AS count FROM ".$this->tableName;
+			$tableSize = $this->db->fetchOne($countRows);
+		
+			$select = $this->restTable->select();
+
+			// TO SUPPORT SORTING Look for sort param
+			$tableSort = $this->_getAllParams();	
+/*			$sortArr = explode(',',$tableSort);
+			if( is_array( $sortArr ) ) {
+				foreach($sortArr as $key=> $val) {
+					if( preg_match( "/^\_(.*)/", $val, $valArr) ) {
+						$sortArr[$key] = $valArr[1]." ASC";
+					}elseif( preg_match( "/^-(.*)/", $val, $valArr) ) {
+						$sortArr[$key] = $valArr[1]." DESC";
+					}
+				}
+			}
+*/
+			$this->logger->log("TEST: ".print_r($tableSort,true), Zend_Log::DEBUG);	
+			
+
+			// TO SUPPORT PAGINATION WE NEED TO LOOK FOR RANGE = VAR and TRANSLATE IT TO
+			// OFFSET AND LIMIT parameters in query.
+			$range = $this->_request->getHeader('Range');	
+			$rangeArr = array();
+			if( preg_match( "/items=(\d+)-(\d+)/", $range,$rangeArr) ) {
+				$itemsRange = $rangeArr[0];
+				$offset = $rangeArr[1];
+				$limit  = $rangeArr[2];
+				$select->limit($limit,$offset);
+				$this->_response->setHeader('Content-Range', $itemsRange.'/'.$tableSize);
+			}
+			$this->logger->log($this->tableName." Index (READ ALL)  Action Called", Zend_Log::DEBUG);	
+			$rows = $this->restTable->fetchAll($select);
 			print Zend_Json::encode($rows->toArray());
 
     }
