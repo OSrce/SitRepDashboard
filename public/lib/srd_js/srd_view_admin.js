@@ -204,13 +204,13 @@ dojo.declare(
 							{ name: "Signal", field:"cfs_code", width: "50px", formatter:function(data) {
 									if(data) { return "10-"+data} else { return ''; } }
 						  },
-							{ name: "Signal Info", field:"cfs_codesupp", width: "50px" },
+							{ name: "Signal Info1", field:"cfs_codesup1", width: "50px" },
+							{ name: "Signal Info2", field:"cfs_codesup2", width: "50px" },
 							{ name: "Time Assigned", field:"cfs_timeassigned", width: "50px" },
 							{ name: "Priority", field:"cfs_priority", width: "50px" },
-							{ name: "Ops Tracking", field:"cfs_opstrack", width: "50px" },
-							{ name: "Ops Tracking Date", field:"cfs_opstrack_date", width: "50px" },
+							{ name: "Ops Tracking", field:"cfs_routenotifications", width: "50px" },
 							{ name: "Final Disposition", field:"cfs_finaldis", width: "50px" },
-							{ name: "Final Disposition Info", field:"cfs_finaldissupp", width: "50px" },
+							{ name: "Final Disposition Info", field:"cfs_finaldissup1", width: "50px" },
 							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "50px" },
 							{ name: "Final Disposition Unit", field:"cfs_finaldisunit", width: "50px" },
 							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px" },

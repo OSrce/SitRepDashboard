@@ -106,6 +106,8 @@ function srd_document() {
 		datagrid 	: 'srd_view_datagrid',
 		layergrid	:	'srd_view_layergrid',
 		admin			:	'srd_view_admin',
+		opstrack	:	'srd_view_opstrack',
+		cfssingle	:	'srd_view_cfssingle',
 		video			:	'srd_view_video'
 	}
 

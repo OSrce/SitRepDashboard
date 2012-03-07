@@ -27,20 +27,45 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
     public function indexAction()
     {
 
-			$countRows = "SELECT COUNT(*) AS count FROM ".$this->tableName;
-			$tableSize = $this->db->fetchOne($countRows);
+//			$countRows = "SELECT COUNT(*) AS count FROM ".$this->tableName;
+//			$tableSize = $this->db->fetchOne($countRows);
 		
 			$select = $this->restTable->select();
 
 			// TO SUPPORT SORTING Look for sort param
 			$tableSort = "";
 			$paramArr = $this->_getAllParams();	
+			$this->logger->log("The Params: ".print_r($paramArr,true)."\n", Zend_Log::DEBUG);	
 			foreach($paramArr as $key=> $val) {
-				if( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
-					$tableSort = $keyArr[1];
+				$this->logger->log("The key:$key:::\n", Zend_Log::DEBUG);	
+				if( $key == "module" || $key == "controller" || $key == "action") {
 					continue;
+				} elseif( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
+					$tableSort = $keyArr[1];
+				} else {
+					$select->where("$key=?",$val); 	
 				}
 			}
+
+//			$this->logger->log("TEST0: ".(string)$select."\n", Zend_Log::DEBUG);	
+
+			$select->from($this->tableName, array('TotalRecords' => new Zend_Db_Expr('Count(*)') ) );
+			$tableSize = $this->db->fetchOne($select);
+			$this->logger->log("TEST9: $tableSize\n", Zend_Log::DEBUG);	
+			$select->reset();
+
+			foreach($paramArr as $key=> $val) {
+				$this->logger->log("The key:$key:::\n", Zend_Log::DEBUG);	
+				if( $key == "module" || $key == "controller" || $key == "action") {
+					continue;
+				} elseif( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
+					$tableSort = $keyArr[1];
+				} else {
+					$select->where("$key=?",$val); 	
+				}
+			}
+
+
 			$sortArr = explode(',',$tableSort);
 //			$this->logger->log("TEST2: $tableSort\n".print_r($sortArr,true), Zend_Log::DEBUG);	
 			if( is_array( $sortArr ) ) {
