@@ -31,7 +31,8 @@ dojo.declare(
 //			this.map = this.srd_doc.map;
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_mapContent = new dijit.layout.ContentPane(
-	     {  splitter: 'false', style: "background-color:white;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
+				/// NEED TO FIX THIS TODO: width and height are messed up
+	     {  splitter: 'false', style: "background-color:black;width:1000px;height:1000px;border:0px;margin:0px;padding:0px;", region: 'center'} );
 			this.container.addChild(this.srd_mapContent);
 			this.mapDiv = dojo.create("div",{ 'class':'map' }, this.srd_mapContent.domNode);
 			this.map_init();
@@ -55,9 +56,9 @@ dojo.declare(
 						new OpenLayers.Control.KeyboardDefaults(),
 						this.geolocateControl
 					],
-//					projection : "EPSG:900913",
-//					displayProjection: "EPSG:4326"
-					maxExtent : new OpenLayers.Bounds(-20037508,-20037508, 20037508, 20037508)
+					projection : "EPSG:900913",
+					displayProjection: "EPSG:4326"
+//					maxExtent : new OpenLayers.Bounds(-20037508,-20037508, 20037508, 20037508)
 				} );
 				this.map.render( this.mapDiv  ); 
 				console.log("DONE CREATING MAP!!!!");
