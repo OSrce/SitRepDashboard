@@ -114,12 +114,13 @@ dojo.declare(
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
 */
 				/// NEED TO START BUILDING UI FOR VIEWING SINGLE JOB.
-				this.srd_dateselect = new dijit.form.DateTextBox( {
-					label: "Date:",
+				this.srd_dateLabel = new dijit.layout.ContentPane( {
+					content : "Date: "
+				} );
+				this.container.addChild(this.srd_dateLabel);
+				this.srd_dateSelect = new dijit.form.DateTextBox( {
 					value: new Date() } );
-
-				
-				this.container.addChild(this.srd_dateselect);
+//				this.container.addChild(this.srd_dateSelect);
 
 		
 		},

@@ -29,9 +29,11 @@ dojo.declare(
 			this.data = view_data;
 			this.data.height = Math.round(100 / this.data.yDim);
 //			this.containerStyle = 'width:100%; height:'+this.height+'%;margin:0px;border:0px;padding:0px; background-color:black;';
-			this.containerStyle = 'width:100%; height:'+this.data.height+'%;background-color:black;';
+				//TEST TRYING TO REMOVE STYLE FROM JS PUT IN CSS!!!!
+//			this.containerStyle = 'width:100%; height:'+this.data.height+'%;background-color:black;';
 			this.container = new dijit.layout.BorderContainer({
-				style: this.containerStyle
+//				style: this.containerStyle
+				"class": "srdView"
 			} );	
 			this.srd_doc.viewContainer.addChild(this.container,this.data.xPos,this.data.yPos);
 			dojo.connect(this.container, 'onClick',this, 'srd_select');
