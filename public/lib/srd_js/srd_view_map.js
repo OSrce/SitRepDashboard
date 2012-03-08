@@ -29,13 +29,15 @@ dojo.declare(
 			this.start_lon = view_data.start_lon;
 			this.start_zoom = view_data.start_zoom;
 //			this.map = this.srd_doc.map;
+			dojo.addOnLoad( function() {
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_mapContent = new dijit.layout.ContentPane(
-				/// NEED TO FIX THIS TODO: width and height are messed up
-	     {  splitter: 'false', style: "background-color:black;width:1000px;height:1000px;border:0px;margin:0px;padding:0px;", region: 'center'} );
+	     {  splitter: 'false', style: "background-color:black;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
+			
 			this.container.addChild(this.srd_mapContent);
 			this.mapDiv = dojo.create("div",{ 'class':'map' }, this.srd_mapContent.domNode);
 			this.map_init();
+			}.bind(this) );
 		},
 		map_init : function() {
 			if(this.map == null) {
