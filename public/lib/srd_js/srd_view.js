@@ -8,6 +8,9 @@
 //
 /////////////////////////////////
 
+dojo.require("dojox.grid.EnhancedGrid");
+dojo.require("dojox.grid.enhanced.plugins.NestedSorting");
+
 //srd_view class definition using dojo.declare 
 dojo.declare( 
 	'srd_view',

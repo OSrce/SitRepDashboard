@@ -1,0 +1,18 @@
+/*******
+* Create function sr_geocode_event
+* to have sr_cfs address info geocoded after inserts.
+*
+*/
+
+CREATE OR REPLACE FUNCTION sr_geocode_event() RETURNS trigger AS
+IF TG RELNAME=''sr_cfs'' THEN
+	UPDATE sr_cfs.
+
+SELECT g.rating, g.geomout FROM geocode('1 Test St, New York NY', 1 );
+
+LANGUAGE 'plpgsql';
+
+
+--- END FUNCTION ---
+
+

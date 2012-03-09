@@ -94,6 +94,7 @@ dojo.declare(
 							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "50px" },
 							{ name: "Final Disposition Unit", field:"cfs_finaldisunit", width: "50px" },
 							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px" },
+							{ name: "Last Updated From SPRINT", field:"cfs_updated_on", width: "50px" },
 
 							{ name: "Body of Job", field:"cfs_body", width: "250px" }
 							]
@@ -101,9 +102,10 @@ dojo.declare(
 					
 				}
 				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
-				this.srd_datagrid = new dojox.grid.DataGrid( {
+				this.srd_datagrid = new dojox.grid.EnhancedGrid( {
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
+					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
 				var todayStr = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
@@ -140,9 +142,10 @@ dojo.declare(
 					dojo.store.Memory() 
 				);
 				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
-				this.srd_datagrid = new dojox.grid.DataGrid( {
+				this.srd_datagrid = new dojox.grid.EnhancedGrid( {
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
+					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
 				this.container.addChild(this.srd_datagrid);
