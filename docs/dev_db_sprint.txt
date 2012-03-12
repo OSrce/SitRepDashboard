@@ -1,3 +1,10 @@
+/*  SQL FILE FOR SETTING UP calls for service table
+*
+*
+*
+*
+*/
+
 
 CREATE TABLE sr_cfs (
   cfs_date DATE NOT NULL,

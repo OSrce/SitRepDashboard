@@ -2,17 +2,70 @@
 * Create function sr_geocode_event
 * to have sr_cfs address info geocoded after inserts.
 *
+* NEED TO ENABLE DBLINK
+* psql -d sr_data -f /usr/share/pgsql/contrib/dblink.sql
+*
 */
 
-CREATE OR REPLACE FUNCTION sr_geocode_event() RETURNS trigger AS
-IF TG RELNAME=''sr_cfs'' THEN
-	UPDATE sr_cfs.
+CREATE OR REPLACE FUNCTION sr_geocode_event() RETURNS TRIGGER 
+AS $sr_geocode_trigger$
+DECLARE
+querystr text;
+addressstr1 varchar(256);
+therating INTEGER;
+thegeomout geometry;
+BEGIN
+IF TG_RELNAME='sr_cfs' THEN
+	IF NEW.cfs_addr IS NULL THEN
+		IF NEW.cfs_cross1 IS NULL AND NEW.cfs_cross2 IS NULL THEN
+			/* NO GOOD -> RETURN cfs_geocoded = false */
+			NEW.cfs_geocoded = false;
+		ELSE
+			querystr := 'SELECT rating, ST_Force_3D( ST_Transform(geomout, 4326)) AS sr_geomout FROM geocode_intersection(''' ||NEW.cfs_cross1|| ''','''|| NEW.cfs_cross2 || ''',''New York'', ''NY'',NULL, 1 ) ';
+			RAISE NOTICE 'Query String===%===',querystr;
+			SELECT INTO therating, thegeomout  g.rating, g.geomout FROM dblink('dbname=sr_geocoder', querystr) AS g(rating int, geomout geometry);
+			IF therating <= 10 THEN
+				RAISE NOTICE 'Geocode Successful';
+				NEW.sr_geom := thegeomout;
+				NEW.cfs_geocoded := 'true';
+			ELSE
+				RAISE NOTICE 'Geocode Unsuccessful';
+				NEW.cfs_geocoded := 'false';
+			END IF;
+		END IF;
+	ELSE /* We have a GOOD Address String */
+		addressstr1 := NEW.cfs_addr||', New York NY';
+		querystr := 'SELECT rating, ST_Force_3D( ST_Transform( geomout, 4326) ) AS sr_geomout FROM geocode(''' || addressstr1 || ''', 1 )';
+		RAISE NOTICE 'FULL ADDR TO GEOCODE===%===',addressstr1;
+		RAISE NOTICE 'Query String===%===',querystr;
+		SELECT INTO therating, thegeomout  g.rating, g.geomout FROM dblink('dbname=sr_geocoder', querystr) AS g(rating int, geomout geometry);
+---		SELECT INTO therating, thegeomout  g.rating, g.geomout FROM dblink('dbname=sr_geocoder', 'SELECT rating, geomout FROM geocode( addressstr1, 1 ) AS geoval') AS g(rating int, geomout geometry);
 
-SELECT g.rating, g.geomout FROM geocode('1 Test St, New York NY', 1 );
-
+		IF therating <= 10 THEN
+			RAISE NOTICE 'Geocode Successful';
+			NEW.sr_geom := thegeomout;
+			NEW.cfs_geocoded := 'true';
+		ELSE
+			RAISE NOTICE 'Geocode Unsuccessful';
+			NEW.cfs_geocoded := 'false';
+		END IF;
+	END IF;
+	RETURN NEW;
+END IF;
+END;
+$sr_geocode_trigger$
 LANGUAGE 'plpgsql';
-
-
 --- END FUNCTION ---
+
+/* CREATE THE TRIGGER AND RUN ON ALL ROWS.*/
+
+DROP TRIGGER sr_geocode_trigger ON sr_cfs;
+CREATE TRIGGER sr_geocode_trigger
+BEFORE INSERT OR UPDATE ON sr_cfs
+    FOR EACH ROW EXECUTE PROCEDURE sr_geocode_event();
+
+
+
+
 
 
