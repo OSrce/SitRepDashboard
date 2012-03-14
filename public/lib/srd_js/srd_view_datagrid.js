@@ -34,6 +34,9 @@ dojo.declare(
 			var theStruct = [
 				{ name: "Feature ID", field:"fid", width: "50px" }
 			];
+			if( this.srd_selLayer == null || this.srd_selLayer.layer == null || this.srd_selLayer.layer.features == null || this.srd_selLayer.layer.features.length == 0) {
+				return;
+			}
 			for(var dataType in this.srd_selLayer.layer.features[0].data) {
 				theStruct.push( { 
 					name: dataType,

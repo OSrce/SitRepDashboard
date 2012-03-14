@@ -234,9 +234,10 @@ dojo.declare(
 				}
 */
 				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
-				this.srd_datagrid = new dojox.grid.DataGrid( {
+				this.srd_datagrid = new dojox.grid.EnhancedGrid( {
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
+					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
 				this.container.addChild(this.srd_datagrid);
@@ -271,9 +272,10 @@ dojo.declare(
 					dojo.store.Memory() 
 				);
 				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
-				this.srd_datagrid = new dojox.grid.DataGrid( {
+				this.srd_datagrid = new dojox.grid.EnhancedGrid( {
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
+					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
 				this.container.addChild(this.srd_datagrid);
