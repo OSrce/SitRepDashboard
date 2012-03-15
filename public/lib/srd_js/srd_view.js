@@ -21,7 +21,8 @@ dojo.declare(
 		// type: this can be one of the following:
 		// empty, map, datagrid, admin, view (more to come)
 		data : null,
-		container : null,
+		outsideContainer : null,
+		insideContainer : null,
 		selected : null,
 		containerStyle : null,
 		dataMenu : null,
@@ -32,21 +33,26 @@ dojo.declare(
 			this.data = view_data;
 			this.data.height = Math.round(100 / this.data.yDim);
 //			this.containerStyle = 'width:100%; height:'+this.height+'%;margin:0px;border:0px;padding:0px; background-color:black;';
-				//TEST TRYING TO REMOVE STYLE FROM JS PUT IN CSS!!!!
-//			this.containerStyle = 'width:100%; height:'+this.data.height+'%;background-color:black;';
-			this.container = new dijit.layout.BorderContainer({
-//				style: this.containerStyle
-				"class": "srdView"
+
+			this.outsideContainer = new dijit.layout.BorderContainer({
+				"class": "srdViewOutside"
 			} );	
-			this.srd_doc.viewContainer.addChild(this.container,this.data.xPos,this.data.yPos);
-			dojo.connect(this.container, 'onClick',this, 'srd_select');
+			this.srd_doc.viewContainer.addChild(this.outsideContainer,this.data.xPos,this.data.yPos);
+
+			this.insideContainer = new dijit.layout.BorderContainer({
+				"class": "srdViewInside",
+				"region": "center"
+			} );	
+			this.outsideContainer.addChild( this.insideContainer );
+
+			dojo.connect(this.insideContainer, 'onClick',this, 'srd_select');
 			
 			this.dataMenu = new dijit.Menu( {} );
 		},
 		destroy : function() {
 			console.log("Destroy View called!");
-			this.srd_doc.viewContainer.removeChild(this.container);
-			this.container.destroyRecursive();			
+			this.srd_doc.viewContainer.removeChild(this.outsideContainer);
+			this.outsideContainer.destroyRecursive();			
 
 		},
 		// RESIZE - USED FOR Y DIM SINCE ITS NOT HANDLED AUTOMATICALLY.
@@ -58,10 +64,11 @@ dojo.declare(
 //			this.yDim = view_data.yDim;
 //			this.width = 50; //Math.round(100 / this.xDim);
 			this.data.height = Math.round(100 / this.data.yDim);
-			this.containerStyle = 'width:100%; height:'+this.data.height+'%; background-color:black;';
-			this.container.set('style',this.containerStyle);
+//			this.containerStyle = 'width:100%-10px; height:'+this.data.height+'%-10px; background-color:black;';
+//			this.outsideContainer.set('style',this.containerStyle);
 			console.log('RESIZE CALLED: height: '+this.data.height);
-			this.container.resize();
+			this.outsideContainer.resize();
+			this.insideContainer.resize();
 		},
 		
 		srd_select : function(event) {
@@ -71,13 +78,13 @@ dojo.declare(
 			}
 			this.srd_doc.selectedView = this;
 			this.srd_doc.srd_updateViewMenu();
-			this.containerStyle = 'background-color:grey;';
-			this.container.set('style',this.containerStyle);
+			this.containerStyle = 'background-color: grey;';
+			this.outsideContainer.set('style',this.containerStyle);
 			this.srd_doc.srd_dataMenu = this.dataMenu;
 		},
 		srd_unselect : function() {
-			this.containerStyle = 'background-color:black;';
-			this.container.set('style',this.containerStyle);
+			this.containerStyle = 'background-color: black;';
+			this.outsideContainer.set('style',this.containerStyle);
 		}
 
 	}

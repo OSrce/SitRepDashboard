@@ -78,6 +78,7 @@ dojo.declare(
 				);
 				var gridCellsDijit = dojox.grid.cells;
 				this.srd_structList = { 
+					defaultCell: { width: 10, editable: true },
 					"Users": [
 						{ name: "User ID", field:"uid", width: "50px" },
 						{ name: "Group ID", field:"gid", width: "50px" },
@@ -240,7 +241,7 @@ dojo.declare(
 					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
-				this.container.addChild(this.srd_datagrid);
+				this.insideContainer.addChild(this.srd_datagrid);
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
 		
 		},
@@ -278,7 +279,7 @@ dojo.declare(
 					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
-				this.container.addChild(this.srd_datagrid);
+				this.insideContainer.addChild(this.srd_datagrid);
 			}
 		}
 	}

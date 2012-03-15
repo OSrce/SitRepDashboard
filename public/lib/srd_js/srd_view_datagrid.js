@@ -57,7 +57,7 @@ dojo.declare(
 				structure : theStruct,
 				region : 'center'
 			} );
-			this.container.addChild(this.srd_datagrid);
+			this.insideContainer.addChild(this.srd_datagrid);
 			this.srd_datagrid.startup();
 		}
 	}

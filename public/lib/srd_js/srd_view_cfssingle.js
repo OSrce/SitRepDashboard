@@ -23,6 +23,7 @@ dojo.declare(
 	
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
+			dojo.addOnLoad( function() {
 			console.log("srd_view_cfssingle constructor called!");
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_selLayer = this.srd_doc.srd_selLayer;
@@ -113,16 +114,23 @@ dojo.declare(
 				this.container.addChild(this.srd_datagrid);
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
 */
-				/// NEED TO START BUILDING UI FOR VIEWING SINGLE JOB.
-				this.srd_dateLabel = new dijit.layout.ContentPane( {
-					content : "Date: "
+				this.cp = new dijit.layout.ContentPane( {
+					region: "center",
+					class: "srd_cfs_single"
 				} );
-				this.container.addChild(this.srd_dateLabel);
+				this.insideContainer.addChild(this.cp);	
+				this.insideContainer.resize();
+				/// NEED TO START BUILDING UI FOR VIEWING SINGLE JOB.
+				this.srd_dateLabel = dojo.create("label", {class:"srd_cfs_row1", id:"date_label", innerHTML: "Date :"} , this.cp.domNode);
 				this.srd_dateSelect = new dijit.form.DateTextBox( {
+					class: "srd_cfs_row1",
+					id: "cfs_date",
 					value: new Date() } );
-//				this.container.addChild(this.srd_dateSelect);
+				this.srd_dateSelect.placeAt(this.cp.domNode);
+				this.srd_timecreated = dojo.create("label", {class:"srd_cfs_row1", id:"cfs_time", innerHTML: "Time :"} , this.cp.domNode);
 
-		
+
+		}.bind(this) );	
 		},
 		deleteSelectedItems: function() {
 			var items = this.srd_datagrid.selection.getSelected();
@@ -157,7 +165,7 @@ dojo.declare(
 					structure : this.srd_structList[this.selectedTable],
 					region : 'center'
 				} );
-				this.container.addChild(this.srd_datagrid);
+				this.insideContainer.addChild(this.srd_datagrid);
 			}
 		}
 	}

@@ -71,7 +71,7 @@ dojo.declare(
 				var gridCellsDijit = dojox.grid.cells;
 				this.srd_structList = { 
 					"Calls for service - SPRINT": [ {
-						defaultCell: { width: 10, editable: true },
+						defaultCell: { width: 10, editable: false },
 						cells: [
 							{ name: "Date", field:"cfs_date", width: "80px" },
 							{ name: "Time", field:"cfs_timecreated", width: "50px" },
@@ -110,7 +110,7 @@ dojo.declare(
 				} );
 				var todayStr = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
 				this.srd_datagrid.setQuery( { cfs_date: todayStr, cfs_routenotifications: 'true'} ); 
-				this.container.addChild(this.srd_datagrid);
+				this.insideContainer.addChild(this.srd_datagrid);
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
 		
 		},
@@ -148,7 +148,7 @@ dojo.declare(
 					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
-				this.container.addChild(this.srd_datagrid);
+				this.insideContainer.addChild(this.srd_datagrid);
 			}
 		}
 	}

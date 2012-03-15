@@ -34,7 +34,7 @@ dojo.declare(
 			this.srd_mapContent = new dijit.layout.ContentPane(
 	     {  splitter: 'false', style: "background-color:black;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
 			
-			this.container.addChild(this.srd_mapContent);
+			this.insideContainer.addChild(this.srd_mapContent);
 			this.mapDiv = dojo.create("div",{ 'class':'map' }, this.srd_mapContent.domNode);
 			this.map_init();
 			}.bind(this) );

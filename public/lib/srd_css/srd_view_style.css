@@ -1,0 +1,59 @@
+
+.srdViewOutside.dijitBorderContainer {
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	margin:0px;
+	padding:0px;
+	border:0px;
+}
+
+
+.srdViewInside.dijitBorderContainer  {
+	margin:3px;
+	padding:0;
+	border:0;
+	line-height:normal;
+	color: blue;
+	background-color: black;
+}
+
+
+
+.srd_cfs_single {
+	background-color: white;
+	color: black;
+	font-size: 12pt;
+	width: 100%;
+	height: 100%;
+}
+
+.srd_cfs_row1 {
+	position: absolute;
+	top: 30px;
+	left: 10px;
+	clear: both;
+}
+
+.srd_cfs_row2 {
+	position: absolute;
+	top: 60px;
+}
+
+#date_label {
+	left: 10px;
+}	
+#widget_cfs_date {
+	left: 60px;
+	width: 95px;
+}
+#cfs_time {
+	left: 150px;
+}
+#job_label {
+	left: 180px;
+}
+#job_label {
+	left: 200px;
+}
+

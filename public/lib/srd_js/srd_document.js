@@ -104,7 +104,6 @@ function srd_document() {
 		empty 		: 'srd_view',
 		map 			: 'srd_view_map',
 		datagrid 	: 'srd_view_datagrid',
-		layergrid	:	'srd_view_layergrid',
 		admin			:	'srd_view_admin',
 		opstrack	:	'srd_view_opstrack',
 		cfssingle	:	'srd_view_cfssingle',
@@ -953,13 +952,14 @@ srd_document.prototype.srd_changeViewGridDimensions = function(theDimType,theDim
 					if( !this.staticVals.view_data[xPos][yPos] ) {
 						this.staticVals.view_data[xPos][yPos] = [];
 						this.staticVals.view_data[xPos][yPos].type = 'empty';
-					this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
-					this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
-					this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
-					this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
+						this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
+						this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
+						this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
+						this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
 						tmpViewYArr[yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
 					} else {
 						tmpViewYArr[yPos] = this.viewArr[xPos][yPos];
+						thmpViewYArr[yPos].resize();
 					}
 				}
 				this.viewArr[xPos] = tmpViewYArr;
