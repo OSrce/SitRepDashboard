@@ -74,23 +74,23 @@ dojo.declare(
 				var gridCellsDijit = dojox.grid.cells;
 				this.srd_structList = { 
 					"Calls for service - SPRINT": [ {
-						defaultCell: { width: 10, editable: true },
+						defaultCell: { width: 10, editable: false },
 						cells: [
-							{ name: "Date", field:"cfs_date", width: "80px" },
-							{ name: "Time", field:"cfs_timecreated", width: "50px" },
-							{ name: "Job Let", field:"cfs_letter", width: "50px" },
-							{ name: "Job #", field:"cfs_num", width: "50px" },
-							{ name: "Precinct", field:"cfs_pct", width: "50px" },
-							{ name: "Sector", field:"cfs_sector", width: "50px" },
+							{ name: "Date", field:"cfs_date", srdtype:"DateTextBox", srdrow:1, width:"80px", editable: true},
+							{ name: "Time", field:"cfs_timecreated", srdtype:"PlainText", srdrow:1, width: "50px" },
+							{ name: "Job Let", field:"cfs_letter", srdtype:"Hidden", width: "50px" },
+							{ name: "Job #", field:"cfs_num", srdtype:"Text", srdrow:1, width: "50px", editable:true },
+							{ name: "Precinct", field:"cfs_pct", srdtype:"PlainText", srdrow:2,width: "50px" },
+							{ name: "Sector", field:"cfs_sector", srdtype:"Hidden", width: "50px" },
 							{ name: "Address", field:"cfs_addr", width: "100px" },
 							{ name: "Cross St 1", field:"cfs_cross1", width: "50px" },
 							{ name: "Cross St 2", field:"cfs_cross2", width: "50px" },
-							{ name: "Signal", field:"cfs_code", width: "50px", formatter:function(data) {
+							{ name: "Signal", field:"cfs_code", srdtype:"PlainText", srdrow:2, width: "50px", formatter:function(data) {
 									if(data) { return "10-"+data} else { return ''; } }
 						  },
-							{ name: "Signal Info1", field:"cfs_codesup1", width: "50px" },
-							{ name: "Signal Info2", field:"cfs_codesup2", width: "50px" },
-							{ name: "Time Assigned", field:"cfs_timeassigned", width: "50px" },
+							{ field:"cfs_codesup1", srdtype:"PlainText", srdrow:2, width: "50px" },
+							{ field:"cfs_codesup2", srdtype:"PlainText", srdrow:2, width: "50px" },
+							{ name: "Time Assigned", field:"cfs_timeassigned", srdtype:"PlainText", srdrow:3,width: "50px" },
 							{ name: "Priority", field:"cfs_priority", width: "50px" },
 							{ name: "Ops Tracking", field:"cfs_routenotifications", width: "50px" },
 							{ name: "Final Disposition", field:"cfs_finaldis", width: "50px" },
@@ -98,8 +98,9 @@ dojo.declare(
 							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "50px" },
 							{ name: "Final Disposition Unit", field:"cfs_finaldisunit", width: "50px" },
 							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px" },
+							{ name: "Last Updated", field:"cfs_updated_on", srdtype:"PlainText", srdrow:1, width: "60px" },
 
-							{ name: "Body of Job", field:"cfs_body", width: "250px" }
+							{ field:"cfs_body", srdtype:"Text", srdrow:4, width: "250px" }
 							]
 					} ]
 					
@@ -120,15 +121,8 @@ dojo.declare(
 				} );
 				this.insideContainer.addChild(this.cp);	
 				this.insideContainer.resize();
-				/// NEED TO START BUILDING UI FOR VIEWING SINGLE JOB.
-				this.srd_dateLabel = dojo.create("label", {class:"srd_cfs_row1", id:"date_label", innerHTML: "Date :"} , this.cp.domNode);
-				this.srd_dateSelect = new dijit.form.DateTextBox( {
-					class: "srd_cfs_row1",
-					id: "cfs_date",
-					value: new Date() } );
-				this.srd_dateSelect.placeAt(this.cp.domNode);
-				this.srd_timecreated = dojo.create("label", {class:"srd_cfs_row1", id:"cfs_time", innerHTML: "Time :"} , this.cp.domNode);
-
+			this.srd_widgetArr = null;
+			this.displaySingleCfs();
 
 		}.bind(this) );	
 		},
@@ -166,6 +160,75 @@ dojo.declare(
 					region : 'center'
 				} );
 				this.insideContainer.addChild(this.srd_datagrid);
+			}
+		},
+		// END SELECT TABLE FUNCTION
+		// BEGIN displaySingleCfs FUNCTION
+		displaySingleCfs: function() {
+			console.log("Called Display Single CFS");
+			if( !this.srd_widgetArr) {
+				this.srd_widgetArr = {};
+				for(var i=0;i<this.srd_structList[this.selectedTable][0].cells.length;i++) {
+					var cell = this.srd_structList[this.selectedTable][0].cells[i];
+					if(!cell.editable) {
+						cell.editable = false;
+					}
+					if(cell.srdtype) {
+						console.log("Creating Widget for "+cell.srdtype);
+						switch(cell.srdtype) {
+						case "DateTextBox" :
+							var theLabel = dojo.create("label", {class:"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
+							var theWidget = new dijit.form.DateTextBox( {
+								class: "srd_cfs_row"+cell.srdrow,
+								id: cell.field,
+								value: new Date(),
+								srd_view: this,
+								editable: cell.editable,
+								onChange: function() { this.srd_view.getData(this.id); }
+							} );
+							theWidget.placeAt(this.cp.domNode);
+							theWidget.startup();
+							this.srd_widgetArr[cell.field] = theWidget;
+							break;
+						case "PlainText" :
+							if(cell.name) {
+								var theLabel = dojo.create("label", {class:"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
+							}
+							var theWidget = dojo.create("div", {class:"srd_cfs_row"+cell.srdrow, id:cell.field, innerHTML: ""} , this.cp.domNode);
+							this.srd_widgetArr[cell.field] = theWidget;
+							break;	
+						case "Text" :
+							if(cell.name) {
+								var theLabel = dojo.create("label", {class:"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
+							}
+							var theWidget = new dijit.form.Textarea( {
+								class: "srd_cfs_row"+cell.srdrow,
+								id: cell.field,
+								editable: cell.editable,
+								srd_view: this,
+								onChange: function() { this.srd_view.getData(this.id); }
+							} );
+							theWidget.placeAt(this.cp.domNode);
+							theWidget.startup();
+							this.srd_widgetArr[cell.field] = theWidget;
+							break;
+						}
+					}
+				}
+			}		
+		},
+		// END displaySingleCfs FUNCTION
+		// BEGIN getData FUNCTION
+		getData : function(theId) {	
+			console.log("getData Called!");
+			if( this.srd_widgetArr["cfs_date"].value && this.srd_widgetArr["cfs_num"].value) {
+					var theDate = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
+//					var theDate = this.srd_widgetArr["cfs_date"].value;
+					var theJob = this.srd_widgetArr["cfs_num"].value; 
+					var theRetArr = this.srd_store.query({"cfs_date":theDate, "cfs_num":theJob}, {
+						count: 1
+					} );	
+
 			}
 		}
 	}

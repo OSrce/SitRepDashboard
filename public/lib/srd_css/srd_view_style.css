@@ -40,20 +40,72 @@
 	top: 60px;
 }
 
-#date_label {
+.srd_cfs_row3 {
+	position: absolute;
+	top: 110px;
+}
+
+.srd_cfs_row4 {
+	position: absolute;
+	top: 160px;
+}
+
+
+
+
+
+#label_cfs_date {
 	left: 10px;
 }	
 #widget_cfs_date {
 	left: 60px;
 	width: 95px;
 }
-#cfs_time {
-	left: 150px;
+#label_cfs_timecreated {
+	left: 170px;
 }
-#job_label {
-	left: 180px;
+#cfs_timecreated {
+	left: 250px;
 }
-#job_label {
-	left: 200px;
+#label_cfs_num {
+	left: 300px;
 }
+#cfs_num {
+	left: 350px;
+	width: 81px;
+}
+#label_cfs_updated_on {
+	left: 450px;
+}
+#cfs_updated_on {
+	left: 550px;
+}
+
+#label_cfs_code {
+	left: 300px;
+}
+#cfs_code {
+	left: 350px;
+}
+
+#label_cfs_pct {
+	left: 10px;
+}
+#cfs_pct {
+	left: 60px;
+}
+
+
+#cfs_codesup2 {
+	left: 550px;
+}
+
+
+#cfs_body {
+	left: 10px;
+	width: 700px;
+}
+
+
+
 

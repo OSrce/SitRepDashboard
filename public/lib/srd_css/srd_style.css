@@ -1668,7 +1668,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .dijitFolderOpened,
 .dijitIconFolderOpen,
 .dijitIconError {
-	background-image: url(../dijit/themes/../icons/images/commonIconsObjActEnabled.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/commonIconsObjActEnabled.png); 
 	width: 16px;
 	height: 16px;
 }
@@ -1707,7 +1707,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .dj_ie6 .dijitFolderOpened,
 .dj_ie6 .dijitIconFolderOpen,
 .dj_ie6 .dijitIconError {
-	background-image: url(../dijit/themes/../icons/images/commonIconsObjActEnabled8bit.png);
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/commonIconsObjActEnabled8bit.png);
 }
 .dijitDisabled .dijitIconSave,
 .dijitDisabled .dijitIconPrint,
@@ -1744,7 +1744,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .dijitDisabled .dijitFolderOpened,
 .dijitDisabled .dijitIconFolderOpen,
 .dijitDisabled .dijitIconError {
-	background-image: url(../dijit/themes/../icons/images/commonIconsObjActDisabled.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/commonIconsObjActDisabled.png); 
 }
 .dijitIconSave { background-position: 0px; }
 .dijitIconPrint { background-position: -16px; }
@@ -1792,16 +1792,16 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dojoDndAvatar tr	{ border: none; }
 .tundra .dojoDndAvatarHeader td	{ height: 20px; padding: 0 0 0 21px; }
 .tundra .dojoDndAvatarItem td { padding: 2px;}
-.tundra.dojoDndMove .dojoDndAvatarHeader	{background-color: #f58383; background-image: url(../dijit/themes/tundra/images/dndNoMove.png); background-repeat: no-repeat; background-position: 2px center;}
-.tundra.dojoDndCopy .dojoDndAvatarHeader	{background-color: #f58383; background-image: url(../dijit/themes/tundra/images/dndNoCopy.png); background-repeat: no-repeat; background-position: 2px center;}
-.tundra.dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-color: #97e68d; background-image: url(../dijit/themes/tundra/images/dndMove.png); background-repeat: no-repeat; background-position: 2px center;}
-.tundra.dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-color: #97e68d; background-image: url(../dijit/themes/tundra/images/dndCopy.png); background-repeat: no-repeat; background-position: 2px center;}
+.tundra.dojoDndMove .dojoDndAvatarHeader	{background-color: #f58383; background-image: url(../SR_Dojo/dijit/themes/tundra/images/dndNoMove.png); background-repeat: no-repeat; background-position: 2px center;}
+.tundra.dojoDndCopy .dojoDndAvatarHeader	{background-color: #f58383; background-image: url(../SR_Dojo/dijit/themes/tundra/images/dndNoCopy.png); background-repeat: no-repeat; background-position: 2px center;}
+.tundra.dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-color: #97e68d; background-image: url(../SR_Dojo/dijit/themes/tundra/images/dndMove.png); background-repeat: no-repeat; background-position: 2px center;}
+.tundra.dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader	{background-color: #97e68d; background-image: url(../SR_Dojo/dijit/themes/tundra/images/dndCopy.png); background-repeat: no-repeat; background-position: 2px center;}
 .tundra .dijitContentPaneLoading {
-	background:url(../dijit/themes/tundra/images/loading.gif) no-repeat left center;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/loading.gif) no-repeat left center;
 	padding-left:25px;
 }
 .tundra .dijitContentPaneError {
-	background:url(../dijit/themes/tundra/images/warning.png) no-repeat left center;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/warning.png) no-repeat left center;
 	padding-left:25px;
 }
 .tundra .dijitContentPane {
@@ -1831,7 +1831,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	margin-right:4px;	
 	padding:0;
 	border:1px solid #ccc;
-	background:#e2e2e2 url(../dijit/themes/tundra/images/tabEnabled.png) repeat-x;
+	background:#e2e2e2 url(../SR_Dojo/dijit/themes/tundra/images/tabEnabled.png) repeat-x;
 }
 .tundra .dijitTabInnerDiv {
 	padding:2px 8px 2px 9px;
@@ -1864,7 +1864,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	border-left-color:#92a0b3;
 	border-right-color:#92a0b3;
 	border-bottom-color:#92a0b3;
-	background:#e2e2e2 url(../dijit/themes/tundra/images/tabHover.gif) repeat-x;
+	background:#e2e2e2 url(../SR_Dojo/dijit/themes/tundra/images/tabHover.gif) repeat-x;
 }
 .tundra .dijitTabContainerTop .dijitTabHover {
 	border-bottom-color:#ccc;
@@ -1913,18 +1913,18 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	border: none;	
 }
 .tundra .dijitTabCloseButton {
-	background: url(../dijit/themes/tundra/images/tabClose.png) no-repeat right top;
+	background: url(../SR_Dojo/dijit/themes/tundra/images/tabClose.png) no-repeat right top;
 	width: 12px;
 	height: 12px;
 }
 .dj_ie6 .tundra .dijitTabCloseButton {
-	background-image : url(../dijit/themes/tundra/images/tabClose.gif);
+	background-image : url(../SR_Dojo/dijit/themes/tundra/images/tabClose.gif);
 }
 .tundra .dijitTabCloseButtonHover {
-	background-image : url(../dijit/themes/tundra/images/tabCloseHover.png);
+	background-image : url(../SR_Dojo/dijit/themes/tundra/images/tabCloseHover.png);
 }
 .dj_ie6 .tundra .dijitTabCloseButtonHover {
-	background-image : url(../dijit/themes/tundra/images/tabCloseHover.gif);
+	background-image : url(../SR_Dojo/dijit/themes/tundra/images/tabCloseHover.gif);
 }
 .tundra .dijitTabContainerTop-tabs {
 	margin-bottom: 0;
@@ -2057,10 +2057,10 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dijitTabStripIcon {
 	height: 14px;
 	width: 14px;
-	background: url(../dijit/themes/tundra/images/spriteRoundedIconsSmall.png) no-repeat left top ;
+	background: url(../SR_Dojo/dijit/themes/tundra/images/spriteRoundedIconsSmall.png) no-repeat left top ;
 }
 .dj_ie6 .tundra .dijitTabStripIcon {
-	background-image: url(../dijit/themes/tundra/images/spriteRoundedIconsSmall.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteRoundedIconsSmall.gif);
 }
 .tundra .dijitTabStripSlideRightIcon {
 	background-position: -30px top;
@@ -2073,43 +2073,43 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	background-color: #fff;
 }
 .tundra .dijitAccordionTitle {
-	background:#fafafa url(../dijit/themes/tundra/images/titleBar.png) repeat-x bottom left;
+	background:#fafafa url(../SR_Dojo/dijit/themes/tundra/images/titleBar.png) repeat-x bottom left;
 	border-top: 1px solid #bfbfbf;
 	padding: 4px 4px 4px 8px;
 }
 .tundra .dijitAccordionTitleHover  {
-	background: #f8fafd url(../dijit/themes/tundra/images/accordionItemHover.gif) bottom repeat-x;
+	background: #f8fafd url(../SR_Dojo/dijit/themes/tundra/images/accordionItemHover.gif) bottom repeat-x;
 }
 .tundra .dijitAccordionTitleSelected  {
-	background: #f9f9f9 url(../dijit/themes/tundra/images/accordionItemActive.gif) bottom repeat-x;
+	background: #f9f9f9 url(../SR_Dojo/dijit/themes/tundra/images/accordionItemActive.gif) bottom repeat-x;
 	font-weight: bold;
 	border-top: 1px solid #aaaaaa;
 	border-bottom: 1px solid #bfbfbf;
 	padding: 4px 4px 4px 8px;
 }
 .tundra .dijitSplitContainerSizerH {
-	background:url(../dijit/themes/tundra/images/splitContainerSizerV.png) repeat-y #fff;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/splitContainerSizerV.png) repeat-y #fff;
 	border:0;
 	border-left:1px solid #bfbfbf;
 	border-right:1px solid #bfbfbf;
 	width:7px;
 }
 .tundra .dijitSplitContainerSizerH .thumb {
-	background:url(../dijit/themes/tundra/images/splitContainerSizerV-thumb.png) no-repeat #ccc;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/splitContainerSizerV-thumb.png) no-repeat #ccc;
 	left:1px;
 	width:3px;
 	height:19px;
 	overflow: hidden;
 }
 .tundra .dijitSplitContainerSizerV {
-	background:url(../dijit/themes/tundra/images/splitContainerSizerH.png) repeat-x #fff;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/splitContainerSizerH.png) repeat-x #fff;
 	border:0;
 	border-top:1px solid #bfbfbf;
 	border-bottom:1px solid #bfbfbf;
 	height:7px;
 }
 .tundra .dijitSplitContainerSizerV .thumb {
-	background:url(../dijit/themes/tundra/images/splitContainerSizerH-thumb.png) no-repeat #ccc;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/splitContainerSizerH-thumb.png) no-repeat #ccc;
 	top:1px;
 	width:19px;
 	height:3px;
@@ -2178,8 +2178,8 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitTextBox {
 	
-	background:#fff url(../dijit/themes/tundra/images/validationInputBg.png) repeat-x top left;
-	#background:#fff url(../dijit/themes/tundra/images/validationInputBg.gif) repeat-x top left;
+	background:#fff url(../SR_Dojo/dijit/themes/tundra/images/validationInputBg.png) repeat-x top left;
+	#background:#fff url(../SR_Dojo/dijit/themes/tundra/images/validationInputBg.gif) repeat-x top left;
 	border:1px solid #b3b3b3;
 }
 .tundra .dijitComboBox .dijitButtonNode {
@@ -2207,7 +2207,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dijitValidationIcon {
 	
 	width: 16px;
-	background: transparent url(../dijit/themes/tundra/images/warning.png) no-repeat center center;
+	background: transparent url(../SR_Dojo/dijit/themes/tundra/images/warning.png) no-repeat center center;
 }
 .tundra .dijitComboBoxHighlightMatch {
 	background-color:#a5beda;
@@ -2221,7 +2221,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	border: 1px solid #c0c0c0;
 	border-bottom: 1px solid #9b9b9b;
 	padding: 0.1em 0.2em 0.2em 0.2em;
-	background: #fff url(../dijit/themes/tundra/images/buttonEnabled.png) repeat-x bottom left;
+	background: #fff url(../SR_Dojo/dijit/themes/tundra/images/buttonEnabled.png) repeat-x bottom left;
 }
 .tundra .dijitButtonText {
 	text-align: center;
@@ -2246,7 +2246,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dijitTextBoxDisabled .dijitButtonNode {
 	
 	border-color: #d5d5d5 #d5d5d5 #bdbdbd #d5d5d5;
-	background:#e4e4e4 url(../dijit/themes/tundra/images/buttonDisabled.png) top repeat-x;
+	background:#e4e4e4 url(../SR_Dojo/dijit/themes/tundra/images/buttonDisabled.png) top repeat-x;
 }
 .tundra .dijitButtonHover .dijitButtonNode,
 .tundra .dijitButtonNodeHover,
@@ -2259,13 +2259,13 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	border-color: #a5beda;
 	border-bottom-color:#5c7590;
 	color:#243C5F;
-	background:#fcfdff url(../dijit/themes/tundra/images/buttonHover.png) repeat-x bottom;
+	background:#fcfdff url(../SR_Dojo/dijit/themes/tundra/images/buttonHover.png) repeat-x bottom;
 }
 .tundra .dijitDownArrowButtonHover,
 .tundra .dijitUpArrowButtonHover {
 	
 	color:#243C5F;
-	background:#fcfdff url(../dijit/themes/tundra/images/buttonHover.png) repeat-x bottom;
+	background:#fcfdff url(../SR_Dojo/dijit/themes/tundra/images/buttonHover.png) repeat-x bottom;
 }
 .tundra .dijitUpArrowButtonActive,
 .tundra .dijitDownArrowButtonActive,
@@ -2276,10 +2276,10 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dijitStackController .dijitToggleButtonChecked .dijitButtonNode {
 	
 	border-color:#366dba;
-	background: #ededed url(../dijit/themes/tundra/images/buttonActive.png) bottom repeat-x;
+	background: #ededed url(../SR_Dojo/dijit/themes/tundra/images/buttonActive.png) bottom repeat-x;
 }
 .tundra .dijitArrowButtonInner {
-	background:url(../dijit/themes/tundra/images/spriteArrows.png) no-repeat scroll 0 center;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/spriteArrows.png) no-repeat scroll 0 center;
 	width: 7px;
 	height: 7px;
 	margin: 0 4px 0 4px;
@@ -2288,7 +2288,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	background-position: 0 center;
 }
 .dj_ie6 .tundra .dijitArrowButtonInner {
-	background-image:url(../dijit/themes/tundra/images/spriteArrows.gif);
+	background-image:url(../SR_Dojo/dijit/themes/tundra/images/spriteArrows.gif);
 }
 .tundra .dijitLeftArrowButton .dijitArrowButtonInner {
 	background-position: -7px center;
@@ -2334,14 +2334,14 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	padding: 0;
 }
 .tundra .dijitToggleButton .dijitCheckBoxIcon {
-	background-image: url(../dijit/themes/tundra/images/checkmarkNoBorder.png);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmarkNoBorder.png);
 }
 .dj_ie6 .tundra .dijitToggleButton .dijitCheckBoxIcon {
-	background-image: url(../dijit/themes/tundra/images/checkmarkNoBorder.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmarkNoBorder.gif);
 }
 .tundra .dijitCheckBox,
 .tundra .dijitCheckBoxIcon			{
-	background-image: url(../dijit/themes/tundra/images/checkmark.png); 
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmark.png); 
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -2350,7 +2350,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .dj_ie6 .tundra .dijitCheckBox,
 .dj_ie6 .tundra .dijitCheckBoxIcon			{
-	background-image: url(../dijit/themes/tundra/images/checkmark.gif); 
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmark.gif); 
 }
 .tundra .dijitCheckBox,
 .tundra .dijitToggleButton .dijitCheckBoxIcon {
@@ -2380,7 +2380,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitRadio,			
 .tundra .dijitRadioIcon	{		
-	background-image: url(../dijit/themes/tundra/images/checkmark.png); 
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmark.png); 
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -2389,14 +2389,14 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .dj_ie6 .tundra .dijitRadio,
 .dj_ie6 .tundra .dijitRadioIcon	{
-	background-image: url(../dijit/themes/tundra/images/checkmark.gif); 
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmark.gif); 
 }
 .tundra .dijitToggleButton .dijitRadioIcon {
 	
-	background-image: url(../dijit/themes/tundra/images/checkmarkNoBorder.png);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmarkNoBorder.png);
 }
 .dj_ie6 .tundra .dijitToggleButton .dijitRadioIcon {
-	background-image: url(../dijit/themes/tundra/images/checkmarkNoBorder.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmarkNoBorder.gif);
 }
 .tundra .dijitRadio,
 .tundra .dijitRadioIcon {
@@ -2423,27 +2423,27 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitSliderProgressBarH {
 	border-color: #aab0bb;
-	background: #c0c2c5 url(../dijit/themes/tundra/images/sliderFull.png) repeat-x top left;
+	background: #c0c2c5 url(../SR_Dojo/dijit/themes/tundra/images/sliderFull.png) repeat-x top left;
 }
 .tundra .dijitSliderProgressBarV {
 	border-color: #aab0bb;
-	background: #c0c2c5 url(../dijit/themes/tundra/images/sliderFullVertical.png) repeat-y bottom left;
+	background: #c0c2c5 url(../SR_Dojo/dijit/themes/tundra/images/sliderFullVertical.png) repeat-y bottom left;
 }
 .tundra .dijitSliderFocused .dijitSliderProgressBarH,
 .tundra .dijitSliderFocused .dijitSliderLeftBumper {
-	background-image:url(../dijit/themes/tundra/images/sliderFullFocus.png);
+	background-image:url(../SR_Dojo/dijit/themes/tundra/images/sliderFullFocus.png);
 }
 .tundra .dijitSliderFocused .dijitSliderProgressBarV,
 .tundra .dijitSliderFocused .dijitSliderBottomBumper {
-	background-image:url(../dijit/themes/tundra/images/sliderFullVerticalFocus.png);
+	background-image:url(../SR_Dojo/dijit/themes/tundra/images/sliderFullVerticalFocus.png);
 }
 .tundra .dijitSliderRemainingBarV {
 	border-color: #b4b4b4;
-	background: #dcdcdc url(../dijit/themes/tundra/images/sliderEmptyVertical.png) repeat-y bottom left;
+	background: #dcdcdc url(../SR_Dojo/dijit/themes/tundra/images/sliderEmptyVertical.png) repeat-y bottom left;
 }
 .tundra .dijitSliderRemainingBarH {
 	border-color: #b4b4b4;
-	background: #dcdcdc url(../dijit/themes/tundra/images/sliderEmpty.png) repeat-x top left;
+	background: #dcdcdc url(../SR_Dojo/dijit/themes/tundra/images/sliderEmpty.png) repeat-x top left;
 }
 .tundra .dijitSliderBar {
 	border-style: solid;
@@ -2456,22 +2456,22 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	border:0;
 	width:16px;
 	height:16px;
-	background:url(../dijit/themes/tundra/images/preciseSliderThumb.png) no-repeat center top;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/preciseSliderThumb.png) no-repeat center top;
 }
 .tundra .dijitSliderFocused .dijitSliderImageHandleH {
-	background-image:url(../dijit/themes/tundra/images/preciseSliderThumbFocus.png);
-	#background-image:url(../dijit/themes/tundra/images/preciseSliderThumbFocus.gif);
+	background-image:url(../SR_Dojo/dijit/themes/tundra/images/preciseSliderThumbFocus.png);
+	#background-image:url(../SR_Dojo/dijit/themes/tundra/images/preciseSliderThumbFocus.gif);
 }
 .dj_ie6 .tundra .dijitSliderImageHandleH {
-	background-image:url(../dijit/themes/tundra/images/preciseSliderThumb.gif);
+	background-image:url(../SR_Dojo/dijit/themes/tundra/images/preciseSliderThumb.gif);
 }
 .tundra .dijitSliderLeftBumper {
 	border-left-width: 1px;
 	border-color: #aab0bb;
-	background: #c0c2c5 url(../dijit/themes/tundra/images/sliderFull.png) repeat-x top left;
+	background: #c0c2c5 url(../SR_Dojo/dijit/themes/tundra/images/sliderFull.png) repeat-x top left;
 }
 .tundra .dijitSliderRightBumper {
-	background: #dcdcdc url(../dijit/themes/tundra/images/sliderEmpty.png) repeat-x top left;
+	background: #dcdcdc url(../SR_Dojo/dijit/themes/tundra/images/sliderEmpty.png) repeat-x top left;
 	border-color: #b4b4b4;
 	border-right-width: 1px;
 }
@@ -2479,21 +2479,21 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	border:0;
 	width:16px;
 	height:16px;
-	background:url(../dijit/themes/tundra/images/sliderThumb.png) no-repeat center center;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/sliderThumb.png) no-repeat center center;
 }
 .tundra .dijitSliderFocused .dijitSliderImageHandleV {
-	background-image:url(../dijit/themes/tundra/images/sliderThumbFocus.png);
+	background-image:url(../SR_Dojo/dijit/themes/tundra/images/sliderThumbFocus.png);
 }
 .dj_ie6 .tundra .dijitSliderFocused .dijitSliderImageHandleV {
-	background-image:url(../dijit/themes/tundra/images/sliderThumbFocus.gif);
+	background-image:url(../SR_Dojo/dijit/themes/tundra/images/sliderThumbFocus.gif);
 }
 .tundra .dijitSliderBottomBumper {
 	border-bottom-width: 1px;
 	border-color: #aab0bb;
-	background: #c0c2c5 url(../dijit/themes/tundra/images/sliderFullVertical.png) repeat-y bottom left;
+	background: #c0c2c5 url(../SR_Dojo/dijit/themes/tundra/images/sliderFullVertical.png) repeat-y bottom left;
 }
 .tundra .dijitSliderTopBumper {
-	background: #dcdcdc url(../dijit/themes/tundra/images/sliderEmptyVertical.png) repeat-y top left;
+	background: #dcdcdc url(../SR_Dojo/dijit/themes/tundra/images/sliderEmptyVertical.png) repeat-y top left;
 	border-color: #b4b4b4;
 	border-top-width: 1px;
 }
@@ -2501,7 +2501,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dijitSliderDecrementIconV,
 .tundra .dijitSliderIncrementIconH,
 .tundra .dijitSliderIncrementIconV {
-	background-image: url(../dijit/themes/tundra/images/spriteArrows.png);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteArrows.png);
 	background-repeat: no-repeat;
 	margin: 5px;
 	height: 7px;
@@ -2512,7 +2512,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .dj_ie6 .tundra .dijitSliderDecrementIconV,
 .dj_ie6 .tundra .dijitSliderIncrementIconH,
 .dj_ie6 .tundra .dijitSliderIncrementIconV {
-	background-image: url(../dijit/themes/tundra/images/spriteArrows.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteArrows.gif);
 }
 .tundra .dijitSliderDecrementIconH {
 	background-position: -7px 0;
@@ -2558,8 +2558,8 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitSelect .dijitButtonContents {
 	padding-top: 1px;
-	background:#fff url(../dijit/themes/tundra/images/validationInputBg.png) repeat-x top left;
-	#background:#fff url(../dijit/themes/tundra/images/validationInputBg.gif) repeat-x top left;
+	background:#fff url(../SR_Dojo/dijit/themes/tundra/images/validationInputBg.png) repeat-x top left;
+	#background:#fff url(../SR_Dojo/dijit/themes/tundra/images/validationInputBg.gif) repeat-x top left;
 }
 .tundra .dijitSelectHover .dijitButtonContents,
 .tundra .dijitSelectActive .dijitButtonContents,
@@ -2573,7 +2573,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitSelectDisabled .dijitButtonNode {
 	border-color: #d5d5d5 #bdbdbd #bdbdbd #d5d5d5;
-	background:#e4e4e4 url(../dijit/themes/tundra/images/buttonDisabled.png) top repeat-x;
+	background:#e4e4e4 url(../SR_Dojo/dijit/themes/tundra/images/buttonDisabled.png) top repeat-x;
 }
 .dj_ie .tundra .dijitSelectDisabled  .dijitButtonNode * {
 	filter: gray() alpha(opacity=50);
@@ -2583,12 +2583,12 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	border-bottom-color:#5c7590;
 	border-right-color:#5c7590;
 	color:#243C5F;
-	background:#fcfdff url(../dijit/themes/tundra/images/buttonHover.png) repeat-x bottom;
+	background:#fcfdff url(../SR_Dojo/dijit/themes/tundra/images/buttonHover.png) repeat-x bottom;
 }
 .tundra .dijitSelectActive .dijitButtonNode,
 .tundra .dijitSelectOpened .dijitButtonNode {
 	border-color:#366dba;
-	background: #ededed url(../dijit/themes/tundra/images/buttonActive.png) bottom repeat-x;
+	background: #ededed url(../SR_Dojo/dijit/themes/tundra/images/buttonActive.png) bottom repeat-x;
 }
 .tundra .dijitSelectMenu td {
 	padding: 0;
@@ -2598,12 +2598,12 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	padding: 0.1em 0.2em;
 }
 .tundra .dijitTreeNode {
-    background-image : url(../dijit/themes/tundra/images/i.gif);
+    background-image : url(../SR_Dojo/dijit/themes/tundra/images/i.gif);
     background-repeat : repeat-y;
     zoom: 1;	
 }
 .tundra .dijitTreeIsLast {
-    background: url(../dijit/themes/tundra/images/i_half.gif) no-repeat;
+    background: url(../SR_Dojo/dijit/themes/tundra/images/i_half.gif) no-repeat;
 }
 .tundra .dijitTreeIsRoot {
     margin-left: 0;
@@ -2626,34 +2626,34 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitTreeRowHover {
 	
-	background-image: url(../dijit/themes/tundra/images/treeHover.png);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/treeHover.png);
 	background-repeat: repeat;
 	background-color: transparent !important;
 }
 .tundra .dijitTreeExpandoOpened {
-	background-image: url(../dijit/themes/tundra/images/treeExpand_minus.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/treeExpand_minus.gif);
 }
 .tundra .dijitTreeExpandoClosed {
-	background-image: url(../dijit/themes/tundra/images/treeExpand_plus.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/treeExpand_plus.gif);
 }
 .tundra .dijitTreeExpandoLeaf {
-	background-image: url(../dijit/themes/tundra/images/treeExpand_leaf.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/treeExpand_leaf.gif);
 }
 .tundra .dijitTreeExpandoLoading {
-	background-image: url(../dijit/themes/tundra/images/treeExpand_loading.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/treeExpand_loading.gif);
 }
 .tundra .dijitTreeIcon {
 	width: 16px;
 	height: 16px;
 }
 .tundra .dijitFolderOpened {
-	background: url(../dijit/themes/tundra/images/folderOpened.gif) no-repeat;
+	background: url(../SR_Dojo/dijit/themes/tundra/images/folderOpened.gif) no-repeat;
 }
 .tundra .dijitFolderClosed {
-	background: url(../dijit/themes/tundra/images/folderClosed.gif) no-repeat;
+	background: url(../SR_Dojo/dijit/themes/tundra/images/folderClosed.gif) no-repeat;
 }
 .tundra .dijitLeaf {
-	background: url(../dijit/themes/tundra/images/leaf.gif) no-repeat;
+	background: url(../SR_Dojo/dijit/themes/tundra/images/leaf.gif) no-repeat;
 }
 .tundra .dijitTreeNode .dojoDndItemBefore,
 .tundra .dijitTreeNode .dojoDndItemAfter {
@@ -2673,12 +2673,12 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitProgressBarEmpty {
 	
-	background:#fff url(../dijit/themes/tundra/images/progressBarEmpty.png) repeat-x center center;
+	background:#fff url(../SR_Dojo/dijit/themes/tundra/images/progressBarEmpty.png) repeat-x center center;
 	border-color: #a2a2a2 #b8b8b8 #b8b8b8 #a2a2a2;
 }
 .tundra .dijitProgressBarTile {
 	
-	background:#f0f0f0 url(../dijit/themes/tundra/images/progressBarFull.png) repeat-x center center;
+	background:#f0f0f0 url(../SR_Dojo/dijit/themes/tundra/images/progressBarFull.png) repeat-x center center;
 }
 .tundra .dijitProgressBarFull {
 	border-right:1px solid #b8b8b8;
@@ -2689,26 +2689,26 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitProgressBarIndeterminate .dijitProgressBarTile {
 	
-	background:#cad2de url(../dijit/themes/tundra/images/progressBarAnim.gif) repeat-x center center;
+	background:#cad2de url(../SR_Dojo/dijit/themes/tundra/images/progressBarAnim.gif) repeat-x center center;
 }
 .tundra .dijitTitlePaneTitle {
 	background: #cccccc;
-	background:#fff url(../dijit/themes/tundra/images/titleBar.png) repeat-x bottom left;
+	background:#fff url(../SR_Dojo/dijit/themes/tundra/images/titleBar.png) repeat-x bottom left;
 	border:1px solid #bfbfbf;
 	padding:3px 4px;
 }
 .tundra .dijitTitlePaneTitleHover  {
-	background: #f8fafd url(../dijit/themes/tundra/images/accordionItemHover.gif) bottom repeat-x;
+	background: #f8fafd url(../SR_Dojo/dijit/themes/tundra/images/accordionItemHover.gif) bottom repeat-x;
 }
 .tundra .dijitTitlePane .dijitArrowNode {
-	background-image: url(../dijit/themes/tundra/images/spriteArrows.png);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteArrows.png);
 	background-repeat: no-repeat;
 	background-position: 0 0;
 	height: 7px;
 	width: 7px;
 }
 .dj_ie6 .tundra .dijitTitlePane .dijitArrowNode {
-	background-image: url(../dijit/themes/tundra/images/spriteArrows.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteArrows.gif);
 }
 .tundra .dijitTitlePane .dijitClosed .dijitArrowNode {
 	background-position: -14px 0;
@@ -2729,12 +2729,12 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	
 	width:15px;
 	height:15px;
-	background-image: url(../dijit/themes/tundra/images/spriteRoundedIconsSmall.png);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteRoundedIconsSmall.png);
 	background-repeat: no-repeat
 }
 .dj_ie6 .tundra .dijitCalendarIncrementControl {
 	font-size:.1em;
-	background-image: url(../dijit/themes/tundra/images/spriteRoundedIconsSmall.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteRoundedIconsSmall.gif);
 }
 .tundra .dijitA11ySideArrow {
 	display: none;
@@ -2754,7 +2754,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitCalendarMonthContainer th {
 	
-	background:#d3d3d3 url(../dijit/themes/tundra/images/titleBar.png) repeat-x top;
+	background:#d3d3d3 url(../SR_Dojo/dijit/themes/tundra/images/titleBar.png) repeat-x top;
 	padding-top:.3em;
 	padding-bottom:.2em;
 	text-align:center;
@@ -2765,7 +2765,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitCalendarDayLabelTemplate {
 	
-	background:white url(../dijit/themes/tundra/images/calendarDayLabel.png) repeat-x bottom;
+	background:white url(../SR_Dojo/dijit/themes/tundra/images/calendarDayLabel.png) repeat-x bottom;
 	font-weight:normal;
 	padding-top:.15em;
 	padding-bottom:0;
@@ -2821,7 +2821,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitCalendarYearContainer {
 	
-	background:white url(../dijit/themes/tundra/images/calendarYearLabel.png) repeat-x bottom;
+	background:white url(../SR_Dojo/dijit/themes/tundra/images/calendarYearLabel.png) repeat-x bottom;
 	border-top:1px solid #ccc;
 }
 .tundra .dijitCalendarYearLabel {
@@ -2866,7 +2866,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	color:white;
 }
 .tundra .dijitTimePickerMarker {
-	background:#d3d3d3 url(../dijit/themes/tundra/images/titleBar.png) repeat-x top;
+	background:#d3d3d3 url(../SR_Dojo/dijit/themes/tundra/images/titleBar.png) repeat-x top;
 	color:#293a4b;
 	font-weight: bold;
 }
@@ -2901,7 +2901,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitToolbar {
 	border-bottom: 1px solid #ccc;
-	background:#eaeaea url(../dijit/themes/tundra/images/titleBar.png) repeat-x top left;
+	background:#eaeaea url(../SR_Dojo/dijit/themes/tundra/images/titleBar.png) repeat-x top left;
 }
 .dj_ie6 .tundra .dijitToolbar {
 	height: 10px;
@@ -2957,11 +2957,11 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitToolbarSeparator {
 	
-	background: url(../dijit/themes/../icons/images/editorIconsEnabled.png);
+	background: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsEnabled.png);
 }
 .tundra .dijitToolbarRtl .dijitToolbarSeparator {
 	
-	background-image: url(../dijit/themes/../icons/images/editorIconsDisabled.png);
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsDisabled.png);
 }
 .tundra .dijitDialog {
 	background: #fff;
@@ -2976,7 +2976,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitDialogTitleBar {
 	
-	background: #fafafa url(../dijit/themes/tundra/images/titleBar.png) repeat-x top left;
+	background: #fafafa url(../SR_Dojo/dijit/themes/tundra/images/titleBar.png) repeat-x top left;
 	padding: 5px 6px 3px 6px;
 	outline:0; 
 }
@@ -2988,7 +2988,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dijitDialogCloseIcon {
 	
 	
-	background: url(../dijit/themes/tundra/images/tabClose.png) no-repeat right top;
+	background: url(../SR_Dojo/dijit/themes/tundra/images/tabClose.png) no-repeat right top;
 	position: absolute;
 	vertical-align: middle;
 	right: 6px;
@@ -2997,13 +2997,13 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	width: 15px;
 }
 .dj_ie6 .tundra .dijitDialogCloseIcon {
-	background : url(../dijit/themes/tundra/images/tabClose.gif) no-repeat right top;
+	background : url(../SR_Dojo/dijit/themes/tundra/images/tabClose.gif) no-repeat right top;
 }
 .tundra .dijitDialogCloseIconHover {
-	background: url(../dijit/themes/tundra/images/tabCloseHover.png) no-repeat right top;
+	background: url(../SR_Dojo/dijit/themes/tundra/images/tabCloseHover.png) no-repeat right top;
 }
 .dj_ie6 .tundra .dijitDialogCloseIconHover {
-	background : url(../dijit/themes/tundra/images/tabCloseHover.gif) no-repeat right top;
+	background : url(../SR_Dojo/dijit/themes/tundra/images/tabCloseHover.gif) no-repeat right top;
 }
 .tundra .dijitTooltip,
 .tundra .dijitTooltipDialog {
@@ -3020,7 +3020,7 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitTooltipContainer {
 	
-	background: #ffffff url(../dijit/themes/tundra/images/popupMenuBg.gif) repeat-x bottom left;
+	background: #ffffff url(../SR_Dojo/dijit/themes/tundra/images/popupMenuBg.gif) repeat-x bottom left;
 	border: 1px solid #7eabcd;
 	padding: 0.45em;
 	-webkit-border-radius: 3px;
@@ -3040,24 +3040,24 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	
 	top: 0;
 	left: 3px;
-	background:url(../dijit/themes/tundra/images/tooltipConnectorUp.png) no-repeat top left;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/tooltipConnectorUp.png) no-repeat top left;
 	width:16px;
 	height:14px;
 }
 .dj_ie .tundra .dijitTooltipBelow .dijitTooltipConnector {
 	
-	background-image: url(../dijit/themes/tundra/images/tooltipConnectorUp.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/tooltipConnectorUp.gif);
 }
 .tundra .dijitTooltipAbove .dijitTooltipConnector {
 	
 	bottom: 0;
 	left: 3px;
-	background:url(../dijit/themes/tundra/images/tooltipConnectorDown.png) no-repeat top left;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/tooltipConnectorDown.png) no-repeat top left;
 	width:16px;
 	height:14px;
 }
 .dj_ie .tundra .dijitTooltipAbove .dijitTooltipConnector {
-	background-image: url(../dijit/themes/tundra/images/tooltipConnectorDown.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/tooltipConnectorDown.gif);
 }
 .dj_ie6 .tundra .dijitTooltipAbove .dijitTooltipConnector {
 	bottom: -3px;
@@ -3068,12 +3068,12 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dijitTooltipLeft .dijitTooltipConnector {
 	
 	right: 0;
-	background:url(../dijit/themes/tundra/images/tooltipConnectorRight.png) no-repeat top left;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/tooltipConnectorRight.png) no-repeat top left;
 	width:16px;
 	height:14px;
 }
 .dj_ie .tundra .dijitTooltipLeft .dijitTooltipConnector {
-	background-image: url(../dijit/themes/tundra/images/tooltipConnectorRight.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/tooltipConnectorRight.gif);
 }
 .tundra .dijitTooltipRight {
 	padding-left: 14px;
@@ -3081,12 +3081,12 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 .tundra .dijitTooltipRight .dijitTooltipConnector {
 	
 	left: 0;
-	background:url(../dijit/themes/tundra/images/tooltipConnectorLeft.png) no-repeat top left;
+	background:url(../SR_Dojo/dijit/themes/tundra/images/tooltipConnectorLeft.png) no-repeat top left;
 	width:16px;
 	height:14px;
 }
 .dj_ie .tundra .dijitTooltipRight .dijitTooltipConnector {
-	background-image: url(../dijit/themes/tundra/images/tooltipConnectorLeft.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/tooltipConnectorLeft.gif);
 }
 .dj_webkit .tundra .dijitTooltipContainer {
 	-webkit-box-shadow: 0 5px 10px #adadad;
@@ -3127,11 +3127,11 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	
 	width: 7px;
 	height: 7px;
-	background-image: url(../dijit/themes/tundra/images/spriteArrows.png);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteArrows.png);
 	background-position: -14px 0;
 }
 .dj_ie6 .tundra .dijitMenuExpand {
-	background-image: url(../dijit/themes/tundra/images/spriteArrows.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/spriteArrows.gif);
 }
 .tundra .dijitMenuSeparatorTop {
 	border-bottom: 1px solid #9b9b9b;
@@ -3143,11 +3143,11 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	display: none;
 }
 .tundra .dijitCheckedMenuItemIcon {
-	background-image: url(../dijit/themes/tundra/images/checkmark.png);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmark.png);
 	background-position: -80px;
 }
 .dj_ie6 .tundra .dijitCheckedMenuItemIcon {
-	background-image: url(../dijit/themes/tundra/images/checkmark.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/checkmark.gif);
 }
 .tundra .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon {
 	background-position: -64px;
@@ -3157,24 +3157,24 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	border-top:0;
 }
 .tundra .dijitEditorIcon {
-	background-image: url(../dijit/themes/../icons/images/editorIconsEnabled.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsEnabled.png); 
 	background-repeat: no-repeat;
 	width: 18px;
 	height: 18px;
 	text-align: center;
 }
 .tundra .dijitDisabled .dijitEditorIcon {
-	background-image: url(../dijit/themes/../icons/images/editorIconsDisabled.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsDisabled.png); 
 }
 .dijitEditorIcon {
-	background-image: url(../dijit/themes/../icons/images/editorIconsEnabled.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsEnabled.png); 
 	background-repeat: no-repeat;
 	width: 18px;
 	height: 18px;
 	text-align: center;
 }
 .dijitDisabled .dijitEditorIcon {
-	background-image: url(../dijit/themes/../icons/images/editorIconsDisabled.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsDisabled.png); 
 }
 .dijitEditorIconSep { background-position: 0px; }
 .dijitEditorIconSave { background-position: -18px; }
@@ -3323,19 +3323,19 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 	left: 5px;
 }
 .tundra .dijitEditorRtl .dijitEditorIcon {
-	background-image: url(../dijit/themes/../icons/images/editorIconsEnabled_rtl.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsEnabled_rtl.png); 
 }
 .tundra .dijitEditorRtlDisabled .dijitEditorIcon {
-	background-image: url(../dijit/themes/../icons/images/editorIconsDisabled_rtl.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsDisabled_rtl.png); 
 }
 .dijitEditorRtl .dijitEditorIcon {
-	background-image: url(../dijit/themes/../icons/images/editorIconsEnabled_rtl.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsEnabled_rtl.png); 
 }
 .dijitEditorRtlDisabled .dijitEditorIcon {
-	background-image: url(../dijit/themes/../icons/images/editorIconsDisabled_rtl.png); 
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsDisabled_rtl.png); 
 }
 .dijitToolbarRtl .dijitToolbarSeparator {
-	background-image: url(../dijit/themes/../icons/images/editorIconsEnabled_rtl.png);
+	background-image: url(../SR_Dojo/dijit/themes/../icons/images/editorIconsEnabled_rtl.png);
 }
 .tundra .dijitMenuItemRtl .dijitMenuExpand {
 	background-position: -7px 0;
@@ -3347,10 +3347,10 @@ DIV.dijitTabDisabled, .dj_ie DIV.dijitTabDisabled {
 }
 .tundra .dijitTreeNodeRtl .dijitTreeExpandoOpened {
 	
-	background-image: url(../dijit/themes/tundra/images/treeExpand_minus_rtl.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/treeExpand_minus_rtl.gif);
 }
 .tundra .dijitTreeNodeRtl .dijitTreeExpandoClosed {
-	background-image: url(../dijit/themes/tundra/images/treeExpand_plus_rtl.gif);
+	background-image: url(../SR_Dojo/dijit/themes/tundra/images/treeExpand_plus_rtl.gif);
 }
 .tundra .dijitTitlePaneRtl .dijitClosed .dijitArrowNode {
 	background-position: -7px 0;
@@ -3562,7 +3562,7 @@ table {  font-size:100%; }
 .dojoxGridHeader .dojoxGridCell { 
 	border: 1px solid;
 	border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
-	background: url(../dojox/grid/resources/images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
+	background: url(../SR_Dojo/dojox/grid/resources/images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
 	padding-bottom: 2px;
 }
 .dojoxGridHeader .dojoxGridCellOver {
@@ -3623,7 +3623,7 @@ table {  font-size:100%; }
 	border: 1px solid;
 	border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
 	border-top: none;
-	background: url(../dojox/grid/resources/images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
+	background: url(../SR_Dojo/dojox/grid/resources/images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
 }
 .dojoxGridRowbarInner {
 	border-top: 1px solid #F6F4EB;
@@ -3761,7 +3761,7 @@ table {  font-size:100%; }
 .dojoxGridDndAvatarItem	td {
 	border: 1px solid;
 	border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
-	background: url(../dojox/grid/resources/images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
+	background: url(../SR_Dojo/dojox/grid/resources/images/grid_dx_gradient.gif) #E8E1CF top repeat-x;
 	padding: 0pt;
 	margin: 0pt;
 }
@@ -3774,30 +3774,30 @@ table {  font-size:100%; }
 	margin: 0;
 }
 .dojoDndMove .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(../dojox/grid/../../dojo/resources/images/dndNoMove.png);
+	background-image: url(../SR_Dojo/dojox/grid/../../SR_Dojo/dojo/resources/images/dndNoMove.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndCopy .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(../dojox/grid/../../dojo/resources/images/dndNoCopy.png);
+	background-image: url(../SR_Dojo/dojox/grid/../../SR_Dojo/dojo/resources/images/dndNoCopy.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndMove .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(../dojox/grid/../../dojo/resources/images/dndMove.png);
+	background-image: url(../SR_Dojo/dojox/grid/../../SR_Dojo/dojo/resources/images/dndMove.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndCopy .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url(../dojox/grid/../../dojo/resources/images/dndCopy.png);
+	background-image: url(../SR_Dojo/dojox/grid/../../SR_Dojo/dojo/resources/images/dndCopy.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoxGridColPlaceBottom {
-	background: transparent url(../dojox/grid/resources/images/grid_sort_up.gif) no-repeat scroll left top;
+	background: transparent url(../SR_Dojo/dojox/grid/resources/images/grid_sort_up.gif) no-repeat scroll left top;
 }
 .dojoxGridColPlaceTop {
-	background: transparent url(../dojox/grid/resources/images/grid_sort_down.gif) no-repeat scroll left top;
+	background: transparent url(../SR_Dojo/dojox/grid/resources/images/grid_sort_down.gif) no-repeat scroll left top;
 }
 .dojoxGridColPlaceTop, .dojoxGridColPlaceBottom {
 	font-size:1px;
@@ -3828,10 +3828,10 @@ table {  font-size:100%; }
 	cursor: col-resize !important;
 }
 .dojoxGridColPlaceBottom {
-	background: transparent url(../dojox/grid/resources/images/grid_sort_up.gif) no-repeat scroll left top;
+	background: transparent url(../SR_Dojo/dojox/grid/resources/images/grid_sort_up.gif) no-repeat scroll left top;
 }
 .dojoxGridColPlaceTop {
-	background: transparent url(../dojox/grid/resources/images/grid_sort_down.gif) no-repeat scroll left top;
+	background: transparent url(../SR_Dojo/dojox/grid/resources/images/grid_sort_down.gif) no-repeat scroll left top;
 }
 .dojoxGridColPlaceTop, .dojoxGridColPlaceBottom {
 	font-size:1px;
@@ -3881,57 +3881,57 @@ table {  font-size:100%; }
 	white-space: nowrap;
 }
 .soria .dojoxFloatingPaneTitle {
-	background:#fff url(../dojox/layout/../../dijit/themes/soria/images/titleBar.png) repeat-x top left;
+	background:#fff url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/soria/images/titleBar.png) repeat-x top left;
 	border:1px solid #b1badf;
 	font-size: 0.9em;
 	font-weight: bold;
 	line-height:1.2em;
 }
 .tundra .dojoxFloatingPaneTitle {
-	background:#fafafa url(../dojox/layout/../../dijit/themes/tundra/images/titleBarBg.gif) repeat-x bottom left;
+	background:#fafafa url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/tundra/images/titleBarBg.gif) repeat-x bottom left;
 	border:1px solid #bfbfbf;
 	color:#000; 	
 }
 .dojoxFloatingCloseIcon {
-	background:url(../dojox/layout/../../dijit/themes/tundra/images/tabClose.png) no-repeat center center; 
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/tundra/images/tabClose.png) no-repeat center center; 
 	width:16px;
 	height:16px; 
 	overflow:hidden;
 	float:right; 
 }
 .dojoxFloatingMinimizeIcon {
-	background:url(../dojox/layout/../../dijit/themes/tundra/images/spriteArrows.png) no-repeat 0px center; 
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/tundra/images/spriteArrows.png) no-repeat 0px center; 
 	width:7px;
 	margin: 0px 4px;
 	overflow:hidden;
 	float:right; 
 }
 .soria .dojoxFloatingMinimizeIcon {
-	background:url(../dojox/layout/../../dijit/themes/soria/images/spriteRoundedIconsSmallBl.png) no-repeat -15px top;
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/soria/images/spriteRoundedIconsSmallBl.png) no-repeat -15px top;
 	width: 14px;
 	margin: 0px 2px;
 }
 .floatingPaneMaximized .dojoxFloatingMaximizeIcon { display:none; }
 .dojoxFloatingMaximizeIcon {
-	background:url(../dojox/layout/../../dijit/themes/tundra/images/spriteArrows.png) no-repeat -21px center;
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/tundra/images/spriteArrows.png) no-repeat -21px center;
 	width:7px;
 	margin: 0px 4px;
 	overflow:hidden;
 	float:right;	
 }
 .soria .dojoxFloatingMaximizeIcon {
-	background:url(../dojox/layout/../../dijit/themes/soria/images/spriteRoundedIconsSmallBl.png) no-repeat -45px top;
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/soria/images/spriteRoundedIconsSmallBl.png) no-repeat -45px top;
 }
 .floatingPaneMaximized .dojoxFloatingRestoreIcon { display:inline; }
 .dojoxFloatingRestoreIcon {
-	background:url(../dojox/layout/../../dijit/themes/tundra/images/spriteArrows.png) no-repeat 0px center; 
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/tundra/images/spriteArrows.png) no-repeat 0px center; 
 	width:7px;
 	margin: 0px 4px;
 	float:right;
 	display:none;
 }
 .dojoxFloatingResizeHandle {
-	background:url(../dojox/layout/resources/icons/resize.png) no-repeat bottom right;
+	background:url(../SR_Dojo/dojox/layout/resources/icons/resize.png) no-repeat bottom right;
 	position:absolute; 
 	right:0; 
 	bottom:0; 	
@@ -3947,10 +3947,10 @@ table {  font-size:100%; }
 	cursor:pointer;
 }
 .soria .dojoxFloatingCloseIcon {
-	background:url(../dojox/layout/../../dijit/themes/soria/images/spriteRoundedIconsSmallBl.png) no-repeat -60px top;
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/soria/images/spriteRoundedIconsSmallBl.png) no-repeat -60px top;
 }
 .tundra .dojoxFloatingCloseIcon {
-	background:url(../dojox/layout/../../dijit/themes/tundra/images/tabClose.png) no-repeat center center; 	
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/tundra/images/tabClose.png) no-repeat center center; 	
 }
 .dojoxFloatingDockDefault {
 	position:absolute;
@@ -3970,14 +3970,14 @@ table {  font-size:100%; }
 	margin: 0px;
 }
 .dojoxDockRestoreButton {
-	background:url(../dojox/layout/../../dijit/themes/tundra/images/arrowUp.png) no-repeat center center;
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/tundra/images/arrowUp.png) no-repeat center center;
 	width:16px; height:16px;
 	overflow:hidden; 
 	float:left;
 	margin-top:2px; 
 }
 .soria .dojoxDockRestoreButton {
-	background:url(../dojox/layout/../../dijit/themes/soria/images/spriteRoundedIconsSmallBl.png) no-repeat -45px top;
+	background:url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/soria/images/spriteRoundedIconsSmallBl.png) no-repeat -45px top;
 }
 .dojoxDockTitleNode {
 	overflow:hidden;
@@ -4002,10 +4002,10 @@ table {  font-size:100%; }
 	height: 16px;
 	width: auto;
 	float: left;
-	background: #fafafa url(../dojox/layout/../../dijit/themes/tundra/images/titleBarBg.gif) repeat-x bottom left;
+	background: #fafafa url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/tundra/images/titleBarBg.gif) repeat-x bottom left;
 }
 .soria .dojoxDockNode {
-	background:#b7cdee url(../dojox/layout/../../dijit/themes/soria/images/titleBar.png) repeat-x;
+	background:#b7cdee url(../SR_Dojo/dojox/layout/../../SR_Dojo/dijit/themes/soria/images/titleBar.png) repeat-x;
 }
 .dojoxFloatingPaneContent {
 	overflow: auto;
@@ -4024,14 +4024,14 @@ table {  font-size:100%; }
 	width: 13px;
 	height: 13px;
 	z-index: 20;
-	background-image: url(../dojox/layout/resources/icons/resize.png);
+	background-image: url(../SR_Dojo/dojox/layout/resources/icons/resize.png);
 	line-height: 0px;
 }
 .dijitRtl .dojoxResizeHandle {
         float: right;
         left: 0px;
         right: auto;
-	background-image: url(../dojox/layout/resources/icons/resizeRtl.png);
+	background-image: url(../SR_Dojo/dojox/layout/resources/icons/resizeRtl.png);
 }
 .dojoxResizeNW {
 	cursor: nw-resize;
@@ -4121,22 +4121,6 @@ html, body {
 	width: 600px;
 	height: 300px;
 }	
-
-
-
- .srdView.dijitBorderContainer  {
-	width:100%;
-	height:100%;
-	margin:0;
-	border:3;
-	padding:0;
-	line-height:normal;
-	color: blue;
-	background-color : black;
-}
-
-			
-
 
 
 
