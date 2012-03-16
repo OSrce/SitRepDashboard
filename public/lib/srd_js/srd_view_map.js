@@ -35,7 +35,7 @@ dojo.declare(
 	     {  splitter: 'false', style: "background-color:black;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
 			
 			this.insideContainer.addChild(this.srd_mapContent);
-			this.mapDiv = dojo.create("div",{ 'class':'map' }, this.srd_mapContent.domNode);
+			this.mapDiv = dojo.create("div",{ id: 'srdmap', 'class':'map', style:'top:0;left:0;width:100%;height:100%;' }, this.srd_mapContent.domNode);
 			this.map_init();
 			}.bind(this) );
 		},

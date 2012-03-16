@@ -116,8 +116,8 @@ dojo.declare(
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
 */
 				this.cp = new dijit.layout.ContentPane( {
-					region: "center",
-					class: "srd_cfs_single"
+					'region': "center",
+					'class': "srd_cfs_single"
 				} );
 				this.insideContainer.addChild(this.cp);	
 				this.insideContainer.resize();
@@ -174,12 +174,12 @@ dojo.declare(
 						cell.editable = false;
 					}
 					if(cell.srdtype) {
-						console.log("Creating Widget for "+cell.srdtype);
+//						console.log("Creating Widget for "+cell.srdtype);
 						switch(cell.srdtype) {
 						case "DateTextBox" :
-							var theLabel = dojo.create("label", {class:"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
+							var theLabel = dojo.create("label", {'class':"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
 							var theWidget = new dijit.form.DateTextBox( {
-								class: "srd_cfs_row"+cell.srdrow,
+								'class': "srd_cfs_row"+cell.srdrow,
 								id: cell.field,
 								value: new Date(),
 								srd_view: this,
@@ -192,17 +192,17 @@ dojo.declare(
 							break;
 						case "PlainText" :
 							if(cell.name) {
-								var theLabel = dojo.create("label", {class:"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
+								var theLabel = dojo.create("label", {'class':"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
 							}
-							var theWidget = dojo.create("div", {class:"srd_cfs_row"+cell.srdrow, id:cell.field, innerHTML: ""} , this.cp.domNode);
+							var theWidget = dojo.create("div", {'class':"srd_cfs_row"+cell.srdrow, id:cell.field, innerHTML: ""} , this.cp.domNode);
 							this.srd_widgetArr[cell.field] = theWidget;
 							break;	
 						case "Text" :
 							if(cell.name) {
-								var theLabel = dojo.create("label", {class:"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
+								var theLabel = dojo.create("label", {'class':"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
 							}
 							var theWidget = new dijit.form.Textarea( {
-								class: "srd_cfs_row"+cell.srdrow,
+								'class': "srd_cfs_row"+cell.srdrow,
 								id: cell.field,
 								editable: cell.editable,
 								srd_view: this,
@@ -220,17 +220,44 @@ dojo.declare(
 		// END displaySingleCfs FUNCTION
 		// BEGIN getData FUNCTION
 		getData : function(theId) {	
-			console.log("getData Called!");
-			if( this.srd_widgetArr["cfs_date"].value && this.srd_widgetArr["cfs_num"].value) {
-					var theDate = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
+//			console.log("getData Called!");
+			if( this.srd_widgetArr["cfs_date"] && this.srd_widgetArr["cfs_num"] ) {
+				if( this.srd_widgetArr["cfs_date"].value && this.srd_widgetArr["cfs_num"].value) {
+//					var theDate = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
+					var theDate = dojo.date.locale.format( new Date(this.srd_widgetArr["cfs_date"].value), { datePattern: "y-M-d" } );
 //					var theDate = this.srd_widgetArr["cfs_date"].value;
 					var theJob = this.srd_widgetArr["cfs_num"].value; 
-					var theRetArr = this.srd_store.query({"cfs_date":theDate, "cfs_num":theJob}, {
+					dojo.when( this.srd_store.query({"cfs_date":theDate, "cfs_num":theJob}, {
 						count: 1
-					} );	
-
+					} ), function(results) {
+						this.displayResults(results[0])
+					}.bind(this)
+					);
+				}
+			}
+		},
+		// END getData FUNCTION
+		// BEGIN displayResults FUNCTION
+		displayResults : function(item) {	
+			for(var hashId in item) {
+//				console.log( "Showing value for "+hashId+" ::: "+item[hashId]);
+				if(this.srd_widgetArr[hashId] && hashId != "cfs_num" && hashId != "cfs_date" ) {
+					if(this.srd_widgetArr[hashId].declaredClass && this.srd_widgetArr[hashId].declaredClass != undefined ) {					
+						if(this.srd_widgetArr[hashId].declaredClass == "dijit.form.Textarea" ) {
+//							console.log("Widget is TextArea");
+							this.srd_widgetArr[hashId].set("value", item[hashId]);
+						} else {
+//							console.log("Widget is something else.");
+							dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', item[hashId]);
+						}	
+					} else {
+//						console.log("Widget is something else.");
+						dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', item[hashId]);
+					}
+				}
 			}
 		}
+		// END displayResults FUNCTION
 	}
 );
 

@@ -65,8 +65,12 @@
 	left: 170px;
 }
 #cfs_timecreated {
+	left: 220px;
+}
+#cfs_timeassigned {
 	left: 250px;
 }
+
 #label_cfs_num {
 	left: 300px;
 }
@@ -88,11 +92,15 @@
 	left: 350px;
 }
 
+#cfs_codesup1 {
+	left: 380px;
+}
+
 #label_cfs_pct {
 	left: 10px;
 }
 #cfs_pct {
-	left: 60px;
+	left: 100px;
 }
 
 

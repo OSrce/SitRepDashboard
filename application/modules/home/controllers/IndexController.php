@@ -64,10 +64,10 @@ class Home_IndexController extends Zend_Controller_Action
 
 			$this->getLayers();
 
-			echo "<script>\n";
+			$this->getResponse()->appendBody( "<script type=\"text/javascript\">\n") ;
 			// BEGIN LOAD STATIC VALS INTO CLIENTS JS.			
-			echo "srd.staticVals = ";
-			echo Zend_Json::encode($staticVals)."\n";
+			$this->getResponse()->appendBody( "srd.staticVals = ");
+			$this->getResponse()->appendBody( Zend_Json::encode($staticVals)."\n");
 			// END LOAD STATIC VALS
 
 			// BEGIN LOAD srdLayerArr data :
@@ -75,30 +75,27 @@ class Home_IndexController extends Zend_Controller_Action
 				$styleArr = $style->toArray();
 				$styleArrJSON = Zend_Json::encode($styleArr);
 				$logger->log("printstyleJSON:".$styleArrJSON,Zend_Log::DEBUG);
-				echo "srd.srd_styleArr['$styleId'] = \n";
-				echo $styleArrJSON."\n";
+				$this->getResponse()->appendBody( "srd.srd_styleArr['$styleId'] = \n");
+				$this->getResponse()->appendBody( $styleArrJSON."\n");
 			}
 			// END LOAD srdLayerArr data
 
 			// BEGIN LOAD srdLayerArr data :
 			foreach($this->_layers as $layerId => $layer) {
-				echo "srd.srd_layerArr[$layerId] = new srd_layer();\n";
+				$this->getResponse()->appendBody( "srd.srd_layerArr[$layerId] = new srd_layer();\n");
 				$layerOptions = $layer->toArray();
 				$logger->log("printLayer:".print_r($layerOptions,true),Zend_Log::DEBUG);
 				$layerOptionsJSON = Zend_Json::encode($layerOptions);
 //				$logger->log("printLayerJSON:".$layerOptionsJSON,Zend_Log::DEBUG);
-				echo "srd.srd_layerArr['$layerId'].options = \n";
-				echo $layerOptionsJSON."\n";
-				echo "srd.srd_layerArr['$layerId'].srd_styleArr = srd.srd_styleArr;\n";
+				$this->getResponse()->appendBody( "srd.srd_layerArr['$layerId'].options = \n");
+				$this->getResponse()->appendBody( $layerOptionsJSON."\n");
+				$this->getResponse()->appendBody( "srd.srd_layerArr['$layerId'].srd_styleArr = srd.srd_styleArr;\n");
 			}
 			// END LOAD srdLayerArr data
 
 
-
-
-
-			echo "\n</script>\n";
-
+			$this->getResponse()->appendBody( "\n</script>\n");
+			$this->getResponse()->appendBody( "\n</head>\n");
 			$this->render('index');
 
     }
