@@ -8,6 +8,8 @@
 //
 /////////////////////////////////
 
+dojo.require('dojox.timing');
+
 //srd_view class definition using dojo.declare 
 dojo.declare( 
 	'srd_view_opstrack',
@@ -31,7 +33,7 @@ dojo.declare(
 				}
 				this.selectedTable = "Calls for service - SPRINT";
 				this.selectedDataMenu = new dijit.Menu();
-				
+				this.autoRefresh = false;				
 				for( var tmpTable in this.tableList) {
 					console.log("Table Type:"+tmpTable);
 					this.selectedDataMenu.addChild( new dijit.MenuItem( {
@@ -60,7 +62,11 @@ dojo.declare(
 					srd_view: this,
 					onClick: function() { this.srd_view.deleteSelectedItems(); } 
 				} ) );
-	
+				this.dataMenu.addChild(new dijit.MenuItem( {
+					label: "Auto Refresh",
+					srd_view: this,
+					onClick: function() { this.srd_view.toggleAutoRefresh(); } 
+				} ) );
 			
 				this.srd_store = new dojo.store.Cache(
 					dojo.store.JsonRest({ 
@@ -71,32 +77,67 @@ dojo.declare(
 				var gridCellsDijit = dojox.grid.cells;
 				this.srd_structList = { 
 					"Calls for service - SPRINT": [ {
-						defaultCell: { width: 10, editable: false },
+						defaultCell: { width: 10, editable: false, cellStyles: 'text-align: center;'  },
 						cells: [
-							{ name: "Date", field:"cfs_date", width: "80px" },
-							{ name: "Time", field:"cfs_timecreated", width: "50px" },
-							{ name: "Job Let", field:"cfs_letter", width: "50px" },
-							{ name: "Job #", field:"cfs_num", width: "50px" },
+							{ name: "Date", field:"cfs_date", width: "120px" },
+							{ name: "Time", field:"cfs_timecreated", width: "90px" },
+//							{ name: "Job Let", field:"cfs_letter", width: "50px" },
+							{ name: "Job #", field:"cfs_num", width: "90px" },
 							{ name: "Precinct", field:"cfs_pct", width: "50px" },
 							{ name: "Sector", field:"cfs_sector", width: "50px" },
-							{ name: "Address", field:"cfs_addr", width: "100px" },
-							{ name: "Cross St 1", field:"cfs_cross1", width: "50px" },
-							{ name: "Cross St 2", field:"cfs_cross2", width: "50px" },
-							{ name: "Signal", field:"cfs_code", width: "50px", formatter:function(data) {
+							{ name: "Address", field:"cfs_addr", width: "250px" },
+							{ name: "Cross St 1", field:"cfs_cross1", width: "150px" },
+							{ name: "Cross St 2", field:"cfs_cross2", width: "150px" },
+							{ name: "Signal", field:"cfs_code", width: "90px", formatter:function(data) {
 									if(data) { return "10-"+data} else { return ''; } }
 						  },
 							{ name: "Signal Info1", field:"cfs_codesup1", width: "50px" },
-							{ name: "Signal Info2", field:"cfs_codesup2", width: "50px" },
-							{ name: "Time Assigned", field:"cfs_timeassigned", width: "50px" },
+							{ name: "Signal Info2", field:"cfs_codesup2", width: "150px" },
+							{ name: "Time Assigned", field:"cfs_timeassigned", width: "100px",  formatter: function(data) {
+									if(data) { 
+										var dateObj = dojo.date.locale.parse(data, { datePattern: 'yyyy-MM-dd', timePattern:'HH:mm:ss'} );
+										if(dateObj) {
+											var test =dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
+											return test;
+										} else {
+											return data;
+										}
+									} else { return ''; } 
+								}
+							},
 							{ name: "Priority", field:"cfs_priority", width: "50px" },
-							{ name: "Final Disposition", field:"cfs_finaldis", width: "50px" },
-							{ name: "Final Disposition Info", field:"cfs_finaldissup1", width: "50px" },
-							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "50px" },
+							{ name: "Final Disposition", field:"cfs_finaldis", width: "90px", formatter:function(data) {
+									if(data) { return "10-"+data} else { return ''; } }
+						  },
+							{ name: "Final Disposition Info", field:"cfs_finaldissup1", width: "150px" },
+							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "150px", formatter: function(data) {
+									if(data) { 
+										var dateObj = dojo.date.locale.parse(data, { datePattern: 'yyyy-MM-dd', timePattern:'HH:mm:ss'} );
+										if(dateObj) {
+											var test =dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
+											return test;
+										} else {
+											return data;
+										}
+									} else { return ''; } 
+								}
+							},
 							{ name: "Final Disposition Unit", field:"cfs_finaldisunit", width: "50px" },
 							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px" },
-							{ name: "Last Updated From SPRINT", field:"cfs_updated_on", width: "50px" },
+							{ name: "Last Updated From SPRINT", field:"cfs_updated_on", width: "150px" , formatter: function(data) {
+									if(data) { 
+										var dateObj = dojo.date.locale.parse(data, { datePattern: 'yyyy-MM-dd', timePattern:'HH:mm:ss'} );
+										if(dateObj) {
+											var test =dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
+											return test;
+										} else {
+											return data;
+										}
+									} else { return ''; } 
+								}
+							}
 
-							{ name: "Body of Job", field:"cfs_body", width: "250px" }
+//							{ name: "Body of Job", field:"cfs_body", width: "250px" }
 							]
 					} ]
 					
@@ -109,7 +150,8 @@ dojo.declare(
 					region : 'center'
 				} );
 				var todayStr = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
-				this.srd_datagrid.setQuery( { cfs_date: todayStr, cfs_routenotifications: 'true'} ); 
+				this.srd_query = { cfs_date: todayStr, cfs_routenotifications: 'true'}; 
+				this.srd_datagrid.setQuery(this.srd_query ); 
 				this.insideContainer.addChild(this.srd_datagrid);
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
 		
@@ -150,6 +192,27 @@ dojo.declare(
 				} );
 				this.insideContainer.addChild(this.srd_datagrid);
 			}
+		},
+		// END selectTable FUNCTION
+		toggleAutoRefresh: function() { 
+			if( ! this.autoRefresh ) {
+				this.srd_timer = new dojox.timing.Timer(30000);
+				this.srd_timer.onTick = function() { this.refreshTable();
+					}.bind(this);				
+				this.srd_timer.start();	
+				this.autoRefresh = true;
+			} else {
+				this.srd_timer.stop();	
+				this.autoRefresh = false;
+			}
+		},
+		// END toggleAutoRefresh
+		refreshTable: function() {
+			console.log("Refresh Table Called!");
+			this.srd_datagrid.setQuery(this.srd_query ); 
+			this.srd_datagrid.setStore( this.srd_dataStore );
+			this.srd_datagrid.setQuery(this.srd_query ); 
+	
 		}
 	}
 );
