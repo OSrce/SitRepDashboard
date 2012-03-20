@@ -22,6 +22,7 @@ CREATE TABLE sr_cfs (
 	cfs_dispatcherid VARCHAR(8),
 	cfs_timecreated TIME,
 	cfs_timeassigned TIMESTAMP,
+	cfs_assignedunit VARCHAR(16),
 	cfs_priority INT,
 	cfs_routenotifications BOOL DEFAULT FALSE,
 	cfs_finaldis INT,
