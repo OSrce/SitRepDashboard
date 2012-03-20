@@ -33,7 +33,7 @@ dojo.declare(
 				}
 				this.selectedTable = "Calls for service - SPRINT";
 				this.selectedDataMenu = new dijit.Menu();
-				this.autoRefresh = false;				
+//				this.autoRefresh = false;				
 				for( var tmpTable in this.tableList) {
 					console.log("Table Type:"+tmpTable);
 					this.selectedDataMenu.addChild( new dijit.MenuItem( {
@@ -62,10 +62,10 @@ dojo.declare(
 					srd_view: this,
 					onClick: function() { this.srd_view.deleteSelectedItems(); } 
 				} ) );
-				this.dataMenu.addChild(new dijit.MenuItem( {
+				this.dataMenu.addChild(new dijit.CheckedMenuItem( {
 					label: "Auto Refresh",
 					srd_view: this,
-					onClick: function() { this.srd_view.toggleAutoRefresh(); } 
+					onClick: function() { this.srd_view.toggleAutoRefresh(this); } 
 				} ) );
 			
 				this.srd_store = new dojo.store.Cache(
@@ -194,16 +194,16 @@ dojo.declare(
 			}
 		},
 		// END selectTable FUNCTION
-		toggleAutoRefresh: function() { 
-			if( ! this.autoRefresh ) {
+		toggleAutoRefresh: function(menuItem) { 
+			if( menuItem.checked == true ) {
 				this.srd_timer = new dojox.timing.Timer(30000);
 				this.srd_timer.onTick = function() { this.refreshTable();
 					}.bind(this);				
 				this.srd_timer.start();	
-				this.autoRefresh = true;
+//				this.autoRefresh = true;
 			} else {
 				this.srd_timer.stop();	
-				this.autoRefresh = false;
+//				this.autoRefresh = false;
 			}
 		},
 		// END toggleAutoRefresh
