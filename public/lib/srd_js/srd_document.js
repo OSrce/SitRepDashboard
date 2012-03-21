@@ -158,8 +158,22 @@ srd_document.prototype.srd_init = function() {
 		this.srd_selLayer = this.srd_layerArr[key];
 	}
 
+	// TESTING - TODO: CLEAN UP - STYLES AND LAYERS (Settings) SHOULD be stores!
+	var tmpStore = new dojo.store.Memory({data: theLayers, idProperty: "id"}); 
+	tmpStore.query().forEach(function(layerOptions) {
+		this.srd_layerArr[layerOptions.id] = new srd_layer();
+		this.srd_layerArr[layerOptions.id].options = layerOptions;
+		this.srd_layerArr[layerOptions.id].srd_styleArr = this.srd_styleArr;
+	}.bind(this) );
 
-
+	this.srd_layerStore = new dojo.store.Cache(
+		dojo.store.JsonRest({
+			target: "/srdata/Layers/"
+		} ),
+		tmpStore
+	);
+	
+	
 
 
 
@@ -399,41 +413,47 @@ srd_document.prototype.srd_createWhiteboard = function() {
 }
 	
 srd_document.prototype.srd_createLayer = function(theName,theUrl) {
-	var tmpLayer = new srd_layer();
-	tmpLayer.options.name = theName;
+//	var tmpLayer = new srd_layer();
+	var tmpOptions = {};
+	tmpOptions.name = theName;
 	if(theUrl != "") {
-		tmpLayer.options.url = theUrl;
+		tmpOptions.url = theUrl;
 	}
-	tmpLayer.options.type = "Vector";
-	tmpLayer.options.format = "GeoJSON";
-	tmpLayer.options.projection = this.staticVals.default_projection;
-	tmpLayer.options.isBaseLayer = false;
-	tmpLayer.options.visibility = true;
-	tmpLayer.options.editable = true;
+	tmpOptions.type = "Vector";
+	tmpOptions.format = "GeoJSON";
+
+//	TODO : FIX THESE!!!
+		tmpOptions.datatable = "sr_layer_static_data";
+//	tmpOptions.projection = this.staticVals.default_projection;
+//	tmpOptions.isBaseLayer = false;
+	tmpOptions.visibility = true;
+//	tmpOptions.editable = true;
 
 	//BAD - NEED TO REQUEST ID FROM SERVER, CANT PICK ARBITRARILY
 //	tmpLayer.options.id = this.srd_layerArr.length;
-	tmpLayer.options.id = 20000;
+//	tmpLayer.options.id = 20000;
+	this.srd_layerStore.add(tmpOptions).then(function(layerOptions) {
+		console.log("Create Layer Called and New Layeroptions object returned! ID:".layerOptions.id);
+		this.srd_layerArr[layerOptions.id] = new srd_layer();
+		this.srd_layerArr[layerOptions.id].options = layerOptions;
+//	this.srd_layerArr[tmpLayer.options.id] = tmpLayer;	
+		this.staticVals.layerCount++;
 
-	this.srd_layerArr[tmpLayer.options.id] = tmpLayer;	
-	this.staticVals.layerCount++;
+		this.srd_layerArr[layerOptions.id].loadData();
+		this.srd_layerArr[layerOptions.id].addLayerToMap(this.selectedView.map);
 
-	tmpLayer.loadData();
-	//BAD!!!!!!! TESTING ONLY!!!
-	tmpLayer.addLayerToMap(this.selectedView.map);
-	//END BAD
 //	this.srd_selLayer = tmpLayer;
-	this.srd_saveMenu.addChild(new dijit.MenuItem( { 
-			label: tmpLayer.options.name,
-			onClick: function() { this.saveLayer(tmpLayer.id) }.bind(this)
-	} ) );
-	if(this.srd_layerEditMenu != null) {
-		this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
-				label: tmpLayer.options.name,
-				onClick: function() { this.srd_selectEditLayer( tmpLayer.id );  }.bind(this)
+		this.srd_saveMenu.addChild(new dijit.MenuItem( { 
+				label: layerOptions.name,
+				onClick: function() { this.saveLayer(layerOptions.id) }.bind(this)
 		} ) );
-	}
-
+		if(this.srd_layerEditMenu != null) {
+			this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
+					label: layerOptions.name,
+					onClick: function() { this.srd_selectEditLayer( layerOptions.id );  }.bind(this)
+			} ) );
+		}
+	}.bind(this) );
 
 }
 

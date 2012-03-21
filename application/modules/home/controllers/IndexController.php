@@ -71,6 +71,7 @@ class Home_IndexController extends Zend_Controller_Action
 			// END LOAD STATIC VALS
 
 			// BEGIN LOAD srdLayerArr data :
+//			$this->getResponse()->appendBody("srd.srd_styleArr
 			foreach($this->_styles as $styleId => $style) {
 				$styleArr = $style->toArray();
 				$styleArrJSON = Zend_Json::encode($styleArr);
@@ -81,16 +82,24 @@ class Home_IndexController extends Zend_Controller_Action
 			// END LOAD srdLayerArr data
 
 			// BEGIN LOAD srdLayerArr data :
+			$this->getResponse()->appendBody("var theLayers = [\n");
+			$firstTime =1;
 			foreach($this->_layers as $layerId => $layer) {
-				$this->getResponse()->appendBody( "srd.srd_layerArr[$layerId] = new srd_layer();\n");
+				if($firstTime ==1) {
+					$firstTime =0;
+				} else {
+					$this->getResponse()->appendBody(",");
+				}
+//				$this->getResponse()->appendBody( "srd.srd_layerArr[$layerId] = new srd_layer();\n");
 				$layerOptions = $layer->toArray();
 				$logger->log("printLayer:".print_r($layerOptions,true),Zend_Log::DEBUG);
 				$layerOptionsJSON = Zend_Json::encode($layerOptions);
 //				$logger->log("printLayerJSON:".$layerOptionsJSON,Zend_Log::DEBUG);
-				$this->getResponse()->appendBody( "srd.srd_layerArr['$layerId'].options = \n");
+//				$this->getResponse()->appendBody( "srd.srd_layerArr['$layerId'].options = \n");
 				$this->getResponse()->appendBody( $layerOptionsJSON."\n");
-				$this->getResponse()->appendBody( "srd.srd_layerArr['$layerId'].srd_styleArr = srd.srd_styleArr;\n");
+//				$this->getResponse()->appendBody( "srd.srd_layerArr['$layerId'].srd_styleArr = srd.srd_styleArr;\n");
 			}
+			$this->getResponse()->appendBody("]\n");
 			// END LOAD srdLayerArr data
 
 
