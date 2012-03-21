@@ -21,6 +21,7 @@ dojo.declare(
 	
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
+			dojo.addOnLoad( function() {
 			console.log("srd_view_admin constructor called!");
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_selLayer = this.srd_doc.srd_selLayer;
@@ -39,7 +40,6 @@ dojo.declare(
 				}
 				this.selectedTable = "Users";
 				this.selectedDataMenu = new dijit.Menu();
-				
 				for( var tmpTable in this.tableList) {
 					console.log("Table Type:"+tmpTable);
 					this.selectedDataMenu.addChild( new dijit.MenuItem( {
@@ -78,143 +78,143 @@ dojo.declare(
 				);
 				var gridCellsDijit = dojox.grid.cells;
 				this.srd_structList = { 
-					defaultCell: { width: 10, editable: true },
+					defaultCell: { autoWidth:true, width: "50", editable: true },
 					"Users": [
-						{ name: "User ID", field:"uid", width: "50px" },
-						{ name: "Group ID", field:"gid", width: "50px" },
-						{ name: "Username", field:"username", width: "50px" },
-						{ name: "First Name", field:"firstname", width: "50px" },
-						{ name: "Last Name", field:"lastname", width: "50px" },
-						{ name: "Title", field:"title", width: "50px" },
-						{ name: "Title Code", field:"titlecode", width: "50px" },
-						{ name: "Email", field:"email", width: "50px" },
-						{ name: "Last Login", field:"last_login", width: "50px" },
-						{ name: "View Layout X", field:"view_layout_x", width: "50px" },
-						{ name: "View Layout Y", field:"view_layout_y", width: "50px" },
-						{ name: "View Data", field:"view_data", width: "50px" }
+						{ name: "User ID", field:"uid" },
+						{ name: "Group ID", field:"gid" },
+						{ name: "Username", field:"username" },
+						{ name: "First Name", field:"firstname" },
+						{ name: "Last Name", field:"lastname" },
+						{ name: "Title", field:"title" },
+						{ name: "Title Code", field:"titlecode" },
+						{ name: "Email", field:"email" },
+						{ name: "Last Login", field:"last_login" },
+						{ name: "View Layout X", field:"view_layout_x" },
+						{ name: "View Layout Y", field:"view_layout_y" },
+						{ name: "View Data", field:"view_data" }
 					],
 					"Groups": [
-						{ name: "Group ID", field:"gid", width: "50px" },
-						{ name: "Parent ID", field:"parent_gid", width: "50px" },
-						{ name: "Groupname", field:"groupname", width: "50px" }
+						{ name: "Group ID", field:"gid" },
+						{ name: "Parent ID", field:"parent_gid" },
+						{ name: "Groupname", field:"groupname" }
 					],
 					"Permissions": [
-						{ name: "Permission ID", field:"permission_id", width: "50px" },
-						{ name: "Role Type", field:"role_type", width: "50px" },
-						{ name: "Role Id", field:"role_id", width: "50px" },
-						{ name: "Resource Type", field:"resource_type", width: "50px" },
-						{ name: "Resource ID", field:"resource_id", width: "50px" },
-						{ name: "Create", field:"permission_create", width: "50px" },
-						{ name: "Read", field:"permission_read", width: "50px" },
-						{ name: "Update", field:"permission_update", width: "50px" },
-						{ name: "Delete", field:"permission_delete", width: "50px" }
+						{ name: "Permission ID", field:"permission_id" },
+						{ name: "Role Type", field:"role_type" },
+						{ name: "Role Id", field:"role_id" },
+						{ name: "Resource Type", field:"resource_type" },
+						{ name: "Resource ID", field:"resource_id" },
+						{ name: "Create", field:"permission_create" },
+						{ name: "Read", field:"permission_read" },
+						{ name: "Update", field:"permission_update" },
+						{ name: "Delete", field:"permission_delete" }
 					],
 					"Modules": [
-						{ name: "Module ID", field:"id", width: "50px" },
-						{ name: "Module Name", field:"name", width: "50px" }
+						{ name: "Module ID", field:"id" },
+						{ name: "Module Name", field:"name" }
 					],
 					"Sessions": [
-						{ name: "Session ID", field:"id", width: "50px" },
-						{ name: "Modified", field:"modified", width: "50px" },
-						{ name: "Lifetime", field:"lifetime", width: "50px" },
-						{ name: "Data", field:"data", width: "50px" }
+						{ name: "Session ID", field:"id" },
+						{ name: "Modified", field:"modified" },
+						{ name: "Lifetime", field:"lifetime" },
+						{ name: "Data", field:"data" }
 					],
 					"Layers": [ {
 						defaultCell: { width: 10, editable: true },
 						cells: [
-							{ name: "ID", field:"id", width: "50px" },
-							{ name: "Name", field:"name", width: "50px" },
-							{ name: "Type", field:"type", width: "50px" },
-							{ name: "Format", field:"format", width: "50px" },
-							{ name: "isBaseLayer", field:"isbaselayer", width: "50px" },
-							{ name: "Projection", field:"projection", width: "50px" },
-							{ name: "Visibility", field:"visibility", width: "50px" },
-							{ name: "Spherical Mercator", field:"sphericalmercator", width: "50px" },
+							{ name: "ID", field:"id" },
+							{ name: "Name", field:"name" },
+							{ name: "Type", field:"type" },
+							{ name: "Format", field:"format" },
+							{ name: "isBaseLayer", field:"isbaselayer" },
+							{ name: "Projection", field:"projection" },
+							{ name: "Visibility", field:"visibility" },
+							{ name: "Spherical Mercator", field:"sphericalmercator" },
 							{ name: "Url", field:"url", width: "100px" },
-							{ name: "Zoom Levels", field:"numzoomlevels", width: "50px" },
-							{ name: "Min Zoom Level", field:"minzoomlevel", width: "50px" },
-							{ name: "Max Zoom Level", field:"maxzoomlevel", width: "50px" },
-							{ name: "Attribution", field:"attribution", width: "50px" },
-							{ name: "Default Style ID", field:"defaultstyle", width: "50px" },
-							{ name: "Data Table", field:"datatable", width: "50px" },
-							{ name: "Created On", field:"created_on", width: "50px" },
-							{ name: "Created By", field:"created_by", width: "50px" },
-							{ name: "Updated On", field:"updated_on", width: "50px" },
-							{ name: "Updated By", field:"updated_by", width: "50px" }
+							{ name: "Zoom Levels", field:"numzoomlevels" },
+							{ name: "Min Zoom Level", field:"minzoomlevel" },
+							{ name: "Max Zoom Level", field:"maxzoomlevel" },
+							{ name: "Attribution", field:"attribution" },
+							{ name: "Default Style ID", field:"defaultstyle" },
+							{ name: "Data Table", field:"datatable" },
+							{ name: "Created On", field:"created_on" },
+							{ name: "Created By", field:"created_by" },
+							{ name: "Updated On", field:"updated_on" },
+							{ name: "Updated By", field:"updated_by" }
 						]
 					} ]  ,
 					"Styles": [ {
 						defaultCell: { width: 10, editable: true },
 						cells: [
-							{ name: "ID", field:"id", width: "50px" },
+							{ name: "ID", field:"id" },
 //							{ hidden: true, field:"id" },
 							//TESTING TESTING --- NEED TO FIX!!!!
-//							{ name: "ID", field:"grid_id", width: "50px", formatter: 
+//							{ name: "ID", field:"grid_id", formatter: 
 //								function(data) { return data.id;  }
 //							 },
-							{ name: "Name", field:"name", width: "50px" },
-							{ name: "Label", field:"label", width: "50px" },
-							{ name: "Fill Color", field:"fillcolor", width: "50px" },
-							{ name: "Fill Opacity", field:"fillopacity", width: "50px" },
-							{ name: "Stroke Color", field:"strokecolor", width: "50px" },
-							{ name: "Stroke Opacity", field:"strokeopacity", width: "50px" },
-							{ name: "Stroke Width", field:"strokewidth", width: "50px" },
-							{ name: "Point Radius", field:"pointradius", width: "50px" },
-							{ name: "Font Color", field:"fontcolor", width: "50px" },
-							{ name: "Font Size", field:"fontsize", width: "50px" },
-							{ name: "Font Family", field:"fontfamily", width: "50px" },
-							{ name: "Font Weight", field:"fontweight", width: "50px" },
-							{ name: "Font Opacity", field:"fontopacity", width: "50px" },
-							{ name: "Label Align", field:"labelalign", width: "50px" },
-							{ name: "Label X Offset", field:"labelxoffset", width: "50px" },
-							{ name: "Label Y Offset", field:"labelyoffset", width: "50px" },
-							{ name: "External Graphic", field:"externalgraphic", width: "50px" },
-							{ name: "Graphic Width", field:"graphicwidth", width: "50px" },
-							{ name: "Graphic Height", field:"graphicheight", width: "50px" },
-							{ name: "Graphic Opacity", field:"graphicopacity", width: "50px" },
-							{ name: "rotation", field:"rotation", width: "50px" },
-							{ name: "Created On", field:"created_on", width: "50px" },
-							{ name: "Created By", field:"created_by", width: "50px" },
-							{ name: "Updated On", field:"updated_on", width: "50px" },
-							{ name: "Updated By", field:"updated_by", width: "50px" }
+							{ name: "Name", field:"name" },
+							{ name: "Label", field:"label" },
+							{ name: "Fill Color", field:"fillcolor" },
+							{ name: "Fill Opacity", field:"fillopacity" },
+							{ name: "Stroke Color", field:"strokecolor" },
+							{ name: "Stroke Opacity", field:"strokeopacity" },
+							{ name: "Stroke Width", field:"strokewidth" },
+							{ name: "Point Radius", field:"pointradius" },
+							{ name: "Font Color", field:"fontcolor" },
+							{ name: "Font Size", field:"fontsize" },
+							{ name: "Font Family", field:"fontfamily" },
+							{ name: "Font Weight", field:"fontweight" },
+							{ name: "Font Opacity", field:"fontopacity" },
+							{ name: "Label Align", field:"labelalign" },
+							{ name: "Label X Offset", field:"labelxoffset" },
+							{ name: "Label Y Offset", field:"labelyoffset" },
+							{ name: "External Graphic", field:"externalgraphic" },
+							{ name: "Graphic Width", field:"graphicwidth" },
+							{ name: "Graphic Height", field:"graphicheight" },
+							{ name: "Graphic Opacity", field:"graphicopacity" },
+							{ name: "rotation", field:"rotation" },
+							{ name: "Created On", field:"created_on" },
+							{ name: "Created By", field:"created_by" },
+							{ name: "Updated On", field:"updated_on" },
+							{ name: "Updated By", field:"updated_by" }
 						]
 					} ],
 					"Style Presets": [ {
 						defaultCell: { width: 10, editable: true },
 						cells: [
-							{ name: "ID", field:"id", width: "50px" },
-							{ name: "Name", field:"name", width: "50px" },
-							{ name: "Style ID", field:"style_id", width: "50px" },
-							{ name: "Layer ID", field:"layer_id", width: "50px" },
-							{ name: "Group ID", field:"group_id", width: "50px" },
-							{ name: "User ID", field:"user_id", width: "50px" }
+							{ name: "ID", field:"id" },
+							{ name: "Name", field:"name" },
+							{ name: "Style ID", field:"style_id" },
+							{ name: "Layer ID", field:"layer_id" },
+							{ name: "Group ID", field:"group_id" },
+							{ name: "User ID", field:"user_id" }
 							]
 					} ],
 					"Calls for service - SPRINT": [ {
 						defaultCell: { width: 10, editable: true },
 						cells: [
 							{ name: "Date", field:"cfs_date", width: "80px" },
-							{ name: "Time", field:"cfs_timecreated", width: "50px" },
-							{ name: "Job Let", field:"cfs_letter", width: "50px" },
-							{ name: "Job #", field:"cfs_num", width: "50px" },
-							{ name: "Precinct", field:"cfs_pct", width: "50px" },
-							{ name: "Sector", field:"cfs_sector", width: "50px" },
+							{ name: "Time", field:"cfs_timecreated" },
+							{ name: "Job Let", field:"cfs_letter" },
+							{ name: "Job #", field:"cfs_num" },
+							{ name: "Precinct", field:"cfs_pct" },
+							{ name: "Sector", field:"cfs_sector" },
 							{ name: "Address", field:"cfs_addr", width: "100px" },
-							{ name: "Cross St 1", field:"cfs_cross1", width: "50px" },
-							{ name: "Cross St 2", field:"cfs_cross2", width: "50px" },
-							{ name: "Signal", field:"cfs_code", width: "50px", formatter:function(data) {
+							{ name: "Cross St 1", field:"cfs_cross1" },
+							{ name: "Cross St 2", field:"cfs_cross2" },
+							{ name: "Signal", field:"cfs_code", formatter:function(data) {
 									if(data) { return "10-"+data} else { return ''; } }
 						  },
-							{ name: "Signal Info1", field:"cfs_codesup1", width: "50px" },
-							{ name: "Signal Info2", field:"cfs_codesup2", width: "50px" },
-							{ name: "Time Assigned", field:"cfs_timeassigned", width: "50px" },
-							{ name: "Priority", field:"cfs_priority", width: "50px" },
-							{ name: "Ops Tracking", field:"cfs_routenotifications", width: "50px" },
-							{ name: "Final Disposition", field:"cfs_finaldis", width: "50px" },
-							{ name: "Final Disposition Info", field:"cfs_finaldissup1", width: "50px" },
-							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "50px" },
-							{ name: "Final Disposition Unit", field:"cfs_finaldisunit", width: "50px" },
-							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px" },
+							{ name: "Signal Info1", field:"cfs_codesup1" },
+							{ name: "Signal Info2", field:"cfs_codesup2" },
+							{ name: "Time Assigned", field:"cfs_timeassigned" },
+							{ name: "Priority", field:"cfs_priority" },
+							{ name: "Ops Tracking", field:"cfs_routenotifications" },
+							{ name: "Final Disposition", field:"cfs_finaldis" },
+							{ name: "Final Disposition Info", field:"cfs_finaldissup1" },
+							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate" },
+							{ name: "Final Disposition Unit", field:"cfs_finaldisunit" },
+							{ name: "Job is Duplicate", field:"cfs_dup" },
 
 							{ name: "Body of Job", field:"cfs_body", width: "250px" }
 							]
@@ -243,7 +243,7 @@ dojo.declare(
 				} );
 				this.insideContainer.addChild(this.srd_datagrid);
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
-		
+			}.bind(this) );	
 		},
 		deleteSelectedItems: function() {
 			var items = this.srd_datagrid.selection.getSelected();
