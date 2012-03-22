@@ -23,6 +23,7 @@ dojo.declare(
 	
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
+			dojo.addOnLoad( function() {
 			console.log("srd_view_ops constructor called!");
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_selLayer = this.srd_doc.srd_selLayer;
@@ -154,7 +155,7 @@ dojo.declare(
 				this.srd_datagrid.setQuery(this.srd_query ); 
 				this.insideContainer.addChild(this.srd_datagrid);
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
-		
+			}.bind(this) );		
 		},
 		deleteSelectedItems: function() {
 			var items = this.srd_datagrid.selection.getSelected();

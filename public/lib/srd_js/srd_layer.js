@@ -327,7 +327,7 @@ srd_layer.prototype.loadData = function( ) {
 				this.options.url =null;
 				if(this.options.url == null || this.options.url == "") {
 						this.layerProtocol = new OpenLayers.Protocol.HTTP( {
-							url: "/srdata/Features/"+this.options.id,
+							url: "/srdata/Features/layer_id/"+this.options.id+"/",
 //							params: { layer_id : this.options.id },
 //							readWithPOST: true,
 							format: new OpenLayers.Format.GeoJSON( { } )

@@ -1,6 +1,6 @@
 <?php
 
-class Srdata_FeaturesController extends Zend_Rest_Controller
+class Srdata_GeojsonController extends Zend_Rest_Controller
 {
 		protected $tableName; 
 		protected $db;

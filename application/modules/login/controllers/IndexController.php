@@ -156,10 +156,7 @@ class Login_IndexController extends Zend_Controller_Action {
 					$default_view_data = array( 
 						'0' => array(
 							'0' => array(
-								'type' 				=> 'map',
-								'start_lat'		=> 40.713,
-								'start_lon'		=> -73.996,
-								'start_zoom'	=> 12
+								'type' 				=> 'opstrack'
 							)
 						)
 					);

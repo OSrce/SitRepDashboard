@@ -126,6 +126,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$retObj[$idName] = $theRow; 
 			$this->getResponse()->appendBody(Zend_Json::encode($retObj));
 
+			$this->getResponse()->setHttpResponseCode(201);
 		}
 
 		// PUT Action === UPDATE

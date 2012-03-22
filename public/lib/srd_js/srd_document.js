@@ -193,6 +193,8 @@ srd_document.prototype.srd_init = function() {
 	}.bind(this) );
 
 	dojo.addOnLoad(function() {
+
+	this.srd_displayMenuBar();
 	// ASSUME view_layer_x/y have been set and that settings are populated
 	// parse and init different views
 	this.centerPane = new dijit.layout.ContentPane( { 
@@ -238,7 +240,7 @@ srd_document.prototype.srd_init = function() {
 
 	}.bind(this) );
 
-	this.srd_displayMenuBar();
+//	this.srd_displayMenuBar();
 
 }
 // END SRD_DOCUMENT CONSTRUCTOR
@@ -408,7 +410,7 @@ srd_document.prototype.srd_createWhiteboard = function() {
             selector: "date",
             datePattern: theFrmt
         });
-	var url ="/srdata/Features/5000";
+	var url ="/srdata/Features/";
 	this.srd_createLayer(name,url);
 }
 	
@@ -425,11 +427,12 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 //	TODO : FIX THESE!!!
 		tmpOptions.datatable = "sr_layer_static_data";
 //	tmpOptions.projection = this.staticVals.default_projection;
-		tmpOptions.isBaseLayer = false;
+//		tmpOptions.isBaseLayer = false;
 		tmpOptions.visibility = true;
 		dojo.when( this.srd_layerStore.add(tmpOptions), function( returnId ) {
 		console.log("Create Layer Called and New Layeroptions object returned! ID:"+returnId);
 		this.id = returnId;
+		this.isBaseLayer = false;
 	  this.editable = true;
 		console.log("New Layer Object Returned! Name="+this.name);
 
@@ -444,12 +447,12 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 //	this.srd_selLayer = tmpLayer;
 		srd.srd_saveMenu.addChild(new dijit.MenuItem( { 
 				label: this.name,
-				onClick: function() { srd.saveLayer(this.id) }.bind(srd)
+				onClick: function() { srd.saveLayer(returnId) }.bind(srd)
 		} ) );
 		if(srd.srd_layerEditMenu != null) {
 			srd.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
 					label: this.name,
-					onClick: function() { srd.srd_selectEditLayer( this.id );  }.bind(srd)
+					onClick: function() { srd.srd_selectEditLayer( returnId );  }.bind(srd)
 			} ) );
 		}
 	}.bind(tmpOptions)  );
