@@ -425,35 +425,34 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 //	TODO : FIX THESE!!!
 		tmpOptions.datatable = "sr_layer_static_data";
 //	tmpOptions.projection = this.staticVals.default_projection;
-//	tmpOptions.isBaseLayer = false;
-	tmpOptions.visibility = true;
-//	tmpOptions.editable = true;
+		tmpOptions.isBaseLayer = false;
+		tmpOptions.visibility = true;
+		dojo.when( this.srd_layerStore.add(tmpOptions), function( returnId ) {
+		console.log("Create Layer Called and New Layeroptions object returned! ID:"+returnId);
+		this.id = returnId;
+	  this.editable = true;
+		console.log("New Layer Object Returned! Name="+this.name);
 
-	//BAD - NEED TO REQUEST ID FROM SERVER, CANT PICK ARBITRARILY
-//	tmpLayer.options.id = this.srd_layerArr.length;
-//	tmpLayer.options.id = 20000;
-	this.srd_layerStore.add(tmpOptions).then(function(layerOptions) {
-		console.log("Create Layer Called and New Layeroptions object returned! ID:".layerOptions.id);
-		this.srd_layerArr[layerOptions.id] = new srd_layer();
-		this.srd_layerArr[layerOptions.id].options = layerOptions;
+		srd.srd_layerArr[this.id] = new srd_layer();
+		srd.srd_layerArr[this.id].options = this;
 //	this.srd_layerArr[tmpLayer.options.id] = tmpLayer;	
-		this.staticVals.layerCount++;
+		srd.staticVals.layerCount++;
 
-		this.srd_layerArr[layerOptions.id].loadData();
-		this.srd_layerArr[layerOptions.id].addLayerToMap(this.selectedView.map);
+		srd.srd_layerArr[this.id].loadData();
+		srd.srd_layerArr[this.id].addLayerToMap(srd.selectedView.map);
 
 //	this.srd_selLayer = tmpLayer;
-		this.srd_saveMenu.addChild(new dijit.MenuItem( { 
-				label: layerOptions.name,
-				onClick: function() { this.saveLayer(layerOptions.id) }.bind(this)
+		srd.srd_saveMenu.addChild(new dijit.MenuItem( { 
+				label: this.name,
+				onClick: function() { srd.saveLayer(this.id) }.bind(srd)
 		} ) );
-		if(this.srd_layerEditMenu != null) {
-			this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
-					label: layerOptions.name,
-					onClick: function() { this.srd_selectEditLayer( layerOptions.id );  }.bind(this)
+		if(srd.srd_layerEditMenu != null) {
+			srd.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
+					label: this.name,
+					onClick: function() { srd.srd_selectEditLayer( this.id );  }.bind(srd)
 			} ) );
 		}
-	}.bind(this) );
+	}.bind(tmpOptions)  );
 
 }
 

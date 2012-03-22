@@ -122,8 +122,9 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			
 			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
 			$theRow = $this->restTable->insert($data);
-			print Zend_Json::encode($theRow);
-
+			$idName = $this->idName;
+			$retObj[$idName] = $theRow; 
+			$this->getResponse()->appendBody(Zend_Json::encode($retObj));
 
 		}
 
