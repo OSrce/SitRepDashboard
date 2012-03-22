@@ -59,7 +59,7 @@ create TABLE sr_modules (
 );
 
 CREATE TYPE layer_type AS ENUM ('XYZ','Vector','WFS','GeoRSS','WMS');
-CREATE TYPE layer_format AS ENUM ('GML','WFST','WKT','GeoJSON');
+CREATE TYPE layer_format AS ENUM ('GML','WFST','WKT','GeoJSON','SRJSON');
 CREATE TABLE sr_layers (
 	id SERIAL NOT NULL,
 	name VARCHAR(128) NOT NULL,
@@ -136,7 +136,6 @@ SELECT AddGeometryColumn('sr_layer_static_data','sr_geom',4326,'GEOMETRY',2);
 CREATE TABLE sr_layer_dynamic_data (
 	layer_id INT NOT NULL,
 	feature_id BIGINT NOT NULL,
-	feature_style INT,	
 	feature_data TEXT,
 	feature_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	feature_end TIMESTAMP DEFAULT null,

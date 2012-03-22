@@ -422,640 +422,639 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 		tmpOptions.url = theUrl;
 	}
 	tmpOptions.type = "Vector";
-	tmpOptions.format = "GeoJSON";
+					tmpOptions.format = "SRJSON";
 
-//	TODO : FIX THESE!!!
-		tmpOptions.datatable = "sr_layer_static_data";
-//	tmpOptions.projection = this.staticVals.default_projection;
-//		tmpOptions.isBaseLayer = false;
-		tmpOptions.visibility = true;
-		dojo.when( this.srd_layerStore.add(tmpOptions), function( returnId ) {
-		console.log("Create Layer Called and New Layeroptions object returned! ID:"+returnId);
-		this.id = returnId;
-		this.isBaseLayer = false;
-	  this.editable = true;
-		console.log("New Layer Object Returned! Name="+this.name);
+				//	TODO : FIX THESE!!!
+						tmpOptions.datatable = "sr_layer_static_data";
+				//	tmpOptions.projection = this.staticVals.default_projection;
+				//		tmpOptions.isBaseLayer = false;
+						tmpOptions.visibility = true;
+						dojo.when( this.srd_layerStore.add(tmpOptions), function( returnId ) {
+						console.log("Create Layer Called and New Layeroptions object returned! ID:"+returnId);
+						this.id = returnId;
+						this.isBaseLayer = false;
+						this.editable = true;
+						console.log("New Layer Object Returned! Name="+this.name);
 
-		srd.srd_layerArr[this.id] = new srd_layer();
-		srd.srd_layerArr[this.id].options = this;
-//	this.srd_layerArr[tmpLayer.options.id] = tmpLayer;	
-		srd.staticVals.layerCount++;
+						srd.srd_layerArr[this.id] = new srd_layer();
+						srd.srd_layerArr[this.id].options = this;
+						srd.staticVals.layerCount++;
 
-		srd.srd_layerArr[this.id].loadData();
-		srd.srd_layerArr[this.id].addLayerToMap(srd.selectedView.map);
+						srd.srd_layerArr[this.id].loadData();
+						srd.srd_layerArr[this.id].addLayerToMap(srd.selectedView.map);
 
-//	this.srd_selLayer = tmpLayer;
-		srd.srd_saveMenu.addChild(new dijit.MenuItem( { 
-				label: this.name,
-				onClick: function() { srd.saveLayer(returnId) }.bind(srd)
-		} ) );
-		if(srd.srd_layerEditMenu != null) {
-			srd.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
-					label: this.name,
-					onClick: function() { srd.srd_selectEditLayer( returnId );  }.bind(srd)
-			} ) );
-		}
-	}.bind(tmpOptions)  );
-
-}
-
-srd_document.prototype.srd_displayMenuBar = function() {
-	dojo.addOnLoad(function() {
-		if(this.srd_menuBar == null) {
-			this.srd_menuBar = new dijit.MenuBar( { 
-				splitter: false,
-				'region': 'top',
-				style: "margin:0px;padding:0px;"
-			} );	
-			//// ICON in LEFT CORNER ////
-			this.srd_menuBar.addChild(new dijit.MenuBarItem( {
-				label: '<img src="lib/img/SR_Icon.png" height="20" width="16">' } ) );
-			//// SitRep MENU /////	
-			var srd_sitrepMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.MenuBarItem({
-				label: "SitRep" 
-			} ) );
-
-			//// File Menu ////
-			var srd_fileMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
-				label: "File",
-				popup: srd_fileMenu
-			}) );
-			srd_fileMenu.addChild(new dijit.MenuItem({
-				label: "New Whiteboard Layer",
-				onClick: function() { this.srd_createWhiteboard()  }.bind(this)
-			}));
-			srd_fileMenu.addChild(new dijit.MenuItem({
-				label: "Open",
-				onClick: function() { this.openFile() }.bind(this)
-			}));
-			srd_fileMenu.addChild(new dijit.MenuItem({
-				label: "Save Project",
-				onClick: function() { alert("Future Function - Save Project") }.bind(this)
-			}));
-			this.srd_saveMenu = new dijit.Menu( );
-//			this.srd_saveMenu.addChild(new dijit.MenuItem( { 
-//				label: "List of Editable Layers",
-//				disabled: true
-//			} ) );
-			for( tmpId in this.srd_layerArr) {
-				if(this.srd_layerArr[tmpId].editable == true) {
-					this.srd_saveMenu.addChild(new dijit.MenuItem( { 
-						label: this.srd_layerArr[tmpId].name,
-						onClick: function() { this.saveLayer(tmpId) }.bind(this)
-					} ) );
-				}
-			}	
-			srd_fileMenu.addChild(new dijit.PopupMenuItem({
-				label: "Save Layer",
-				popup:this.srd_saveMenu
-			}));
-//			srd_fileMenu.startup();
-
-			//// Edit Menu ////
-			var srd_editMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
-				label: "Edit",
-				popup: srd_editMenu
-			}) );
-			srd_editMenu.addChild(new dijit.MenuItem({
-				label: "TEST1",
-				onClick: function() { alert("Place TEST Here") }.bind(this)
-//				onClick: function() { this.srd_layerArr[13].uploadLayer(); }.bind(this)
-			}));
-			//// View Menu ////
-			this.srd_viewMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
-				label: "View",
-				popup: this.srd_viewMenu
-			}) );
-			var theLabel = "Selected View : ";
-			if(this.selectedView) {
-				theLabel = theLabel+this.selectedView.data.type+" "+this.selectedView.data.xPos+","+this.selectedView.data.yPos;
-			}
-			this.srd_viewMenuSelected = new dijit.MenuItem({
-				label: theLabel
-			})
-			this.srd_viewMenu.addChild(this.srd_viewMenuSelected);
-			// VIEW TYPE MENU DROP DOWN
-			this.srd_viewTypeMenu = new dijit.Menu();
-			for(var theType in this.viewType) {
-				this.srd_viewTypeMenu.addChild( new dijit.MenuItem( {
-					label: theType,
-					value: theType,
-					srd_doc: this,
-					onClick: function() { this.srd_doc.srd_changeViewType(this.value) }
-				} ) );
-			}
-			this.srd_viewMenu.addChild(new dijit.PopupMenuItem({
-				label: "Change Type: ",
-				popup:this.srd_viewTypeMenu
-			}));
-			///// END View Menu ////	
-
-			//// Data Menu ////
-			this.srd_dataMenuPopup = new dijit.PopupMenuBarItem({
-				label: "Data",
-				popup: this.selectedView.dataMenu
-			} );
-			this.srd_menuBar.addChild(this.srd_dataMenuPopup);
-			/// END Data Menu
-			this.srd_dataMenu = this.srd_viewMenu;	
-
-			//// Tools Menu ////
-			var srd_toolsMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
-				label: "Tools",
-				popup: srd_toolsMenu
-			}) );
-			// Toggle for Edit Toolbar
-			srd_toolsMenu.addChild(
-				new dijit.CheckedMenuItem({
-					label: "Edit Toolbar",
-					srd_doc: this,
-					onClick: function() { this.srd_doc.srd_toggleEditPanel(this); }
-				}) 
-			);
-			// Toggle for Location Tracking
-			srd_toolsMenu.addChild(
-				new dijit.CheckedMenuItem({
-					label: "Display Location",
-					srd_doc: this,
-					onClick: function() { this.srd_doc.srd_toggleLocationTracking(this); }
-				}) 
-			);
-	
-/*
-			// BEGIN UPLOAD LAYER MENU
-			this.srd_uploadMenu = new dijit.Menu( );
-			for( tmpId in this.srd_layerArr) {
-					this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
-						label: this.srd_layerArr[tmpId].name,
-						onClick: function() { this.srd_layerArr[tmpId].uploadLayer() }.bind(this)
-					} ) );
-			}	
-			srd_toolsMenu.addChild(new dijit.PopupMenuItem({
-				label: "Upload Layer to Server",
-				popup:this.srd_uploadMenu
-			}));
-			// END UPLOAD LAYER MENU
-*/
-
-			//// Window Menu ////
-			this.srd_windowMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
-				label: "Window",
-				popup: this.srd_windowMenu
-			}) );
-			// ROW SIZE MENU DROP DOWN
-			this.srd_windowRowMenu = new dijit.Menu();
-			for(var y=1;y<5;y++) {
-				this.srd_windowRowMenu.addChild( new dijit.MenuItem( {
-					label: y,
-					value: y,
-					srd_doc: this,
-					onClick: function() { this.srd_doc.srd_changeViewGridDimensions('y',this.value) }
-				} ) );
-			}
-			this.srd_windowMenu.addChild(new dijit.PopupMenuItem({
-				label: "View Rows: "+this.staticVals.view_layout_y,
-				popup:this.srd_windowRowMenu	
-			}));
-			// COLUMN SIZE MENU DROP DOWN
-			this.srd_windowColMenu = new dijit.Menu();
-			for(var x=1;x<5;x++) {
-				this.srd_windowColMenu.addChild( new dijit.MenuItem( {
-					label: x,
-					value: x,
-					srd_doc: this,
-					onClick: function() { this.srd_doc.srd_changeViewGridDimensions('x',this.value) }
-				} ) );
-			}
-			this.srd_windowMenu.addChild(new dijit.PopupMenuItem({
-				label: "View Columns: "+this.staticVals.view_layout_x,
-				popup:this.srd_windowColMenu	
-			}));
-
-
-/*			var theSchema = {
-				"type" : "object",
-				"properties" : {
-					"items" :
-					"rating" : { "type": "number"},
-					"addy" : { "type": "string"},
-					"lat" : { "type": "number"},
-					"lon" : { "type": "number"},
-				}
-			}
-*/
-
-//			this.srsearch_store = new dojox.data.JsonRestStore ( {
-//				schema : theSchema,
-//				target: "/srsearch/index",
-//				syncMode:true
-
-			this.srsearch_store = new dojox.data.QueryReadStore( {
-// 			this.srsearch_store = new ComboBoxReadStore( {
-				url: "/srsearch/index"
-			} );
-
-			// LIVE SEARCH IN MENUBAR
-			this.srsearch_box = new dijit.form.ComboBox( {
-				id: "srsearch",
-				placeHolder: "Search for something",
-				store: this.srsearch_store,
-				searchAttr: "addy",
-				srd_doc: this,
-				autoComplete: false,
-//				selectOnClick: true,
-				searchDelay: 1000,
-				queryExpr: "${0}",
-				onChange: function() {
-//						this.value = this.displayedValue;
-						console.log("Search Text Clicked:"+this.store.getValue(this.item, "lat") );
-						var lat = this.store.getValue(this.item, "lat");	
-						var lon = this.store.getValue(this.item, "lon");	
-						if(this.srd_doc.selectedView == null) {
-							this.srd_doc.selectedView = this.viewArr[0][0];
+				//	this.srd_selLayer = tmpLayer;
+						srd.srd_saveMenu.addChild(new dijit.MenuItem( { 
+								label: this.name,
+								onClick: function() { srd.saveLayer(returnId) }.bind(srd)
+						} ) );
+						if(srd.srd_layerEditMenu != null) {
+							srd.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
+									label: this.name,
+									onClick: function() { srd.srd_selectEditLayer( returnId );  }.bind(srd)
+							} ) );
 						}
-						this.srd_doc.selectedView.goToPoint(lat,lon);
+					}.bind(tmpOptions)  );
+
 				}
-			} );
-			this.srd_menuBar.addChild(this.srsearch_box);
-			this.srsearch_box.startup();
-			//END SEARCH BAR
-			
-			//BEGIN USERNAME / Logout Options
-			this.srd_userMenu = new dijit.Menu({});
-			this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
-				label: "Log Out", //this.staticVals.user_title+" "+this.staticVals.user_lastname,
-				popup: this.srd_userMenu
-			}) );
-			this.srd_userMenu.addChild( new dijit.MenuItem( {
-				label: "Log Out: "+this.staticVals.user_lastname,
-				srd_doc: this,
-				onClick: function() { this.srd_doc.logout() }
-			} ) );
 
-			//END PLACING MENU ITEMS, LETS FIRE UP THE MENUBAR!				
-			this.srd_menuBar.startup();
+				srd_document.prototype.srd_displayMenuBar = function() {
+					dojo.addOnLoad(function() {
+						if(this.srd_menuBar == null) {
+							this.srd_menuBar = new dijit.MenuBar( { 
+								splitter: false,
+								'region': 'top',
+								style: "margin:0px;padding:0px;"
+							} );	
+							//// ICON in LEFT CORNER ////
+							this.srd_menuBar.addChild(new dijit.MenuBarItem( {
+								label: '<img src="lib/img/SR_Icon.png" height="20" width="16">' } ) );
+							//// SitRep MENU /////	
+							var srd_sitrepMenu = new dijit.Menu({});
+							this.srd_menuBar.addChild(new dijit.MenuBarItem({
+								label: "SitRep" 
+							} ) );
 
-		}
-		
-/*		// GET RID OF ALL WIDGETS ON SCREEN
-		var widgetArr = this.srd_container.getChildren();
-		for(var i=0;i<widgetArr.length;i++) {
-			this.srd_container.removeChild(widgetArr[i]);
-		}
-*/
-		this.srd_container.addChild(this.srd_menuBar);
-	}.bind(this) );
-	return;
-}
+							//// File Menu ////
+							var srd_fileMenu = new dijit.Menu({});
+							this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+								label: "File",
+								popup: srd_fileMenu
+							}) );
+							srd_fileMenu.addChild(new dijit.MenuItem({
+								label: "New Whiteboard Layer",
+								onClick: function() { this.srd_createWhiteboard()  }.bind(this)
+							}));
+							srd_fileMenu.addChild(new dijit.MenuItem({
+								label: "Open",
+								onClick: function() { this.openFile() }.bind(this)
+							}));
+							srd_fileMenu.addChild(new dijit.MenuItem({
+								label: "Save Project",
+								onClick: function() { alert("Future Function - Save Project") }.bind(this)
+							}));
+							this.srd_saveMenu = new dijit.Menu( );
+				//			this.srd_saveMenu.addChild(new dijit.MenuItem( { 
+				//				label: "List of Editable Layers",
+				//				disabled: true
+				//			} ) );
+							for( tmpId in this.srd_layerArr) {
+								if(this.srd_layerArr[tmpId].editable == true) {
+									this.srd_saveMenu.addChild(new dijit.MenuItem( { 
+										label: this.srd_layerArr[tmpId].name,
+										onClick: function() { this.saveLayer(tmpId) }.bind(this)
+									} ) );
+								}
+							}	
+							srd_fileMenu.addChild(new dijit.PopupMenuItem({
+								label: "Save Layer",
+								popup:this.srd_saveMenu
+							}));
+				//			srd_fileMenu.startup();
 
-srd_document.prototype.srd_toggleLocationTracking = function(menuItem) {
-	dojo.addOnLoad( function() {
-		if(menuItem.checked == true) {
-			console.log("Enabling Location Tracking");
-		// ELSE menuItem is NOT CHECKED :
-		} else {
-			console.log("Disabling Location Tracking");
-			
+							//// Edit Menu ////
+							var srd_editMenu = new dijit.Menu({});
+							this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+								label: "Edit",
+								popup: srd_editMenu
+							}) );
+							srd_editMenu.addChild(new dijit.MenuItem({
+								label: "TEST1",
+								onClick: function() { alert("Place TEST Here") }.bind(this)
+				//				onClick: function() { this.srd_layerArr[13].uploadLayer(); }.bind(this)
+							}));
+							//// View Menu ////
+							this.srd_viewMenu = new dijit.Menu({});
+							this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+								label: "View",
+								popup: this.srd_viewMenu
+							}) );
+							var theLabel = "Selected View : ";
+							if(this.selectedView) {
+								theLabel = theLabel+this.selectedView.data.type+" "+this.selectedView.data.xPos+","+this.selectedView.data.yPos;
+							}
+							this.srd_viewMenuSelected = new dijit.MenuItem({
+								label: theLabel
+							})
+							this.srd_viewMenu.addChild(this.srd_viewMenuSelected);
+							// VIEW TYPE MENU DROP DOWN
+							this.srd_viewTypeMenu = new dijit.Menu();
+							for(var theType in this.viewType) {
+								this.srd_viewTypeMenu.addChild( new dijit.MenuItem( {
+									label: theType,
+									value: theType,
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_changeViewType(this.value) }
+								} ) );
+							}
+							this.srd_viewMenu.addChild(new dijit.PopupMenuItem({
+								label: "Change Type: ",
+								popup:this.srd_viewTypeMenu
+							}));
+							///// END View Menu ////	
 
-		}
-		if(this.selectedView == null) {
-			this.selectedView = this.viewArr[0][0];
-		}
-		this.selectedView.toggleLocationTracking(menuItem.checked);
-	return;
-	}.bind(this) );
-}
+							//// Data Menu ////
+							this.srd_dataMenuPopup = new dijit.PopupMenuBarItem({
+								label: "Data",
+								popup: this.selectedView.dataMenu
+							} );
+							this.srd_menuBar.addChild(this.srd_dataMenuPopup);
+							/// END Data Menu
+							this.srd_dataMenu = this.srd_viewMenu;	
+
+							//// Tools Menu ////
+							var srd_toolsMenu = new dijit.Menu({});
+							this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+								label: "Tools",
+								popup: srd_toolsMenu
+							}) );
+							// Toggle for Edit Toolbar
+							srd_toolsMenu.addChild(
+								new dijit.CheckedMenuItem({
+									label: "Edit Toolbar",
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_toggleEditPanel(this); }
+								}) 
+							);
+							// Toggle for Location Tracking
+							srd_toolsMenu.addChild(
+								new dijit.CheckedMenuItem({
+									label: "Display Location",
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_toggleLocationTracking(this); }
+								}) 
+							);
+					
+				/*
+							// BEGIN UPLOAD LAYER MENU
+							this.srd_uploadMenu = new dijit.Menu( );
+							for( tmpId in this.srd_layerArr) {
+									this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
+										label: this.srd_layerArr[tmpId].name,
+										onClick: function() { this.srd_layerArr[tmpId].uploadLayer() }.bind(this)
+									} ) );
+							}	
+							srd_toolsMenu.addChild(new dijit.PopupMenuItem({
+								label: "Upload Layer to Server",
+								popup:this.srd_uploadMenu
+							}));
+							// END UPLOAD LAYER MENU
+				*/
+
+							//// Window Menu ////
+							this.srd_windowMenu = new dijit.Menu({});
+							this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+								label: "Window",
+								popup: this.srd_windowMenu
+							}) );
+							// ROW SIZE MENU DROP DOWN
+							this.srd_windowRowMenu = new dijit.Menu();
+							for(var y=1;y<5;y++) {
+								this.srd_windowRowMenu.addChild( new dijit.MenuItem( {
+									label: y,
+									value: y,
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_changeViewGridDimensions('y',this.value) }
+								} ) );
+							}
+							this.srd_windowMenu.addChild(new dijit.PopupMenuItem({
+								label: "View Rows: "+this.staticVals.view_layout_y,
+								popup:this.srd_windowRowMenu	
+							}));
+							// COLUMN SIZE MENU DROP DOWN
+							this.srd_windowColMenu = new dijit.Menu();
+							for(var x=1;x<5;x++) {
+								this.srd_windowColMenu.addChild( new dijit.MenuItem( {
+									label: x,
+									value: x,
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_changeViewGridDimensions('x',this.value) }
+								} ) );
+							}
+							this.srd_windowMenu.addChild(new dijit.PopupMenuItem({
+								label: "View Columns: "+this.staticVals.view_layout_x,
+								popup:this.srd_windowColMenu	
+							}));
+
+
+				/*			var theSchema = {
+								"type" : "object",
+								"properties" : {
+									"items" :
+									"rating" : { "type": "number"},
+									"addy" : { "type": "string"},
+									"lat" : { "type": "number"},
+									"lon" : { "type": "number"},
+								}
+							}
+				*/
+
+				//			this.srsearch_store = new dojox.data.JsonRestStore ( {
+				//				schema : theSchema,
+				//				target: "/srsearch/index",
+				//				syncMode:true
+
+							this.srsearch_store = new dojox.data.QueryReadStore( {
+				// 			this.srsearch_store = new ComboBoxReadStore( {
+								url: "/srsearch/index"
+							} );
+
+							// LIVE SEARCH IN MENUBAR
+							this.srsearch_box = new dijit.form.ComboBox( {
+								id: "srsearch",
+								placeHolder: "Search for something",
+								store: this.srsearch_store,
+								searchAttr: "addy",
+								srd_doc: this,
+								autoComplete: false,
+				//				selectOnClick: true,
+								searchDelay: 1000,
+								queryExpr: "${0}",
+								onChange: function() {
+				//						this.value = this.displayedValue;
+										console.log("Search Text Clicked:"+this.store.getValue(this.item, "lat") );
+										var lat = this.store.getValue(this.item, "lat");	
+										var lon = this.store.getValue(this.item, "lon");	
+										if(this.srd_doc.selectedView == null) {
+											this.srd_doc.selectedView = this.viewArr[0][0];
+										}
+										this.srd_doc.selectedView.goToPoint(lat,lon);
+								}
+							} );
+							this.srd_menuBar.addChild(this.srsearch_box);
+							this.srsearch_box.startup();
+							//END SEARCH BAR
+							
+							//BEGIN USERNAME / Logout Options
+							this.srd_userMenu = new dijit.Menu({});
+							this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+								label: "Log Out", //this.staticVals.user_title+" "+this.staticVals.user_lastname,
+								popup: this.srd_userMenu
+							}) );
+							this.srd_userMenu.addChild( new dijit.MenuItem( {
+								label: "Log Out: "+this.staticVals.user_lastname,
+								srd_doc: this,
+								onClick: function() { this.srd_doc.logout() }
+							} ) );
+
+							//END PLACING MENU ITEMS, LETS FIRE UP THE MENUBAR!				
+							this.srd_menuBar.startup();
+
+						}
+						
+				/*		// GET RID OF ALL WIDGETS ON SCREEN
+						var widgetArr = this.srd_container.getChildren();
+						for(var i=0;i<widgetArr.length;i++) {
+							this.srd_container.removeChild(widgetArr[i]);
+						}
+				*/
+						this.srd_container.addChild(this.srd_menuBar);
+					}.bind(this) );
+					return;
+				}
+
+				srd_document.prototype.srd_toggleLocationTracking = function(menuItem) {
+					dojo.addOnLoad( function() {
+						if(menuItem.checked == true) {
+							console.log("Enabling Location Tracking");
+						// ELSE menuItem is NOT CHECKED :
+						} else {
+							console.log("Disabling Location Tracking");
+							
+
+						}
+						if(this.selectedView == null) {
+							this.selectedView = this.viewArr[0][0];
+						}
+						this.selectedView.toggleLocationTracking(menuItem.checked);
+					return;
+					}.bind(this) );
+				}
 
 
 
-srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
-	dojo.addOnLoad( function() {
-		if(menuItem.checked == true) {
-			if(this.srd_toolbar == null) {
-				this.srd_toolbar = new dijit.layout.BorderContainer({ 
-//					style: "background-color:gray;width:150px;border:3px",
-					style: "width:150px;overflow:auto;",
-					region: 'right',
-					splitter: 'true' 
-				}  );		
-				this.srd_container.addChild(this.srd_toolbar);
-				this.srd_container.resize();
+				srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
+					dojo.addOnLoad( function() {
+						if(menuItem.checked == true) {
+							if(this.srd_toolbar == null) {
+								this.srd_toolbar = new dijit.layout.BorderContainer({ 
+				//					style: "background-color:gray;width:150px;border:3px",
+									style: "width:150px;overflow:auto;",
+									region: 'right',
+									splitter: 'true' 
+								}  );		
+								this.srd_container.addChild(this.srd_toolbar);
+								this.srd_container.resize();
 
-/*
-				var cp_tool_panel = new dijit.layout.ContentPane({
-					region: 'bottom',
-					style: "height:100px",
-					content:"<div id='srd_tool_panel' class='olControlPanel' ></div>" } );
+				/*
+								var cp_tool_panel = new dijit.layout.ContentPane({
+									region: 'bottom',
+									style: "height:100px",
+									content:"<div id='srd_tool_panel' class='olControlPanel' ></div>" } );
 
-				this.srd_toolbar.addChild(cp_tool_panel);
+								this.srd_toolbar.addChild(cp_tool_panel);
 
-			this.srd_panel = new OpenLayers.Control.Panel( { div: dojo.byId('srd_tool_panel')  } );
-			this.map.addControl(this.srd_panel);
-*/
-			this.srd_toolbar.resize();
+							this.srd_panel = new OpenLayers.Control.Panel( { div: dojo.byId('srd_tool_panel')  } );
+							this.map.addControl(this.srd_panel);
+				*/
+							this.srd_toolbar.resize();
 
 
-			// BEGIN LAYER SELECT
-			var editPaletteTop = new dijit.layout.BorderContainer( {
-//				style:"height:100px;background-color:yellow",
-				style:"height:60px;",
-				region: 'top',
-				splitter: false
-			} );
-			
+							// BEGIN LAYER SELECT
+							var editPaletteTop = new dijit.layout.BorderContainer( {
+				//				style:"height:100px;background-color:yellow",
+								style:"height:60px;",
+								region: 'top',
+								splitter: false
+							} );
+							
 
-			var activeLayerName = new dijit.layout.ContentPane({
-				content:"Editing Palette<br>Layer: ",
-				region: 'top',
-				style:'margin:0px;padding:0px;border:0px;'
-//				style:'height:30px;
-			});
-			editPaletteTop.addChild(activeLayerName);
-			this.srd_layerEditMenu = new dijit.Menu({ });
-			for( tmpId in this.srd_layerArr) {
-				if(this.srd_layerArr[tmpId].options.isBaseLayer == false) {
-						this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
-						label: this.srd_layerArr[tmpId].options.name,
+							var activeLayerName = new dijit.layout.ContentPane({
+								content:"Editing Palette<br>Layer: ",
+								region: 'top',
+								style:'margin:0px;padding:0px;border:0px;'
+				//				style:'height:30px;
+							});
+							editPaletteTop.addChild(activeLayerName);
+							this.srd_layerEditMenu = new dijit.Menu({ });
+							for( tmpId in this.srd_layerArr) {
+								if(this.srd_layerArr[tmpId].options.isBaseLayer == false) {
+										this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
+										label: this.srd_layerArr[tmpId].options.name,
+										srd_doc: this,
+										tmpId: tmpId,
+										onClick: function() { this.srd_doc.srd_selectEditLayer( this.tmpId );  }
+									} ) );
+									// CHECK TO SEE IF selected Layer is null, if so,
+									// make the selLayer the last editable layer in the arr
+									if(this.srd_selLayer == null) {
+										this.srd_selLayer = this.srd_layerArr[tmpId];
+					
+									}
+								}
+							}
+								
+							// AT THIS POINT, if there is it least 1 editable layer, selLayer will NOT
+							// be null so if it is it means we don't have ANY editable layers to
+							// choose from.
+							if(this.srd_selLayer == null ) {
+								// TODO :
+								// MAKE IT SO THAT ALL EDIT CONTROLS ARENT SELECTABLE.
+							}
+
+					
+							this.srd_layerEditMenuDropDown = new dijit.form.DropDownButton({
+								label: this.srd_selLayer.options.name,
+								dropDown: this.srd_layerEditMenu,
+				//				style: "width:inherit;position:relative",
+								id: "srd_activeLayer",
+								region:'top'
+
+							});
+							editPaletteTop.addChild(this.srd_layerEditMenuDropDown);
+							editPaletteTop.startup();
+							this.srd_toolbar.addChild(editPaletteTop);
+							// END LAYER SELECT
+
+				//			this.srd_toolbar.addChild(this.srd_selLayer.editPalette.layoutContainer)
+							this.srd_selLayer.editPalette.addToContainer(this.srd_toolbar);
+
+
+							this.srd_selectEditLayer(this.srd_selLayer.id);
+
+						} else {
+							this.srd_container.addChild(this.srd_toolbar);
+							this.srd_container.resize();
+						}
+						menuItem.checked = true;
+				//		this.srd_panel.activate();
+
+				//		this.srd_toolbar.startup();
+				//		var theSize = {w:"50%", h:"50%" };
+				//		this.srd_mapContent.resize(theSize);
+				//		this.map.updateSize();
+				//		this.srd_toolbar.placeAt(dojo.body());		
+					} else {
+						if(this.srd_toolbar != null) {
+					//		this.srd_panel.deactivate();
+							this.srd_container.removeChild(this.srd_toolbar);
+				//			this.srd_toolbar.destroyRecursive();
+							this.srd_container.resize();
+				//			delete this.srd_toolbar;
+				//			this.srd_toolbar = null;
+
+						}
+						menuItem.checked = false;
+					}
+					return;
+					}.bind(this) );
+				}
+
+				srd_document.prototype.saveLayer = function( layerId ) {
+					var formatGml = new OpenLayers.Format.GML( { 
+							'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
+							'externalProjection' : new OpenLayers.Projection("EPSG:4326")
+					});
+					var test = formatGml.write(this.srd_layerArr[layerId].layer.features);
+
+					dojo.xhrPost( { 
+						url: "lib/srd_php/UploadLayer.php",
+						content: {
+							fileName: this.srd_layerArr[layerId].name,
+							localSave:true,
+							layerData: test
+						},
+						load: function(result) {
+							console.log("Sent file: "+this.content.fileName);
+							document.location.href = "lib/srd_php/UploadLayer.php?fileName="+this.content.fileName;
+						}
+					} );
+				}
+
+				srd_document.prototype.openFile = function() {
+				//	dojo.addOnLoad(function() {
+						if(this.fileSelDialog != null) {
+							this.fileSelDialog.show();
+							return;
+						}
+
+					this.fileSelDialog = new dijit.Dialog( {
+							style: "width: 400px",
+							content:"<div id='test1'></div><div id='test2'></div>"
+						} );
+
+					this.openFileForm = new dijit.form.Form( { 
+							action:'lib/srd_php/UploadFile.php',
+							method: 'post',
+							encType:"multipart/form-data"
+						} );
+					this.openFileForm.placeAt('test1');	
+
+					this.srd_uploader = new dojox.form.Uploader( { 
+						id: "uploader",
+						type: 'file',
+						name: 'uploadedfile',
+						label:"Select Layers to Upload",
+						multiple:true,
+				//		uploadOnSelect:true,
 						srd_doc: this,
-						tmpId: tmpId,
-						onClick: function() { this.srd_doc.srd_selectEditLayer( this.tmpId );  }
-					} ) );
-					// CHECK TO SEE IF selected Layer is null, if so,
-					// make the selLayer the last editable layer in the arr
-					if(this.srd_selLayer == null) {
-						this.srd_selLayer = this.srd_layerArr[tmpId];
-	
+						onComplete: function(evt) {
+				//			alert("Completed file upload!");
+							for(var fileArr in evt) {
+								if(evt[fileArr].name != null) {
+									var theName = evt[fileArr].name;
+									var theUrl = "/srd_uploads/"+theName;
+				//				console.log("File uploaded! "+theName);	
+									theName = theName.replace('.gml','');
+									this.srd_doc.srd_createLayer(theName,theUrl);					
+								}
+							}
+						},
+						onError: function(evt) {
+							alert("File upload error!");
+						}
+
+					}  );
+					this.srd_fileList = new dojox.form.uploader.FileList({uploader: this.srd_uploader }  );
+
+						var oFSubmit = new dijit.form.Button( {
+							label : 'Upload!',
+							type  : 'button',
+							srd_doc: this,
+							onClick: function(evt) {
+									console.log("Clicked the Upload Button!");
+									this.srd_doc.srd_uploader.upload();					
+									this.srd_doc.fileSelDialog.hide();
+
+								}
+
+
+						});
+						
+						this.openFileForm.domNode.appendChild(this.srd_fileList.domNode);
+						this.openFileForm.domNode.appendChild(this.srd_uploader.domNode);
+						this.openFileForm.domNode.appendChild(oFSubmit.domNode);
+						this.openFileForm.startup();
+
+					this.fileSelDialog.show();	
+
+				//	} );
+					
+				}
+
+
+				srd_document.prototype.srd_selectEditLayer = function( theId ) {
+					console.log("srd_selectEditLayer Called:"+theId);
+					if(theId == this.srd_selLayer.id) {
+						return;
+					}
+					if(this.srd_selLayer != null) {
+						this.srd_selLayer.editPalette.removeFromContainer(this.srd_toolbar);
+						this.srd_selLayer.editPalette.deactivateDrawControls();
+					}	
+					this.srd_selLayer = this.srd_layerArr[theId];
+					this.srd_selLayer.editPalette.addToContainer(this.srd_toolbar);
+					this.srd_layerEditMenuDropDown.set("label",this.srd_selLayer.options.name);
+					this.srd_selLayer.editPalette.activateDrawControl();
+				//	console.log("srd_selectEditLayer Finished");
+				}
+
+				srd_document.prototype.srd_changeViewGridDimensions = function(theDimType,theDim) {
+					console.log("changeViewGridDim called: "+theDimType+", val: "+theDim);
+					if(theDimType == 'x') {
+						if(theDim > this.staticVals.view_layout_x) {
+							this.viewContainer.setColumns(theDim);
+							for(var xPos=this.staticVals.view_layout_x;xPos<theDim;xPos++) {
+								if( !this.staticVals.view_data[xPos] ) {
+									this.staticVals.view_data[xPos] = [];
+								}
+								var tmpViewYArr = [];
+								for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
+									if( !this.staticVals.view_data[xPos][yPos] ) {
+										this.staticVals.view_data[xPos][yPos] = [];
+										this.staticVals.view_data[xPos][yPos].type = 'empty';
+										this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
+										this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
+										this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
+										this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
+										tmpViewYArr[yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
+									} else {
+										tmpViewYArr[yPos] = this.viewArr[xPos][yPos];
+										thmpViewYArr[yPos].resize();
+									}
+								}
+								this.viewArr[xPos] = tmpViewYArr;
+							}
+						} else {
+							//PRESENT WARNING ABOUT LOSING VIEWS...
+						}
+						this.staticVals.view_layout_x = theDim;
+					} else if(theDimType == 'y') { 
+						if(theDim > this.staticVals.view_layout_y) {
+				//			this.viewContainer.setColumns(theDim);
+							for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
+								if( !this.staticVals.view_data[xPos] ) {
+									this.staticVals.view_data[xPos] = [];
+								}
+								if( !this.viewArr[xPos] ) {
+									this.viewArr[xPos] = [];
+								}
+								for(var yPos=0;yPos<theDim;yPos++) {
+									if( !this.staticVals.view_data[xPos][yPos] ) {
+										this.staticVals.view_data[xPos][yPos] = [];
+										this.staticVals.view_data[xPos][yPos].type = 'empty';
+									}
+									this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
+									this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
+									this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
+									this.staticVals.view_data[xPos][yPos].yDim = theDim;
+									if(!this.viewArr[xPos][yPos]) {
+										this.viewArr[xPos][yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
+									} else {
+											this.viewArr[xPos][yPos].resize(this.staticVals.view_data[xPos][yPos]);
+									}
+								}
+							}
+						} else {
+							//PRESENT WARNING ABOUT LOSING VIEWS...
+						}
+						this.staticVals.view_layout_x = theDim;
+					}
+					this.srd_container.resize();
+				}
+
+				srd_document.prototype.srd_updateViewMenu = function() {
+					var theLabel = "Selected View : ";
+					if(this.selectedView) {
+						theLabel = theLabel+this.selectedView.data.type+" "+this.selectedView.data.xPos+","+this.selectedView.data.yPos;
+					}
+					this.srd_viewMenuSelected.set('label', theLabel);
+				}
+
+
+				srd_document.prototype.srd_changeViewType = function(theType) {
+					if(this.selectedView && this.selectedView.data.type != theType) {	
+						var xPos = this.selectedView.data.xPos;
+						var yPos = this.selectedView.data.yPos;
+						this.selectedView.destroy();
+						delete this.viewArr[xPos][yPos];
+						for(var theVar in this.viewDefaults[theType] ) {
+							this.staticVals.view_data[xPos][yPos][theVar] = this.viewDefaults[theType][theVar];
+						}
+							console.log( "NEW VIEW TYPE:"+this.viewType[theType]+"xPos="+xPos+",yPos="+yPos);
+							this.viewArr[xPos][yPos] = new window[ this.viewType[theType] ](this.staticVals.view_data[xPos][yPos], this);
+						this.selectedView = this.viewArr[xPos][yPos];
+						this.viewContainer.resize();
 					}
 				}
-			}
-				
-			// AT THIS POINT, if there is it least 1 editable layer, selLayer will NOT
-			// be null so if it is it means we don't have ANY editable layers to
-			// choose from.
-			if(this.srd_selLayer == null ) {
-				// TODO :
-				// MAKE IT SO THAT ALL EDIT CONTROLS ARENT SELECTABLE.
-			}
 
-	
-			this.srd_layerEditMenuDropDown = new dijit.form.DropDownButton({
-				label: this.srd_selLayer.options.name,
-				dropDown: this.srd_layerEditMenu,
-//				style: "width:inherit;position:relative",
-				id: "srd_activeLayer",
-				region:'top'
-
-			});
-			editPaletteTop.addChild(this.srd_layerEditMenuDropDown);
-			editPaletteTop.startup();
-			this.srd_toolbar.addChild(editPaletteTop);
-			// END LAYER SELECT
-
-//			this.srd_toolbar.addChild(this.srd_selLayer.editPalette.layoutContainer)
-			this.srd_selLayer.editPalette.addToContainer(this.srd_toolbar);
-
-
-			this.srd_selectEditLayer(this.srd_selLayer.id);
-
-		} else {
-			this.srd_container.addChild(this.srd_toolbar);
-			this.srd_container.resize();
-		}
-		menuItem.checked = true;
-//		this.srd_panel.activate();
-
-//		this.srd_toolbar.startup();
-//		var theSize = {w:"50%", h:"50%" };
-//		this.srd_mapContent.resize(theSize);
-//		this.map.updateSize();
-//		this.srd_toolbar.placeAt(dojo.body());		
-	} else {
-		if(this.srd_toolbar != null) {
-	//		this.srd_panel.deactivate();
-			this.srd_container.removeChild(this.srd_toolbar);
-//			this.srd_toolbar.destroyRecursive();
-			this.srd_container.resize();
-//			delete this.srd_toolbar;
-//			this.srd_toolbar = null;
-
-		}
-		menuItem.checked = false;
-	}
-	return;
-	}.bind(this) );
-}
-
-srd_document.prototype.saveLayer = function( layerId ) {
-	var formatGml = new OpenLayers.Format.GML( { 
-			'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
-			'externalProjection' : new OpenLayers.Projection("EPSG:4326")
-	});
-	var test = formatGml.write(this.srd_layerArr[layerId].layer.features);
-
- 	dojo.xhrPost( { 
-		url: "lib/srd_php/UploadLayer.php",
-		content: {
-			fileName: this.srd_layerArr[layerId].name,
-			localSave:true,
-			layerData: test
-		},
-		load: function(result) {
-			console.log("Sent file: "+this.content.fileName);
-			document.location.href = "lib/srd_php/UploadLayer.php?fileName="+this.content.fileName;
-		}
-	} );
-}
-
-srd_document.prototype.openFile = function() {
-//	dojo.addOnLoad(function() {
-		if(this.fileSelDialog != null) {
-			this.fileSelDialog.show();
-			return;
-		}
-
-	this.fileSelDialog = new dijit.Dialog( {
-			style: "width: 400px",
-			content:"<div id='test1'></div><div id='test2'></div>"
-		} );
-
-	this.openFileForm = new dijit.form.Form( { 
-			action:'lib/srd_php/UploadFile.php',
-			method: 'post',
-			encType:"multipart/form-data"
-		} );
-	this.openFileForm.placeAt('test1');	
-
-	this.srd_uploader = new dojox.form.Uploader( { 
-		id: "uploader",
-		type: 'file',
-		name: 'uploadedfile',
-		label:"Select Layers to Upload",
-		multiple:true,
-//		uploadOnSelect:true,
-		srd_doc: this,
-		onComplete: function(evt) {
-//			alert("Completed file upload!");
-			for(var fileArr in evt) {
-				if(evt[fileArr].name != null) {
-					var theName = evt[fileArr].name;
-					var theUrl = "/srd_uploads/"+theName;
-//				console.log("File uploaded! "+theName);	
-					theName = theName.replace('.gml','');
-					this.srd_doc.srd_createLayer(theName,theUrl);					
-				}
-			}
-		},
-		onError: function(evt) {
-			alert("File upload error!");
-		}
-
-	}  );
-	this.srd_fileList = new dojox.form.uploader.FileList({uploader: this.srd_uploader }  );
-
-		var oFSubmit = new dijit.form.Button( {
-			label : 'Upload!',
-			type  : 'button',
-			srd_doc: this,
-			onClick: function(evt) {
-					console.log("Clicked the Upload Button!");
-					this.srd_doc.srd_uploader.upload();					
-					this.srd_doc.fileSelDialog.hide();
+				// FUNCTION TO DO ANY CLEAN UP NEEDED 
+				// THEN REDIRECT TO /login/logout
+				srd_document.prototype.logout = function() {	
+					console.log("Logging Out User : "+this.staticVals.user_lastname);
+					window.location.href = "/login/index/logout";	
 
 				}
-
-
-		});
-		
-		this.openFileForm.domNode.appendChild(this.srd_fileList.domNode);
-		this.openFileForm.domNode.appendChild(this.srd_uploader.domNode);
-		this.openFileForm.domNode.appendChild(oFSubmit.domNode);
-		this.openFileForm.startup();
-
-	this.fileSelDialog.show();	
-
-//	} );
-	
-}
-
-
-srd_document.prototype.srd_selectEditLayer = function( theId ) {
-	console.log("srd_selectEditLayer Called:"+theId);
-	if(theId == this.srd_selLayer.id) {
-		return;
-	}
-	if(this.srd_selLayer != null) {
-		this.srd_selLayer.editPalette.removeFromContainer(this.srd_toolbar);
-		this.srd_selLayer.editPalette.deactivateDrawControls();
-	}	
-	this.srd_selLayer = this.srd_layerArr[theId];
-	this.srd_selLayer.editPalette.addToContainer(this.srd_toolbar);
-	this.srd_layerEditMenuDropDown.set("label",this.srd_selLayer.options.name);
-	this.srd_selLayer.editPalette.activateDrawControl();
-//	console.log("srd_selectEditLayer Finished");
-}
-
-srd_document.prototype.srd_changeViewGridDimensions = function(theDimType,theDim) {
-	console.log("changeViewGridDim called: "+theDimType+", val: "+theDim);
-	if(theDimType == 'x') {
-		if(theDim > this.staticVals.view_layout_x) {
-			this.viewContainer.setColumns(theDim);
-			for(var xPos=this.staticVals.view_layout_x;xPos<theDim;xPos++) {
-				if( !this.staticVals.view_data[xPos] ) {
-					this.staticVals.view_data[xPos] = [];
-				}
-				var tmpViewYArr = [];
-				for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
-					if( !this.staticVals.view_data[xPos][yPos] ) {
-						this.staticVals.view_data[xPos][yPos] = [];
-						this.staticVals.view_data[xPos][yPos].type = 'empty';
-						this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
-						this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
-						this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
-						this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
-						tmpViewYArr[yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
-					} else {
-						tmpViewYArr[yPos] = this.viewArr[xPos][yPos];
-						thmpViewYArr[yPos].resize();
-					}
-				}
-				this.viewArr[xPos] = tmpViewYArr;
-			}
-		} else {
-			//PRESENT WARNING ABOUT LOSING VIEWS...
-		}
-		this.staticVals.view_layout_x = theDim;
-	} else if(theDimType == 'y') { 
-		if(theDim > this.staticVals.view_layout_y) {
-//			this.viewContainer.setColumns(theDim);
-			for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
-				if( !this.staticVals.view_data[xPos] ) {
-					this.staticVals.view_data[xPos] = [];
-				}
-				if( !this.viewArr[xPos] ) {
-					this.viewArr[xPos] = [];
-				}
-				for(var yPos=0;yPos<theDim;yPos++) {
-					if( !this.staticVals.view_data[xPos][yPos] ) {
-						this.staticVals.view_data[xPos][yPos] = [];
-						this.staticVals.view_data[xPos][yPos].type = 'empty';
-					}
-					this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
-					this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
-					this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
-					this.staticVals.view_data[xPos][yPos].yDim = theDim;
-					if(!this.viewArr[xPos][yPos]) {
-						this.viewArr[xPos][yPos] = new srd_view(this.staticVals.view_data[xPos][yPos], this);
-					} else {
-							this.viewArr[xPos][yPos].resize(this.staticVals.view_data[xPos][yPos]);
-					}
-				}
-			}
-		} else {
-			//PRESENT WARNING ABOUT LOSING VIEWS...
-		}
-		this.staticVals.view_layout_x = theDim;
-	}
-	this.srd_container.resize();
-}
-
-srd_document.prototype.srd_updateViewMenu = function() {
-	var theLabel = "Selected View : ";
-	if(this.selectedView) {
-		theLabel = theLabel+this.selectedView.data.type+" "+this.selectedView.data.xPos+","+this.selectedView.data.yPos;
-	}
-	this.srd_viewMenuSelected.set('label', theLabel);
-}
-
-
-srd_document.prototype.srd_changeViewType = function(theType) {
-	if(this.selectedView && this.selectedView.data.type != theType) {	
-		var xPos = this.selectedView.data.xPos;
-		var yPos = this.selectedView.data.yPos;
-		this.selectedView.destroy();
-		delete this.viewArr[xPos][yPos];
-		for(var theVar in this.viewDefaults[theType] ) {
-			this.staticVals.view_data[xPos][yPos][theVar] = this.viewDefaults[theType][theVar];
-		}
-      console.log( "NEW VIEW TYPE:"+this.viewType[theType]+"xPos="+xPos+",yPos="+yPos);
-			this.viewArr[xPos][yPos] = new window[ this.viewType[theType] ](this.staticVals.view_data[xPos][yPos], this);
-		this.selectedView = this.viewArr[xPos][yPos];
-		this.viewContainer.resize();
-	}
-}
-
-// FUNCTION TO DO ANY CLEAN UP NEEDED 
-// THEN REDIRECT TO /login/logout
-srd_document.prototype.logout = function() {	
-	console.log("Logging Out User : "+this.staticVals.user_lastname);
-	window.location.href = "/login/index/logout";	
-
-}
 
 
 

@@ -173,9 +173,9 @@ srd_layer.prototype.getLayer = function() {
 
 srd_layer.prototype.addLayerToMap = function(theMap) {
 	this.map = theMap; 
-	console.log("Adding Layer to Map...");
+	console.log("Adding Layer to Map. For Layer "+this.options.name);
 	this.map.addLayer( this.layer );
-	console.log("Adding Cotnrols to Map...");
+	console.log("Adding Controls to Map...");
 	if(this.options.editable) {
 		for( theCon in this.srd_drawControls) {
 			this.map.addControl(this.srd_drawControls[theCon]);
@@ -321,13 +321,40 @@ srd_layer.prototype.loadData = function( ) {
 
 			}
 
+		} else if(this.options.format == "SRJSON" ) {
+				console.log("Create SRJson Layer Run From Server="+this.options.name+"===");
+				this.store = new dojo.store.Cache(
+					dojo.store.JsonRest( { 
+//						idProperty: "feature_id",
+						target: "/srdata/Features/"
+					} ),
+					dojo.store.Memory()
+				);
+				this.layer = new OpenLayers.Layer.Vector(this.options.name, {
+					isBaseLayer:	this.options.isBaseLayer,
+					projection:		new OpenLayers.Projection(this.options.projection),
+					units:				"degrees",
+					visibility:		this.options.visibility,
+					styleMap:			this.srd_styleMap
+				} );
+				dojo.when( this.store.query({"layer_id":this.options.id}), function(theFeatArr) {
+					theFeatArr.forEach( function(theFeat) {
+						var theFeature = new OpenLayers.Feature.Vector( new OpenLayers.Geometry.fromWKT( theFeat.geometry), dojo.fromJson(theFeat.feature_data) );
+						theFeature.fid = theFeat.feature_id;
+//						theFeature.id = theFeat.feature_id;
+						console.log("Adding Feature:"+theFeature.fid);
+						this.layer.addFeatures( [theFeature] ); 
+					}.bind(this) );
+					this.layer.events.register("featureadded", this, this.srd_create);
+				}.bind(this) );
+
 		} else if(this.options.format == "GeoJSON" ) {
 
 				this.layerProtocol = null;
 				this.options.url =null;
 				if(this.options.url == null || this.options.url == "") {
 						this.layerProtocol = new OpenLayers.Protocol.HTTP( {
-							url: "/srdata/Features/layer_id/"+this.options.id+"/",
+							url: "/srdata/Geojson/layer_id/"+this.options.id+"/",
 //							params: { layer_id : this.options.id },
 //							readWithPOST: true,
 							format: new OpenLayers.Format.GeoJSON( { } )
@@ -440,7 +467,7 @@ srd_layer.prototype.loadData = function( ) {
 
 
 	console.log("End if Vector");
-	console.log("TEST5::"+this.srd_featureAttributes.tagName+":::");
+//	console.log("TEST5::"+this.srd_featureAttributes.tagName+":::");
 /////////////////////////////////////////////
 	}
 	// END IF VECTOR
@@ -959,6 +986,27 @@ srd_layer.prototype.createFeature = function(theFeat,options) {
 }
 
 
+srd_layer.prototype.srd_create = function(evt) {
+	console.log("Create Feature Called! ID: "+evt.feature.id);
+	var featId = this.layer.features.length;
+	while( this.layer.getFeatureByFid(featId) != null) {
+		featId++;
+	}
+	var item = {
+		"layer_id":this.options.id,
+		"feature_id":featId,
+		"feature_data":dojo.toJson(evt.feature.attributes),
+		"sr_geom":evt.feature.geometry.toString()
+	}
+	dojo.when( this.store.add(item), function(returnId) {
+		retItem2 = returnId;
+		console.log("Created Feature on server side! ID:"+returnId);
+		retItem = dojo.fromJson(returnId);
+		console.log("Created Feature on server side! ID:"+retItem.feature_id);
+//		evt.feature.fid=featId;	
+	});	
+	
+}
 
 
 

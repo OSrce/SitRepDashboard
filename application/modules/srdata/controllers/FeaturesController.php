@@ -28,11 +28,21 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
     public function indexAction()
     {
 			$this->logger->log($this->tableName." Get (Index) Action Called: ", Zend_Log::DEBUG);	
-			
-			$rows = $this->restTable->fetchAll();
-			print Zend_Json::encode($rows->toArray());
+			$selectLayer = $this->restTable->select();
+			$selectLayer->from( 'sr_layer_dynamic_data',array(
+				'feature_id', 'feature_data', 'geometry' => new Zend_Db_Expr("ST_AsText(sr_geom)")  ) );
 
-    }
+			$selectLayer->where("layer_id = ?",$this->layerId);
+			try {
+				$rows = $this->restTable->fetchAll($selectLayer);	
+    		$this->getResponse()->appendBody(Zend_Json::encode($rows->toArray() ));
+	      $this->getResponse()->setHttpResponseCode(200);
+			} catch(Zend_DB_Statement_Exception $theExcept) {
+				$theError = $theExcept->getMessage();
+				$this->logger->log("Read Features Failed : ".$theError, Zend_Log::DEBUG);
+			}
+
+}
 
 		// GET Action === READ SPECIFIC ROW
 		public function getAction() 
@@ -72,6 +82,17 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 		public function postAction() 
 		{
 			$this->logger->log($this->tableName." Post Action Called: ", Zend_Log::DEBUG);	
+			
+			$data = Zend_Json::decode($this->getRequest()->getRawBody() );
+//			$this->boolToString($data);
+			
+			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
+			$theRow = $this->restTable->insert($data);
+			$this->logger->log("Put Data Result: ".print_r($theRow,true), Zend_Log::DEBUG);
+			$idName = "id";
+			$retObj[$idName] = $theRow['feature_id']; 
+			$this->getResponse()->appendBody(Zend_Json::encode($retObj));
+			$this->getResponse()->setHttpResponseCode(201);
 
 		}
 
@@ -79,6 +100,19 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 		public function putAction() 
 		{
 			$this->logger->log($this->tableName." Put Action Called: ", Zend_Log::DEBUG);	
+			$data = Zend_Json::decode($this->getRequest()->getRawBody() );
+//			$this->boolToString($data);
+			
+			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
+			$theRow = $this->restTable->insert($data);
+			$this->logger->log("Put Data Result: ".print_r($theRow,true), Zend_Log::DEBUG);
+			$idName = "feature_id";
+			$retObj[$idName] = $theRow['feature_id']; 
+			$this->getResponse()->appendBody(Zend_Json::encode($retObj));
+			$this->getResponse()->setHttpResponseCode(201);
+
+
+
 
 		}
 
