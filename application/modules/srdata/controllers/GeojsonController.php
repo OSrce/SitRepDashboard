@@ -18,6 +18,12 @@ class Srdata_GeojsonController extends Zend_Rest_Controller
 			$this->tableName = "Features";
 			$this->idName = "layer_id";
 			$this->layerId = $this->_getParam($this->idName);	
+			if( $this->layerId ==null) {
+				$this->layerId = $this->_getParam('id',false);
+			}
+
+
+
 
 			$this->_helper->viewRenderer->setNoRender(true);
 			$this->logger->log("REST Class: ".$this->tableName." Inited for layer:".$this->layerId, Zend_Log::DEBUG);	

@@ -132,24 +132,37 @@ class Login_Acl extends Zend_Acl {
 		foreach($allPermissions as $perm) {
 //			$logger->log("thePerm type= ".get_class($perm),Zend_Log::DEBUG);
 //			$logger->log("thePerm role_id= ".$perm->role_id,Zend_Log::DEBUG);
-			$resType = $perm->resource_type;
+//			$resType = $perm->resource_type;
 			$resId = $perm->resource_id;
-			$theResource = $resType.':'.$resId;
-			$logger->log("TheResource:".$theResource,Zend_Log::DEBUG);
+//			$theResource = $resType.':'.$resId;
+			$logger->log("TheResource:".$resId,Zend_Log::DEBUG);
 
-			if( ! $this->has($theResource) ) { 
-				$this->addResource(new Zend_Acl_Resource( $resType.":".$resId)  ); 
-			}
-			if ($perm->permission_read == 'allow') {
-				$logger->log("ACL Allow:".$theResource." FOR ".$resId,Zend_Log::DEBUG);
-				$this->allow($roleType.":".$roleId, $resType.":".$resId , 'read' );
-			} else {
-				$this->deny($roleType.":".$roleId, $resType.":".$resId , 'read' );
+			if( ! $this->has($resId) ) { 
+				$this->addResource(new Zend_Acl_Resource( $resId)  ); 
 			}
 			if ($perm->permission_create == 'allow') {
-				$this->allow($roleType.":".$roleId, $resType.":".$resId , 'create' );
+				$logger->log("ACL Create Allow:".$resId,Zend_Log::DEBUG);
+				$this->allow($roleType.":".$roleId, $resId , 'create' );
 			} else {
-				$this->deny($roleType.":".$roleId, $resType.":".$resId , 'create' );
+				$this->deny($roleType.":".$roleId, $resId , 'create' );
+			}
+			if ($perm->permission_read == 'allow') {
+				$logger->log("ACL Read Allow:".$resId,Zend_Log::DEBUG);
+				$this->allow($roleType.":".$roleId, $resId , 'read' );
+			} else {
+				$this->deny($roleType.":".$roleId, $resId , 'read' );
+			}
+			if ($perm->permission_update == 'allow') {
+				$logger->log("ACL Update Allow:".$resId,Zend_Log::DEBUG);
+				$this->allow($roleType.":".$roleId, $resId , 'update' );
+			} else {
+				$this->deny($roleType.":".$roleId, $resId , 'update' );
+			}
+			if ($perm->permission_delete == 'allow') {
+				$logger->log("ACL Delete Allow:".$resId,Zend_Log::DEBUG);
+				$this->allow($roleType.":".$roleId, $resId , 'delete' );
+			} else {
+				$this->deny($roleType.":".$roleId, $resId , 'delete' );
 			}
 		}
 		return true;

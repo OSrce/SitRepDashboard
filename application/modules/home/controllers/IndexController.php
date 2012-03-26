@@ -109,41 +109,47 @@ class Home_IndexController extends Zend_Controller_Action
 
     }
 		
-		private function getLayers() {
-				date_default_timezone_set("America/New_York");
-			$logger = new Zend_Log();
-			$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
+	private function getLayers() {
+		date_default_timezone_set("America/New_York");
+		$logger = new Zend_Log();
+		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
 	
 
-//		$presetsTable = new Srdata_Model_DbTable_Presets($db);
-			$stylesTable = new Srdata_Model_DbTable_Styles($this->_db);
-			$layersTable = new Srdata_Model_DbTable_Layers($this->_db);
+//	$presetsTable = new Srdata_Model_DbTable_Presets($db);
+		$stylesTable = new Srdata_Model_DbTable_Styles($this->_db);
+		$layersTable = new Srdata_Model_DbTable_Layers($this->_db);
+		$modulesTable = new Srdata_Model_DbTable_Modules($this->_db);
 
-			$acl = new Login_Acl($this->_db,$this->_uid,$this->_gid);
-			$theRole = "uid:".$this->_uid;
-			$theResources = $acl->getResources();
-			$this->_layers = array();
-			$this->_styles = array();
-			$logger->log("getLayer 1:::".print_r($theResources,true),Zend_Log::DEBUG);
-			foreach($theResources as $theRes) {
-				list ($resType, $resId) = preg_split('/:/',$theRes ); 
-				if($resType == 'layer') {
-					if( $acl->isAllowed($theRole,$theRes,'read') ) {
-						$layerRowSet = $layersTable->find($resId);
-						if(count($layerRowSet) ) {
-							$this->_layers[ strval($resId) ] = $layerRowSet->current(); 
-						}
+		$acl = new Login_Acl($this->_db,$this->_uid,$this->_gid);
+		$theRole = "uid:".$this->_uid;
+		$theResources = $acl->getResources();
+		$this->_layers = array();
+		$this->_styles = array();
+		$logger->log("getLayer 1:::".print_r($theResources,true),Zend_Log::DEBUG);
+		foreach($theResources as $theRes) {
+//		list ($resType, $resId) = preg_split('/:/',$theRes ); 
+//		if($resType == 'layer') {
+			$theSelect = $modulesTable->select();
+			$theSelect->where('id=?',$theRes);
+			$theModule = $modulesTable->fetchRow($theSelect);
+			if( $acl->isAllowed($theRole,$theRes,'read') ) {
+				if( $theModule['name'] == '*/*/*' || $theModule['name'] == 'srdata/*/*' ) {
+				// LOAD EVERY LAYER, STYLE, PRESET...
+					$logger->log("Load Everything.",Zend_Log::DEBUG);
+					$layerSelect = $layersTable->select();
+					$layerSelect->order('id');	
+					$layerRowSet = $layersTable->fetchAll($layerSelect);
+					foreach($layerRowSet as $layerRow) {
+						$this->_layers[$layerRow['id']] = $layerRow;
 					}
+				} elseif( $theModule['name'] == 'srdata\/layers\/\*' ) {
+				// LOAD EVERY LAYER
+				
+
 				}
-				if($resType == 'style') {
-					if( $acl->isAllowed($theRole,$theRes,'read') ) {
-						$styleRowSet = $stylesTable->find($resId);
-						if(count($styleRowSet) ) {
-							$this->_styles[ strval($resId) ] = $styleRowSet->current(); 
-						}
-					}
-				}
+				
 			}
 		}
+	}
 }
 

@@ -15,9 +15,12 @@ class Srdata_GeojsonstaticController extends Zend_Rest_Controller
 
 			$this->db = $this->getInvokeArg('bootstrap')->getResource('db');
 			$this->restTable = new Srdata_Model_DbTable_Featuresstatic($this->db);
-			$this->tableName = "Features";
+			$this->tableName = "Featuresstatic";
 			$this->idName = "layer_id";
 			$this->layerId = $this->_getParam($this->idName);	
+			if( $this->layerId ==null) {
+				$this->layerId = $this->_getParam('id',false);
+			}
 
 			$this->_helper->viewRenderer->setNoRender(true);
 			$this->logger->log("REST Class: ".$this->tableName." Inited for layer:".$this->layerId, Zend_Log::DEBUG);	
@@ -38,11 +41,12 @@ class Srdata_GeojsonstaticController extends Zend_Rest_Controller
 		public function getAction() 
 		{
 			$this->logger->log($this->tableName." Get Action Called: ", Zend_Log::DEBUG);	
-			
+
 			$selectLayer = $this->restTable->select();
 			$selectLayer->from( 'sr_layer_static_data',array('feature_style',
 				'feature_id', 'feature_data', 'geojson_geom' => new Zend_Db_Expr("ST_AsGeoJSON(sr_geom)")  ) );
 
+			
 			$selectLayer->where("layer_id = ?",$this->layerId);
 			try {
 				$rows = $this->restTable->fetchAll($selectLayer);	

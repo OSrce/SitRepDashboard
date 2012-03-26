@@ -94,7 +94,7 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 			$select = $modulesTable->select()->where('name = ?',$res);
 			$theModule = $modulesTable->fetchRow($select);
 			if( count( $theModule) ) {
-				$theResource = "module:".$theModule->id;
+				$theResource = $theModule->id;
 
 //		    $logger->log("Performing ACL Check:".$theResource,Zend_Log::DEBUG);
 				if( $acl->has($theResource) ) {
