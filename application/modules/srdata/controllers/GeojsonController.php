@@ -40,7 +40,7 @@ class Srdata_GeojsonController extends Zend_Rest_Controller
 			$this->logger->log($this->tableName." Get Action Called: ", Zend_Log::DEBUG);	
 			
 			$selectLayer = $this->restTable->select();
-			$selectLayer->from( 'sr_layer_static_data',array('feature_style',
+			$selectLayer->from( 'sr_layer_dynamic_data',array('feature_style',
 				'feature_id', 'feature_data', 'geojson_geom' => new Zend_Db_Expr("ST_AsGeoJSON(sr_geom)")  ) );
 
 			$selectLayer->where("layer_id = ?",$this->layerId);

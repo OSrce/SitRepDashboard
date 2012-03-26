@@ -1,6 +1,6 @@
 <?php
 
-class Srdata_FeaturesController extends Zend_Rest_Controller
+class Srdata_FeaturesstaticController extends Zend_Rest_Controller
 {
 		protected $tableName; 
 		protected $db;
@@ -14,7 +14,7 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 			$this->logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_rest.log"));
 
 			$this->db = $this->getInvokeArg('bootstrap')->getResource('db');
-			$this->restTable = new Srdata_Model_DbTable_Features($this->db);
+			$this->restTable = new Srdata_Model_DbTable_Featuresstatic($this->db);
 			$this->tableName = "Features";
 			$this->idName = "layer_id";
 			$this->layerId = $this->_getParam($this->idName);	
@@ -29,7 +29,7 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
     {
 			$this->logger->log($this->tableName." Get (Index) Action Called: ", Zend_Log::DEBUG);	
 			$selectLayer = $this->restTable->select();
-			$selectLayer->from( 'sr_layer_dynamic_data',array(
+			$selectLayer->from( 'sr_layer_static_data',array(
 				'feature_id', 'feature_data', 'geometry' => new Zend_Db_Expr("ST_AsText(sr_geom)")  ) );
 
 			$selectLayer->where("layer_id = ?",$this->layerId);
@@ -50,7 +50,7 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 			$this->logger->log($this->tableName." Get Action Called: ", Zend_Log::DEBUG);	
 			
 			$selectLayer = $this->restTable->select();
-			$selectLayer->from( 'sr_layer_dynamic_data',array('feature_style',
+			$selectLayer->from( 'sr_layer_static_data',array('feature_style',
 				'feature_id', 'feature_data', 'geojson_geom' => new Zend_Db_Expr("ST_AsGeoJSON(sr_geom)")  ) );
 
 			$selectLayer->where("layer_id = ?",$this->layerId);

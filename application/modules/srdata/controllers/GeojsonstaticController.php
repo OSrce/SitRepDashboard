@@ -1,6 +1,6 @@
 <?php
 
-class Srdata_FeaturesController extends Zend_Rest_Controller
+class Srdata_GeojsonstaticController extends Zend_Rest_Controller
 {
 		protected $tableName; 
 		protected $db;
@@ -14,7 +14,7 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 			$this->logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_rest.log"));
 
 			$this->db = $this->getInvokeArg('bootstrap')->getResource('db');
-			$this->restTable = new Srdata_Model_DbTable_Features($this->db);
+			$this->restTable = new Srdata_Model_DbTable_Featuresstatic($this->db);
 			$this->tableName = "Features";
 			$this->idName = "layer_id";
 			$this->layerId = $this->_getParam($this->idName);	
@@ -28,21 +28,11 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
     public function indexAction()
     {
 			$this->logger->log($this->tableName." Get (Index) Action Called: ", Zend_Log::DEBUG);	
-			$selectLayer = $this->restTable->select();
-			$selectLayer->from( 'sr_layer_dynamic_data',array(
-				'feature_id', 'feature_data', 'geometry' => new Zend_Db_Expr("ST_AsText(sr_geom)")  ) );
+			
+			$rows = $this->restTable->fetchAll();
+			print Zend_Json::encode($rows->toArray());
 
-			$selectLayer->where("layer_id = ?",$this->layerId);
-			try {
-				$rows = $this->restTable->fetchAll($selectLayer);	
-    		$this->getResponse()->appendBody(Zend_Json::encode($rows->toArray() ));
-	      $this->getResponse()->setHttpResponseCode(200);
-			} catch(Zend_DB_Statement_Exception $theExcept) {
-				$theError = $theExcept->getMessage();
-				$this->logger->log("Read Features Failed : ".$theError, Zend_Log::DEBUG);
-			}
-
-}
+    }
 
 		// GET Action === READ SPECIFIC ROW
 		public function getAction() 
@@ -50,7 +40,7 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 			$this->logger->log($this->tableName." Get Action Called: ", Zend_Log::DEBUG);	
 			
 			$selectLayer = $this->restTable->select();
-			$selectLayer->from( 'sr_layer_dynamic_data',array('feature_style',
+			$selectLayer->from( 'sr_layer_static_data',array('feature_style',
 				'feature_id', 'feature_data', 'geojson_geom' => new Zend_Db_Expr("ST_AsGeoJSON(sr_geom)")  ) );
 
 			$selectLayer->where("layer_id = ?",$this->layerId);
@@ -82,17 +72,6 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 		public function postAction() 
 		{
 			$this->logger->log($this->tableName." Post Action Called: ", Zend_Log::DEBUG);	
-			
-			$data = Zend_Json::decode($this->getRequest()->getRawBody() );
-//			$this->boolToString($data);
-			
-			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
-			$theRow = $this->restTable->insert($data);
-			$this->logger->log("Put Data Result: ".print_r($theRow,true), Zend_Log::DEBUG);
-			$idName = "id";
-			$retObj[$idName] = $theRow['feature_id']; 
-			$this->getResponse()->appendBody(Zend_Json::encode($retObj));
-			$this->getResponse()->setHttpResponseCode(201);
 
 		}
 
@@ -100,19 +79,6 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 		public function putAction() 
 		{
 			$this->logger->log($this->tableName." Put Action Called: ", Zend_Log::DEBUG);	
-			$data = Zend_Json::decode($this->getRequest()->getRawBody() );
-//			$this->boolToString($data);
-			
-			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
-			$theRow = $this->restTable->insert($data);
-			$this->logger->log("Put Data Result: ".print_r($theRow,true), Zend_Log::DEBUG);
-			$idName = "feature_id";
-			$retObj[$idName] = $theRow['feature_id']; 
-			$this->getResponse()->appendBody(Zend_Json::encode($retObj));
-			$this->getResponse()->setHttpResponseCode(201);
-
-
-
 
 		}
 

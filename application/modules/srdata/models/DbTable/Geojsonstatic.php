@@ -3,7 +3,7 @@
 class Srdata_Model_DbTable_Features extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'sr_layer_dynamic_data';
+    protected $_name = 'sr_layer_static_data';
 		protected $_rowClass = 'Srdata_Model_Feature';
 
 		public function insert(array $data) {
