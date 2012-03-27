@@ -7,6 +7,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		protected $restTable;
 		protected $idName;
 		protected $theRequest;
+		protected $retObj;
 
     public function init()
     {
@@ -128,8 +129,8 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
 			$theRow = $this->restTable->insert($data);
 			$idName = $this->idName;
-			$retObj[$idName] = $theRow; 
-			$this->getResponse()->appendBody(Zend_Json::encode($retObj));
+			$this->retObj[$idName] = $theRow; 
+			$this->getResponse()->appendBody(Zend_Json::encode($this->retObj));
 
 			$this->getResponse()->setHttpResponseCode(201);
 		}

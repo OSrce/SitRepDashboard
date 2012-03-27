@@ -168,7 +168,7 @@ srd_document.prototype.srd_init = function() {
 
 	this.srd_layerStore = new dojo.store.Cache(
 		dojo.store.JsonRest({
-			target: "/srdata/Layers/"
+			target: "/srdata/layers/"
 		} ),
 		tmpStore
 	);
@@ -410,7 +410,7 @@ srd_document.prototype.srd_createWhiteboard = function() {
             selector: "date",
             datePattern: theFrmt
         });
-	var url ="/srdata/Features/";
+	var url ="/srdata/features/";
 	this.srd_createLayer(name,url);
 }
 	
@@ -432,7 +432,11 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						console.log("Create Layer Called and New Layeroptions object returned! ID:"+returnId);
 						this.id = returnId;
 						this.isBaseLayer = false;
-						this.editable = true;
+						this.layer_update = true;
+						this.layer_delete = true;
+						this.feature_create = true;
+						this.feature_update = true;
+						this.feature_delete = true;
 						console.log("New Layer Object Returned! Name="+this.name);
 
 						srd.srd_layerArr[this.id] = new srd_layer();

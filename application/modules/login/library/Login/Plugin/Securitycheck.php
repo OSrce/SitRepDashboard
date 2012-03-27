@@ -69,6 +69,10 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 
 
 	private function _isAllowed($auth,$acl) {
+//		date_default_timezone_set("America/New_York");
+//    $logger = new Zend_Log();
+//    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
+
 		if(empty($auth) || empty($acl) ||
 			!($auth instanceof Zend_Auth) ||
 			!($acl instanceof Zend_Acl) ) {
@@ -80,9 +84,13 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 			$resources = array(	
 				'*/*/*',
 				$this->_module.'/*/*',
-				$this->_module.'/'.$this->_controller.'/*',
-				$this->_module.'/'.$this->_controller.'/'.$this->getRequest()->getParam('id',false),
+				$this->_module.'/'.$this->_controller.'/*'
 			);
+			if($this->_controller == 'features') {
+				array_push($resources, $this->_module.'/'.$this->_controller.'/'.$this->getRequest()->getParam('layer_id',false) );
+			} else {
+				array_push($resources, $this->_module.'/'.$this->_controller.'/'.$this->getRequest()->getParam('id',false) );
+			}
 		} else {
 			$resources = array(
 				'*/*/*',
@@ -97,11 +105,9 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 		$modulesTable = new Login_Model_DbTable_Modules($db);
 		$result = false;
 
-//		date_default_timezone_set("America/New_York");
-//    $logger = new Zend_Log();
-//    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
-		
+	
 		foreach($resources as $res) {
+//		 	$logger->log("Performing ACL Check:".$res,Zend_Log::DEBUG);
 			$select = $modulesTable->select()->where('name = ?',$res);
 			$theModule = $modulesTable->fetchRow($select);
 			if( count( $theModule) ) {
@@ -109,8 +115,15 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 
 //		    $logger->log("Performing ACL Check:".$theResource,Zend_Log::DEBUG);
 				if( $acl->has($theResource) ) {
-					$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'read');
-//		    	$logger->log("ACL Result:".$result,Zend_Log::DEBUG);
+					if($this->getRequest()->isGet() ) {
+						$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'read');
+					} elseif( $this->getRequest()->isPost() ) {
+						$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'create');
+					} elseif( $this->getRequest()->isPut() ) {
+						$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'update');
+					} elseif( $this->getRequest()->isDelete() ) {
+						$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'delete');
+					}
 				}
 			}
 		}

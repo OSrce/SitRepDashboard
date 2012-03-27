@@ -36,7 +36,11 @@ function srd_layer( ) {
 			minZoomLevel : null,
 			maxZoomLevel : null,
 			attribution : "",
-			editable : false
+			layer_update : false,
+			layer_delete : false,
+			feature_create : false,
+			feature_update : false,
+			feature_delete : false,
 		}
 		
 		this.featureCount = 0;
@@ -176,7 +180,7 @@ srd_layer.prototype.addLayerToMap = function(theMap) {
 	console.log("Adding Layer to Map. For Layer "+this.options.name);
 	this.map.addLayer( this.layer );
 	console.log("Adding Controls to Map...");
-	if(this.options.editable) {
+	if(this.options.feature_update) {
 		for( theCon in this.srd_drawControls) {
 			this.map.addControl(this.srd_drawControls[theCon]);
 		}
@@ -326,7 +330,7 @@ srd_layer.prototype.loadData = function( ) {
 				this.store = new dojo.store.Cache(
 					dojo.store.JsonRest( { 
 //						idProperty: "feature_id",
-						target: "/srdata/Features/"
+						target: "/srdata/features/"
 					} ),
 					dojo.store.Memory()
 				);
@@ -480,7 +484,7 @@ srd_layer.prototype.loadData = function( ) {
 			this.editPalette = new srd_editPalette(this);
 //			console.log("finished making editPal");
 
-			if(this.options.editable == true) {
+			if(this.options.feature_update == true) {
 				this.editPalette.addControl("activeControlPicker","Edit Mode","activeControl",this.srd_drawControls);
 			}
 			this.editPalette.addControl("editText","Feature Label","label",this.srd_featureAttributes);
@@ -523,7 +527,7 @@ srd_layer.prototype.loadData = function( ) {
 
 // DEFINE preFeatureInsert for Dynamic Layers so that we can add appropriate styling
 srd_layer.prototype.srd_preFeatureInsert = function(feature) {
-	if( this.options.editable == true) {
+	if( this.options.feature_update == true) {
 		if(feature.attributes.customStyle == null) {
 			feature.attributes.customStyle = true;
 			for(var styleAttribute in this.srd_featureAttributes) {

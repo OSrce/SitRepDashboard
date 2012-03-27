@@ -28,15 +28,15 @@ dojo.declare(
 //				console.log("Selected Layer : "+this.srd_selLayer.name);
 				// DEFINE ALL THE DIFFERENT TABLE WE CAN CONNECT TO:
 				this.tableList = {
-					"Users" : "/srdata/Users/",
-					"Groups" : "/srdata/Groups/",
-					"Permissions" : "/srdata/Permissions/",
-					"Modules" : "/srdata/Modules/",
-					"Sessions" : "/srdata/Sessions/",
-					"Layers" : "/srdata/Layers/",
-					"Styles" : "/srdata/Styles/",
-					"Style Presets" : "/srdata/Stylepresets/",
-					"Calls for service - SPRINT" : "/srdata/Cfs/"
+					"Users" : "/srdata/users/",
+					"Groups" : "/srdata/groups/",
+					"Permissions" : "/srdata/permissions/",
+					"Modules" : "/srdata/modules/",
+					"Sessions" : "/srdata/sessions/",
+					"Layers" : "/srdata/layers/",
+					"Styles" : "/srdata/styles/",
+					"Style Presets" : "/srdata/stylepresets/",
+					"Calls for service - SPRINT" : "/srdata/cfs/"
 				}
 				this.selectedTable = "Users";
 				this.selectedDataMenu = new dijit.Menu();
@@ -102,7 +102,6 @@ dojo.declare(
 						{ name: "Permission ID", field:"permission_id" },
 						{ name: "Role Type", field:"role_type" },
 						{ name: "Role Id", field:"role_id" },
-						{ name: "Resource Type", field:"resource_type" },
 						{ name: "Resource ID", field:"resource_id" },
 						{ name: "Create", field:"permission_create" },
 						{ name: "Read", field:"permission_read" },

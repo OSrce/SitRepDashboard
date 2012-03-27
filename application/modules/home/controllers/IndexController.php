@@ -141,10 +141,16 @@ class Home_IndexController extends Zend_Controller_Action
 					$layerRowSet = $layersTable->fetchAll($layerSelect);
 					foreach($layerRowSet as $layerRow) {
 						$this->_layers[$layerRow['id']] = $layerRow;
+/*						$this->_layers[$layerRow['id']]['layer_update'] = 'true';
+						$this->_layers[$layerRow['id']]['layer_delete'] = 'true';
+						$this->_layers[$layerRow['id']]['feature_create'] = 'true';
+						$this->_layers[$layerRow['id']]['feature_update'] = 'true';
+						$this->_layers[$layerRow['id']]['feature_delete'] = 'true';
+*/
 					}
-					$styleSelect = $layersTable->select();
+					$styleSelect = $stylesTable->select();
 					$styleSelect->order('id');	
-					$styleRowSet = $layersTable->fetchAll($layerSelect);
+					$styleRowSet = $stylesTable->fetchAll($stylesSelect);
 					foreach($styleRowSet as $styleRow) {
 						$this->_styles[$styleRow['id']] = $styleRow;
 					}
@@ -172,6 +178,11 @@ class Home_IndexController extends Zend_Controller_Action
 					$layerRowSet = $layersTable->fetchAll($layerSelect);
 					foreach($layerRowSet as $layerRow) {
 						$this->_layers[$layerRow['id']] = $layerRow;
+//						$this->_layers[$layerRow['id']]['layer_update'] = 'true';
+//						$this->_layers[$layerRow['id']]['layer_delete'] = 'true';
+//						$this->_layers[$layerRow['id']]['feature_create'] = 'true';
+//						$this->_layers[$layerRow['id']]['feature_update'] = 'true';
+//						$this->_layers[$layerRow['id']]['feature_delete'] = 'true';
 					}
 				} elseif( $theModule['name'] == 'srdata\/styles\/\*' ) {
 				// LOAD EVERY STYLE

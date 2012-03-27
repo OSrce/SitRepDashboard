@@ -22,6 +22,5 @@ class Srdata_Model_DbTable_Layers extends Zend_Db_Table_Abstract
 			}
 			return parent::update($data, $where);
 		}
-
-}
+	}
 
