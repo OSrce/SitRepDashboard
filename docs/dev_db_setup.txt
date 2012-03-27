@@ -147,17 +147,3 @@ SELECT AddGeometryColumn('sr_layer_dynamic_data','sr_geom',4326,'GEOMETRY',3);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-

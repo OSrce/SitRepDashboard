@@ -42,6 +42,7 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 					$request->setModuleName('login');
 					$request->setControllerName('index');
 					$request->setActionName('notauthorized');
+					$this->getResponse()->setHttpResponseCode(403);
 					return;
 				}
 			} 
@@ -73,22 +74,32 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 			!($acl instanceof Zend_Acl) ) {
 				return false;
 		}
-		$resources = array(
-			'*/*/*',
-			$this->_module.'/*/*',
-			$this->_module.'/'.$this->_controller.'/*',
-			$this->_module.'/'.$this->_controller.'/'.$this->_action
-		);
 
+		$resources = null;
+		if( $this->_module == 'srdata') {
+			$resources = array(	
+				'*/*/*',
+				$this->_module.'/*/*',
+				$this->_module.'/'.$this->_controller.'/*',
+				$this->_module.'/'.$this->_controller.'/'.$this->getRequest()->getParam('id',false),
+			);
+		} else {
+			$resources = array(
+				'*/*/*',
+				$this->_module.'/*/*',
+				$this->_module.'/'.$this->_controller.'/*',
+				$this->_module.'/'.$this->_controller.'/'.$this->_action
+			);
+		}
 		$bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
 		$db = $bootstrap->getResource('db');
 	
 		$modulesTable = new Login_Model_DbTable_Modules($db);
 		$result = false;
 
-//		date_default_timezone_set("America/New_York");
-//    $logger = new Zend_Log();
-//    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
+		date_default_timezone_set("America/New_York");
+    $logger = new Zend_Log();
+    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
 		
 		foreach($resources as $res) {
 			$select = $modulesTable->select()->where('name = ?',$res);
@@ -96,7 +107,7 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 			if( count( $theModule) ) {
 				$theResource = $theModule->id;
 
-//		    $logger->log("Performing ACL Check:".$theResource,Zend_Log::DEBUG);
+		    $logger->log("Performing ACL Check:".$theResource,Zend_Log::DEBUG);
 				if( $acl->has($theResource) ) {
 					$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'read');
 //		    	$logger->log("ACL Result:".$result,Zend_Log::DEBUG);

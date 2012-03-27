@@ -144,8 +144,23 @@ class Home_IndexController extends Zend_Controller_Action
 					}
 				} elseif( $theModule['name'] == 'srdata\/layers\/\*' ) {
 				// LOAD EVERY LAYER
-				
-
+					$logger->log("Load Every Layer.",Zend_Log::DEBUG);
+					$layerSelect = $layersTable->select();
+					$layerSelect->order('id');	
+					$layerRowSet = $layersTable->fetchAll($layerSelect);
+					foreach($layerRowSet as $layerRow) {
+						$this->_layers[$layerRow['id']] = $layerRow;
+					}
+				} elseif( preg_match( '/srdata\/layers\/(\d+)/', $theModule['name'], $matchArr ) ) {
+				//LOAD SPECFIC LAYER
+					$logger->log("Load Layer :".$matchArr[1],Zend_Log::DEBUG);
+					$layerSelect = $layersTable->select();
+					$layerSelect->where('id = ?',$matchArr[1]);	
+					$layerSelect->order('id');	
+					$layerRowSet = $layersTable->fetchAll($layerSelect);
+					foreach($layerRowSet as $layerRow) {
+						$this->_layers[$layerRow['id']] = $layerRow;
+					}
 				}
 				
 			}

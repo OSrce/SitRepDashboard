@@ -355,7 +355,7 @@ srd_layer.prototype.loadData = function( ) {
 				if(this.options.url == null || this.options.url == "") {
 						this.layerProtocol = new OpenLayers.Protocol.HTTP( {
 //								url: "/srdata/Geojsonstatic/layer_id/"+this.options.id+"/",
-								url: "/srdata/Geojsonstatic/"+this.options.id,
+								url: "/srdata/geojsonstatic/"+this.options.id,
 //							params: { layer_id : this.options.id },
 //							readWithPOST: true,
 							format: new OpenLayers.Format.GeoJSON( { } )
@@ -999,13 +999,14 @@ srd_layer.prototype.srd_create = function(evt) {
 		"feature_data":dojo.toJson(evt.feature.attributes),
 		"sr_geom":evt.feature.geometry.toString()
 	}
+	evt.srd_layer = this;
 	dojo.when( this.store.add(item), function(returnId) {
-		retItem2 = returnId;
-		console.log("Created Feature on server side! ID:"+returnId);
-		retItem = dojo.fromJson(returnId);
-		console.log("Created Feature on server side! ID:"+retItem.feature_id);
-//		evt.feature.fid=featId;	
-	});	
+//		console.log("Created Feature on server side! ID:"+returnId);
+		var retItem = dojo.fromJson(returnId);
+//		console.log("Created Feature on server side! ID:"+this.feature.fid);
+		this.feature.fid=returnId;
+//		console.log("Created Feature on server side! ID:"+this.feature.fid);
+	}.bind(evt) );	
 	
 }
 
