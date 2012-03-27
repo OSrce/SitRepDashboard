@@ -425,7 +425,6 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 					tmpOptions.format = "SRJSON";
 
 				//	TODO : FIX THESE!!!
-						tmpOptions.datatable = "sr_layer_static_data";
 				//	tmpOptions.projection = this.staticVals.default_projection;
 				//		tmpOptions.isBaseLayer = false;
 						tmpOptions.visibility = true;

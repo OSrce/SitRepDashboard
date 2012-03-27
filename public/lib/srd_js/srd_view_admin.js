@@ -78,7 +78,7 @@ dojo.declare(
 				);
 				var gridCellsDijit = dojox.grid.cells;
 				this.srd_structList = { 
-					defaultCell: { autoWidth:true, width: "50", editable: true },
+					defaultCell: { autoWidth:true, width:60, editable: true },
 					"Users": [
 						{ name: "User ID", field:"uid" },
 						{ name: "Group ID", field:"gid" },
@@ -111,7 +111,7 @@ dojo.declare(
 					],
 					"Modules": [
 						{ name: "Module ID", field:"id" },
-						{ name: "Module Name", field:"name" }
+						{ name: "Module Name", field:"name"  }
 					],
 					"Sessions": [
 						{ name: "Session ID", field:"id" },

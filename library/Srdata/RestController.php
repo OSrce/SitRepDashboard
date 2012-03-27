@@ -88,10 +88,15 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$range = $this->_request->getHeader('Range');	
 			$rangeArr = array();
 			if( preg_match( "/items=(\d+)-(\d+)/", $range,$rangeArr) ) {
-				$itemsRange = $rangeArr[0];
 				$offset = $rangeArr[1];
 				$limit  = $rangeArr[2];
-				$select->limit($limit,$offset);
+				$limit += 1;
+				$select->limit($limit-$offset,$offset);
+				if($limit > $tableSize) {
+					$limit = $tableSize;
+				}
+				$limit -= 1;
+				$itemsRange = "items=".$offset."-".$limit;
 				$this->_response->setHeader('Content-Range', $itemsRange.'/'.$tableSize);
 			}
 			$this->logger->log($this->tableName." Index (READ ALL)  Action Called", Zend_Log::DEBUG);	
