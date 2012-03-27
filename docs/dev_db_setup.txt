@@ -36,14 +36,12 @@ CREATE TABLE sr_groups (
 );
 
 CREATE TYPE roleType AS ENUM ('uid','gid');
-CREATE TYPE resType AS ENUM ('module','layer','style');
 CREATE TYPE permitType AS ENUM ('deny', 'allow');
 
 CREATE TABLE sr_acl_permissions (
 	permission_id SERIAL NOT NULL,
 	role_type roleType NOT NULL,
 	role_id INT NOT NULL,
-	resource_type resType NOT NULL,
 	resource_id INT NOT NULL,
 	permission_create permitType NOT NULL DEFAULT 'deny',
 	permission_read permitType NOT NULL DEFAULT 'deny',
@@ -75,7 +73,6 @@ CREATE TABLE sr_layers (
 	maxZoomLevel INT,
 	attribution VARCHAR(128),
 	defaultStyle int,
-	dataTable VARCHAR(128) NOT NULL,
 	created_on TIMESTAMP,
 	updated_on TIMESTAMP,
 	created_by INT,

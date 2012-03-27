@@ -97,9 +97,9 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 		$modulesTable = new Login_Model_DbTable_Modules($db);
 		$result = false;
 
-		date_default_timezone_set("America/New_York");
-    $logger = new Zend_Log();
-    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
+//		date_default_timezone_set("America/New_York");
+//    $logger = new Zend_Log();
+//    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
 		
 		foreach($resources as $res) {
 			$select = $modulesTable->select()->where('name = ?',$res);
@@ -107,7 +107,7 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 			if( count( $theModule) ) {
 				$theResource = $theModule->id;
 
-		    $logger->log("Performing ACL Check:".$theResource,Zend_Log::DEBUG);
+//		    $logger->log("Performing ACL Check:".$theResource,Zend_Log::DEBUG);
 				if( $acl->has($theResource) ) {
 					$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'read');
 //		    	$logger->log("ACL Result:".$result,Zend_Log::DEBUG);

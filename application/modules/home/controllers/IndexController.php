@@ -115,7 +115,7 @@ class Home_IndexController extends Zend_Controller_Action
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
 	
 
-//	$presetsTable = new Srdata_Model_DbTable_Presets($db);
+		$presetsTable = new Srdata_Model_DbTable_Presets($this->_db);
 		$stylesTable = new Srdata_Model_DbTable_Styles($this->_db);
 		$layersTable = new Srdata_Model_DbTable_Layers($this->_db);
 		$modulesTable = new Srdata_Model_DbTable_Modules($this->_db);
@@ -142,6 +142,18 @@ class Home_IndexController extends Zend_Controller_Action
 					foreach($layerRowSet as $layerRow) {
 						$this->_layers[$layerRow['id']] = $layerRow;
 					}
+					$styleSelect = $layersTable->select();
+					$styleSelect->order('id');	
+					$styleRowSet = $layersTable->fetchAll($layerSelect);
+					foreach($styleRowSet as $styleRow) {
+						$this->_styles[$styleRow['id']] = $styleRow;
+					}
+					$presetSelect = $presetsTable->select();
+					$presetSelect->order('id');	
+					$presetRowSet = $presetsTable->fetchAll($presetSelect);
+					foreach($presetRowSet as $presetRow) {
+						$this->_presets[$presetRow['id']] = $presetRow;
+					}
 				} elseif( $theModule['name'] == 'srdata\/layers\/\*' ) {
 				// LOAD EVERY LAYER
 					$logger->log("Load Every Layer.",Zend_Log::DEBUG);
@@ -161,8 +173,26 @@ class Home_IndexController extends Zend_Controller_Action
 					foreach($layerRowSet as $layerRow) {
 						$this->_layers[$layerRow['id']] = $layerRow;
 					}
+				} elseif( $theModule['name'] == 'srdata\/styles\/\*' ) {
+				// LOAD EVERY STYLE
+					$logger->log("Load Every Style.",Zend_Log::DEBUG);
+					$styleSelect = $stylesTable->select();
+					$styleSelect->order('id');	
+					$styleRowSet = $stylesTable->fetchAll($styleSelect);
+					foreach($styleRowSet as $styleRow) {
+						$this->_styles[$styleRow['id']] = $styleRow;
+					}
+				} elseif( preg_match( '/srdata\/styles\/(\d+)/', $theModule['name'], $matchArr ) ) {
+				//LOAD SPECFIC STYLE
+					$logger->log("Load Style :".$matchArr[1],Zend_Log::DEBUG);
+					$styleSelect = $stylesTable->select();
+					$styleSelect->where('id = ?',$matchArr[1]);	
+					$styleSelect->order('id');	
+					$styleRowSet = $stylesTable->fetchAll($styleSelect);
+					foreach($styleRowSet as $styleRow) {
+						$this->_styles[$styleRow['id']] = $styleRow;
+					}
 				}
-				
 			}
 		}
 	}
