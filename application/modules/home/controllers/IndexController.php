@@ -91,7 +91,7 @@ class Home_IndexController extends Zend_Controller_Action
 					$this->getResponse()->appendBody(",");
 				}
 //				$this->getResponse()->appendBody( "srd.srd_layerArr[$layerId] = new srd_layer();\n");
-				$layerOptions = $layer->toArray();
+				$layerOptions = $layer;
 				$logger->log("printLayer:".print_r($layerOptions,true),Zend_Log::DEBUG);
 				$layerOptionsJSON = Zend_Json::encode($layerOptions);
 //				$logger->log("printLayerJSON:".$layerOptionsJSON,Zend_Log::DEBUG);
@@ -132,73 +132,94 @@ class Home_IndexController extends Zend_Controller_Action
 			$theSelect = $modulesTable->select();
 			$theSelect->where('id=?',$theRes);
 			$theModule = $modulesTable->fetchRow($theSelect);
+			$layerSelect = null;
+			$styleSelect = null;
+			$presetSelect = null;
 			if( $acl->isAllowed($theRole,$theRes,'read') ) {
 				if( $theModule['name'] == '*/*/*' || $theModule['name'] == 'srdata/*/*' ) {
 				// LOAD EVERY LAYER, STYLE, PRESET...
+					//SETUP layerSelect
 					$logger->log("Load Everything.",Zend_Log::DEBUG);
 					$layerSelect = $layersTable->select();
 					$layerSelect->order('id');	
-					$layerRowSet = $layersTable->fetchAll($layerSelect);
-					foreach($layerRowSet as $layerRow) {
-						$this->_layers[$layerRow['id']] = $layerRow;
-/*						$this->_layers[$layerRow['id']]['layer_update'] = 'true';
-						$this->_layers[$layerRow['id']]['layer_delete'] = 'true';
-						$this->_layers[$layerRow['id']]['feature_create'] = 'true';
-						$this->_layers[$layerRow['id']]['feature_update'] = 'true';
-						$this->_layers[$layerRow['id']]['feature_delete'] = 'true';
-*/
-					}
+					//SETUP styleSelect
 					$styleSelect = $stylesTable->select();
 					$styleSelect->order('id');	
-					$styleRowSet = $stylesTable->fetchAll($stylesSelect);
-					foreach($styleRowSet as $styleRow) {
-						$this->_styles[$styleRow['id']] = $styleRow;
-					}
+					//SETUP presetSelect
 					$presetSelect = $presetsTable->select();
 					$presetSelect->order('id');	
-					$presetRowSet = $presetsTable->fetchAll($presetSelect);
-					foreach($presetRowSet as $presetRow) {
-						$this->_presets[$presetRow['id']] = $presetRow;
-					}
 				} elseif( $theModule['name'] == 'srdata\/layers\/\*' ) {
 				// LOAD EVERY LAYER
+					//SETUP layerSelect
 					$logger->log("Load Every Layer.",Zend_Log::DEBUG);
 					$layerSelect = $layersTable->select();
 					$layerSelect->order('id');	
-					$layerRowSet = $layersTable->fetchAll($layerSelect);
-					foreach($layerRowSet as $layerRow) {
-						$this->_layers[$layerRow['id']] = $layerRow;
-					}
 				} elseif( preg_match( '/srdata\/layers\/(\d+)/', $theModule['name'], $matchArr ) ) {
 				//LOAD SPECFIC LAYER
+					//SETUP layerSelect
 					$logger->log("Load Layer :".$matchArr[1],Zend_Log::DEBUG);
 					$layerSelect = $layersTable->select();
 					$layerSelect->where('id = ?',$matchArr[1]);	
 					$layerSelect->order('id');	
-					$layerRowSet = $layersTable->fetchAll($layerSelect);
-					foreach($layerRowSet as $layerRow) {
-						$this->_layers[$layerRow['id']] = $layerRow;
-//						$this->_layers[$layerRow['id']]['layer_update'] = 'true';
-//						$this->_layers[$layerRow['id']]['layer_delete'] = 'true';
-//						$this->_layers[$layerRow['id']]['feature_create'] = 'true';
-//						$this->_layers[$layerRow['id']]['feature_update'] = 'true';
-//						$this->_layers[$layerRow['id']]['feature_delete'] = 'true';
-					}
 				} elseif( $theModule['name'] == 'srdata\/styles\/\*' ) {
 				// LOAD EVERY STYLE
+					//SETUP styleSelect
 					$logger->log("Load Every Style.",Zend_Log::DEBUG);
 					$styleSelect = $stylesTable->select();
 					$styleSelect->order('id');	
-					$styleRowSet = $stylesTable->fetchAll($styleSelect);
-					foreach($styleRowSet as $styleRow) {
-						$this->_styles[$styleRow['id']] = $styleRow;
-					}
 				} elseif( preg_match( '/srdata\/styles\/(\d+)/', $theModule['name'], $matchArr ) ) {
 				//LOAD SPECFIC STYLE
+					//SETUP styleSelect
 					$logger->log("Load Style :".$matchArr[1],Zend_Log::DEBUG);
 					$styleSelect = $stylesTable->select();
 					$styleSelect->where('id = ?',$matchArr[1]);	
 					$styleSelect->order('id');	
+				}
+				//GET ALL THE LAYER INFO FOR THIS RESOURCE:
+				if($layerSelect != null) {
+					$layerRowSet = $layersTable->fetchAll($layerSelect);
+					foreach($layerRowSet as $layerRow) {
+//						$logger->log("layerRow is type:".gettype($layerRow),Zend_Log::DEBUG);
+						if( !array_key_exists( $layerRow[id], $this->_layers) ) { 
+							$this->_layers[$layerRow['id']] = $layerRow->toArray();
+							$this->_layers[$layerRow['id']]['layer_update'] = 'false';
+							$this->_layers[$layerRow['id']]['layer_delete'] = 'false';
+							$this->_layers[$layerRow['id']]['feature_create'] = 'false';
+							$this->_layers[$layerRow['id']]['feature_update'] = 'false';
+							$this->_layers[$layerRow['id']]['feature_delete'] = 'false';
+						}
+						$tmpResLayer = null;
+						$tmpResFeature = null;
+						if( $theModule['name'] == '*/*/*' || $theModule['name'] == 'srdata/*/*' ) {
+							$tmpResLayer = $theRes;
+							$tmpResFeature = $theRes;
+						} elseif( preg_match( '/srdata\/layers/', $theModule['name'] ) ) {
+							$tmpResLayer = $theRes;
+						} elseif( preg_match( '/srdata\/features/', $theModule['name'] ) ) {
+							$tmpResFeature = $theRes;
+						}
+						if($tmpResLayer != null) {
+							if( $acl->isAllowed($theRole,$tmpResLayer,'update') ) {
+								$this->_layers[$layerRow['id']]['layer_update'] = 'true';
+							}
+							if( $acl->isAllowed($theRole,$tmpResLayer,'delete') ) {
+								$this->_layers[$layerRow['id']]['layer_delete'] = 'true';
+							}
+						}
+						if($tmpResFeature != null) {
+							if( $acl->isAllowed($theRole,$tmpResFeature,'create') ) {
+								$this->_layers[$layerRow['id']]['feature_create'] = 'true';
+							}
+							if( $acl->isAllowed($theRole,$tmpResFeature,'update') ) {
+								$this->_layers[$layerRow['id']]['feature_update'] = 'true';
+							}
+							if( $acl->isAllowed($theRole,$tmpResFeature,'delete') ) {
+								$this->_layers[$layerRow['id']]['feature_delete'] = 'true';
+							}
+						}
+					}
+				}
+				if($styleSelect != null) {
 					$styleRowSet = $stylesTable->fetchAll($styleSelect);
 					foreach($styleRowSet as $styleRow) {
 						$this->_styles[$styleRow['id']] = $styleRow;

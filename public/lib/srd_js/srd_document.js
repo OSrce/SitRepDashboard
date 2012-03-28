@@ -502,7 +502,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 				//				disabled: true
 				//			} ) );
 							for( tmpId in this.srd_layerArr) {
-								if(this.srd_layerArr[tmpId].editable == true) {
+								if(this.srd_layerArr[tmpId].type == "Vector" && this.srd_layerArr[tmpId].feature_update == true) {
 									this.srd_saveMenu.addChild(new dijit.MenuItem( { 
 										label: this.srd_layerArr[tmpId].name,
 										onClick: function() { this.saveLayer(tmpId) }.bind(this)
