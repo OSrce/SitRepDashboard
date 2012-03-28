@@ -1,6 +1,6 @@
 <?php
 
-class Srdata_FeaturesController extends Zend_Rest_Controller
+class Srdata_FeaturesController extends Srdata_RestController
 {
 		protected $tableName; 
 		protected $db;
@@ -120,12 +120,12 @@ class Srdata_FeaturesController extends Zend_Rest_Controller
 		}
 
 		// DELETE Action === DELETE
-		public function deleteAction() 
+/*		public function deleteAction() 
 		{
-			$this->logger->log($this->tableName." Delete Action Called: ", Zend_Log::DEBUG);	
-
+			$this->logger->log($this->tableName." Delete Action Called: for Features", Zend_Log::DEBUG);	
+			return parent::deleteAction();
 		}
-
+*/
 
 
 }

@@ -154,11 +154,26 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		public function deleteAction() 
 		{
 			$this->logger->log($this->tableName." Delete (DELETE) Action Called: ", Zend_Log::DEBUG);	
+			$select = $this->restTable->select();
+			$paramArr = $this->_getAllParams();	
+			$this->logger->log("The Params: ".print_r($paramArr,true)."\n", Zend_Log::DEBUG);	
+			foreach($paramArr as $key=> $val) {
+				$this->logger->log("The key:$key:::\n", Zend_Log::DEBUG);	
+				if( $key == "module" || $key == "controller" || $key == "action") {
+					continue;
+//				} elseif( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
+//					$tableSort = $keyArr[1];
+				} else {
+					$select->where("$key=?",$val); 	
+				}
+			}
 
-			$id = $this->_getParam('id');
-			$idName = $this->idName;
-			$where = $this->restTable->getAdapter()->quoteInto("$idName=?",$id);
-			$this->restTable->delete($where);
+//			$id = $this->_getParam('id');
+//			$idName = $this->idName;
+//			$where = $this->restTable->getAdapter()->quoteInto("$idName=?",$id);
+
+				// TODO ::: NEED TO DO SANITY CHECKS AND FIX!			
+//			$this->restTable->delete($select);
 
 			// SHOULD CHECK TO SEE IF DELETE WAS SUCCESSFUL BEFORE RETURNING No Content (204).			
 			$this->getResponse()->setHttpResponseCode(204);

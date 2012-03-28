@@ -350,6 +350,8 @@ srd_layer.prototype.loadData = function( ) {
 						this.layer.addFeatures( [theFeature] ); 
 					}.bind(this) );
 					this.layer.events.register("featureadded", this, this.srd_create);
+					this.layer.events.register("featuremodified", this, this.srd_update);
+					this.layer.events.register("featureremoved", this, this.srd_delete);
 				}.bind(this) );
 
 		} else if(this.options.format == "GeoJSON" ) {
@@ -989,10 +991,11 @@ srd_layer.prototype.createFeature = function(theFeat,options) {
 	console.log("theOptions="+options.headers.layer_id);
 	this.layerProtocol.create(theFeat,options);
 }
+// ABOVE MAYBE TO REMOVE --- OLD CODE----
 
-
+// BEGIN srd_create EVENT HANDLER FOR AFTER NEW FEATURES ARE CREATED
 srd_layer.prototype.srd_create = function(evt) {
-	console.log("Create Feature Called! ID: "+evt.feature.id);
+//	console.log("Create Feature Called! ID: "+evt.feature.id);
 	var featId = this.layer.features.length;
 	while( this.layer.getFeatureByFid(featId) != null) {
 		featId++;
@@ -1009,10 +1012,44 @@ srd_layer.prototype.srd_create = function(evt) {
 		var retItem = dojo.fromJson(returnId);
 //		console.log("Created Feature on server side! ID:"+this.feature.fid);
 		this.feature.fid=returnId;
+		console.log("Created Feature on server side! ID:"+this.feature.fid);
+	}.bind(evt) );	
+}
+// END srd_create EVENT HANDLER FOR AFTER NEW FEATURES ARE CREATED
+
+// BEGIN srd_update EVENT HANDLER FOR AFTER FEATURES ARE UPDATED
+srd_layer.prototype.srd_update = function(evt) {
+	console.log("Update Feature Called! ID: "+evt.feature.fid);
+	var item = {
+		"layer_id":this.options.id,
+		"feature_id":evt.feature.fid,
+		"feature_data":dojo.toJson(evt.feature.attributes),
+		"sr_geom":evt.feature.geometry.toString()
+	}
+	evt.srd_layer = this;
+	dojo.when( this.store.put(item), function(returnId) {
+//		console.log("Created Feature on server side! ID:"+returnId);
+		var retItem = dojo.fromJson(returnId);
+//		console.log("Created Feature on server side! ID:"+this.feature.fid);
+		this.feature.fid=returnId;
 //		console.log("Created Feature on server side! ID:"+this.feature.fid);
 	}.bind(evt) );	
-	
-}
+}	
+// END srd_update EVENT HANDLER FOR AFTER FEATURES ARE UPDATED
+
+// BEGIN srd_delete EVENT HANDLER FOR AFTER FEATURES ARE DELETED
+srd_layer.prototype.srd_delete = function(evt) {
+	console.log("Delete Feature Called! ID: "+evt.feature.fid);
+	var itemStr = "layer_id/"+this.options.id+"/feature_id/"+evt.feature.fid;
+	evt.srd_layer = this;
+	dojo.when( this.store.remove(itemStr), function(returnId) {
+		var retItem = dojo.fromJson(returnId);
+//		this.feature.fid=returnId;
+//		console.log("Created Feature on server side! ID:"+this.feature.fid);
+	}.bind(evt) );	
+}	
+// END srd_update EVENT HANDLER FOR AFTER FEATURES ARE UPDATED
+
 
 
 
