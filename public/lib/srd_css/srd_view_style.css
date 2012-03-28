@@ -42,13 +42,24 @@
 
 .srd_cfs_row3 {
 	position: absolute;
-	top: 110px;
+	top: 90px;
 }
 
 .srd_cfs_row4 {
 	position: absolute;
-	top: 160px;
+	top: 120px;
 }
+
+.srd_cfs_row5 {
+	position: absolute;
+	top: 150px;
+}
+
+.srd_cfs_row6 {
+	position: absolute;
+	top: 180px;
+}
+
 
 
 
@@ -67,8 +78,13 @@
 #cfs_timecreated {
 	left: 220px;
 }
+
+#label_cfs_timeassigned {
+	left: 10px;
+}
+
 #cfs_timeassigned {
-	left: 250px;
+	left: 120px;
 }
 
 #label_cfs_num {
@@ -93,7 +109,7 @@
 }
 
 #cfs_codesup1 {
-	left: 380px;
+	left: 400px;
 }
 
 #label_cfs_pct {
@@ -105,8 +121,59 @@
 
 
 #cfs_codesup2 {
-	left: 550px;
+	left: 480px;
 }
+
+
+#label_cfs_addr {
+	left: 10px;
+}
+#cfs_addr {
+	left: 80px;
+}
+#label_cfs_cross1 {
+	left: 240px;
+}
+#cfs_cross1 {
+	left: 325px;
+}
+#label_cfs_cross2 {
+	left: 480px;
+}
+#cfs_cross2 {
+	left: 565px;
+}
+
+#label_cfs_finaldisdate {
+	left: 10px;
+}
+#cfs_finaldisdate {
+	left: 60px;
+}
+#label_cfs_finaldisunit {
+	left: 150px;
+}
+#cfs_finaldisunit {
+	left: 190px;
+}
+#label_cfs_finaldis {
+	left: 300px;
+}
+#cfs_finaldis {
+	left: 340px;
+}
+#cfs_finaldissup1 {
+	left: 390px;
+}
+
+
+
+
+
+
+
+
+
 
 
 #cfs_body {

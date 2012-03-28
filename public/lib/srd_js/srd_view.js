@@ -85,8 +85,28 @@ dojo.declare(
 		srd_unselect : function() {
 			this.containerStyle = 'background-color: black;';
 			this.outsideContainer.set('style',this.containerStyle);
+		},
+		dateToTime : function(data) {
+			if(data) { 
+				var dateObj = dojo.date.locale.parse(data, { datePattern: 'yyyy-MM-dd', timePattern:'HH:mm:ss'} );
+				if(dateObj) {
+					var test =dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
+					return test;
+				} else {
+					return data;
+				}
+			} else { return ''; 
+			} 
+		},
+		// END dateToTime FUNCTION
+		// BEG formatSignal FUNCTION
+		formatSignal : function(data) {
+			if(data) {
+				return "10-"+data
+			} else {
+				return ''; 
+			}
 		}
-
 	}
 );
 

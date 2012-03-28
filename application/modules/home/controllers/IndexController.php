@@ -180,7 +180,7 @@ class Home_IndexController extends Zend_Controller_Action
 					$layerRowSet = $layersTable->fetchAll($layerSelect);
 					foreach($layerRowSet as $layerRow) {
 //						$logger->log("layerRow is type:".gettype($layerRow),Zend_Log::DEBUG);
-						if( !array_key_exists( $layerRow[id], $this->_layers) ) { 
+						if( !array_key_exists( $layerRow['id'], $this->_layers) ) { 
 							$this->_layers[$layerRow['id']] = $layerRow->toArray();
 							$this->_layers[$layerRow['id']]['layer_update'] = 'false';
 							$this->_layers[$layerRow['id']]['layer_delete'] = 'false';

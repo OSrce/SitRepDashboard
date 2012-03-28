@@ -80,27 +80,25 @@ dojo.declare(
 							{ name: "Time", field:"cfs_timecreated", srdtype:"PlainText", srdrow:1, width: "50px" },
 							{ name: "Job Let", field:"cfs_letter", srdtype:"Hidden", width: "50px" },
 							{ name: "Job #", field:"cfs_num", srdtype:"Text", srdrow:1, width: "50px", editable:true },
-							{ name: "Precinct", field:"cfs_pct", srdtype:"PlainText", srdrow:2,width: "50px" },
+							{ name: "Precinct", field:"cfs_pct", srdtype:"PlainText", srdrow:2, width: "50px" },
 							{ name: "Sector", field:"cfs_sector", srdtype:"Hidden", width: "50px" },
-							{ name: "Address", field:"cfs_addr", width: "100px" },
-							{ name: "Cross St 1", field:"cfs_cross1", width: "50px" },
-							{ name: "Cross St 2", field:"cfs_cross2", width: "50px" },
-							{ name: "Signal", field:"cfs_code", srdtype:"PlainText", srdrow:2, width: "50px", formatter:function(data) {
-									if(data) { return "10-"+data} else { return ''; } }
-						  },
+							{ name: "Address", field:"cfs_addr", srdtype:"PlainText", srdrow:3,width: "100px" },
+							{ name: "Cross St 1", field:"cfs_cross1", srdtype:"PlainText", srdrow:3, width: "50px" },
+							{ name: "Cross St 2", field:"cfs_cross2", srdtype:"PlainText", srdrow:3, width: "50px" },
+							{ name: "Signal", field:"cfs_code", srdtype:"PlainText", srdrow:2, width: "50px", formatter: this.formatSignal},
 							{ field:"cfs_codesup1", srdtype:"PlainText", srdrow:2, width: "50px" },
 							{ field:"cfs_codesup2", srdtype:"PlainText", srdrow:2, width: "50px" },
-							{ name: "Time Assigned", field:"cfs_timeassigned", srdtype:"PlainText", srdrow:3,width: "50px" },
+							{ name: "Time Assigned", field:"cfs_timeassigned", srdtype:"PlainText", srdrow:4,width: "50px" },
 							{ name: "Priority", field:"cfs_priority", width: "50px" },
 							{ name: "Ops Tracking", field:"cfs_routenotifications", width: "50px" },
-							{ name: "Final Disposition", field:"cfs_finaldis", width: "50px" },
-							{ name: "Final Disposition Info", field:"cfs_finaldissup1", width: "50px" },
-							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "50px" },
-							{ name: "Final Disposition Unit", field:"cfs_finaldisunit", width: "50px" },
+							{ name: "Dis", field:"cfs_finaldis", srdtype:"PlainText", srdrow:5, width: "50px" },
+							{ field:"cfs_finaldissup1",  srdtype:"PlainText", srdrow:5, width: "50px" },
+							{ name: "Final", field:"cfs_finaldisdate",  srdtype:"PlainText", srdrow:5, width: "50px",formatter: this.dateToTime},
+							{ name: "Unit", field:"cfs_finaldisunit",  srdtype:"PlainText", srdrow:5, width: "50px" },
 							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px" },
 							{ name: "Last Updated", field:"cfs_updated_on", srdtype:"PlainText", srdrow:1, width: "60px" },
 
-							{ field:"cfs_body", srdtype:"Text", srdrow:4, width: "250px" }
+							{ field:"cfs_body", srdtype:"Text", srdrow:6, width: "250px" }
 							]
 					} ]
 					
@@ -184,7 +182,7 @@ dojo.declare(
 								value: new Date(),
 								srd_view: this,
 								editable: cell.editable,
-								onChange: function() { this.srd_view.getData(this.id); }
+								onChange: function() { this.srd_view.getData(); }
 							} );
 							theWidget.placeAt(this.cp.domNode);
 							theWidget.startup();
@@ -195,6 +193,9 @@ dojo.declare(
 								var theLabel = dojo.create("label", {'class':"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
 							}
 							var theWidget = dojo.create("div", {'class':"srd_cfs_row"+cell.srdrow, id:cell.field, innerHTML: ""} , this.cp.domNode);
+							if(cell.formatter) {
+								dojo.attr(theWidget,'formatter',cell.formatter);
+							}
 							this.srd_widgetArr[cell.field] = theWidget;
 							break;	
 						case "Text" :
@@ -206,7 +207,9 @@ dojo.declare(
 								id: cell.field,
 								editable: cell.editable,
 								srd_view: this,
-								onChange: function() { this.srd_view.getData(this.id); }
+								intermediateChanges: true,
+								onChange: function() { this.srd_view.getData(); },
+								onKeyPress: function(e) { this.srd_view.noEnter(e); }
 							} );
 							theWidget.placeAt(this.cp.domNode);
 							theWidget.startup();
@@ -219,7 +222,7 @@ dojo.declare(
 		},
 		// END displaySingleCfs FUNCTION
 		// BEGIN getData FUNCTION
-		getData : function(theId) {	
+		getData : function() {	
 //			console.log("getData Called!");
 			if( this.srd_widgetArr["cfs_date"] && this.srd_widgetArr["cfs_num"] ) {
 				if( this.srd_widgetArr["cfs_date"].value && this.srd_widgetArr["cfs_num"].value) {
@@ -246,18 +249,43 @@ dojo.declare(
 						if(this.srd_widgetArr[hashId].declaredClass == "dijit.form.Textarea" ) {
 //							console.log("Widget is TextArea");
 							this.srd_widgetArr[hashId].set("value", item[hashId]);
-						} else {
+/*						} else {
+							if(this.srd_widgetArr[hashId].formatter) {
+								console.log("Var :"+hashId+" has formatter!");
+								dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', this.srd_widgetArr[hashId].formatter( item[hashId]) );
+							} else {
 //							console.log("Widget is something else.");
 							dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', item[hashId]);
+
+							}
+*/
 						}	
 					} else {
 //						console.log("Widget is something else.");
-						dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', item[hashId]);
+						if(hashId=="cfs_finaldisdate" || hashId=="cfs_timeassigned" || hashId=="cfs_timecreated") {
+//							console.log("Var :"+hashId+" has formatter!");
+							dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', this.dateToTime( item[hashId]) );
+						} else if(hashId=="cfs_finaldis" || hashId=="cfs_code" ) {
+							dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', this.formatSignal( item[hashId]) );
+	
+						} else {
+//						console.log("Widget is something else.");
+							dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', item[hashId]);
+						}
 					}
 				}
 			}
-		}
+		},
 		// END displayResults FUNCTION
+		// BEGIN noEnter FUNCTION
+		noEnter : function(e) {	
+//			console.log("noEnter Called!");
+			if(e.keyCode == dojo.keys.ENTER) {
+				dojo.stopEvent(e);	
+//				this.getData();
+			}
+		}
+		// END noEnter
 	}
 );
 

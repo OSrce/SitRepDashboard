@@ -329,6 +329,7 @@ srd_layer.prototype.loadData = function( ) {
 				console.log("Create SRJson Layer Run From Server="+this.options.name+"===");
 				this.store = new dojo.store.Cache(
 					dojo.store.JsonRest( { 
+//						idProperty: { "layer_id", "feature_id"},
 //						idProperty: "feature_id",
 						target: "/srdata/features/"
 					} ),
@@ -1008,11 +1009,12 @@ srd_layer.prototype.srd_create = function(evt) {
 	}
 	evt.srd_layer = this;
 	dojo.when( this.store.add(item), function(returnId) {
-//		console.log("Created Feature on server side! ID:"+returnId);
-		var retItem = dojo.fromJson(returnId);
-//		console.log("Created Feature on server side! ID:"+this.feature.fid);
+		console.log("Created Feature on server side! retStr:"+returnId);
+//		var retItem = dojo.fromJson(retStr);
+//		console.log("Created Feature on server side! retItem.feature_id:"+retItem.feature_id);
+//		this.feature.fid=retItem.feature_id;
 		this.feature.fid=returnId;
-		console.log("Created Feature on server side! ID:"+this.feature.fid);
+		console.log("Created Feature on server side! this.feature.fid:"+this.feature.fid);
 	}.bind(evt) );	
 }
 // END srd_create EVENT HANDLER FOR AFTER NEW FEATURES ARE CREATED

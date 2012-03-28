@@ -19,6 +19,15 @@ class Srdata_Model_Layer extends Zend_Db_Table_Row_Abstract
 		return $retStr;
 	}
 
+	public function setFromArray($data) {
+		foreach($data as $key => $val) {
+			unset( $data[$key] );
+			$key = $this->_transformColumn($key);
+			$data[$key] = $val;
+		}
+		return parent::setFromArray($data);	
+	}
+
 
 	public function toArray() {
 		$retArr = parent::toArray();
