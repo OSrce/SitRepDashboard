@@ -90,10 +90,14 @@ dojo.declare(
 			if(data) { 
 				var dateObj = dojo.date.locale.parse(data, { datePattern: 'yyyy-MM-dd', timePattern:'HH:mm:ss'} );
 				if(dateObj) {
-					var test =dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
-					return test;
+					return dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
 				} else {
-					return data;
+					dateObj = dojo.date.locale.parse(data, { timePattern:'HH:mm:ss'} );
+					if(dateObj) {
+						return dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
+					} else {
+						return data;
+					}
 				}
 			} else { return ''; 
 			} 

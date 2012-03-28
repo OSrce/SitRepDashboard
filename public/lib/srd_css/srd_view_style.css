@@ -73,10 +73,10 @@
 	width: 95px;
 }
 #label_cfs_timecreated {
-	left: 170px;
+	left: 10px;
 }
 #cfs_timecreated {
-	left: 220px;
+	left: 60px;
 }
 
 #label_cfs_timeassigned {
@@ -84,21 +84,21 @@
 }
 
 #cfs_timeassigned {
-	left: 120px;
+	left: 85px;
 }
 
 #label_cfs_num {
-	left: 300px;
+	left: 200px;
 }
 #cfs_num {
-	left: 350px;
+	left: 250px;
 	width: 81px;
 }
 #label_cfs_updated_on {
-	left: 450px;
+	left: 350px;
 }
 #cfs_updated_on {
-	left: 550px;
+	left: 410px;
 }
 
 #label_cfs_code {
@@ -113,10 +113,10 @@
 }
 
 #label_cfs_pct {
-	left: 10px;
+	left: 150px;
 }
 #cfs_pct {
-	left: 100px;
+	left: 220px;
 }
 
 
@@ -135,20 +135,20 @@
 	left: 240px;
 }
 #cfs_cross1 {
-	left: 325px;
+	left: 290px;
 }
 #label_cfs_cross2 {
-	left: 480px;
+	left: 450px;
 }
 #cfs_cross2 {
-	left: 565px;
+	left: 500px;
 }
 
 #label_cfs_finaldisdate {
 	left: 10px;
 }
 #cfs_finaldisdate {
-	left: 60px;
+	left: 85px;
 }
 #label_cfs_finaldisunit {
 	left: 150px;
@@ -165,6 +165,13 @@
 #cfs_finaldissup1 {
 	left: 390px;
 }
+#label_cfs_dupnum {
+	left: 450px;
+}
+#cfs_dupnum {
+	left: 490px;
+}
+
 
 
 
@@ -178,7 +185,7 @@
 
 #cfs_body {
 	left: 10px;
-	width: 700px;
+	width: 590px;
 }
 
 
