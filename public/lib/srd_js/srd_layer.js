@@ -40,7 +40,7 @@ function srd_layer( ) {
 			layer_delete : false,
 			feature_create : false,
 			feature_update : false,
-			feature_delete : false,
+			feature_delete : false
 		}
 		
 		this.featureCount = 0;
