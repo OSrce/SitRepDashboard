@@ -154,10 +154,11 @@ dojo.declare(
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
 					plugins: {nestedSorting: true},
-					onRowDblClick: this.popupCfssingle(evt),
 					region : 'center'
 				} );
 				this.insideContainer.addChild(this.srd_datagrid);
+				//TODO FIX THIS - IT DOES NOT WORK!!!!
+				dojo.connect(this.srd_datagrid, 'onRowClick', this, 'popupCfsSingle');
 			}
 		},
 		// END selectTable FUNCTION
@@ -183,7 +184,8 @@ dojo.declare(
 		},
 		// END refreshTable
 		// BEGIN popupCfsSingle
-		popupCfsSingle: function() {
+		popupCfsSingle: function(event) {
+			console.log("popupCfsSingle CALLED!");
 			window.open('/home/cfssingle','Calls For Service - Single View');	
 
 		}
