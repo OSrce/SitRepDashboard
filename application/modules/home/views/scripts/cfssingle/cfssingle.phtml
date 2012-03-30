@@ -75,6 +75,7 @@
 			dojo.addOnLoad( function() {
 				var parArr = dojo.queryToObject(location.search.substr(1) );
 				var theCon = new dijit.layout.LayoutContainer( {
+					style:'overflow:auto'
 				}, 'theSrdDoc');
 				var theDoc = { 'viewContainer': theCon};
 <?php

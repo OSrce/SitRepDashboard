@@ -115,6 +115,7 @@ dojo.declare(
 */
 				this.cp = new dijit.layout.ContentPane( {
 					'region': "center",
+					'isLayoutContainer': true,
 					'class': "srd_cfs_single"
 				} );
 				if(this.data.noContainers) {
@@ -227,7 +228,7 @@ dojo.declare(
 						}
 					}
 				}
-			}	
+			}
 		},
 		// END displaySingleCfs FUNCTION
 		// BEGIN getData FUNCTION
@@ -284,6 +285,7 @@ dojo.declare(
 					}
 				}
 			}
+			this.cp.resize();	
 		},
 		// END displayResults FUNCTION
 		// BEGIN noEnter FUNCTION
