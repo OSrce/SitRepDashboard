@@ -71,7 +71,7 @@ dojo.declare(
 			this.insideContainer.resize();
 		},
 		
-		srd_select : function(event) {
+		srd_select : function(evt) {
 			console.log("Selected view! xPos:"+this.data.xPos+", yPos:"+this.data.yPos);
 			if(this.srd_doc.selectedView) {
 				this.srd_doc.selectedView.srd_unselect();

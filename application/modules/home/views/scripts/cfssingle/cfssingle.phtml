@@ -73,11 +73,16 @@
 
 		<script type="text/javascript">
 			dojo.addOnLoad( function() {
+				var parArr = dojo.queryToObject(location.search.substr(1) );
 				var theCon = new dijit.layout.LayoutContainer( {
 				}, 'theSrdDoc');
 				var theDoc = { 'viewContainer': theCon};
 				var data = {xDim:1, yDim:1, noContainers:true};
 				var theView = new srd_view_cfssingle(data, theDoc);	
+//				console.log("TEST:::"+parArr.cfs_date+":::"+parArr.cfs_num);
+				if(parArr) {
+					theView.getJob(parArr.cfs_date, parArr.cfs_num);
+				}
 			} );
 		</script>
 

@@ -289,8 +289,25 @@ dojo.declare(
 				dojo.stopEvent(e);	
 //				this.getData();
 			}
-		}
+		},
 		// END noEnter
+		getJob : function(theDate, theJob) {
+			this.theDate = theDate;
+			this.theJob = theJob;
+		dojo.addOnLoad(function() {
+//				console.log("getJob Called:"+this.theDate+" ::: "+this.theJob);
+
+			this.srd_widgetArr["cfs_date"].set("value",this.theDate);
+			this.srd_widgetArr["cfs_num"].set("value", this.theJob);
+				dojo.when( this.srd_store.query({"cfs_date":this.theDate, "cfs_num":this.theJob}, {
+					count: 1
+				} ), function(results) {
+					this.displayResults(results[0])
+				}.bind(this)
+				);
+			}.bind(this) );
+		}
+		// END getJob
 	}
 );
 

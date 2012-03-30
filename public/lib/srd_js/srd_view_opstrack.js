@@ -119,6 +119,7 @@ dojo.declare(
 				this.srd_query = { cfs_date: todayStr, cfs_routenotifications: 'true'}; 
 				this.srd_datagrid.setQuery(this.srd_query ); 
 				this.insideContainer.addChild(this.srd_datagrid);
+				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
 			}.bind(this) );		
 		},
@@ -158,7 +159,7 @@ dojo.declare(
 				} );
 				this.insideContainer.addChild(this.srd_datagrid);
 				//TODO FIX THIS - IT DOES NOT WORK!!!!
-				dojo.connect(this.srd_datagrid, 'onRowClick', this, 'popupCfsSingle');
+				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
 			}
 		},
 		// END selectTable FUNCTION
@@ -177,6 +178,8 @@ dojo.declare(
 		// END toggleAutoRefresh
 		refreshTable: function() {
 			console.log("Refresh Table Called!");
+			var todayStr = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
+			this.srd_query = { cfs_date: todayStr, cfs_routenotifications: 'true'}; 
 			this.srd_datagrid.setQuery(this.srd_query ); 
 			this.srd_datagrid.setStore( this.srd_dataStore );
 			this.srd_datagrid.setQuery(this.srd_query ); 
@@ -184,9 +187,14 @@ dojo.declare(
 		},
 		// END refreshTable
 		// BEGIN popupCfsSingle
-		popupCfsSingle: function(event) {
-			console.log("popupCfsSingle CALLED!");
-			window.open('/home/cfssingle','Calls For Service - Single View');	
+		popupCfsSingle: function(evt) {
+			var selectedItem = this.srd_datagrid.getItem(this.srd_datagrid.selection.selectedIndex);
+			var theDate = this.srd_datagrid.store.getValue( selectedItem, 'cfs_date' );
+			var theJobNum = this.srd_datagrid.store.getValue( selectedItem, 'cfs_num' );
+			console.log("popupCfsSingle CALLED: "+theDate+" ::: "+theJobNum);
+			var urlStr = '/home/cfssingle?cfs_date='+theDate+"&cfs_num="+theJobNum;
+//			var theWindow = window.open(urlStr,'Calls For Service - Single View','width=650px');	
+			var theWindow = window.open(urlStr,'CallsForService','width=650');	
 
 		}
 	}
