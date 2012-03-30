@@ -144,25 +144,33 @@ class Login_Acl extends Zend_Acl {
 				$logger->log("ACL Create Allow:".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resId , 'create' );
 			} else {
-				$this->deny($roleType.":".$roleId, $resId , 'create' );
+				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'create' ) ) {
+					$this->deny($roleType.":".$roleId, $resId , 'create' );
+				}
 			}
 			if ($perm->permission_read == 'allow') {
 				$logger->log("ACL Read Allow:".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resId , 'read' );
 			} else {
-				$this->deny($roleType.":".$roleId, $resId , 'read' );
+				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'read' ) ) {
+					$this->deny($roleType.":".$roleId, $resId , 'read' );
+				}
 			}
 			if ($perm->permission_update == 'allow') {
 				$logger->log("ACL Update Allow:".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resId , 'update' );
 			} else {
-				$this->deny($roleType.":".$roleId, $resId , 'update' );
+				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'update' ) ) {
+					$this->deny($roleType.":".$roleId, $resId , 'update' );
+				}
 			}
 			if ($perm->permission_delete == 'allow') {
 				$logger->log("ACL Delete Allow:".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resId , 'delete' );
 			} else {
-				$this->deny($roleType.":".$roleId, $resId , 'delete' );
+				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'delete' ) ) {
+					$this->deny($roleType.":".$roleId, $resId , 'delete' );
+				}
 			}
 		}
 		return true;

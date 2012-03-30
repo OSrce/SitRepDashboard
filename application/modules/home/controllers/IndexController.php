@@ -26,7 +26,8 @@ class Home_IndexController extends Zend_Controller_Action
 				$this->_view_layout_x = $user['view_layout_x'];			
 				$this->_view_layout_y = $user['view_layout_y'];			
 				$this->_view_data = Zend_Json::decode( $user['view_data'] );	
-
+				
+				$this->view->srd_login_opts = $this->_options['srd']['login'];
 
 		 }
 

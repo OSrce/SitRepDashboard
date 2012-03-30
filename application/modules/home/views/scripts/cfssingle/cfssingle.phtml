@@ -77,6 +77,11 @@
 				var theCon = new dijit.layout.LayoutContainer( {
 				}, 'theSrdDoc');
 				var theDoc = { 'viewContainer': theCon};
+<?php
+       echo "theDoc.siteLeftImage='".$this->srd_login_opts['leftimage']."';\n";
+       echo "theDoc.siteRightImage='".$this->srd_login_opts['rightimage']."';\n";
+       echo "theDoc.siteTitle='".$this->srd_login_opts['title']."';\n";
+?>
 				var data = {xDim:1, yDim:1, noContainers:true};
 				var theView = new srd_view_cfssingle(data, theDoc);	
 //				console.log("TEST:::"+parArr.cfs_date+":::"+parArr.cfs_num);
