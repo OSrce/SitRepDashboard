@@ -117,8 +117,13 @@ dojo.declare(
 					'region': "center",
 					'class': "srd_cfs_single"
 				} );
-				this.insideContainer.addChild(this.cp);	
-				this.insideContainer.resize();
+				if(this.data.noContainers) {
+					this.srd_doc.viewContainer.addChild(this.cp);
+					this.outsideContainer.destroyRecursive();
+				} else {
+					this.insideContainer.addChild(this.cp);	
+					this.insideContainer.resize();
+				}
 			this.srd_widgetArr = null;
 			this.displaySingleCfs();
 

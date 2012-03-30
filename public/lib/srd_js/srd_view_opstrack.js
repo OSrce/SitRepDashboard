@@ -154,6 +154,7 @@ dojo.declare(
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
 					plugins: {nestedSorting: true},
+					onRowDblClick: this.popupCfssingle(evt),
 					region : 'center'
 				} );
 				this.insideContainer.addChild(this.srd_datagrid);
@@ -179,6 +180,12 @@ dojo.declare(
 			this.srd_datagrid.setStore( this.srd_dataStore );
 			this.srd_datagrid.setQuery(this.srd_query ); 
 	
+		},
+		// END refreshTable
+		// BEGIN popupCfsSingle
+		popupCfsSingle: function() {
+			window.open('/home/cfssingle','Calls For Service - Single View');	
+
 		}
 	}
 );
