@@ -58,6 +58,7 @@ function srd_document() {
 
 	this.srd_toolbar = null;
 	
+	this.srd_wlayoutArr = [];
 	this.srd_styleArr = [];
 	this.srd_layerArr = [];
 
@@ -87,9 +88,13 @@ function srd_document() {
 //			start_lat: null,
 //			start_lon: null,
 //			start_zoom: null,
+
 			view_layout_x: null,
 			view_layout_y: null,
 			view_data: null,
+			
+			default_wlayout:null,
+
 			layerCount: null
 	};
 
@@ -172,8 +177,13 @@ srd_document.prototype.srd_init = function() {
 		} ),
 		tmpStore
 	);
-	
-	
+
+			// TODO CLEAN UP!!!!	
+	this.staticVals.view_layout_x = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_x;
+	this.staticVals.view_layout_y = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_y;
+	this.staticVals.view_data = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_data;
+
+
 
 
 
@@ -195,6 +205,8 @@ srd_document.prototype.srd_init = function() {
 	dojo.addOnLoad(function() {
 
 	this.srd_displayMenuBar();
+
+
 	// ASSUME view_layer_x/y have been set and that settings are populated
 	// parse and init different views
 	this.centerPane = new dijit.layout.ContentPane( { 

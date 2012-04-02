@@ -89,9 +89,10 @@ dojo.declare(
 						{ name: "Title Code", field:"titlecode" },
 						{ name: "Email", field:"email" },
 						{ name: "Last Login", field:"last_login" },
-						{ name: "View Layout X", field:"view_layout_x" },
-						{ name: "View Layout Y", field:"view_layout_y" },
-						{ name: "View Data", field:"view_data" }
+//						{ name: "View Layout X", field:"view_layout_x" },
+//						{ name: "View Layout Y", field:"view_layout_y" },
+//						{ name: "View Data", field:"view_data" }
+						{ name: "Default Window Layout", field:"wlayout" }
 					],
 					"Groups": [
 						{ name: "Group ID", field:"gid" },

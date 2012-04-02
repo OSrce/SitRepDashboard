@@ -150,10 +150,10 @@ class Login_IndexController extends Zend_Controller_Action {
 					}
 
 					// DEFAULTS FOR USERS NOT IN DB :
-					$user->view_layout_x = 1;
-					$user->view_layout_y = 1;
+//					$user->view_layout_x = 1;
+//					$user->view_layout_y = 1;
 					//TODO : This should be pulled from options ini ...
-					$default_view_data = array( 
+/*					$default_view_data = array( 
 						'0' => array(
 							'0' => array(
 								'type' 				=> 'opstrack'
@@ -161,6 +161,8 @@ class Login_IndexController extends Zend_Controller_Action {
 						)
 					);
 					$user->view_data = Zend_Json::encode($default_view_data);	
+*/
+					$user->wlayout = 1;
 					$user->save();
 
 				} catch( Zend_Ldap_Exception $zle) {
@@ -186,9 +188,7 @@ class Login_IndexController extends Zend_Controller_Action {
 				'gid' => $user->gid,
 				'lastname' => $user->lastname,
 				'title' => $user->title,
-				'view_layout_x' => $user->view_layout_x,
-				'view_layout_y' => $user->view_layout_y,
-				'view_data' => $user->view_data,
+				'wlayout' => $user->wlayout,
 				'hostname' => gethostbyaddr($_SERVER['REMOTE_ADDR'])
 			);
 			$auth->getStorage()->write($data);

@@ -6,6 +6,7 @@ class Home_IndexController extends Zend_Controller_Action
 		private $_uid;
 		private $_gid;
 
+		private $_wlayouts;
 		private $_layers;
 		private $_styles;
 
@@ -22,10 +23,11 @@ class Home_IndexController extends Zend_Controller_Action
 				$this->_gid = $user['gid'];
 				$this->_title = $user['title'];
 				$this->_lastname = $user['lastname'];
+				$this->_wlayout = $user['wlayout'];
 
-				$this->_view_layout_x = $user['view_layout_x'];			
-				$this->_view_layout_y = $user['view_layout_y'];			
-				$this->_view_data = Zend_Json::decode( $user['view_data'] );	
+//				$this->_view_layout_x = $user['view_layout_x'];			
+//				$this->_view_layout_y = $user['view_layout_y'];			
+//				$this->_view_data = Zend_Json::decode( $user['view_data'] );	
 				
 				$this->view->srd_login_opts = $this->_options['srd']['login'];
 
@@ -36,9 +38,10 @@ class Home_IndexController extends Zend_Controller_Action
 
 			$staticVals = array( 
 //				'default_projection' => 'EPSG:4326',
-				'view_layout_x' =>	$this->_view_layout_x,
-				'view_layout_y' =>	$this->_view_layout_y,
-				'view_data' =>	$this->_view_data,
+//				'view_layout_x' =>	$this->_view_layout_x,
+//				'view_layout_y' =>	$this->_view_layout_y,
+//				'view_data' =>	$this->_view_data,
+				'default_wlayout' => $this->_wlayout,
 				'user_title' => $this->_title,
 				'user_lastname' => $this->_lastname,
 //				'start_lat' => 40.714,
@@ -70,17 +73,27 @@ class Home_IndexController extends Zend_Controller_Action
 			$this->getResponse()->appendBody( "srd.staticVals = ");
 			$this->getResponse()->appendBody( Zend_Json::encode($staticVals)."\n");
 			// END LOAD STATIC VALS
+			
 
-			// BEGIN LOAD srdLayerArr data :
+			// BEGIN LOAD srdWlayoutArr data :
+			foreach($this->_wlayouts as $wlayoutId => $wlayoutArr) {
+				$wlayoutArrJSON = Zend_Json::encode($wlayoutArr);
+				$logger->log("printwlayoutJSON:".$wlayoutArrJSON,Zend_Log::DEBUG);
+				$this->getResponse()->appendBody( "srd.srd_wlayoutArr['$wlayoutId'] = \n");
+				$this->getResponse()->appendBody( $wlayoutArrJSON."\n");
+			}
+			// END LOAD srdWlayoutArr data
+
+			// BEGIN LOAD srdStyleArr data :
 //			$this->getResponse()->appendBody("srd.srd_styleArr
-			foreach($this->_styles as $styleId => $style) {
-				$styleArr = $style->toArray();
+			foreach($this->_styles as $styleId => $styleArr) {
+//				$styleArr = $style->toArray();
 				$styleArrJSON = Zend_Json::encode($styleArr);
 				$logger->log("printstyleJSON:".$styleArrJSON,Zend_Log::DEBUG);
 				$this->getResponse()->appendBody( "srd.srd_styleArr['$styleId'] = \n");
 				$this->getResponse()->appendBody( $styleArrJSON."\n");
 			}
-			// END LOAD srdLayerArr data
+			// END LOAD srdStyleArr data
 
 			// BEGIN LOAD srdLayerArr data :
 			$this->getResponse()->appendBody("var theLayers = [\n");
@@ -116,6 +129,7 @@ class Home_IndexController extends Zend_Controller_Action
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
 	
 
+		$wlayoutsTable = new Srdata_Model_DbTable_Wlayout($this->_db);
 		$presetsTable = new Srdata_Model_DbTable_Presets($this->_db);
 		$stylesTable = new Srdata_Model_DbTable_Styles($this->_db);
 		$layersTable = new Srdata_Model_DbTable_Layers($this->_db);
@@ -124,6 +138,7 @@ class Home_IndexController extends Zend_Controller_Action
 		$acl = new Login_Acl($this->_db,$this->_uid,$this->_gid);
 		$theRole = "uid:".$this->_uid;
 		$theResources = $acl->getResources();
+		$this->_wlayouts = array();
 		$this->_layers = array();
 		$this->_styles = array();
 		$logger->log("getLayer 1:::".print_r($theResources,true),Zend_Log::DEBUG);
@@ -133,14 +148,19 @@ class Home_IndexController extends Zend_Controller_Action
 			$theSelect = $modulesTable->select();
 			$theSelect->where('id=?',$theRes);
 			$theModule = $modulesTable->fetchRow($theSelect);
+			$wlayoutSelect = null;
 			$layerSelect = null;
 			$styleSelect = null;
 			$presetSelect = null;
 			if( $acl->isAllowed($theRole,$theRes,'read') ) {
 				if( $theModule['name'] == '*/*/*' || $theModule['name'] == 'srdata/*/*' ) {
 				// LOAD EVERY LAYER, STYLE, PRESET...
-					//SETUP layerSelect
 					$logger->log("Load Everything.",Zend_Log::DEBUG);
+					//SETUP wlayoutSelect
+					$wlayoutSelect = $wlayoutsTable->select();
+					$wlayoutSelect->order('id');	
+	
+					//SETUP layerSelect
 					$layerSelect = $layersTable->select();
 					$layerSelect->order('id');	
 					//SETUP styleSelect
@@ -223,9 +243,21 @@ class Home_IndexController extends Zend_Controller_Action
 				if($styleSelect != null) {
 					$styleRowSet = $stylesTable->fetchAll($styleSelect);
 					foreach($styleRowSet as $styleRow) {
-						$this->_styles[$styleRow['id']] = $styleRow;
+						if( !array_key_exists( $styleRow['id'], $this->_styles) ) { 
+							$this->_styles[$styleRow['id']] = $styleRow->toArray();
+						}
 					}
 				}
+				if($wlayoutSelect != null) {
+					$wlayoutRowSet = $wlayoutsTable->fetchAll($wlayoutSelect);
+					foreach($wlayoutRowSet as $wlayoutRow) {
+						if( !array_key_exists( $wlayoutRow['id'], $this->_wlayouts) ) { 
+							$this->_wlayouts[$wlayoutRow['id']] = $wlayoutRow->toArray();
+							$this->_wlayouts[$wlayoutRow['id']]['view_data'] = Zend_Json::decode( $wlayoutRow['view_data']);
+						}
+					}
+				}
+	
 			}
 		}
 	}

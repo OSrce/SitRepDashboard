@@ -68,6 +68,12 @@ dojo.declare(
 					srd_view: this,
 					onClick: function() { this.srd_view.toggleAutoRefresh(this); } 
 				} ) );
+				this.dataMenu.addChild(new dijit.CheckedMenuItem( {
+					label: "Map Data",
+					srd_view: this,
+					onClick: function() { this.srd_view.toggleMapData(this); } 
+				} ) );
+	
 			
 				this.srd_store = new dojo.store.Cache(
 					dojo.store.JsonRest({ 
@@ -113,6 +119,7 @@ dojo.declare(
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
 					plugins: {nestedSorting: true},
+					sortFields: [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}],
 					region : 'center'
 				} );
 				var todayStr = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
@@ -176,6 +183,31 @@ dojo.declare(
 			}
 		},
 		// END toggleAutoRefresh
+		// BEGIN toggleMapData 
+		toggleMapData: function(menuItem) { 
+			if( menuItem.checked == true ) {
+				//CHECKED
+//				this.srd_doc.srd_createLayer("OpsTracking",'');
+					var theOptions = {
+						name: 'OpsTrack',
+						id:'-1',
+						isBaseLayer: false,
+						visibility: true,
+						type: "Vector",
+						format: "NONE"	
+
+					}
+					this.srd_layer = new srd_layer();
+					this.srd_layer.options = theOptions;
+			
+				
+//				this.srd_layerArr[3001].getFeatureBy('Name',theSector);
+
+			} else {
+				//UNCHECKED
+			}
+		},
+		// END toggleMapData
 		refreshTable: function() {
 			console.log("Refresh Table Called!");
 			var todayStr = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
