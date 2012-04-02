@@ -187,6 +187,7 @@ dojo.declare(
 		toggleMapData: function(menuItem) { 
 			if( menuItem.checked == true ) {
 				//CHECKED
+					console.log("Adding OpsTrack to Map");
 //				this.srd_doc.srd_createLayer("OpsTracking",'');
 					var theOptions = {
 						name: 'OpsTrack',
@@ -199,9 +200,25 @@ dojo.declare(
 					}
 					this.srd_layer = new srd_layer();
 					this.srd_layer.options = theOptions;
-			
-				
-//				this.srd_layerArr[3001].getFeatureBy('Name',theSector);
+//					this.srd_layerArr
+					this.srd_layer.loadData();
+					// NEED TO FIX TODO:::
+					this.srd_layer.addLayerToMap(this.srd_doc.selectedView.map);
+					var theQuery ={ cfs_finaldis: null, cfs_routenotifications: 'true'}; 
+					this.srd_store.query(this.srd_query).forEach( function( cfs) {
+						jontest = cfs;
+						var pct = cfs.cfs_pct;
+						var sector = cfs.cfs_sector;
+						var jobNum = cfs.cfs_num;
+						var searchVal = pct+sector;
+						console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
+						var theRefFeat = this.srd_layerArr[3001].layer.getFeaturesByAttribute('Name',searchVal);
+						if(theRefFeat && theRefFeat.length > 0) {
+							console.log("Adding Feature to Vector Layer!");
+							var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
+							this.srd_layer.layer.addFeatures( Array( theFeat), {});
+						}
+					}.bind(this) );
 
 			} else {
 				//UNCHECKED

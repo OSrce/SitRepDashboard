@@ -325,6 +325,20 @@ srd_layer.prototype.loadData = function( ) {
 
 			}
 
+		} else if(this.options.format == "NONE" ) {
+				console.log("Create Plain Vector  Layer "+this.options.name+"===");
+				this.store = new dojo.store.Memory();
+				this.layer = new OpenLayers.Layer.Vector(this.options.name, {
+					isBaseLayer:	this.options.isBaseLayer,
+					projection:		new OpenLayers.Projection(this.options.projection),
+					units:				"degrees",
+					visibility:		this.options.visibility,
+					styleMap:			this.srd_styleMap
+				} );
+//				this.layer.events.register("featureadded", this, this.srd_create);
+//				this.layer.events.register("featuremodified", this, this.srd_update);
+//				this.layer.events.register("featureremoved", this, this.srd_delete);
+
 		} else if(this.options.format == "SRJSON" ) {
 				console.log("Create SRJson Layer Run From Server="+this.options.name+"===");
 				this.store = new dojo.store.Cache(
