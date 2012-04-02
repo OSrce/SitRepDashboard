@@ -69,9 +69,9 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 
 
 	private function _isAllowed($auth,$acl) {
-//		date_default_timezone_set("America/New_York");
-//    $logger = new Zend_Log();
-//    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
+		date_default_timezone_set("America/New_York");
+    $logger = new Zend_Log();
+    $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
 
 		if(empty($auth) || empty($acl) ||
 			!($auth instanceof Zend_Auth) ||
@@ -107,7 +107,7 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 
 	
 		foreach($resources as $res) {
-//		 	$logger->log("Performing ACL Check:".$res,Zend_Log::DEBUG);
+		 	$logger->log("Performing ACL Check:".$res,Zend_Log::DEBUG);
 			$select = $modulesTable->select()->where('name = ?',$res);
 			$theModule = $modulesTable->fetchRow($select);
 			if( count( $theModule) ) {
@@ -125,8 +125,14 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 						$result = $acl->isAllowed("uid:".$this->_uid, $theResource, 'delete');
 					}
 				}
+				if($result) {
+					$logger->log("ACL Check Performed for : $res, RESULT :$result",Zend_Log::DEBUG);
+					return $result;
+				}
 			}
 		}
+
+		$logger->log("ACL Check Performed for : $res, RESULT :$result",Zend_Log::DEBUG);
 		return $result;
 	}
 

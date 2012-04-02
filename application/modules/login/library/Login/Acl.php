@@ -145,6 +145,7 @@ class Login_Acl extends Zend_Acl {
 				$this->allow($roleType.":".$roleId, $resId , 'create' );
 			} else {
 				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'create' ) ) {
+					$logger->log("ACL Create Deny:".$resId,Zend_Log::DEBUG);
 					$this->deny($roleType.":".$roleId, $resId , 'create' );
 				}
 			}
@@ -153,6 +154,7 @@ class Login_Acl extends Zend_Acl {
 				$this->allow($roleType.":".$roleId, $resId , 'read' );
 			} else {
 				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'read' ) ) {
+					$logger->log("ACL Read Deny:".$resId,Zend_Log::DEBUG);
 					$this->deny($roleType.":".$roleId, $resId , 'read' );
 				}
 			}
@@ -161,6 +163,7 @@ class Login_Acl extends Zend_Acl {
 				$this->allow($roleType.":".$roleId, $resId , 'update' );
 			} else {
 				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'update' ) ) {
+					$logger->log("ACL Update Deny:".$resId,Zend_Log::DEBUG);
 					$this->deny($roleType.":".$roleId, $resId , 'update' );
 				}
 			}
@@ -169,6 +172,7 @@ class Login_Acl extends Zend_Acl {
 				$this->allow($roleType.":".$roleId, $resId , 'delete' );
 			} else {
 				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'delete' ) ) {
+					$logger->log("ACL Delete Deny:".$resId,Zend_Log::DEBUG);
 					$this->deny($roleType.":".$roleId, $resId , 'delete' );
 				}
 			}
