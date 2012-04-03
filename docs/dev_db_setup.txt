@@ -21,9 +21,7 @@ CREATE TABLE sr_users (
 	titlecode INT,
 	email VARCHAR(128),
 	dn VARCHAR(256),
-	view_layout_x INT,
-	view_layout_y INT,
-	view_data TEXT,
+	wlayout INT NOT NULL DEFAULT 1,
 	last_login TIMESTAMP DEFAULT null,
 	PRIMARY KEY (uid)
 );
@@ -147,7 +145,7 @@ CREATE TABLE sr_window_layout (
 	showname BOOL DEFAULT false,
 	view_x	INT NOT NULL DEFAULT 1,
 	view_y	INT NOT NULL DEFAULT 1,
-	view_data TEXT
+	view_data TEXT,
 	PRIMARY KEY ( id ) 
 );
 

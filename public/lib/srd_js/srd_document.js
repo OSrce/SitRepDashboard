@@ -566,6 +566,34 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 								label: "Change Type: ",
 								popup:this.srd_viewTypeMenu
 							}));
+							// ROW SIZE MENU DROP DOWN
+							this.srd_windowRowMenu = new dijit.Menu();
+							for(var y=1;y<5;y++) {
+								this.srd_windowRowMenu.addChild( new dijit.MenuItem( {
+									label: y,
+									value: y,
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_changeViewGridDimensions('y',this.value) }
+								} ) );
+							}
+							this.srd_viewMenu.addChild(new dijit.PopupMenuItem({
+								label: "View Rows: "+this.staticVals.view_layout_y,
+								popup:this.srd_windowRowMenu	
+							}));
+							// COLUMN SIZE MENU DROP DOWN
+							this.srd_windowColMenu = new dijit.Menu();
+							for(var x=1;x<5;x++) {
+								this.srd_windowColMenu.addChild( new dijit.MenuItem( {
+									label: x,
+									value: x,
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_changeViewGridDimensions('x',this.value) }
+								} ) );
+							}
+							this.srd_viewMenu.addChild(new dijit.PopupMenuItem({
+								label: "View Columns: "+this.staticVals.view_layout_x,
+								popup:this.srd_windowColMenu	
+							}));
 							///// END View Menu ////	
 
 							//// Data Menu ////
@@ -622,35 +650,6 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 								label: "Window",
 								popup: this.srd_windowMenu
 							}) );
-							// ROW SIZE MENU DROP DOWN
-							this.srd_windowRowMenu = new dijit.Menu();
-							for(var y=1;y<5;y++) {
-								this.srd_windowRowMenu.addChild( new dijit.MenuItem( {
-									label: y,
-									value: y,
-									srd_doc: this,
-									onClick: function() { this.srd_doc.srd_changeViewGridDimensions('y',this.value) }
-								} ) );
-							}
-							this.srd_windowMenu.addChild(new dijit.PopupMenuItem({
-								label: "View Rows: "+this.staticVals.view_layout_y,
-								popup:this.srd_windowRowMenu	
-							}));
-							// COLUMN SIZE MENU DROP DOWN
-							this.srd_windowColMenu = new dijit.Menu();
-							for(var x=1;x<5;x++) {
-								this.srd_windowColMenu.addChild( new dijit.MenuItem( {
-									label: x,
-									value: x,
-									srd_doc: this,
-									onClick: function() { this.srd_doc.srd_changeViewGridDimensions('x',this.value) }
-								} ) );
-							}
-							this.srd_windowMenu.addChild(new dijit.PopupMenuItem({
-								label: "View Columns: "+this.staticVals.view_layout_x,
-								popup:this.srd_windowColMenu	
-							}));
-
 
 				/*			var theSchema = {
 								"type" : "object",

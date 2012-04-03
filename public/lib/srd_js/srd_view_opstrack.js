@@ -210,9 +210,11 @@ dojo.declare(
 						var pct = cfs.cfs_pct;
 						var sector = cfs.cfs_sector;
 						var jobNum = cfs.cfs_num;
-						var searchVal = pct+sector;
+//						var searchVal = pct+sector;
+						var searchVal = String(pct);
 						console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
-						var theRefFeat = this.srd_layerArr[3001].layer.getFeaturesByAttribute('Name',searchVal);
+//						var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('Name',searchVal);
+						var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('PctName',searchVal);
 						if(theRefFeat && theRefFeat.length > 0) {
 							console.log("Adding Feature to Vector Layer!");
 							var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
