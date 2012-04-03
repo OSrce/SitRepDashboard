@@ -562,7 +562,8 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 // BEGIN FUNC onFeatureSelect
 srd_layer.prototype.onFeatureSelect = function(theFeature) {
 	console.log("Feature selected: "+theFeature.attributes.fillColor);
-	this.editPalette.setFeatureAttributes( theFeature.attributes);
+//	this.editPalette.setFeatureAttributes( theFeature.attributes);
+//	theFeature.	
 	this.selectedFeature = theFeature;
 }
 //END FUNC onFeatureSelect
@@ -570,7 +571,8 @@ srd_layer.prototype.onFeatureSelect = function(theFeature) {
 // BEGIN FUNC onFeatureUnselect
 srd_layer.prototype.onFeatureUnselect = function(theFeature) {
 	console.log("Feature unselected: "+theFeature.fid);
-	this.editPalette.setFeatureAttributes( this.srd_featureAttributes );
+//	this.editPalette.setFeatureAttributes( this.srd_featureAttributes );
+
 	this.selectedFeature = null;
 }
 //END FUNC onFeatureSelect

@@ -40,10 +40,6 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		// GET (Index) Action === READ ALL fetchAll
     public function indexAction()
     {
-
-//			$countRows = "SELECT COUNT(*) AS count FROM ".$this->tableName;
-//			$tableSize = $this->db->fetchOne($countRows);
-		
 			$select = $this->restTable->select();
 
 			// TO SUPPORT SORTING Look for sort param
@@ -56,29 +52,38 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 					continue;
 				} elseif( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
 					$tableSort = $keyArr[1];
+				} elseif( $key == 'SREXPR' ) {
+					$selStr = (string) $val;
+					$select->where($selStr); 	
 				} else {
-					$select->where("$key=?",$val); 	
+					$selStr = (string) "$key $rest_expr '$val'";
+					$select->where($selStr); 	
 				}
 			}
 
-//			$this->logger->log("TEST0: ".(string)$select."\n", Zend_Log::DEBUG);	
-
 			$select->from($this->tableName, array('TotalRecords' => new Zend_Db_Expr('Count(*)') ) );
+			$this->logger->log("TEST0: ".(string)$select."\n", Zend_Log::DEBUG);	
 			$tableSize = $this->db->fetchOne($select);
-			$this->logger->log("TEST9: $tableSize\n", Zend_Log::DEBUG);	
+//			$this->logger->log("TEST9: $tableSize\n", Zend_Log::DEBUG);	
 			$select->reset();
 
+			$selStr = '';
+			$rest_expr = '=';
+			$endGroup=0;
 			foreach($paramArr as $key=> $val) {
 				$this->logger->log("The key:$key:::\n", Zend_Log::DEBUG);	
 				if( $key == "module" || $key == "controller" || $key == "action") {
 					continue;
 				} elseif( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
 					$tableSort = $keyArr[1];
+				} elseif( $key == 'SREXPR' ) {
+					$selStr = (string) $val;
+					$select->where($selStr); 	
 				} else {
-					$select->where("$key=?",$val); 	
+					$selStr = (string) "$key $rest_expr '$val'";
+					$select->where($selStr); 	
 				}
 			}
-
 
 			$sortArr = explode(',',$tableSort);
 //			$this->logger->log("TEST2: $tableSort\n".print_r($sortArr,true), Zend_Log::DEBUG);	
@@ -114,8 +119,10 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 				$this->_response->setHeader('Content-Range', $itemsRange.'/'.$tableSize);
 			}
 			$this->logger->log($this->tableName." Index (READ ALL)  Action Called", Zend_Log::DEBUG);	
+			$this->logger->log("TEST1: ".(string)$select."\n", Zend_Log::DEBUG);	
 			$rows = $this->restTable->fetchAll($select);
-			print Zend_Json::encode($rows->toArray());
+		//	print Zend_Json::encode($rows->toArray());
+			$this->getResponse()->appendBody( Zend_Json::encode($rows->toArray()) );
 
     }
 
@@ -123,13 +130,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		public function getAction() 
 		{
 			$this->logger->log($this->tableName." Get (READ) Action Called: ", Zend_Log::DEBUG);	
-			$id = $this->_getParam('id');
-			$select = $this->restTable->select();
-			$idName = $this->idName;
-			$select->where("$idName=?",$id);
-			$rows = $this->restTable->fetchAll($select);
-			$this->getResponse()->appendBody( Zend_Json::encode($rows->toArray()) );
-			$this->getResponse()->setHttpResponseCode(200);
+				$this->indexAction();
 		}
 
 		// POST Action === CREATE

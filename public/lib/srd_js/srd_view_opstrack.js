@@ -20,7 +20,12 @@ dojo.declare(
 		srd_store		 : null,
 		srd_dataStore		 : null,
 		srd_datagrid : null,
-	
+		srd_mapModes : {
+			"Precinct" : 1,
+			"Sector"   : 2,
+			"Address"  : 3
+		},	
+		srd_selMapMode : 2,
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
 			dojo.addOnLoad( function() {
@@ -122,8 +127,9 @@ dojo.declare(
 					sortFields: [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}],
 					region : 'center'
 				} );
-				var todayStr = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
-				this.srd_query = { cfs_date: todayStr, cfs_routenotifications: 'true'}; 
+				var theDateObj = dojo.date.add(new Date(), 'hour', -1);
+				var lastHourStr = dojo.date.locale.format( theDateObj, { datePattern: "y-M-d" } );
+				this.srd_query = "?SREXPR=( cfs_finaldis IS NULL OR cfs_finaldisdate >= '"+lastHourStr+"' ) AND cfs_routenotifications = 'true'"; 
 				this.srd_datagrid.setQuery(this.srd_query ); 
 				this.insideContainer.addChild(this.srd_datagrid);
 				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
@@ -204,23 +210,43 @@ dojo.declare(
 					this.srd_layer.loadData();
 					// NEED TO FIX TODO:::
 					this.srd_layer.addLayerToMap(this.srd_doc.selectedView.map);
-					var theQuery ={ cfs_finaldis: null, cfs_routenotifications: 'true'}; 
+//					var theQuery ={ cfs_finaldis: null, cfs_routenotifications: 'true'}; 
 					this.srd_store.query(this.srd_query).forEach( function( cfs) {
-						jontest = cfs;
-						var pct = cfs.cfs_pct;
-						var sector = cfs.cfs_sector;
-						var jobNum = cfs.cfs_num;
-//						var searchVal = pct+sector;
-						var searchVal = String(pct);
-						console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
-//						var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('Name',searchVal);
-						var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('PctName',searchVal);
-						if(theRefFeat && theRefFeat.length > 0) {
-							console.log("Adding Feature to Vector Layer!");
-							var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
-							this.srd_layer.layer.addFeatures( Array( theFeat), {});
+						if(this.srd_selMapMode == 1) {
+							// USE PCT BOUNDARIES
+							var pct = cfs.cfs_pct;
+							var jobNum = cfs.cfs_num;
+							var searchVal = String(pct);
+							var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('PctName',searchVal);
+							console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
+							if(theRefFeat && theRefFeat.length > 0) {
+								console.log("Adding Feature to Vector Layer!");
+								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
+								this.srd_layer.layer.addFeatures( Array( theFeat), {});
+							}
+						} else if(this.srd_selMapMode == 2) {
+							// USE SECTOR BOUNDARIES
+							var pct = cfs.cfs_pct;
+							var jobNum = cfs.cfs_num;
+							var sector = cfs.cfs_sector;
+							var searchVal = pct+sector;
+							var theRefFeat = this.srd_layerArr[3001].layer.getFeaturesByAttribute('Name',searchVal);
+							console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
+							if(theRefFeat && theRefFeat.length > 0) {
+								console.log("Adding Feature to Vector Layer!");
+								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
+								this.srd_layer.layer.addFeatures( Array( theFeat), {});
+							}
+						} else if(this.srd_selMapMode ==3) {
+							// USE Actual Address (if it was geocoded)
+//							console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
+//							if(theRefFeat && theRefFeat.length > 0) {
+//								console.log("Adding Feature to Vector Layer!");
+//								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
+//								this.srd_layer.layer.addFeatures( Array( theFeat), {});
+//							}
 						}
-					}.bind(this) );
+				}.bind(this) );
 
 			} else {
 				//UNCHECKED
@@ -229,8 +255,9 @@ dojo.declare(
 		// END toggleMapData
 		refreshTable: function() {
 			console.log("Refresh Table Called!");
-			var todayStr = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
-			this.srd_query = { cfs_date: todayStr, cfs_routenotifications: 'true'}; 
+			var theDateObj = dojo.date.add(new Date(), 'hour', -1);
+			var lastHourStr = dojo.date.locale.format( theDateObj, { datePattern: "y-M-d" } );
+			this.srd_query = "?SREXPR=( cfs_finaldis IS NULL OR cfs_finaldisdate >= '"+lastHourStr+"' ) AND cfs_routenotifications = 'true'"; 
 			this.srd_datagrid.setQuery(this.srd_query ); 
 			this.srd_datagrid.setStore( this.srd_dataStore );
 			this.srd_datagrid.setQuery(this.srd_query ); 
