@@ -186,6 +186,10 @@ srd_layer.prototype.addLayerToMap = function(theMap) {
 			this.map.addControl(this.srd_drawControls[theCon]);
 		}
 	}
+	if(this.options.format == "NONE" ) {
+		this.map.addControl(this.selectControl);
+		this.selectControl.activate();
+	}
 }
 
 
@@ -339,6 +343,15 @@ srd_layer.prototype.loadData = function( ) {
 //				this.layer.events.register("featureadded", this, this.srd_create);
 //				this.layer.events.register("featuremodified", this, this.srd_update);
 //				this.layer.events.register("featureremoved", this, this.srd_delete);
+				this.selectControl = new OpenLayers.Control.SelectFeature(
+					this.layer, {
+					onSelect: function(theFeature) { 
+						this.onFeatureSelect(theFeature) 
+					}.bind(this), 
+					onUnselect: function(theFeature) { 
+						this.onFeatureUnselect(theFeature) }.bind(this)
+					} );
+					 
 
 		} else if(this.options.format == "SRJSON" ) {
 				console.log("Create SRJson Layer Run From Server="+this.options.name+"===");
@@ -529,8 +542,6 @@ srd_layer.prototype.loadData = function( ) {
 
 		}
 	}
-
-
 	console.log("end srd_loadData");
 	//Adding the Control to allow for points to be selected and moved 
 //	this.dragControl = new OpenLayers.Control.DragFeature( this.layer ); 
@@ -561,18 +572,41 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 
 // BEGIN FUNC onFeatureSelect
 srd_layer.prototype.onFeatureSelect = function(theFeature) {
-	console.log("Feature selected: "+theFeature.attributes.fillColor);
+	console.log("Feature selected: "+theFeature.attributes.style);
 //	this.editPalette.setFeatureAttributes( theFeature.attributes);
-//	theFeature.	
+//	theFeature.
 	this.selectedFeature = theFeature;
+	if(this.options.format == "NONE") {	
+		console.log("TEST:::"+this.selectedFeature.geometry.getCentroid().toString() );
+/*		 var popup = new OpenLayers.Popup.FramedCloud("popup",
+			this.selectedFeature.geometry.getBounds().getCenterLonLat(),
+			null,
+			this.selectedFeature.attributes.body,
+			null,
+			true,
+			this.onPopupClose
+		);
+		this.selectedFeature.popup = popup;
+		this.map.addPopup(this.selectedFeature.popup);
+*/
+		this.selectedFeature.popupClass = OpenLayers.Popup.FramedCloud;
+		this.selectedFeature.createPopup();
+	}
+
 }
 //END FUNC onFeatureSelect
-
+srd_layer.prototype.onPopupClose = function(evt) {
+	this.selectControl.unselect(this.selectedFeature);
+}
 // BEGIN FUNC onFeatureUnselect
 srd_layer.prototype.onFeatureUnselect = function(theFeature) {
 	console.log("Feature unselected: "+theFeature.fid);
 //	this.editPalette.setFeatureAttributes( this.srd_featureAttributes );
-
+	if(this.options.format == "NONE") {	
+		this.map.removePopup(this.selectedFeature.popup);
+		this.selectedFeature.popup.destroy();
+		this.selectedFeature.popup = null;
+	}
 	this.selectedFeature = null;
 }
 //END FUNC onFeatureSelect

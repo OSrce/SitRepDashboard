@@ -25,7 +25,7 @@ dojo.declare(
 			"Sector"   : 2,
 			"Address"  : 3
 		},	
-		srd_selMapMode : 2,
+		srd_selMapMode : 1,
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
 			dojo.addOnLoad( function() {
@@ -219,7 +219,12 @@ dojo.declare(
 							console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
 							if(theRefFeat && theRefFeat.length > 0) {
 								console.log("Adding Feature to Vector Layer!");
-								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
+								var theFeatureAttr = { 
+									label: cfs.cfs_code,
+									body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
+									style: 2001
+								}
+								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
 								this.srd_layer.layer.addFeatures( Array( theFeat), {});
 							}
 						} else if(this.srd_selMapMode == 2) {
@@ -232,7 +237,12 @@ dojo.declare(
 							console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
 							if(theRefFeat && theRefFeat.length > 0) {
 								console.log("Adding Feature to Vector Layer!");
-								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
+								var theFeatureAttr = { 
+									label: cfs.cfs_code,
+									body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
+									style: 2001
+								}
+								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
 								this.srd_layer.layer.addFeatures( Array( theFeat), {});
 							}
 						} else if(this.srd_selMapMode ==3) {
