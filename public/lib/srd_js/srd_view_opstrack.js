@@ -91,8 +91,8 @@ dojo.declare(
 					"Calls for service - SPRINT": [ {
 						defaultCell: { width: 10, editable: false, cellStyles: 'text-align: center;'  },
 						cells: [
-							{ name: "Date", field:"cfs_date", width: "120px" },
-							{ name: "Time", field:"cfs_timecreated", width: "90px" },
+							{ name: "Date", field:"cfs_date", width: "120px", hidden:true },
+							{ name: "Time", field:"cfs_timecreated", width: "90px", formatter:this.dateToTime},
 //							{ name: "Job Let", field:"cfs_letter", width: "50px" },
 							{ name: "Job #", field:"cfs_num", width: "90px" },
 							{ name: "Precinct", field:"cfs_pct", width: "50px" },
@@ -127,9 +127,7 @@ dojo.declare(
 					sortFields: [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}],
 					region : 'center'
 				} );
-				var theDateObj = dojo.date.add(new Date(), 'minute', -15);
-				var lastMinStr = dojo.date.locale.format( theDateObj, { datePattern: "y-M-d" } );
-				this.srd_query = { SREXPR: "( cfs_finaldis IS NULL OR cfs_finaldisdate >= '"+lastMinStr+"' ) AND cfs_routenotifications = 'true'" }; 
+				this.srd_query = { SREXPR: "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval '15 minutes' ) AND cfs_routenotifications = 'true'" }; 
 				this.srd_datagrid.setQuery(this.srd_query ); 
 				this.insideContainer.addChild(this.srd_datagrid);
 				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
@@ -255,13 +253,9 @@ dojo.declare(
 		// END toggleMapData
 		refreshTable: function() {
 			console.log("Refresh Table Called!");
-			var theDateObj = dojo.date.add(new Date(), 'minute', -15);
-			var lastMinStr = dojo.date.locale.format( theDateObj, { datePattern: "y-M-d" } );
-			this.srd_query = { SREXPR: "( cfs_finaldis IS NULL OR cfs_finaldisdate >= '"+lastMinStr+"' ) AND cfs_routenotifications = 'true'" }; 
 			this.srd_datagrid.setQuery(this.srd_query ); 
 			this.srd_datagrid.setStore( this.srd_dataStore );
 			this.srd_datagrid.setQuery(this.srd_query ); 
-	
 		},
 		// END refreshTable
 		// BEGIN popupCfsSingle

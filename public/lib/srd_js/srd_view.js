@@ -26,11 +26,22 @@ dojo.declare(
 		selected : null,
 		containerStyle : null,
 		dataMenu : null,
+		id : null,
+		linkViewArr : null,
 		//CONSTUCTOR
 		constructor : function( view_data, parent_srd_doc) {
 			console.log("srd_view constructor called!");
 			this.srd_doc = parent_srd_doc;
 			this.data = view_data;
+			if(this.data.id) {
+				this.id = this.data.id;
+			} else {
+				var tmpId = 1;
+				while( this.srd_doc.getView(tmpId) ) {
+					tmpId++;
+				}
+				this.id = tmpId;
+			}
 			this.data.height = Math.round(100 / this.data.yDim);
 //			this.containerStyle = 'width:100%; height:'+this.height+'%;margin:0px;border:0px;padding:0px; background-color:black;';
 
@@ -109,6 +120,13 @@ dojo.declare(
 				return "10-"+data
 			} else {
 				return ''; 
+			}
+		},
+		// END formatToSignal FUNCTION
+		// BEGIN linkView FUNCTION
+		linkView : function(theId) {
+			if( !this.linkViewarr[theId] ) {
+				this.linkViewArr[theId] = this.srd_doc.getView(theId);
 			}
 		}
 	}

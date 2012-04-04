@@ -179,12 +179,6 @@ srd_document.prototype.srd_init = function() {
 		tmpStore
 	);
 
-			// TODO CLEAN UP!!!!	
-	this.staticVals.view_layout_x = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_x;
-	this.staticVals.view_layout_y = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_y;
-	this.staticVals.view_data = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_data;
-	this.selected_wlayout = this.staticVals.default_wlayout;
-
 
 
 
@@ -215,41 +209,9 @@ srd_document.prototype.srd_init = function() {
 		id: 'srd_centerPane'
 	} );
 	this.srd_container.addChild(this.centerPane);
-		this.viewContainer = new srd_gridContainer( {
-		nbZones: this.staticVals.view_layout_x,
-//		nbColumns: 2,
-		isAutoOrganized: true,
-		hasResizeableColumns : true
-//		style: "background-color:black;margin:0px;border:0px;padding:0px;"
-//		style: "width:100%;height:100%;",
-	}  );
-	dojo.place(this.viewContainer.domNode, this.centerPane.domNode,'first');
-//	this.srd_container.addChild(this.viewContainer);
-	this.viewContainer.startup();
-	this.viewArr = [];
-//	for(var xPos in this.staticVals.view_data) {
-		for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
-		if( !this.staticVals.view_data[xPos] ) {
-			this.staticVals.view_data[xPos] = [];
-		}
-		var tmpViewYArr = [];
-//		for(var yPos in this.staticVals.view_data[xPos] ) {
-		for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
-			if( !this.staticVals.view_data[xPos][yPos] ) {
-				this.staticVals.view_data[xPos][yPos] = [];
-				this.staticVals.view_data[xPos][yPos].type = 'empty';
-			}
-			this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
-			this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
-			this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
-			this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
 
-			tmpViewYArr[yPos] = new window[ this.viewType[this.staticVals.view_data[xPos][yPos].type] ](this.staticVals.view_data[xPos][yPos], this);
-			this.selectedView = tmpViewYArr[yPos];
-		}
-		this.viewArr[xPos] = tmpViewYArr;
-	}
-	this.srd_container.resize();	
+	this.srd_changeWindowLayout(this.staticVals.default_wlayout);
+
 
 	}.bind(this) );
 
@@ -989,12 +951,46 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 					if( wlayout != this.selected_wlayout)	{
 						console.log("Changing Window Layout from "+this.selected_wlayout+" TO "+wlayout);
 						this.selected_wlayout = wlayout;
-						this.viewContainer.destroyRecursive();
-						delete this.viewArr;
+						if(this.viewContainer) {
+							this.viewContainer.destroyRecursive();
+						}
+						if(this.viewArr) {
+							delete this.viewArr;
+						}
 						this.staticVals.view_layout_x = this.srd_wlayoutArr[this.selected_wlayout].view_x;
 						this.staticVals.view_layout_y = this.srd_wlayoutArr[this.selected_wlayout].view_y;
 						this.staticVals.view_data = this.srd_wlayoutArr[this.selected_wlayout].view_data;
-//						this.build
+
+						this.viewContainer = new srd_gridContainer( {
+							nbZones: this.staticVals.view_layout_x,
+				//		nbColumns: 2,
+							isAutoOrganized: true,
+							hasResizeableColumns : true
+						}  );
+						dojo.place(this.viewContainer.domNode, this.centerPane.domNode,'first');
+						this.viewContainer.startup();
+						this.viewArr = [];
+						for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
+							if( !this.staticVals.view_data[xPos] ) {
+								this.staticVals.view_data[xPos] = [];
+							}
+							var tmpViewYArr = [];
+							for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
+								if( !this.staticVals.view_data[xPos][yPos] ) {
+									this.staticVals.view_data[xPos][yPos] = [];
+									this.staticVals.view_data[xPos][yPos].type = 'empty';
+								}
+								this.staticVals.view_data[xPos][yPos].xPos = Number(xPos);
+								this.staticVals.view_data[xPos][yPos].yPos = Number(yPos);
+								this.staticVals.view_data[xPos][yPos].xDim = this.staticVals.view_layout_x;
+								this.staticVals.view_data[xPos][yPos].yDim = this.staticVals.view_layout_y;
+
+								tmpViewYArr[yPos] = new window[ this.viewType[this.staticVals.view_data[xPos][yPos].type] ](this.staticVals.view_data[xPos][yPos], this);
+								this.selectedView = tmpViewYArr[yPos];
+							}
+							this.viewArr[xPos] = tmpViewYArr;
+						}
+						this.srd_container.resize();	
 					}
 				}
 				// END changeWindowLayout FUNCTION
@@ -1088,7 +1084,22 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.viewContainer.resize();
 					}
 				}
-
+				// BEGIN hasView FUNCTION
+				srd_document.prototype.getView = function(theId) {
+					for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
+						if( this.staticVals.view_data[xPos] ) {
+							for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
+								if( this.staticVals.view_data[xPos][yPos] ) {
+									if(this.staticVals.view_data[xPos][yPos].id == theId) {
+										return this.staticVals.view_data[xPos][yPos];
+									}
+								}
+							}
+						}
+					}
+					return null;
+				}	
+				// END hasView FUNCTION
 				// FUNCTION TO DO ANY CLEAN UP NEEDED 
 				// THEN REDIRECT TO /login/logout
 				srd_document.prototype.logout = function() {	
