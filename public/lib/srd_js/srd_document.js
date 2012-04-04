@@ -58,6 +58,7 @@ function srd_document() {
 
 	this.srd_toolbar = null;
 	
+	this.selected_wlayout= null;
 	this.srd_wlayoutArr = [];
 	this.srd_styleArr = [];
 	this.srd_layerArr = [];
@@ -182,7 +183,7 @@ srd_document.prototype.srd_init = function() {
 	this.staticVals.view_layout_x = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_x;
 	this.staticVals.view_layout_y = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_y;
 	this.staticVals.view_data = this.srd_wlayoutArr[this.staticVals.default_wlayout].view_data;
-
+	this.selected_wlayout = this.staticVals.default_wlayout;
 
 
 
@@ -650,6 +651,16 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 								label: "Window",
 								popup: this.srd_windowMenu
 							}) );
+							// LIST EACH WINDOW LAYOUT IN THE WINDOW MENU
+							for( tmpId in this.srd_wlayoutArr) {
+								this.srd_windowMenu.addChild( new dijit.MenuItem( {
+									label: this.srd_wlayoutArr[tmpId].name,
+									value: tmpId,
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_changeWindowLayout(this.value) }
+								} ) );
+							}
+
 
 				/*			var theSchema = {
 								"type" : "object",
@@ -972,7 +983,23 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 					this.srd_selLayer.editPalette.activateDrawControl();
 				//	console.log("srd_selectEditLayer Finished");
 				}
+				// END selectEditLayer FUNCTION
+				// BEGIN changeWindowLayout FUNCTION
+				srd_document.prototype.srd_changeWindowLayout = function(wlayout) {
+					if( wlayout != this.selected_wlayout)	{
+						console.log("Changing Window Layout from "+this.selected_wlayout+" TO "+wlayout);
+						this.selected_wlayout = wlayout;
+						this.viewContainer.destroyRecursive();
+						delete this.viewArr;
+						this.staticVals.view_layout_x = this.srd_wlayoutArr[this.selected_wlayout].view_x;
+						this.staticVals.view_layout_y = this.srd_wlayoutArr[this.selected_wlayout].view_y;
+						this.staticVals.view_data = this.srd_wlayoutArr[this.selected_wlayout].view_data;
+//						this.build
+					}
+				}
+				// END changeWindowLayout FUNCTION
 
+				// BEGIN changeViewGridDimensions FUNCTION
 				srd_document.prototype.srd_changeViewGridDimensions = function(theDimType,theDim) {
 					console.log("changeViewGridDim called: "+theDimType+", val: "+theDim);
 					if(theDimType == 'x') {

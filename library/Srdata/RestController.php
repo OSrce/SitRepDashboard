@@ -56,7 +56,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 					$selStr = (string) $val;
 					$select->where($selStr); 	
 				} else {
-					$selStr = (string) "$key $rest_expr '$val'";
+					$selStr = (string) "$key = '$val'";
 					$select->where($selStr); 	
 				}
 			}
@@ -80,7 +80,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 					$selStr = (string) $val;
 					$select->where($selStr); 	
 				} else {
-					$selStr = (string) "$key $rest_expr '$val'";
+					$selStr = (string) "$key = '$val'";
 					$select->where($selStr); 	
 				}
 			}
