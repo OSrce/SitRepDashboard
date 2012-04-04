@@ -54,6 +54,21 @@ Indexes:
     "sr_users_pkey" PRIMARY KEY, btree (uid)
 
 
+// FOR INSERTING NEW WINDOW LAYOUTS ....
+
+insert into sr_window_layout (name, showname, view_x, view_y,view_data) VALUES ('34 Precinct', false, 1, 1, E'[[{"type":"opstrack", "srd_query": {"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_pct = 34 " } }]]' );
+
+
+insert into sr_window_layout (name, showname, view_x, view_y,view_data) VALUES ('ESU Tracking', false, 1, 1, E'[[{"type":"opstrack", "srd_query": {"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_assignedunit ~ \'^0ES\' " } }]]' );
+
+ update sr_window_layout set name='ESU Tracking with Map', view_data=E'[[{"type":"opstrack","id":1, "srd_query": {"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_assignedunit ~ \'^0ES\' " } }], [{"type":"map","start_lat":40.713,"start_lon":-73.996,"start_zoom":12}] ]' where id=8;
+
+update sr_window_layout set name='ESU Tracking with Map', view_data=E'[[{"type":"opstrack","id":1, "srd_query": {"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_assignedunit ~ \'^0ES\' " } }], [{"type":"map","id":2,"start_lat":40.713,"start_lon":-73.996,"start_zoom":12}] ]', view_x=2 where id=8;
+
+
+
+
+
 
 
 

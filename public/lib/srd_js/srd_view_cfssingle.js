@@ -281,10 +281,16 @@ dojo.declare(
 						} else {
 //						console.log("Widget is something else.");
 							dojo.attr( this.srd_widgetArr[hashId], 'innerHTML', item[hashId]);
+							// TODO: TEMP FIX FOR IE BUG THAT CAN"T USE CSS INHERIT FOR HEIGHT OF ContentPane
+//							if(hashId=="cfs_body") {
+//								var theHeight = 
+//								dojo.attr(this.cp,"style","height:"+theHeight);
+//							}
 						}
 					}
 				}
 			}
+			// END FOR LOOP FOR WIDGETS
 			this.cp.resize();	
 		},
 		// END displayResults FUNCTION

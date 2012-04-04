@@ -40,7 +40,7 @@ dojo.declare(
 			}.bind(this) );
 		},
 		map_init : function() {
-			if(this.map == null) {
+			if(! this.map ) {
 				console.log("CREATING MAP!!!!");
 				this.geolocateControl = new OpenLayers.Control.Geolocate( {
 					bind: false,
@@ -84,6 +84,14 @@ dojo.declare(
 				console.log("addLayerToMap:"+this.srd_layerArr[i].options.name);
 				this.srd_layerArr[i].addLayerToMap(this.map);
 				console.log("Finished addLayerToMap:"+this.srd_layerArr[i].options.name);
+			
+			if(i == 2001 || i == 3001) {
+				//TEMP HACK FOR MapData :
+				this.srd_layerArr[i].layer.setVisibility(true);
+				this.srd_layerArr[i].layer.setVisibility(false);
+			}
+
+
 
 				// BEGIN ADD layer to uploadMenu
 			/*	this.srd_uploadMenu.addChild(new dijit.MenuItem( { 

@@ -20,30 +20,33 @@ dojo.declare(
 		srd_doc : null,
 		// type: this can be one of the following:
 		// empty, map, datagrid, admin, view (more to come)
-		data : null,
+		data : {},
 		outsideContainer : null,
 		insideContainer : null,
 		selected : null,
 		containerStyle : null,
 		dataMenu : null,
-		id : null,
-		linkViewArr : null,
+//		id : null,
+//		linkViewArr : null,
 		//CONSTUCTOR
 		constructor : function( view_data, parent_srd_doc) {
 			console.log("srd_view constructor called!");
 			this.srd_doc = parent_srd_doc;
-			this.data = view_data;
+			if(view_data) {
+				this.data = view_data;
+			}
 			if(this.data.noContainers) {
 				this.data.id = -1;
 			}
 			if(this.data.id) {
-				this.id = this.data.id;
+				this.data.id = this.data.id;
 			} else {
 				var tmpId = 1;
 				while( this.srd_doc.getView(tmpId) ) {
 					tmpId++;
 				}
-				this.id = tmpId;
+				this.data.id = tmpId;
+				console.log("No View ID was found, created new id:"+tmpId);
 			}
 			this.data.height = Math.round(100 / this.data.yDim);
 //			this.containerStyle = 'width:100%; height:'+this.height+'%;margin:0px;border:0px;padding:0px; background-color:black;';
@@ -128,10 +131,25 @@ dojo.declare(
 		// END formatToSignal FUNCTION
 		// BEGIN linkView FUNCTION
 		linkView : function(theId) {
-			if( !this.linkViewarr[theId] ) {
-				this.linkViewArr[theId] = this.srd_doc.getView(theId);
+			if( !this.data.linkViewArr ) {
+					this.data.linkViewArr = [];
+			}	
+			if( !this.data.linkViewArr[theId] ) {
+				this.data.linkViewArr[theId] = this.srd_doc.getView(this.data.linkViewIdArr[theId]);
 			}
-		}
+		},
+		// END linkView FUNCTION
+		// BEGIN updateViewLinks FUNCTION
+		updateViewLinks : function() {
+			console.log("updateViewLinks called for "+this.data.id);
+			for(var theId in this.data.linkViewIdArr) {
+				console.log("linkView "+theId+" , "+this.data.linkViewIdArr[theId]);
+				this.linkView(theId);
+			}
+		}	
+		// END updateViewLinks FUNCTION
+		//
+		//
 	}
 );
 

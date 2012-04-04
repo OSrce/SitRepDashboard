@@ -990,7 +990,13 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							}
 							this.viewArr[xPos] = tmpViewYArr;
 						}
-						this.srd_container.resize();	
+						this.srd_container.resize();
+						// UPDATE LINKS IN ALL VIEWS 
+						for(var tmpX in this.viewArr) {
+							for(var tmpY in this.viewArr[tmpX] ) {
+								this.viewArr[tmpX][tmpY].updateViewLinks();
+							}
+						}	
 					}
 				}
 				// END changeWindowLayout FUNCTION
@@ -1090,8 +1096,10 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						if( this.staticVals.view_data[xPos] ) {
 							for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
 								if( this.staticVals.view_data[xPos][yPos] ) {
+									console.log("getView called, iterating through with:"+theId+", at x="+xPos+", y="+yPos+"data.id="+this.staticVals.view_data[xPos][yPos].id);
 									if(this.staticVals.view_data[xPos][yPos].id == theId) {
-										return this.staticVals.view_data[xPos][yPos];
+										console.log("getView called found "+theId+" at x="+xPos+", y="+yPos);
+										return this.viewArr[xPos][yPos];
 									}
 								}
 							}

@@ -80,12 +80,12 @@ dojo.declare(
 					onClick: function() { this.srd_view.toggleMapData(this); } 
 				} ) );
 	
-			
+				this.srd_memStore = new dojo.store.Memory();			
 				this.srd_store = new dojo.store.Cache(
 					dojo.store.JsonRest({ 
 						target: this.tableList[this.selectedTable]
 					} ),
-					dojo.store.Memory() 
+					this.srd_memStore
 				);
 				var gridCellsDijit = dojox.grid.cells;
 				this.srd_structList = { 
@@ -214,9 +214,14 @@ dojo.declare(
 //					this.srd_layerArr
 					this.srd_layer.loadData();
 					// NEED TO FIX TODO:::
-					this.srd_layer.addLayerToMap(this.srd_doc.selectedView.map);
+					for(var tmpId in this.data.linkViewArr) {
+						if( this.data.linkViewArr[tmpId].data.type == 'map') {
+							this.srd_layer.addLayerToMap(this.data.linkViewArr[tmpId].map);
+						}
+					}
+
 //					var theQuery ={ cfs_finaldis: null, cfs_routenotifications: 'true'}; 
-					this.srd_store.query(this.srd_query).forEach( function( cfs) {
+					this.srd_memStore.query().forEach( function( cfs) {
 						if(this.srd_selMapMode == 1) {
 							// USE PCT BOUNDARIES
 							var pct = cfs.cfs_pct;
@@ -265,6 +270,8 @@ dojo.declare(
 
 			} else {
 				//UNCHECKED
+				delete this.srd_layer.layer.destroy();
+				delete this.srd_layer;
 			}
 		},
 		// END toggleMapData
