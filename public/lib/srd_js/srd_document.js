@@ -1084,7 +1084,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.viewContainer.resize();
 					}
 				}
-				// BEGIN hasView FUNCTION
+				// BEGIN getView FUNCTION
 				srd_document.prototype.getView = function(theId) {
 					for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
 						if( this.staticVals.view_data[xPos] ) {
@@ -1099,7 +1099,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 					}
 					return null;
 				}	
-				// END hasView FUNCTION
+				// END getView FUNCTION
 				// FUNCTION TO DO ANY CLEAN UP NEEDED 
 				// THEN REDIRECT TO /login/logout
 				srd_document.prototype.logout = function() {	

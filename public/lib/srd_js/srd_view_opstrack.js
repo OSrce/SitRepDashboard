@@ -26,6 +26,7 @@ dojo.declare(
 			"Address"  : 3
 		},	
 		srd_selMapMode : 1,
+
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
 			dojo.addOnLoad( function() {
@@ -104,6 +105,7 @@ dojo.declare(
 							{ name: "Signal Info1", field:"cfs_codesup1", width: "50px" },
 							{ name: "Signal Info2", field:"cfs_codesup2", width: "150px" },
 							{ name: "Time Assigned", field:"cfs_timeassigned", width: "100px",  formatter: this.dateToTime },
+							{ name: "Unit Assigned", field:"cfs_assignedunit", width: "100px" },
 							{ name: "Priority", field:"cfs_priority", width: "50px" },
 							{ name: "Final Disposition", field:"cfs_finaldis", width: "90px", formatter:function(data) {
 									if(data) { return "10-"+data} else { return ''; } }
@@ -127,7 +129,12 @@ dojo.declare(
 					sortFields: [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}],
 					region : 'center'
 				} );
-				this.srd_query = { SREXPR: "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval '15 minutes' ) AND cfs_routenotifications = 'true'" }; 
+
+				if(this.data.srd_query) {
+					this.srd_query = this.data.srd_query;
+				} else {
+					this.srd_query = { SREXPR: "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval '15 minutes' ) AND cfs_routenotifications = 'true'" }; 
+				}
 				this.srd_datagrid.setQuery(this.srd_query ); 
 				this.insideContainer.addChild(this.srd_datagrid);
 				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
