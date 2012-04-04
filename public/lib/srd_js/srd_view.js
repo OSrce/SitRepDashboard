@@ -33,6 +33,9 @@ dojo.declare(
 			console.log("srd_view constructor called!");
 			this.srd_doc = parent_srd_doc;
 			this.data = view_data;
+			if(this.data.noContainers) {
+				this.data.id = -1;
+			}
 			if(this.data.id) {
 				this.id = this.data.id;
 			} else {
