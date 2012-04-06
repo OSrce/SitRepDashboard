@@ -91,6 +91,12 @@ dojo.declare(
 				this.srd_layerArr[i].layer.setVisibility(false);
 			}
 
+			// IF start_base_layer is set to a valid baselayer we have, then we
+			// should start with that base layer being the one shown.
+			if(this.data.start_base_layer && this.srd_layerArr[this.data.start_base_layer]) {
+				this.map.setBaseLayer(this.srd_layerArr[this.data.start_base_layer].layer);
+
+			}
 
 
 				// BEGIN ADD layer to uploadMenu

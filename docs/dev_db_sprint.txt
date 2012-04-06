@@ -15,6 +15,7 @@ CREATE TABLE sr_cfs (
 	cfs_addr VARCHAR(128),
 	cfs_cross1 VARCHAR(128),
 	cfs_cross2 VARCHAR(128),
+	cfs_location INT,
 	cfs_code INT NOT NULL,
 	cfs_codesup1 VARCHAR(8),
 	cfs_codesup2 VARCHAR(128),
@@ -33,14 +34,59 @@ CREATE TABLE sr_cfs (
 	cfs_dup BOOL,
 	cfs_dupletter CHAR,
 	cfs_dupnum INT,
-	cfs_geocoded BOOL,
 	cfs_body TEXT,
 	cfs_created_on TIMESTAMP,
 	cfs_updated_on TIMESTAMP,
 	PRIMARY KEY (cfs_date, cfs_num)
 );
 
-SELECT AddGeometryColumn('sr_cfs','sr_geom',4326,'GEOMETRY',3);
+
+
+--CREATE TYPE asset_type AS ENUM('DISPATCHER', '',
+
+CREATE TABLE sr_assets ( 
+	id INT NOT NULL,
+	status_id INT NOT NULL,	
+	location_id INT,
+	data TEXT,
+	created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_on TIMESTAMP DEFAULT null,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE sr_assets_status (
+	id SERIAL NOT NULL,
+	asset_id INT NOT NULL,
+	location_id INT,
+	status VARCHAR(128),	
+	data TEXT,
+	prev_status INT,
+	next_status INT,
+	sr_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	sr_end TIMESTAMP DEFAULT null,
+	updated_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(id)
+);
+
+-- SOURCE 1=ADDRESS, 2=CROSS ST, 3=GPS.
+
+CREATE TABLE sr_locations (
+	id SERIAL NOT NULL,
+	pct INT,
+	sector INT,
+	source INT,
+	address VARCHAR(128),
+	cross1 VARCHAR(128),
+	cross2 VARCHAR(128),
+	rating INT,
+	created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	last_used TIMESTAMP,
+	PRIMARY KEY(id)
+);
+
+SELECT AddGeometryColumn('sr_locations','sr_geom',4326,'GEOMETRY',3);
+
+
 
 
 
