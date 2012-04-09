@@ -45,8 +45,10 @@ CREATE TABLE sr_cfs (
 --CREATE TYPE asset_type AS ENUM('DISPATCHER', '',
 
 CREATE TABLE sr_assets ( 
-	id INT NOT NULL,
-	status_id INT NOT NULL,	
+	id SERIAL NOT NULL,
+	name VARCHAR(64),
+	last_status_id INT NOT NULL,	
+	last_location_status_id INT NOT NULL,	
 	location_id INT,
 	data TEXT,
 	created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -60,8 +62,6 @@ CREATE TABLE sr_assets_status (
 	location_id INT,
 	status VARCHAR(128),	
 	data TEXT,
-	prev_status INT,
-	next_status INT,
 	sr_start TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	sr_end TIMESTAMP DEFAULT null,
 	updated_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
