@@ -109,7 +109,7 @@ dojo.declare(
 				if(dateObj) {
 					return dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
 				} else {
-					dateObj = dojo.date.locale.parse(data, { timePattern:'HH:mm:ss'} );
+					dateObj = dojo.date.locale.parse(data, { selector:'time', timePattern:'HH:mm:ss'} );
 					if(dateObj) {
 						return dojo.date.locale.format( dateObj, {selector:'time', timePattern: 'HH:mm'} );
 					} else {

@@ -95,16 +95,16 @@ dojo.declare(
 							{ name: "Date", field:"cfs_date", width: "120px", hidden:true },
 							{ name: "Time", field:"cfs_timecreated", width: "90px", formatter:this.dateToTime},
 //							{ name: "Job Let", field:"cfs_letter", width: "50px" },
+							{ name: "Signal", field:"cfs_code", width: "90px", formatter: this.formatSignal},
+							{ name: "Signal Info1", field:"cfs_codesup1", width: "50px" },
+							{ name: "Signal Info2", field:"cfs_codesup2", width: "150px" },
 							{ name: "Job #", field:"cfs_num", width: "90px" },
 							{ name: "Precinct", field:"cfs_pct", width: "50px" },
 							{ name: "Sector", field:"cfs_sector", width: "50px" },
 							{ name: "Address", field:"cfs_addr", width: "250px" },
 							{ name: "Cross St 1", field:"cfs_cross1", width: "150px" },
 							{ name: "Cross St 2", field:"cfs_cross2", width: "150px" },
-							{ name: "Signal", field:"cfs_code", width: "90px", formatter: this.formatSignal},
-							{ name: "Signal Info1", field:"cfs_codesup1", width: "50px" },
-							{ name: "Signal Info2", field:"cfs_codesup2", width: "150px" },
-							{ name: "Time Assigned", field:"cfs_timeassigned", width: "100px",  formatter: this.dateToTime },
+						{ name: "Time Assigned", field:"cfs_timeassigned", width: "100px",  formatter: this.dateToTime },
 							{ name: "Unit Assigned", field:"cfs_assignedunit", width: "100px" },
 							{ name: "Priority", field:"cfs_priority", width: "50px" },
 							{ name: "Final Disposition", field:"cfs_finaldis", width: "90px", formatter:function(data) {
@@ -113,7 +113,7 @@ dojo.declare(
 							{ name: "Final Disposition Info", field:"cfs_finaldissup1", width: "150px" },
 							{ name: "Final Disposition Date/Time", field:"cfs_finaldisdate", width: "150px", formatter:this.dateToTime},
 							{ name: "Final Disposition Unit", field:"cfs_finaldisunit", width: "50px" },
-							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px" },
+							{ name: "Job is Duplicate", field:"cfs_dup", width: "50px", hidden:true},
 							{ name: "Last Updated From SPRINT", field:"cfs_updated_on", width: "150px" , formatter:this.dateToTime}
 
 //							{ name: "Body of Job", field:"cfs_body", width: "250px" }

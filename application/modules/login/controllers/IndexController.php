@@ -205,7 +205,7 @@ class Login_IndexController extends Zend_Controller_Action {
 			foreach ($messages as $i => $message) {
 				$logger->log("AUTH LDAP : $message",Zend_Log::DEBUG);
 			}
-			$this->_helper->flashMessenger->addMessage("Authentication error:");
+			$this->_helper->flashMessenger->addMessage("Authentication error: Incorrect Login.");
 			$this->_redirect('/login');
 		}
 
@@ -231,7 +231,11 @@ class Login_IndexController extends Zend_Controller_Action {
 
 	public function notauthorizedAction() {
 
-		$this->render('notauthorized');
+		$auth = Zend_Auth::getInstance();
+		$auth->clearIdentity();
+		$this->_helper->flashMessenger->addMessage("You have entered a valid username / password, but are not authorized to access this system.");
+		$this->_redirect('/login');
+//		$this->render('notauthorized');
 
 	}
 

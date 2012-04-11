@@ -35,6 +35,7 @@ CREATE TABLE sr_cfs (
 	cfs_dupletter CHAR,
 	cfs_dupnum INT,
 	cfs_body TEXT,
+	cfs_body_count INT,
 	cfs_created_on TIMESTAMP,
 	cfs_updated_on TIMESTAMP,
 	PRIMARY KEY (cfs_date, cfs_num)
