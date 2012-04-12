@@ -71,6 +71,9 @@ update sr_window_layout set view_data=E'[[{"type":"opstrack","id":1,"linkViewIdA
 
  insert into sr_acl_permissions ( role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) SELECT 'gid',500, resource_id, permission_create, permission_read, permission_update, permission_delete from sr_acl_permissions where role_id=553;
 
+INSERT INTO sr_cfs_backup SELECT cfs_date, cfs_letter, cfs_num, cfs_pct, cfs_sector, cfs_addr, cfs_cross1, cfs_cross2, cfs_location, cfs_code, cfs_codesup1, cfs_codesup2, cfs_createdby, cfs_dispatcherid, cfs_timecreated, cfs_timeassigned, cfs_assignedunit, cfs_priority, cfs_routenotifications, cfs_finaldis, cfs_finaldissup1, cfs_finaldisdate, cfs_finaldisunit, cfs_callback, cfs_dup, cfs_dupletter, cfs_dupnum, cfs_body, cfs_body_count, cfs_created_on, cfs_updated_on FROM sr_cfs;
+
+
 
 
 

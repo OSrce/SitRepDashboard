@@ -10,6 +10,7 @@
 CREATE OR REPLACE FUNCTION sr_getlocation_event() RETURNS TRIGGER 
 AS $sr_getlocation_trigger$
 DECLARE
+querystr TEXT;
 BEGIN
 IF TG_RELNAME='sr_cfs' THEN
 	IF NEW.cfs_location IS NOT NULL THEN
@@ -23,10 +24,20 @@ IF TG_RELNAME='sr_cfs' THEN
 		/* WE DO NOT HAVE A GOOD ADDR STR SO WE ARE USING CROSS STREETS */
 			INSERT INTO sr_locations (pct, sector, source, address, cross1, cross2) VALUES ( NEW.cfs_pct, NEW.cfs_sector, 2, NEW.cfs_addr, NEW.cfs_cross1, NEW.cfs_cross2 );
 			NEW.cfs_location := currval('sr_locations_id_seq');
+			PERFORM dblink_connect('con1','dbname=sr_data');
+			querystr := 'SELECT sr_geocode_func('||NEW.cfs_location||')';
+--			PERFORM sr_geocode_func(NEW.cfs_location);
+			PERFORM dblink_send_query('con1',querystr);
+			PERFORM dblink_disconnect('con1');
 		END IF;
 	ELSE /* We have a GOOD Address String */
 		INSERT INTO sr_locations (pct, sector, source, address, cross1, cross2) VALUES ( NEW.cfs_pct, NEW.cfs_sector, 1, NEW.cfs_addr, NEW.cfs_cross1, NEW.cfs_cross2 );
 			NEW.cfs_location := currval('sr_locations_id_seq');
+			PERFORM dblink_connect('con1','dbname=sr_data');
+			querystr := 'SELECT sr_geocode_func('||NEW.cfs_location||')';
+--			PERFORM sr_geocode_func(NEW.cfs_location);
+			PERFORM dblink_send_query('con1',querystr);
+			PERFORM dblink_disconnect('con1');
 	END IF;
 	RETURN NEW;
 END IF;
@@ -68,7 +79,12 @@ BEGIN
 			querystr := 'SELECT rating, ST_Force_3D( ST_Transform(geomout, 4326)) AS sr_geomout FROM geocode_intersection(''' ||loc.cross1|| ''','''|| loc.cross2 || ''',''New York'', ''NY'',NULL, 1 ) ';
 			RAISE NOTICE 'Query String===%===',querystr;
 			SELECT INTO therating, thegeomout  g.rating, g.geomout FROM dblink('dbname=sr_geocoder', querystr) AS g(rating int, geomout geometry);
-							
+			IF therating IS NULL THEN
+				therating := -5;
+				UPDATE sr_locations SET rating = therating WHERE id = location_id;
+			ELSE 
+				UPDATE sr_locations SET rating = therating, sr_geom = thegeomout WHERE id = location_id;
+			END IF;
 		END IF;
 	ELSEIF loc.source = 1 THEN
 		IF loc.address IS NULL THEN
@@ -84,8 +100,10 @@ BEGIN
 			SELECT INTO therating, thegeomout  g.rating, g.geomout FROM dblink('dbname=sr_geocoder', querystr) AS g(rating int, geomout geometry);
 			IF therating IS NULL THEN
 				therating := -5;
+				UPDATE sr_locations SET rating = therating WHERE id = location_id;
+			ELSE 
+				UPDATE sr_locations SET rating = therating, sr_geom = thegeomout WHERE id = location_id;
 			END IF;
-			UPDATE sr_locations SET rating = therating, sr_geom = thegeomout WHERE id = location_id;
 		END IF;
 	END IF;
 	RETURN therating;
