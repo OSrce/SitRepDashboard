@@ -7,8 +7,8 @@
 *
 */
 
-CREATE OR REPLACE FUNCTION sr_getlocation_event() RETURNS TRIGGER 
-AS $sr_getlocation_trigger$
+CREATE OR REPLACE FUNCTION sr_cfs_location_event() RETURNS TRIGGER 
+AS $sr_cfs_location_trigger$
 DECLARE
 querystr TEXT;
 BEGIN
@@ -24,34 +24,76 @@ IF TG_RELNAME='sr_cfs' THEN
 		/* WE DO NOT HAVE A GOOD ADDR STR SO WE ARE USING CROSS STREETS */
 			INSERT INTO sr_locations (pct, sector, source, address, cross1, cross2) VALUES ( NEW.cfs_pct, NEW.cfs_sector, 2, NEW.cfs_addr, NEW.cfs_cross1, NEW.cfs_cross2 );
 			NEW.cfs_location := currval('sr_locations_id_seq');
-			PERFORM dblink_connect('con1','dbname=sr_data');
-			querystr := 'SELECT sr_geocode_func('||NEW.cfs_location||')';
+--			PERFORM dblink_connect('con1','dbname=sr_data');
+--			querystr := 'SELECT sr_geocode_func('||NEW.cfs_location||')';
 --			PERFORM sr_geocode_func(NEW.cfs_location);
-			PERFORM dblink_send_query('con1',querystr);
-			PERFORM dblink_disconnect('con1');
+--			PERFORM dblink_send_query('con1',querystr);
+--			PERFORM dblink_disconnect('con1');
 		END IF;
 	ELSE /* We have a GOOD Address String */
 		INSERT INTO sr_locations (pct, sector, source, address, cross1, cross2) VALUES ( NEW.cfs_pct, NEW.cfs_sector, 1, NEW.cfs_addr, NEW.cfs_cross1, NEW.cfs_cross2 );
 			NEW.cfs_location := currval('sr_locations_id_seq');
-			PERFORM dblink_connect('con1','dbname=sr_data');
-			querystr := 'SELECT sr_geocode_func('||NEW.cfs_location||')';
+--			PERFORM dblink_connect('con1','dbname=sr_data');
+--			querystr := 'SELECT sr_geocode_func('||NEW.cfs_location||')';
 --			PERFORM sr_geocode_func(NEW.cfs_location);
-			PERFORM dblink_send_query('con1',querystr);
-			PERFORM dblink_disconnect('con1');
+--			PERFORM dblink_send_query('con1',querystr);
+--			PERFORM dblink_disconnect('con1');
 	END IF;
 	RETURN NEW;
 END IF;
 END;
-$sr_getlocation_trigger$
+$sr_cfs_location_trigger$
 LANGUAGE 'plpgsql';
 --- END FUNCTION ---
 
 /* CREATE THE TRIGGER AND RUN ON ALL ROWS.*/
 
-DROP TRIGGER sr_getlocation_trigger ON sr_cfs;
-CREATE TRIGGER sr_getlocation_trigger
+DROP TRIGGER sr_cfs_location_trigger ON sr_cfs;
+CREATE TRIGGER sr_cfs_location_trigger
 BEFORE INSERT OR UPDATE ON sr_cfs
-    FOR EACH ROW EXECUTE PROCEDURE sr_getlocation_event();
+    FOR EACH ROW EXECUTE PROCEDURE sr_cfs_location_event();
+
+
+/* CREATE TRIGGER FUNCTION CALLED ON sr_locations INSERT/UPDATE */
+
+CREATE OR REPLACE FUNCTION sr_locations_geocode_event() RETURNS TRIGGER 
+AS $sr_locations_geocode_trigger$
+DECLARE
+querystr TEXT;
+BEGIN
+IF TG_RELNAME='sr_locations' THEN
+	IF NEW.sector IS NOT NULL THEN
+		querystr := '"Name":"'||NEW.pct||NEW.sector||'"';
+		SELECT ST_Force_3D(sr_geom) INTO NEW.sr_geom FROM sr_layer_static_data WHERE layer_id=3010 AND feature_data ~ querystr; 
+		IF NEW.sr_geom IS NOT NULL THEN
+			NEW.source := 4;
+		END IF;		
+	ELSEIF NEW.pct IS NOT NULL THEN
+		querystr := '"PctName":"'||NEW.pct||'"';
+		SELECT SR_Force_3D(sr_geom) INTO NEW.sr_geom FROM sr_layer_static_data WHERE layer_id=3010 AND feature_data ~ querystr; 
+		IF NEW.sr_geom IS NOT NULL THEN
+			NEW.source := 5;
+		END IF;		
+	END IF;
+	INSERT INTO sr_locations_workqueue (location_id) VALUES (NEW.id);
+	NOTIFY sr_locations_workqueue;
+	RETURN NEW;
+END IF;
+END;
+$sr_locations_geocode_trigger$
+LANGUAGE 'plpgsql';
+--- END FUNCTION ---
+
+/* CREATE THE TRIGGER AND RUN ON ALL ROWS.*/
+
+DROP TRIGGER sr_locations_geocode_trigger ON sr_locations;
+CREATE TRIGGER sr_locations_geocode_trigger
+BEFORE INSERT OR UPDATE ON sr_locations
+    FOR EACH ROW EXECUTE PROCEDURE sr_locations_geocode_event();
+
+/* END CREATE sr_locations_geocode_trigger */
+
+
 
 
 /*  FUNCTION FOR ACTUAL GEOCODING... */
@@ -111,45 +153,6 @@ END;
 $sr_geocode_func$
 LANGUAGE 'plpgsql';
 --- END FUNCTION ---
-
-
-/*
-		IF loc.cfs_cross1 IS NULL AND NEW.cfs_cross2 IS NULL THEN
-			/* NO GOOD -> RETURN cfs_geocoded = false */
-			NEW.cfs_location = -1;
-		ELSE
-			querystr := 'SELECT rating, ST_Force_3D( ST_Transform(geomout, 4326)) AS sr_geomout FROM geocode_intersection(''' ||NEW.cfs_cross1|| ''','''|| NEW.cfs_cross2 || ''',''New York'', ''NY'',NULL, 1 ) ';
-			RAISE NOTICE 'Query String===%===',querystr;
-			SELECT INTO therating, thegeomout  g.rating, g.geomout FROM dblink('dbname=sr_geocoder', querystr) AS g(rating int, geomout geometry);
-			IF therating <= 10 THEN
-				RAISE NOTICE 'Geocode Successful';
-				NEW.sr_geom := thegeomout;
-				NEW.cfs_geocoded := 'true';
-			ELSE
-				RAISE NOTICE 'Geocode Unsuccessful';
-				NEW.cfs_geocoded := 'false';
-			END IF;
-		END IF;
-	ELSE /* We have a GOOD Address String */
-		addressstr1 := NEW.cfs_addr||', New York NY';
-		querystr := 'SELECT rating, ST_Force_3D( ST_Transform( geomout, 4326) ) AS sr_geomout FROM geocode(''' || addressstr1 || ''', 1 )';
-		RAISE NOTICE 'FULL ADDR TO GEOCODE===%===',addressstr1;
-		RAISE NOTICE 'Query String===%===',querystr;
-		SELECT INTO therating, thegeomout  g.rating, g.geomout FROM dblink('dbname=sr_geocoder', querystr) AS g(rating int, geomout geometry);
----		SELECT INTO therating, thegeomout  g.rating, g.geomout FROM dblink('dbname=sr_geocoder', 'SELECT rating, geomout FROM geocode( addressstr1, 1 ) AS geoval') AS g(rating int, geomout geometry);
-
-		IF therating <= 10 THEN
-			RAISE NOTICE 'Geocode Successful';
-			NEW.sr_geom := thegeomout;
-			NEW.cfs_geocoded := 'true';
-		ELSE
-			RAISE NOTICE 'Geocode Unsuccessful';
-			NEW.cfs_geocoded := 'false';
-		END IF;
-	END IF;
-	RETURN NEW;
-*/
-
 
 
 

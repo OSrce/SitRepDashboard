@@ -149,7 +149,11 @@ CREATE TABLE sr_window_layout (
 	PRIMARY KEY ( id ) 
 );
 
-
+CREATE TABLE sr_locations_workqueue ( 
+	id SERIAL NOT NULL,
+	location_id INT,
+	PRIMARY KEY (id )
+);
 
 
 
