@@ -25,7 +25,7 @@ dojo.declare(
 			"Sector"   : 2,
 			"Address"  : 3
 		},	
-		srd_selMapMode : 1,
+		srd_selMapMode : 3,
 
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
@@ -259,12 +259,17 @@ dojo.declare(
 							}
 						} else if(this.srd_selMapMode ==3) {
 							// USE Actual Address (if it was geocoded)
-//							console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
-//							if(theRefFeat && theRefFeat.length > 0) {
-//								console.log("Adding Feature to Vector Layer!");
-//								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,cfs,null);
-//								this.srd_layer.layer.addFeatures( Array( theFeat), {});
-//							}
+							console.log("Create Feature for Job:"+cfs.cfs_num);
+							var theFeatureAttr = { 
+								label: cfs.cfs_code,
+								body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
+								style: 2001
+							}
+							var theGeom = new OpenLayers.Geometry.fromWKT(cfs.geometry);
+							theGeom.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913") );
+							var theFeat = new OpenLayers.Feature.Vector(theGeom,theFeatureAttr,null);
+							this.srd_layer.layer.addFeatures( Array( theFeat), {});
+							console.log("Feature Geom ="+theFeat.geometry.toString());
 						}
 				}.bind(this) );
 
