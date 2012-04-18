@@ -163,7 +163,8 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
 			$this->restTable->update($data, $where);
 
-			$this->getResponse()->setHttpResponseCode(204);
+			$this->getResponse()->appendBody(Zend_Json::encode($data));
+			$this->getResponse()->setHttpResponseCode(200);
 		}
 
 		// DELETE Action === DELETE

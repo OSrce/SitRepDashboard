@@ -211,7 +211,7 @@ dojo.declare(
 					}
 					this.srd_layer = new srd_layer();
 					this.srd_layer.options = theOptions;
-//					this.srd_layerArr
+					this.srd_layer.srd_styleArr = this.srd_doc.srd_styleArr;
 					this.srd_layer.loadData();
 					// NEED TO FIX TODO:::
 					for(var tmpId in this.data.linkViewArr) {
@@ -261,9 +261,9 @@ dojo.declare(
 							// USE Actual Address (if it was geocoded)
 							console.log("Create Feature for Job:"+cfs.cfs_num);
 							var theFeatureAttr = { 
-								label: cfs.cfs_code,
-								body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
-								style: 2001
+								label: "10-"+cfs.cfs_code,
+								body : "Signal: 10-"+cfs.cfs_code+" Job :"+cfs.cfs_num,
+								style: 5001
 							}
 							var theGeom = new OpenLayers.Geometry.fromWKT(cfs.geometry);
 							theGeom.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913") );

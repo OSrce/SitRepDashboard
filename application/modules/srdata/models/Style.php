@@ -15,7 +15,9 @@ class Srdata_Model_Style extends Zend_Db_Table_Row_Abstract
 		'fontFamily'				=> 'fontfamily',
 		'fontWeight'				=> 'fontweight',
 		'fontOpacity'				=> 'fontopacity',
-		'labelAlign'				=> 'labelalign'
+		'labelAlign'				=> 'labelalign',
+		'labelXOffset'			=> 'labelxoffset',
+		'labelYOffset'			=> 'labelyoffset'
 
 	);	
 

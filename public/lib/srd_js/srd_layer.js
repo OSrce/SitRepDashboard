@@ -102,30 +102,6 @@ function srd_layer( ) {
 //			backgroundGraphic: ''
 		}
 		
-		this.srd_customFeatureAttributes = {
-			fillColor: '${fillColor}',
-			fillOpacity: '${fillOpacity}',
-			strokeColor : '${strokeColor}',
-			strokeOpacity : '${strokeOpacity}',
-			strokeWidth : '${strokeWidth}',
-			pointRadius: '${pointRadius}',
-			label: '${label}',
-			fontColor: '${fontColor}',
-			fontSize: '${fontSize}',
-			fontFamily: 'Courier New, monospace',
-			fontWeight: 'bold',
-			labelAlign: '${labelAlign}',
-			labelXOffset: '0',
-			labelYOffset: '0',
-			externalGraphic: '${externalGraphic}',
-			graphicWidth: '${graphicWidth}',
-			graphicHeight: '${graphicHeight}',
-			graphicOpacity: '${graphicOpacity}',
-			rotation: '${rotation}'
-				
-//			backgroundGraphic: '${backgroundGraphic}'
-
-		}	
 
 //		this.srd_customSelectFeatureAttributes = Object.create(this.srd_customFeatureAttributes);
 		this.srd_customSelectFeatureAttributes = {
@@ -237,10 +213,36 @@ srd_layer.prototype.loadData = function( ) {
 	console.log("Vector Layer created:"+this.options.name);
 // BEGIN MESSY STYLE RULE CODE
 		if(this.srd_styleMap == null) {
-			this.srd_styleMap = new OpenLayers.StyleMap();
+//			this.srd_styleMap = new OpenLayers.StyleMap();
+			this.srd_styleMap = new OpenLayers.StyleMap( { 
+				'default': this.srd_styleArr[this.options.defaultstyle]
+			} );
+			var theRuleArr = [];
+			theRuleArr.push( new OpenLayers.Rule( {
+				elseFilter: true,
+				symbolizer: this.srd_styleArr[this.options.defaultstyle] 
+				} )
+			);
+/*	
+			for(var styleId in this.srd_styleArr) {
+				theRuleArr.push( new OpenLayers.Rule( {
+					filter: new OpenLayers.Filter.Comparison( {
+						type: OpenLayers.Filter.Comparison,EQUAL_TO,
+						property: 'style',
+						value: styleId
+					}),
+					symbolizer: this.srd_styleArr[styleId] 
+					} )
+				);
+			}
+*/
+			this.srd_styleMap.styles["default"].addRules( theRuleArr );
+			this.srd_styleMap.addUniqueValueRules("default","style", this.srd_styleArr);
 		}
+
 //		var tmpSymbolizer = this.srd_styleMap.styles["default"].defaultStyle;
 
+/*
 		var mainRule = new OpenLayers.Rule( {
 			elseFilter: true,
 			symbolizer: this.srd_styleArr[this.options.defaultstyle] } );
@@ -266,7 +268,9 @@ srd_layer.prototype.loadData = function( ) {
 
 		this.srd_styleMap.styles["default"].addRules( [mainRule, customRule] );
 		this.srd_styleMap.styles["select"].addRules( [ customSelectRule] );
+*/
 
+//		this.srd_styleMap.styles["default"] = this.srd_styleArr[this.options.defaultstyle];
 
 //console.log("End Messy Rule code");
 // END MESSY STYLE RULE CODE
