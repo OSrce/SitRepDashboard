@@ -68,9 +68,10 @@ IF TG_RELNAME='sr_locations' THEN
 		IF NEW.sr_geom IS NOT NULL THEN
 			NEW.source := 4;
 		END IF;		
-	ELSEIF NEW.pct IS NOT NULL THEN
+	END IF;
+	IF NEW.sr_geom IS NULL AND NEW.pct IS NOT NULL THEN
 		querystr := '"PctName":"'||NEW.pct||'"';
-		SELECT SR_Force_3D(sr_geom) INTO NEW.sr_geom FROM sr_layer_static_data WHERE layer_id=3010 AND feature_data ~ querystr; 
+		SELECT ST_Force_3D(sr_geom) INTO NEW.sr_geom FROM sr_layer_static_data WHERE layer_id=2010 AND feature_data ~ querystr; 
 		IF NEW.sr_geom IS NOT NULL THEN
 			NEW.source := 5;
 		END IF;		
