@@ -374,17 +374,20 @@ srd_layer.prototype.loadData = function( ) {
 					visibility:		this.options.visibility,
 					styleMap:			this.srd_styleMap
 				} );
-				dojo.when( this.store.query({"layer_id":this.options.id}), function(theFeatArr) {
-					theFeatArr.forEach( function(theFeat) {
+				dojo.when(this.store.query({"layer_id":this.options.id}), function(theFeatArr) {
+					dojo.forEach( theFeatArr, function(theFeat) {
 						var theFeature = new OpenLayers.Feature.Vector( new OpenLayers.Geometry.fromWKT( theFeat.geometry), dojo.fromJson(theFeat.feature_data) );
 						theFeature.fid = theFeat.feature_id;
 //						theFeature.id = theFeat.feature_id;
 						console.log("Adding Feature:"+theFeature.fid);
 						this.layer.addFeatures( [theFeature] ); 
+	
 					}.bind(this) );
+
 					this.layer.events.register("featureadded", this, this.srd_create);
 					this.layer.events.register("featuremodified", this, this.srd_update);
 					this.layer.events.register("featureremoved", this, this.srd_delete);
+
 				}.bind(this) );
 
 		} else if(this.options.format == "GeoJSON" ) {
