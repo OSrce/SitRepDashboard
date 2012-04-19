@@ -212,7 +212,6 @@ srd_document.prototype.srd_init = function() {
 
 	this.srd_changeWindowLayout(this.staticVals.default_wlayout);
 
-
 	}.bind(this) );
 
 //	this.srd_displayMenuBar();

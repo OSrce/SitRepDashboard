@@ -40,7 +40,12 @@ dojo.declare(
 				}
 				this.selectedTable = "Calls for service - SPRINT";
 				this.selectedDataMenu = new dijit.Menu();
-//				this.autoRefresh = false;				
+				if(!this.autoRefresh) {
+					this.autoRefresh = false;				
+				}
+				if(!this.mapData) {
+					this.mapData = false;			
+				}
 				for( var tmpTable in this.tableList) {
 					console.log("Table Type:"+tmpTable);
 					this.selectedDataMenu.addChild( new dijit.MenuItem( {
@@ -187,10 +192,10 @@ dojo.declare(
 				this.srd_timer.onTick = function() { this.refreshTable();
 					}.bind(this);				
 				this.srd_timer.start();	
-//				this.autoRefresh = true;
+				this.autoRefresh = true;
 			} else {
 				this.srd_timer.stop();	
-//				this.autoRefresh = false;
+				this.autoRefresh = false;
 			}
 		},
 		// END toggleAutoRefresh
@@ -198,93 +203,114 @@ dojo.declare(
 		toggleMapData: function(menuItem) { 
 			if( menuItem.checked == true ) {
 				//CHECKED
-					console.log("Adding OpsTrack to Map");
-//				this.srd_doc.srd_createLayer("OpsTracking",'');
-					var theOptions = {
-						name: 'OpsTrack',
-						id:'-1',
-						isBaseLayer: false,
-						visibility: true,
-						type: "Vector",
-						format: "NONE"	
-
-					}
-					this.srd_layer = new srd_layer();
-					this.srd_layer.options = theOptions;
-//					this.srd_layerArr
-					this.srd_layer.loadData();
-					// NEED TO FIX TODO:::
-					for(var tmpId in this.data.linkViewArr) {
-						if( this.data.linkViewArr[tmpId].data.type == 'map') {
-							this.srd_layer.addLayerToMap(this.data.linkViewArr[tmpId].map);
-						}
-					}
-
-//					var theQuery ={ cfs_finaldis: null, cfs_routenotifications: 'true'}; 
-					this.srd_memStore.query().forEach( function( cfs) {
-						if(this.srd_selMapMode == 1) {
-							// USE PCT BOUNDARIES
-							var pct = cfs.cfs_pct;
-							var jobNum = cfs.cfs_num;
-							var searchVal = String(pct);
-							var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('PctName',searchVal);
-							console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
-							if(theRefFeat && theRefFeat.length > 0) {
-								console.log("Adding Feature to Vector Layer!");
-								var theFeatureAttr = { 
-									label: cfs.cfs_code,
-									body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
-									style: 2001
-								}
-								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
-								this.srd_layer.layer.addFeatures( Array( theFeat), {});
-							}
-						} else if(this.srd_selMapMode == 2) {
-							// USE SECTOR BOUNDARIES
-							var pct = cfs.cfs_pct;
-							var jobNum = cfs.cfs_num;
-							var sector = cfs.cfs_sector;
-							var searchVal = pct+sector;
-							var theRefFeat = this.srd_layerArr[3001].layer.getFeaturesByAttribute('Name',searchVal);
-							console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
-							if(theRefFeat && theRefFeat.length > 0) {
-								console.log("Adding Feature to Vector Layer!");
-								var theFeatureAttr = { 
-									label: cfs.cfs_code,
-									body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
-									style: 2001
-								}
-								var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
-								this.srd_layer.layer.addFeatures( Array( theFeat), {});
-							}
-						} else if(this.srd_selMapMode ==3) {
-							// USE Actual Address (if it was geocoded)
-							console.log("Create Feature for Job:"+cfs.cfs_num);
-							var theFeatureAttr = { 
-								label: cfs.cfs_code,
-								body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
-								style: 2001
-							}
-							var theGeom = new OpenLayers.Geometry.fromWKT(cfs.geometry);
-							theGeom.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913") );
-							var theFeat = new OpenLayers.Feature.Vector(theGeom,theFeatureAttr,null);
-							this.srd_layer.layer.addFeatures( Array( theFeat), {});
-							console.log("Feature Geom ="+theFeat.geometry.toString());
-						}
-				}.bind(this) );
-
+				this.mapData = true;
+				this.drawMapData();
 			} else {
 				//UNCHECKED
+				this.mapData = false;
 				delete this.srd_layer.layer.destroy();
 				delete this.srd_layer;
 			}
 		},
 		// END toggleMapData
+		drawMapData: function() {
+			console.log("Adding OpsTrack to Map");
+			var theOptions = {
+				name: 'OpsTrack',
+				id:'-1',
+				isBaseLayer: false,
+				visibility: true,
+				type: "Vector",
+				format: "NONE"	
+			}
+			this.srd_layer = new srd_layer();
+			this.srd_layer.options = theOptions;
+			this.srd_layer.srd_styleArr = this.srd_doc.srd_styleArr;
+			this.srd_layer.loadData();
+			// NEED TO FIX TODO:::
+			for(var tmpId in this.data.linkViewArr) {
+				if( this.data.linkViewArr[tmpId].data.type == 'map') {
+					this.srd_layer.addLayerToMap(this.data.linkViewArr[tmpId].map);
+				}
+			}
+			this.createMapFeatures();
+		},
+		//END DRAW MAP DATA
+		createMapFeatures: function() {
+			this.srd_memStore.query().forEach( function( cfs) {
+				if(this.srd_selMapMode == 1) {
+					// USE PCT BOUNDARIES
+					var pct = cfs.cfs_pct;
+					var jobNum = cfs.cfs_num;
+					var searchVal = String(pct);
+					var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('PctName',searchVal);
+					console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
+					if(theRefFeat && theRefFeat.length > 0) {
+						console.log("Adding Feature to Vector Layer!");
+						var theFeatureAttr = { 
+							label: cfs.cfs_code,
+							body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
+							style: 2001
+						}
+						var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
+						this.srd_layer.layer.addFeatures( Array( theFeat), {});
+					}
+				} else if(this.srd_selMapMode == 2) {
+					// USE SECTOR BOUNDARIES
+					var pct = cfs.cfs_pct;
+					var jobNum = cfs.cfs_num;
+					var sector = cfs.cfs_sector;
+					var searchVal = pct+sector;
+					var theRefFeat = this.srd_layerArr[3001].layer.getFeaturesByAttribute('Name',searchVal);
+					console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
+					if(theRefFeat && theRefFeat.length > 0) {
+						console.log("Adding Feature to Vector Layer!");
+						var theFeatureAttr = { 
+							label: cfs.cfs_code,
+							body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
+							style: 2001
+						}
+						var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
+						this.srd_layer.layer.addFeatures( Array( theFeat), {});
+					}
+				} else if(this.srd_selMapMode ==3) {
+					// USE Actual Address (if it was geocoded)
+					console.log("Create Feature for Job:"+cfs.cfs_num);
+					var theFeatureAttr = { 
+						label: "10-"+cfs.cfs_code,
+						body : "Signal: 10-"+cfs.cfs_code+" Job :"+cfs.cfs_num,
+						style: 5001
+					}
+					if( cfs.cfs_assignedunit) {
+						theFeatureAttr.style = 5002;
+					}
+					if ( cfs.cfs_finaldis) {
+						theFeatureAttr.style = 5004;
+					}	
+
+					var theGeom = new OpenLayers.Geometry.fromWKT(cfs.geometry);
+					theGeom.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913") );
+					var theFeat = new OpenLayers.Feature.Vector(theGeom,theFeatureAttr,null);
+					this.srd_layer.layer.addFeatures( Array( theFeat), {});
+					console.log("Feature Geom ="+theFeat.geometry.toString());
+				}
+			}.bind(this) );
+		},
+		// END CREATE MAP FEATURES
 		refreshTable: function() {
 			console.log("Refresh Table Called!");
+			delete this.srd_memStore.data;
+			this.srd_memStore.data = [];
 			this.srd_datagrid.setQuery(this.srd_query ); 
-			this.srd_datagrid.setStore( this.srd_dataStore );
-			this.srd_datagrid.setQuery(this.srd_query ); 
+			this.srd_datagrid.setStore(this.srd_dataStore); 
+/*			dojo.when( this.srd_dataStore.query(this.srd_query), function(theDataArr) {
+				if(this.mapData == true) {
+					this.srd_layer.layer.destroyFeatures();
+					this.srd_layer.layer.removeAllFeatures();
+					this.createMapFeatures();	
+				}
+			}.bind(this) );
+*/
 		},
 		// END refreshTable
 		// BEGIN popupCfsSingle

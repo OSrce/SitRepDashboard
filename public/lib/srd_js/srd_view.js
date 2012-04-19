@@ -63,7 +63,6 @@ dojo.declare(
 			this.outsideContainer.addChild( this.insideContainer );
 
 			dojo.connect(this.insideContainer, 'onClick',this, 'srd_select');
-			
 			this.dataMenu = new dijit.Menu( {} );
 		},
 		destroy : function() {
