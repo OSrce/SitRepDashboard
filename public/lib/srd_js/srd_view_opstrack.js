@@ -9,6 +9,7 @@
 /////////////////////////////////
 
 dojo.require('dojox.timing');
+dojo.require('dojo.store.Observable');
 
 //srd_view class definition using dojo.declare 
 dojo.declare( 
@@ -85,7 +86,7 @@ dojo.declare(
 					onClick: function() { this.srd_view.toggleMapData(this); } 
 				} ) );
 	
-				this.srd_memStore = new dojo.store.Memory();			
+				this.srd_memStore = dojo.store.Observable( new dojo.store.Memory() );			
 				this.srd_store = new dojo.store.Cache(
 					dojo.store.JsonRest({ 
 						target: this.tableList[this.selectedTable]
@@ -134,13 +135,17 @@ dojo.declare(
 					sortFields: [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}],
 					region : 'center'
 				} );
-
 				if(this.data.srd_query) {
 					this.srd_query = this.data.srd_query;
 				} else {
 					this.srd_query = { SREXPR: "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval '15 minutes' ) AND cfs_routenotifications = 'true'" }; 
 				}
 				this.srd_datagrid.setQuery(this.srd_query ); 
+
+				// Make Query Results from memstore here and observe handler.
+				this.theResults = this.srd_memStore.query();
+				this.observeHandle = this.theResults.observe(function(object,removedFrom,insertedInto) { this.resultsObserver(object, removedFrom, insertedInto); }.bind(this)  );
+
 				this.insideContainer.addChild(this.srd_datagrid);
 				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
@@ -180,6 +185,9 @@ dojo.declare(
 					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
+				// Make Query Results from memstore here and observe handler.
+				this.theResults = this.srd_memStore.query();
+				this.observeHandle = this.theResults.observe(this.resultsObserver(object, removedFrom, insertedInto) );
 				this.insideContainer.addChild(this.srd_datagrid);
 				//TODO FIX THIS - IT DOES NOT WORK!!!!
 				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
@@ -303,8 +311,8 @@ dojo.declare(
 //			this.srd_memStore.data = [];
 //			this.srd_datagrid.setQuery(this.srd_query ); 
 //			this.srd_datagrid.setStore(this.srd_dataStore); 
+//			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
 			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
-				this.srd_datagrid.refresh();
 				if(this.mapData == true) {
 					this.srd_layer.layer.destroyFeatures();
 					this.srd_layer.layer.removeAllFeatures();
@@ -314,6 +322,14 @@ dojo.declare(
 
 		},
 		// END refreshTable
+		
+		// BEGIN resultsObserver
+		resultsObserver: function(object, removedFrom, insertedInto) {
+			console.log("Observer Called!");
+
+
+		},
+		//  END resultsObserver
 		// BEGIN popupCfsSingle
 		popupCfsSingle: function(evt) {
 			var selectedItem = this.srd_datagrid.getItem(this.srd_datagrid.selection.selectedIndex);
