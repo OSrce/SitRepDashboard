@@ -86,8 +86,36 @@ dojo.declare(
 					onClick: function() { this.srd_view.toggleMapData(this); } 
 				} ) );
 	
+				// TEMP FIX <- supposed to be fixed in 1.8 see ticket 14704
+				FixedCache = function(masterStore, cachingStore, options) {
+					var store = dojo.store.Cache( masterStore, cachingStore, options);
+					store.add = function(object, directives) {
+						return Deferred.when(masterStore.add(object, directives), function(result) {
+								cachingStore.add(typeof result == "object" ? result	: object, directives);
+								return result;
+						} );
+					};
+					store.put = function(object, directives) {
+						cachingStore.remove((directives && directives.id) || this.getIdentity(object));
+						return Deferred.when(masterStore.put(object, directives), function(result) {
+								cachingStore.put(typeof result == "object" ? result	: object, directives);
+								return result;
+						} );
+					};
+					store.remove = function(object) {
+					console.log("Removed this object: "+object.id);
+//						cachingStore.remove( this.getIdentity(object) );
+						return Deferred.when( masterStore.remove(object), function(result) {
+								cachingStore.remove(typeof result == "object" ? result : object);
+								return result;
+						} );
+					};
+					return store;
+				};
+				// END TEMP FIX
+
 				this.srd_memStore = dojo.store.Observable( new dojo.store.Memory() );			
-				this.srd_store = new dojo.store.Cache(
+				this.srd_store = new FixedCache(
 					dojo.store.JsonRest({ 
 						target: this.tableList[this.selectedTable]
 					} ),
@@ -127,12 +155,14 @@ dojo.declare(
 					} ]
 					
 				}
+
+				this.srd_sort = [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}];
 				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
 				this.srd_datagrid = new dojox.grid.EnhancedGrid( {
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
 					plugins: {nestedSorting: true},
-					sortFields: [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}],
+					sortFields: this.srd_sort,
 					region : 'center'
 				} );
 				if(this.data.srd_query) {
@@ -185,9 +215,11 @@ dojo.declare(
 					plugins: {nestedSorting: true},
 					region : 'center'
 				} );
+
 				// Make Query Results from memstore here and observe handler.
-				this.theResults = this.srd_memStore.query();
+				this.theResults = this.srd_store.query();
 				this.observeHandle = this.theResults.observe(this.resultsObserver(object, removedFrom, insertedInto) );
+
 				this.insideContainer.addChild(this.srd_datagrid);
 				//TODO FIX THIS - IT DOES NOT WORK!!!!
 				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
@@ -196,7 +228,7 @@ dojo.declare(
 		// END selectTable FUNCTION
 		toggleAutoRefresh: function(menuItem) { 
 			if( menuItem.checked == true ) {
-				this.srd_timer = new dojox.timing.Timer(30000);
+				this.srd_timer = new dojox.timing.Timer(15000);
 				this.srd_timer.onTick = function() { this.refreshTable();
 					}.bind(this);				
 				this.srd_timer.start();	
@@ -307,27 +339,51 @@ dojo.declare(
 		// END CREATE MAP FEATURES
 		refreshTable: function() {
 			console.log("Refresh Table Called!");
-//			delete this.srd_memStore.data;
-//			this.srd_memStore.data = [];
+			delete this.srd_memStore.data;
+			this.srd_memStore.data = [];
+
+//				this.srd_memStore.query().forEach( function(cfs) {
+//					this.srd_memStore.remove(cfs);
+//				}.bind(this) ).then( function() {
+
 //			this.srd_datagrid.setQuery(this.srd_query ); 
+//				this.srd_datagrid._refresh();
+
 //			this.srd_datagrid.setStore(this.srd_dataStore); 
 //			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
-			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
-				if(this.mapData == true) {
-					this.srd_layer.layer.destroyFeatures();
-					this.srd_layer.layer.removeAllFeatures();
-					this.createMapFeatures();	
-				}
-			}.bind(this) );
+				dojo.when( this.srd_store.query(this.srd_query,{ sort:this.srd_sort } ), function(theDataArr) {
+					
+					if(this.mapData == true) {
+						this.srd_layer.layer.destroyFeatures();
+						this.srd_layer.layer.removeAllFeatures();
+						this.createMapFeatures();	
+					}
+				}.bind(this) );
+//			}.bind(this) );
 
 		},
 		// END refreshTable
 		
 		// BEGIN resultsObserver
 		resultsObserver: function(object, removedFrom, insertedInto) {
-			console.log("Observer Called!");
+			console.log("Observer Called! "+object.id+" rf: "+removedFrom+" iI: "+insertedInto);
+//			this.srd_datagrid.update();
+/*			var test1 = this.srd_store.get(object.id);
+			console.log("Test1 = "+test1.id);
+			var test2 = this.srd_dataStore.fetchItemByIdentity(insertedInto);
+			console.log("Test2 = "+this.srd_dataStore.isItem(test2) );
+			var test3 = this.srd_dataStore.isDirty(test2);
+			console.log("Test3 "+test3 );
+*/
+			if(removedFrom > -1) {
+				this.srd_dataStore.onNew(removedFrom);
+			} else if(insertedInto > -1) {
+				this.srd_dataStore.onNew(object);
+			} else {
+				this.srd_dataStore.onSet(object);
+			}	
 
-
+			
 		},
 		//  END resultsObserver
 		// BEGIN popupCfsSingle
