@@ -299,18 +299,19 @@ dojo.declare(
 		// END CREATE MAP FEATURES
 		refreshTable: function() {
 			console.log("Refresh Table Called!");
-			delete this.srd_memStore.data;
-			this.srd_memStore.data = [];
-			this.srd_datagrid.setQuery(this.srd_query ); 
-			this.srd_datagrid.setStore(this.srd_dataStore); 
-/*			dojo.when( this.srd_dataStore.query(this.srd_query), function(theDataArr) {
+//			delete this.srd_memStore.data;
+//			this.srd_memStore.data = [];
+//			this.srd_datagrid.setQuery(this.srd_query ); 
+//			this.srd_datagrid.setStore(this.srd_dataStore); 
+			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
+				this.srd_datagrid.refresh();
 				if(this.mapData == true) {
 					this.srd_layer.layer.destroyFeatures();
 					this.srd_layer.layer.removeAllFeatures();
 					this.createMapFeatures();	
 				}
 			}.bind(this) );
-*/
+
 		},
 		// END refreshTable
 		// BEGIN popupCfsSingle
