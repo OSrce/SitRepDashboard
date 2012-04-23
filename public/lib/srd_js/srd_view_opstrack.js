@@ -347,7 +347,7 @@ dojo.declare(
 //				}.bind(this) ).then( function() {
 
 //			this.srd_datagrid.setQuery(this.srd_query ); 
-//				this.srd_datagrid._refresh();
+				this.srd_datagrid._refresh();
 
 //			this.srd_datagrid.setStore(this.srd_dataStore); 
 //			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
