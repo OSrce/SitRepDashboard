@@ -86,37 +86,12 @@ dojo.declare(
 					onClick: function() { this.srd_view.toggleMapData(this); } 
 				} ) );
 	
-				// TEMP FIX <- supposed to be fixed in 1.8 see ticket 14704
-				FixedCache = function(masterStore, cachingStore, options) {
-					var store = dojo.store.Cache( masterStore, cachingStore, options);
-					store.add = function(object, directives) {
-						return Deferred.when(masterStore.add(object, directives), function(result) {
-								cachingStore.add(typeof result == "object" ? result	: object, directives);
-								return result;
-						} );
-					};
-					store.put = function(object, directives) {
-						cachingStore.remove((directives && directives.id) || this.getIdentity(object));
-						return Deferred.when(masterStore.put(object, directives), function(result) {
-								cachingStore.put(typeof result == "object" ? result	: object, directives);
-								return result;
-						} );
-					};
-					store.remove = function(object) {
-					console.log("Removed this object: "+object.id);
-//						cachingStore.remove( this.getIdentity(object) );
-						return Deferred.when( masterStore.remove(object), function(result) {
-								cachingStore.remove(typeof result == "object" ? result : object);
-								return result;
-						} );
-					};
-					return store;
-				};
-				// END TEMP FIX
-
+//				this.srd_memStore = new dojo.store.Memory();			
 				this.srd_memStore = dojo.store.Observable( new dojo.store.Memory() );			
-				this.srd_store = new FixedCache(
+				this.srd_store = new this.FixedCacheStore(
 					dojo.store.JsonRest({ 
+						idProperty: "id",
+//						queryEngine: dojo.store.util.SimpleQueryEngine,
 						target: this.tableList[this.selectedTable]
 					} ),
 					this.srd_memStore
@@ -202,7 +177,7 @@ dojo.declare(
 				delete this.srd_datagrid;
 				delete this.srd_dataStore;
 				delete this.srd_store;
-				this.srd_store = new dojo.store.Cache(
+				this.srd_store = new this.FixedCacheStore(
 					dojo.store.JsonRest({ 
 						target: this.tableList[this.selectedTable]
 					} ),
@@ -217,7 +192,7 @@ dojo.declare(
 				} );
 
 				// Make Query Results from memstore here and observe handler.
-				this.theResults = this.srd_store.query();
+				this.theResults = this.srd_memStore.query();
 				this.observeHandle = this.theResults.observe(this.resultsObserver(object, removedFrom, insertedInto) );
 
 				this.insideContainer.addChild(this.srd_datagrid);
@@ -315,7 +290,7 @@ dojo.declare(
 					}
 				} else if(this.srd_selMapMode ==3) {
 					// USE Actual Address (if it was geocoded)
-					console.log("Create Feature for Job:"+cfs.cfs_num);
+//					console.log("Create Feature for Job:"+cfs.cfs_num);
 					var theFeatureAttr = { 
 						label: "10-"+cfs.cfs_code,
 						body : "Signal: 10-"+cfs.cfs_code+" Job :"+cfs.cfs_num,
@@ -332,22 +307,22 @@ dojo.declare(
 					theGeom.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913") );
 					var theFeat = new OpenLayers.Feature.Vector(theGeom,theFeatureAttr,null);
 					this.srd_layer.layer.addFeatures( Array( theFeat), {});
-					console.log("Feature Geom ="+theFeat.geometry.toString());
+//					console.log("Feature Geom ="+theFeat.geometry.toString());
 				}
 			}.bind(this) );
 		},
 		// END CREATE MAP FEATURES
 		refreshTable: function() {
 			console.log("Refresh Table Called!");
-			delete this.srd_memStore.data;
-			this.srd_memStore.data = [];
+//			delete this.srd_memStore.data;
+//			this.srd_memStore.data = [];
 
 //				this.srd_memStore.query().forEach( function(cfs) {
 //					this.srd_memStore.remove(cfs);
 //				}.bind(this) ).then( function() {
 
 //			this.srd_datagrid.setQuery(this.srd_query ); 
-				this.srd_datagrid._refresh();
+//				this.srd_datagrid._refresh();
 
 //			this.srd_datagrid.setStore(this.srd_dataStore); 
 //			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
@@ -376,16 +351,66 @@ dojo.declare(
 			console.log("Test3 "+test3 );
 */
 			if(removedFrom > -1) {
-				this.srd_dataStore.onNew(removedFrom);
+//				console.log("Remove Pos "+removedFrom+"From DataGrid!");
+				this.srd_dataStore.onDelete(object);
+				this.srd_datagrid.render();
 			} else if(insertedInto > -1) {
-				this.srd_dataStore.onNew(object);
+				this.srd_dataStore.onNew(object,insertedInto);
+				this.srd_datagrid.render();
 			} else {
 				this.srd_dataStore.onSet(object);
+				this.srd_datagrid.render();
 			}	
-
 			
 		},
 		//  END resultsObserver
+		// TEMP FIX <- supposed to be fixed in 1.8 see ticket 14704
+		FixedCacheStore: function(masterStore, cachingStore, options) {
+			var store = dojo.store.Cache( masterStore, cachingStore, options);
+			store.options = options || {};
+			store.add = function(object, directives) {
+				return Deferred.when(masterStore.add(object, directives), function(result) {
+//					console.log( "ADD Called on FixedCache");
+					cachingStore.add(typeof result == "object" ? result	: object, directives);
+					return result;
+				} );
+			};
+			store.put = function(object, directives) {
+				cachingStore.remove((directives && directives.id) || this.getIdentity(object));
+				return Deferred.when(masterStore.put(object, directives), function(result) {
+//					console.log( "PUT Called on FixedCache");
+					cachingStore.put(typeof result == "object" ? result	: object, directives);
+					return result;
+				} );
+			};
+			store.query = function(query, directives) {
+				directives.doNotEvictList = [];
+				var results = masterStore.query(query, directives);
+//				results.forEach(function(object) {
+				results.then(function(objects) {
+					dojo.forEach(objects, function(object) {
+						if(!store.options.isLoaded || store.options.isLoaded(object) ) {
+							cachingStore.put(object);
+// MAKE DO NOT EVICT LIST THEN ITERATE THROUGH cacheStore checking what to evict.
+							directives.doNotEvictList.push(object.id);
+//							console.log("MasterStore Result:"+object.id);
+						}
+					} );
+					jonTest5 = directives.doNotEvictList;
+					var cacheResults = cachingStore.query();
+					cacheResults.forEach(function(object) {
+//						console.log("CacheStore Result:"+object.id+"dNEL Length:"+directives.doNotEvictList.indexOf(object.id));
+						if( directives.doNotEvictList.indexOf(object.id) == -1 ) {  
+//							console.log("Evicting :"+object.id);
+							cachingStore.remove(object.id);
+						} 
+					} );
+				} );
+				return results;
+			};
+		return store;
+		},
+		// END FixedCacheStore
 		// BEGIN popupCfsSingle
 		popupCfsSingle: function(evt) {
 			var selectedItem = this.srd_datagrid.getItem(this.srd_datagrid.selection.selectedIndex);
