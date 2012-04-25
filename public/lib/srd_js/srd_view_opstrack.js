@@ -327,6 +327,7 @@ dojo.declare(
 
 //			this.srd_datagrid.setStore(this.srd_dataStore); 
 //			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
+//				this.srd_store.query(this.srd_query,{ sort:this.srd_sort } );
 				dojo.when( this.srd_store.query(this.srd_query,{ sort:this.srd_sort } ), function(theDataArr) {
 					
 					if(this.mapData == true) {
@@ -336,6 +337,7 @@ dojo.declare(
 					}
 
 				}.bind(this) );
+
 //			}.bind(this) );
 
 		},
@@ -361,7 +363,7 @@ dojo.declare(
 				var theIndex = this.srd_memStore.data.indexOf(object);
 				console.log( "onNew :"+object.id+" : Index : "+theIndex);
 				if(theIndex >= 0 && theIndex != insertedInto) {
-					
+					console.log("testing");					
 //					this.srd_dataStore.onNew(object,theIndex);
 //					this.srd_datagrid._clearData();
 					this.srd_datagrid._addItem(object,theIndex);
@@ -407,13 +409,21 @@ dojo.declare(
 				var results = masterStore.query(query, directives);
 //				results.forEach(function(object) {
 				results.then(function(objects) {
+//TEST
+					var cacheResults = cachingStore.query();
+					cacheResults.forEach(function(object) {
+						cachingStore.remove(object.id);
+					} );
+//END TEST
 					dojo.forEach(objects, function(object, i) {
 						if(!store.options.isLoaded || store.options.isLoaded(object) ) {
 							if( ! cachingStore.get(object.id)  ) {
 //								console.log("Adding Object to Cache Store:"+i+" :"+object.id);
-								cachingStore.data.splice(i,0,object);
-								cachingStore.index[object.id] = object;
-								cachingStore.notify(object);
+//								cachingStore.data.splice(i,0,object);
+//								cachingStore.index[object.id] = object;
+//								cachingStore.notify(object);
+								cachingStore.add(object);
+
 							} else {
 								cachingStore.put(object,store.options);
 							}							
