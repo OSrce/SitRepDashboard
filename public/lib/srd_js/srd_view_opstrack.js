@@ -358,7 +358,22 @@ dojo.declare(
 //					this.srd_datagrid.render();
 				}.bind(this) );
 			} else if(insertedInto > -1) {
-				this.srd_dataStore.onNew(object,insertedInto);
+				var theIndex = this.srd_memStore.data.indexOf(object);
+				console.log( "onNew :"+object.id+" : Index : "+theIndex);
+				if(theIndex >= 0 && theIndex != insertedInto) {
+					
+//					this.srd_dataStore.onNew(object,theIndex);
+//					this.srd_datagrid._clearData();
+					this.srd_datagrid._addItem(object,theIndex);
+					this.srd_datagrid.updateRows(0, insertedInto);
+//						this.srd_datagrid.update();
+/*					this.srd_memStore.data.forEach(function(object, thisIndex) {
+						this.srd_dataStore.onSet(object);
+					}.bind(this) );
+*/
+				} else {
+					this.srd_dataStore.onNew(object,insertedInto);
+				}
 //				this.srd_dataStore.onNew(object);
 			} else {
 				dojo.when( this.srd_dataStore.onSet(object), function() {
@@ -395,7 +410,7 @@ dojo.declare(
 					dojo.forEach(objects, function(object, i) {
 						if(!store.options.isLoaded || store.options.isLoaded(object) ) {
 							if( ! cachingStore.get(object.id)  ) {
-								console.log("Adding Object to Cache Store:"+i+" :"+object.id);
+//								console.log("Adding Object to Cache Store:"+i+" :"+object.id);
 								cachingStore.data.splice(i,0,object);
 								cachingStore.index[object.id] = object;
 								cachingStore.notify(object);
@@ -404,14 +419,14 @@ dojo.declare(
 							}							
 // MAKE DO NOT EVICT LIST THEN ITERATE THROUGH cacheStore checking what to evict.
 							directives.doNotEvictList.push(object.id);
-							console.log("MasterStore Result:"+object.id);
+//							console.log("MasterStore Result:"+object.id);
 						}
 					} );
 					var cacheResults = cachingStore.query();
 					cacheResults.forEach(function(object) {
-						console.log("CacheStore Result:"+object.id+"dNEL Length:"+directives.doNotEvictList.indexOf(object.id));
+//						console.log("CacheStore Result:"+object.id+"dNEL Length:"+directives.doNotEvictList.indexOf(object.id));
 						if( directives.doNotEvictList.indexOf(object.id) == -1 ) {  
-							console.log("Evicting :"+object.id);
+//							console.log("Evicting :"+object.id);
 							cachingStore.remove(object.id);
 						} 
 					} );
