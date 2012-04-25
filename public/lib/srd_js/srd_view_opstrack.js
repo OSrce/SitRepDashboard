@@ -131,25 +131,26 @@ dojo.declare(
 					
 				}
 
+				// Make Query Results from memstore here and observe handler.
+				this.theResults = this.srd_memStore.query();
+				this.observeHandle = this.theResults.observe(function(object,removedFrom,insertedInto) { this.resultsObserver(object, removedFrom, insertedInto); }.bind(this)  );
+
 				this.srd_sort = [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}];
 				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
-				this.srd_datagrid = new dojox.grid.EnhancedGrid( {
-					store: this.srd_dataStore,
-					structure : this.srd_structList[this.selectedTable],
-					plugins: {nestedSorting: true},
-					sortFields: this.srd_sort,
-					region : 'center'
-				} );
 				if(this.data.srd_query) {
 					this.srd_query = this.data.srd_query;
 				} else {
 					this.srd_query = { SREXPR: "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval '15 minutes' ) AND cfs_routenotifications = 'true'" }; 
 				}
-				this.srd_datagrid.setQuery(this.srd_query ); 
-
-				// Make Query Results from memstore here and observe handler.
-				this.theResults = this.srd_memStore.query();
-				this.observeHandle = this.theResults.observe(function(object,removedFrom,insertedInto) { this.resultsObserver(object, removedFrom, insertedInto); }.bind(this)  );
+				this.srd_datagrid = new dojox.grid.EnhancedGrid( {
+					store: this.srd_dataStore,
+					structure : this.srd_structList[this.selectedTable],
+					plugins: {nestedSorting: true},
+					sortFields: this.srd_sort,
+					query: this.srd_query,
+					region : 'center'
+				} );
+//				this.srd_datagrid.setQuery(this.srd_query ); 
 
 				this.insideContainer.addChild(this.srd_datagrid);
 				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
@@ -333,6 +334,7 @@ dojo.declare(
 						this.srd_layer.layer.removeAllFeatures();
 						this.createMapFeatures();	
 					}
+
 				}.bind(this) );
 //			}.bind(this) );
 
@@ -352,14 +354,16 @@ dojo.declare(
 */
 			if(removedFrom > -1) {
 //				console.log("Remove Pos "+removedFrom+"From DataGrid!");
-				this.srd_dataStore.onDelete(object);
-				this.srd_datagrid.render();
+				dojo.when( this.srd_dataStore.onDelete(object), function() {
+//					this.srd_datagrid.render();
+				}.bind(this) );
 			} else if(insertedInto > -1) {
 				this.srd_dataStore.onNew(object,insertedInto);
-				this.srd_datagrid.render();
+//				this.srd_dataStore.onNew(object);
 			} else {
-				this.srd_dataStore.onSet(object);
-				this.srd_datagrid.render();
+				dojo.when( this.srd_dataStore.onSet(object), function() {
+//					this.srd_datagrid.render();
+				}.bind(this) );
 			}	
 			
 		},
@@ -368,18 +372,18 @@ dojo.declare(
 		FixedCacheStore: function(masterStore, cachingStore, options) {
 			var store = dojo.store.Cache( masterStore, cachingStore, options);
 			store.options = options || {};
-			store.add = function(object, directives) {
+			store.add = function(object, options) {
 				return Deferred.when(masterStore.add(object, directives), function(result) {
-//					console.log( "ADD Called on FixedCache");
-					cachingStore.add(typeof result == "object" ? result	: object, directives);
+					console.log( "ADD Called on FixedCache");
+					cachingStore.add(typeof result == "object" ? result	: object, options);
 					return result;
 				} );
 			};
-			store.put = function(object, directives) {
-				cachingStore.remove((directives && directives.id) || this.getIdentity(object));
-				return Deferred.when(masterStore.put(object, directives), function(result) {
-//					console.log( "PUT Called on FixedCache");
-					cachingStore.put(typeof result == "object" ? result	: object, directives);
+			store.put = function(object, options) {
+				cachingStore.remove((options && options.id) || this.getIdentity(object));
+				return Deferred.when(masterStore.put(object, options), function(result) {
+					console.log( "PUT Called on FixedCache");
+					cachingStore.put(typeof result == "object" ? result	: object, options);
 					return result;
 				} );
 			};
@@ -388,25 +392,31 @@ dojo.declare(
 				var results = masterStore.query(query, directives);
 //				results.forEach(function(object) {
 				results.then(function(objects) {
-					dojo.forEach(objects, function(object) {
+					dojo.forEach(objects, function(object, i) {
 						if(!store.options.isLoaded || store.options.isLoaded(object) ) {
-							cachingStore.put(object);
+							if( ! cachingStore.get(object.id)  ) {
+								console.log("Adding Object to Cache Store:"+i+" :"+object.id);
+								cachingStore.data.splice(i,0,object);
+								cachingStore.index[object.id] = object;
+								cachingStore.notify(object);
+							} else {
+								cachingStore.put(object,store.options);
+							}							
 // MAKE DO NOT EVICT LIST THEN ITERATE THROUGH cacheStore checking what to evict.
 							directives.doNotEvictList.push(object.id);
-//							console.log("MasterStore Result:"+object.id);
+							console.log("MasterStore Result:"+object.id);
 						}
 					} );
-					jonTest5 = directives.doNotEvictList;
 					var cacheResults = cachingStore.query();
 					cacheResults.forEach(function(object) {
-//						console.log("CacheStore Result:"+object.id+"dNEL Length:"+directives.doNotEvictList.indexOf(object.id));
+						console.log("CacheStore Result:"+object.id+"dNEL Length:"+directives.doNotEvictList.indexOf(object.id));
 						if( directives.doNotEvictList.indexOf(object.id) == -1 ) {  
-//							console.log("Evicting :"+object.id);
+							console.log("Evicting :"+object.id);
 							cachingStore.remove(object.id);
 						} 
 					} );
 				} );
-				return results;
+				return dojo.store.util.QueryResults(this.queryEngine(query,directives)(results) );
 			};
 		return store;
 		},
