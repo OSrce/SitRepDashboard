@@ -145,7 +145,7 @@ dojo.declare(
 				this.srd_datagrid = new dojox.grid.EnhancedGrid( {
 					store: this.srd_dataStore,
 					structure : this.srd_structList[this.selectedTable],
-					plugins: {nestedSorting: true},
+					plugins: {nestedSorting: true },
 					sortFields: this.srd_sort,
 					query: this.srd_query,
 					region : 'center'
@@ -254,67 +254,12 @@ dojo.declare(
 		//END DRAW MAP DATA
 		createMapFeatures: function() {
 			this.srd_memStore.query().forEach( function( cfs) {
-				if(this.srd_selMapMode == 1) {
-					// USE PCT BOUNDARIES
-					var pct = cfs.cfs_pct;
-					var jobNum = cfs.cfs_num;
-					var searchVal = String(pct);
-					var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('PctName',searchVal);
-					console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
-					if(theRefFeat && theRefFeat.length > 0) {
-						console.log("Adding Feature to Vector Layer!");
-						var theFeatureAttr = { 
-							label: cfs.cfs_code,
-							body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
-							style: 2001
-						}
-						var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
-						this.srd_layer.layer.addFeatures( Array( theFeat), {});
-					}
-				} else if(this.srd_selMapMode == 2) {
-					// USE SECTOR BOUNDARIES
-					var pct = cfs.cfs_pct;
-					var jobNum = cfs.cfs_num;
-					var sector = cfs.cfs_sector;
-					var searchVal = pct+sector;
-					var theRefFeat = this.srd_layerArr[3001].layer.getFeaturesByAttribute('Name',searchVal);
-					console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
-					if(theRefFeat && theRefFeat.length > 0) {
-						console.log("Adding Feature to Vector Layer!");
-						var theFeatureAttr = { 
-							label: cfs.cfs_code,
-							body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
-							style: 2001
-						}
-						var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
-						this.srd_layer.layer.addFeatures( Array( theFeat), {});
-					}
-				} else if(this.srd_selMapMode ==3) {
-					// USE Actual Address (if it was geocoded)
-//					console.log("Create Feature for Job:"+cfs.cfs_num);
-					var theFeatureAttr = { 
-						label: "10-"+cfs.cfs_code,
-						body : "Signal: 10-"+cfs.cfs_code+" Job :"+cfs.cfs_num,
-						style: 5001
-					}
-					if( cfs.cfs_assignedunit) {
-						theFeatureAttr.style = 5002;
-					}
-					if ( cfs.cfs_finaldis) {
-						theFeatureAttr.style = 5004;
-					}	
-
-					var theGeom = new OpenLayers.Geometry.fromWKT(cfs.geometry);
-					theGeom.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913") );
-					var theFeat = new OpenLayers.Feature.Vector(theGeom,theFeatureAttr,null);
-					this.srd_layer.layer.addFeatures( Array( theFeat), {});
-//					console.log("Feature Geom ="+theFeat.geometry.toString());
-				}
+				this.addToMap(cfs);
 			}.bind(this) );
 		},
 		// END CREATE MAP FEATURES
 		refreshTable: function() {
-			console.log("Refresh Table Called!");
+//			console.log("Refresh Table Called!");
 //			delete this.srd_memStore.data;
 //			this.srd_memStore.data = [];
 
@@ -327,9 +272,9 @@ dojo.declare(
 
 //			this.srd_datagrid.setStore(this.srd_dataStore); 
 //			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
-//				this.srd_store.query(this.srd_query,{ sort:this.srd_sort } );
-				dojo.when( this.srd_store.query(this.srd_query,{ sort:this.srd_sort } ), function(theDataArr) {
-					
+				this.srd_store.query(this.srd_query,{ sort:this.srd_sort } );
+//				dojo.when( this.srd_store.query(this.srd_query,{ sort:this.srd_sort } ), function(theDataArr) {
+/*					
 					if(this.mapData == true) {
 						this.srd_layer.layer.destroyFeatures();
 						this.srd_layer.layer.removeAllFeatures();
@@ -337,7 +282,7 @@ dojo.declare(
 					}
 
 				}.bind(this) );
-
+*/
 //			}.bind(this) );
 
 		},
@@ -345,42 +290,32 @@ dojo.declare(
 		
 		// BEGIN resultsObserver
 		resultsObserver: function(object, removedFrom, insertedInto) {
-			console.log("Observer Called! "+object.id+" rf: "+removedFrom+" iI: "+insertedInto);
-//			this.srd_datagrid.update();
-/*			var test1 = this.srd_store.get(object.id);
-			console.log("Test1 = "+test1.id);
-			var test2 = this.srd_dataStore.fetchItemByIdentity(insertedInto);
-			console.log("Test2 = "+this.srd_dataStore.isItem(test2) );
-			var test3 = this.srd_dataStore.isDirty(test2);
-			console.log("Test3 "+test3 );
-*/
+//			console.log("Observer Called! "+object.id+" rf: "+removedFrom+" iI: "+insertedInto);
 			if(removedFrom > -1) {
 //				console.log("Remove Pos "+removedFrom+"From DataGrid!");
-				dojo.when( this.srd_dataStore.onDelete(object), function() {
-//					this.srd_datagrid.render();
-				}.bind(this) );
+				this.srd_dataStore.onDelete(object);
+				if(this.mapData == true) {
+					this.deleteFromMap(object);
+				}
 			} else if(insertedInto > -1) {
 				var theIndex = this.srd_memStore.data.indexOf(object);
-				console.log( "onNew :"+object.id+" : Index : "+theIndex);
-				if(theIndex >= 0 && theIndex != insertedInto) {
+//				console.log( "onNew :"+object.id+" : Index : "+theIndex);
+/*				if(theIndex >= 0 && theIndex != insertedInto) {
 					console.log("testing");					
 //					this.srd_dataStore.onNew(object,theIndex);
 //					this.srd_datagrid._clearData();
 					this.srd_datagrid._addItem(object,theIndex);
 					this.srd_datagrid.updateRows(0, insertedInto);
 //						this.srd_datagrid.update();
-/*					this.srd_memStore.data.forEach(function(object, thisIndex) {
-						this.srd_dataStore.onSet(object);
-					}.bind(this) );
-*/
 				} else {
+*/
 					this.srd_dataStore.onNew(object,insertedInto);
-				}
-//				this.srd_dataStore.onNew(object);
+					if(this.mapData == true) {
+						this.addToMap(object);
+					}
+//				}
 			} else {
-				dojo.when( this.srd_dataStore.onSet(object), function() {
-//					this.srd_datagrid.render();
-				}.bind(this) );
+				this.srd_dataStore.onSet(object);
 			}	
 			
 		},
@@ -446,6 +381,75 @@ dojo.declare(
 		return store;
 		},
 		// END FixedCacheStore
+		// BEGIN deleteFromMap
+		deleteFromMap: function(object) {
+			var theFeatArr = this.srd_layer.layer.getFeaturesByAttribute('cfs',object);
+			if(theFeatArr) {
+				this.srd_layer.layer.removeFeatures(theFeatArr);	
+			}
+		},
+		// END deleteFromMap
+		// BEGIN addToMap
+		addToMap: function(cfs) {
+			if(this.srd_selMapMode == 1) {
+				// USE PCT BOUNDARIES
+				var pct = cfs.cfs_pct;
+				var jobNum = cfs.cfs_num;
+				var searchVal = String(pct);
+				var theRefFeat = this.srd_layerArr[2001].layer.getFeaturesByAttribute('PctName',searchVal);
+				console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
+				if(theRefFeat && theRefFeat.length > 0) {
+					console.log("Adding Feature to Vector Layer!");
+					var theFeatureAttr = { 
+						label: cfs.cfs_code,
+						body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
+						style: 2001
+					}
+					var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
+					this.srd_layer.layer.addFeatures( Array( theFeat), {});
+				}
+			} else if(this.srd_selMapMode == 2) {
+				// USE SECTOR BOUNDARIES
+				var pct = cfs.cfs_pct;
+				var jobNum = cfs.cfs_num;
+				var sector = cfs.cfs_sector;
+				var searchVal = pct+sector;
+				var theRefFeat = this.srd_layerArr[3001].layer.getFeaturesByAttribute('Name',searchVal);
+				console.log("Create Feature for Job:"+jobNum+" in :"+searchVal);
+				if(theRefFeat && theRefFeat.length > 0) {
+					console.log("Adding Feature to Vector Layer!");
+					var theFeatureAttr = { 
+						label: cfs.cfs_code,
+						body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
+						style: 2001
+					}
+					var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
+					this.srd_layer.layer.addFeatures( Array( theFeat), {});
+				}
+			} else if(this.srd_selMapMode ==3) {
+				// USE Actual Address (if it was geocoded)
+//					console.log("Create Feature for Job:"+cfs.cfs_num);
+				var theFeatureAttr = { 
+					label: "10-"+cfs.cfs_code,
+					body : "Signal: 10-"+cfs.cfs_code+" Job :"+cfs.cfs_num,
+					cfs : cfs,
+					style: 5001
+				}
+				if( cfs.cfs_assignedunit) {
+					theFeatureAttr.style = 5002;
+				}
+				if ( cfs.cfs_finaldis ) {
+					theFeatureAttr.style = 5004;
+				}	
+
+				var theGeom = new OpenLayers.Geometry.fromWKT(cfs.geometry);
+				theGeom.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:900913") );
+				var theFeat = new OpenLayers.Feature.Vector(theGeom,theFeatureAttr,null);
+				this.srd_layer.layer.addFeatures( Array( theFeat), {});
+//					console.log("Feature Geom ="+theFeat.geometry.toString());
+			}
+		},
+		// END addToMap
 		// BEGIN popupCfsSingle
 		popupCfsSingle: function(evt) {
 			var selectedItem = this.srd_datagrid.getItem(this.srd_datagrid.selection.selectedIndex);
