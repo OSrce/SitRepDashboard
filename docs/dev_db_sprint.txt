@@ -35,7 +35,7 @@ CREATE TABLE sr_cfs (
 	cfs_dupletter CHAR,
 	cfs_dupnum INT,
 	cfs_body TEXT,
-	cfs_body_count INT,
+	cfs_bodylastline VARCHAR(100),
 	cfs_created_on TIMESTAMP,
 	cfs_updated_on TIMESTAMP,
 	PRIMARY KEY (cfs_date, cfs_num)
@@ -89,6 +89,7 @@ SELECT AddGeometryColumn('sr_locations','sr_geom',4326,'GEOMETRY',3);
 
 
 CREATE VIEW sr_cfs_withlocation AS SELECT (cfs.cfs_date||'|'||cfs.cfs_num) as id, cfs.*, ST_AsText(loc.sr_geom) as geometry FROM sr_cfs cfs, sr_locations loc WHERE cfs.cfs_location = loc.id;
+
 
 
 

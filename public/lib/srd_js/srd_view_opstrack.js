@@ -438,7 +438,7 @@ dojo.declare(
 				if( cfs.cfs_assignedunit) {
 					theFeatureAttr.style = 5002;
 				}
-				if ( cfs.cfs_finaldis ) {
+				if ( cfs.cfs_finaldisdate ) {
 					theFeatureAttr.style = 5004;
 				}	
 
