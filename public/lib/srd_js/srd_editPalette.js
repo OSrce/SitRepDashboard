@@ -38,6 +38,11 @@ function srd_editPalette (theSrdLayer) {
 		select: { label: "Select Features", img: "lib/SR_OpenLayers/theme/default/img/pan_off.png" }
 	}	
 
+	//BEGIN BUILD THE PRESETS
+	this.getPresets();
+
+	// END BUILD THE PRESETS
+
 }
 // END CONSTRUCTOR
 
@@ -266,6 +271,30 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 	
 
 }
+// END addControl
+
+
+// BEGIN getPresets
+srd_editPalette.prototype.getPresets = function() {
+	dojo.addOnLoad(function() {
+		this.styleArr = this.srd_layer.srd_styleArr;
+		var presetsCP = new dijit.layout.ContentPane( );
+		this.presetsContainer.addChild(presetsCP);
+		this.presetsSource = new dojo.dnd.Source( presetsCP.domNode );
+		this.presetsArr = [];
+		for( var styleId in this.styleArr) {
+			this.presetsArr.push(this.styleArr[styleId] );
+		}
+		this.presetsSource.insertNodes( false, this.presetsArr );
+
+
+	}.bind(this) );
+}
+// END getPresets()
+
+
+
+
 
 
 

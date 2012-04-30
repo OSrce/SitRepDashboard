@@ -1,6 +1,6 @@
-// srd_view_opstrack.js
+// srd_view_cfstrack.js
 ////////////////////////////////
-// srd view admin
+// srd view cfs track
 //
 //
 //
@@ -13,7 +13,7 @@ dojo.require('dojo.store.Observable');
 
 //srd_view class definition using dojo.declare 
 dojo.declare( 
-	'srd_view_opstrack',
+	'srd_view_cfstrack',
 	srd_view,
 	{
 		srd_layerArr : null,
@@ -31,7 +31,7 @@ dojo.declare(
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
 			dojo.addOnLoad( function() {
-			console.log("srd_view_ops constructor called!");
+			console.log("srd_view_cfs constructor called!");
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_selLayer = this.srd_doc.srd_selLayer;
 //				console.log("Selected Layer : "+this.srd_selLayer.name);
@@ -101,7 +101,7 @@ dojo.declare(
 					"Calls for service - SPRINT": [ {
 						defaultCell: { width: 10, editable: false, cellStyles: 'text-align: center;'  },
 						cells: [
-							{ name: "Date", field:"cfs_date", width: "120px", hidden:true },
+							{ name: "Date", field:"cfs_date", width: "120px"  },
 							{ name: "Time", field:"cfs_timecreated", width: "90px", formatter:this.dateToTime},
 //							{ name: "Job Let", field:"cfs_letter", width: "50px" },
 							{ name: "Signal", field:"cfs_code", width: "90px", formatter: this.formatSignal},
