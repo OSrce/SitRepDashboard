@@ -51,7 +51,8 @@ class Login_Form_Login extends Zend_Form
 		$this->addElement(
 			'checkbox','keeploggedin',array(
 				'label' => 'Keep me logged in',
-				'required' => true
+				'checked' => true,
+				'required' => true		
 			)
 		);
 
