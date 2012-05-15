@@ -74,6 +74,10 @@ insert into sr_window_layout (name, showname, view_x, view_y,view_data) VALUES (
 insert into sr_window_layout (name, showname, view_x, view_y,view_data) VALUES ('10-44 Tracking', false, 1, 1, E'[[{"type":"opstrack", "srd_query": {"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'24 hours\' ) AND cfs_code=44 AND cfs+code" } }]]' );
 
 
+update sr_window_layout set view_data=E'[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_query":{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_routenotifications=\'true\'  " } }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' where id=4;
+
+
+
 
 
 

@@ -41,8 +41,14 @@ dojo.declare(
 				}
 				this.selectedTable = "Calls for service - SPRINT";
 				this.selectedDataMenu = new dijit.Menu();
+//				if(this.data.autoRefresh) {
+//					this.autoRefresh = this.data.autoRefresh;
+//				}
 				if(!this.autoRefresh) {
 					this.autoRefresh = false;				
+				}
+				if(this.data.mapData) {
+					this.mapData = this.data.mapData;
 				}
 				if(!this.mapData) {
 					this.mapData = false;			
@@ -75,17 +81,23 @@ dojo.declare(
 					srd_view: this,
 					onClick: function() { this.srd_view.deleteSelectedItems(); } 
 				} ) );
-				this.dataMenu.addChild(new dijit.CheckedMenuItem( {
+				var autoRefreshMenuItem = new dijit.CheckedMenuItem( {
 					label: "Auto Refresh",
 					srd_view: this,
+//					checked: this.autoRefresh,
 					onClick: function() { this.srd_view.toggleAutoRefresh(this); } 
-				} ) );
-				this.dataMenu.addChild(new dijit.CheckedMenuItem( {
+				} );
+				this.dataMenu.addChild(autoRefreshMenuItem);
+//				if(this.autoRefresh == true) {
+//					this.toggleAutoRefresh(autoRefreshMenuItem);
+//				}
+				var mapDataMenuItem = new dijit.CheckedMenuItem( {
 					label: "Map Data",
 					srd_view: this,
+					checked: this.mapData,
 					onClick: function() { this.srd_view.toggleMapData(this); } 
-				} ) );
-	
+				} );
+				this.dataMenu.addChild(mapDataMenuItem);
 //				this.srd_memStore = new dojo.store.Memory();			
 				this.srd_memStore = dojo.store.Observable( new dojo.store.Memory() );			
 				this.srd_store = new this.FixedCacheStore(
@@ -219,6 +231,7 @@ dojo.declare(
 		// END toggleAutoRefresh
 		// BEGIN toggleMapData 
 		toggleMapData: function(menuItem) { 
+			console.log("TOGGLE MAP DATA CALLED!");
 			if( menuItem.checked == true ) {
 				//CHECKED
 				this.mapData = true;
@@ -385,14 +398,17 @@ dojo.declare(
 		// END FixedCacheStore
 		// BEGIN deleteFromMap
 		deleteFromMap: function(object) {
-			var theFeatArr = this.srd_layer.layer.getFeaturesByAttribute('cfs',object);
-			if(theFeatArr) {
-				this.srd_layer.layer.removeFeatures(theFeatArr);	
+			if(this.srd_layer) {
+				var theFeatArr = this.srd_layer.layer.getFeaturesByAttribute('cfs',object);
+				if(theFeatArr) {
+					this.srd_layer.layer.removeFeatures(theFeatArr);	
+				}
 			}
 		},
 		// END deleteFromMap
 		// BEGIN addToMap
 		addToMap: function(cfs) {
+			if(this.srd_layer) {
 			if(this.srd_selMapMode == 1) {
 				// USE PCT BOUNDARIES
 				var pct = cfs.cfs_pct;
@@ -449,6 +465,7 @@ dojo.declare(
 				var theFeat = new OpenLayers.Feature.Vector(theGeom,theFeatureAttr,null);
 				this.srd_layer.layer.addFeatures( Array( theFeat), {});
 //					console.log("Feature Geom ="+theFeat.geometry.toString());
+			}
 			}
 		},
 		// END addToMap
