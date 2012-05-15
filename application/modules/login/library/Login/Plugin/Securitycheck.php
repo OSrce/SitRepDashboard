@@ -14,6 +14,15 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 
 		$auth = Zend_Auth::getInstance();
 
+		date_default_timezone_set("America/New_York");
+ 	  $logger = new Zend_Log();
+ 	  $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
+ 		$logger->log("TEMP TEST1\n",Zend_Log::DEBUG);
+//		$logger->log("TEMP TEST:".print_r($auth,true),Zend_Log::DEBUG);
+		$request = new Zend_Controller_Request_Http();
+		$logger->log("Test2:".print_r($request->getHeader('Cookie') , true),Zend_Log::DEBUG);	
+
+
 		$redirect = true;
 		if($this->_module != self::MODULE_NO_AUTH) {
 			if($this->_isAuth($auth) ) {
@@ -22,7 +31,12 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 //				$this->_role = $user['id_role'];
 				$bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
 				$db = $bootstrap->getResource('db');
-				
+		
+//TEMP TESTING		
+	
+		 		$logger->log("TEMP TEST:".print_r($user,true),Zend_Log::DEBUG);
+
+//TEMP TESTING END
 	
 //				$maanger = $bootstrap->getResource('cachemanager');
 //				$cache = $manager->getCache('acl');

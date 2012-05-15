@@ -124,7 +124,7 @@ class Login_Acl extends Zend_Acl {
 		date_default_timezone_set("America/New_York");
 		$logger = new Zend_Log();
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
-		$logger->log("GetPermissions For:".$roleType.":::".$roleId,Zend_Log::DEBUG);
+//		$logger->log("GetPermissions For:".$roleType.":::".$roleId,Zend_Log::DEBUG);
 
 	
 		$permissionsTable = new Login_Model_DbTable_Permissions($this->the_db);
@@ -135,44 +135,44 @@ class Login_Acl extends Zend_Acl {
 //			$resType = $perm->resource_type;
 			$resId = $perm->resource_id;
 //			$theResource = $resType.':'.$resId;
-			$logger->log("TheResource:".$resId,Zend_Log::DEBUG);
+//			$logger->log("TheResource:".$resId,Zend_Log::DEBUG);
 
 			if( ! $this->has($resId) ) { 
 				$this->addResource(new Zend_Acl_Resource( $resId)  ); 
 			}
 			if ($perm->permission_create == 'allow') {
-				$logger->log("ACL Create Allow:".$resId,Zend_Log::DEBUG);
+//				$logger->log("ACL Create Allow:".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resId , 'create' );
 			} else {
 				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'create' ) ) {
-					$logger->log("ACL Create Deny:".$resId,Zend_Log::DEBUG);
+//					$logger->log("ACL Create Deny:".$resId,Zend_Log::DEBUG);
 					$this->deny($roleType.":".$roleId, $resId , 'create' );
 				}
 			}
 			if ($perm->permission_read == 'allow') {
-				$logger->log("ACL Read Allow:".$resId,Zend_Log::DEBUG);
+//				$logger->log("ACL Read Allow:".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resId , 'read' );
 			} else {
 				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'read' ) ) {
-					$logger->log("ACL Read Deny:".$resId,Zend_Log::DEBUG);
+//					$logger->log("ACL Read Deny:".$resId,Zend_Log::DEBUG);
 					$this->deny($roleType.":".$roleId, $resId , 'read' );
 				}
 			}
 			if ($perm->permission_update == 'allow') {
-				$logger->log("ACL Update Allow:".$resId,Zend_Log::DEBUG);
+//				$logger->log("ACL Update Allow:".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resId , 'update' );
 			} else {
 				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'update' ) ) {
-					$logger->log("ACL Update Deny:".$resId,Zend_Log::DEBUG);
+//					$logger->log("ACL Update Deny:".$resId,Zend_Log::DEBUG);
 					$this->deny($roleType.":".$roleId, $resId , 'update' );
 				}
 			}
 			if ($perm->permission_delete == 'allow') {
-				$logger->log("ACL Delete Allow:".$resId,Zend_Log::DEBUG);
+//				$logger->log("ACL Delete Allow:".$resId,Zend_Log::DEBUG);
 				$this->allow($roleType.":".$roleId, $resId , 'delete' );
 			} else {
 				if( ! $this->isAllowed($roleType.":".$roleId, $resId , 'delete' ) ) {
-					$logger->log("ACL Delete Deny:".$resId,Zend_Log::DEBUG);
+//					$logger->log("ACL Delete Deny:".$resId,Zend_Log::DEBUG);
 					$this->deny($roleType.":".$roleId, $resId , 'delete' );
 				}
 			}

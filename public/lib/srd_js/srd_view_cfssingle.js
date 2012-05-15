@@ -290,6 +290,19 @@ dojo.declare(
 					}
 				}
 			}
+			// GET POSITION OF cfs_body TEXT and resize window height.
+			if(this.srd_widgetArr["cfs_body"] ) {	
+				var posObj = dojo.position(this.srd_widgetArr["cfs_body"].domNode);
+				var theHeight = posObj.y + posObj.h + 20;
+				this.cp.resize({h:theHeight});
+				var winDiff = window.outerHeight-window.innerHeight;
+				if(theHeight + winDiff < screen.height) {
+					if(this.data.noContainers) {
+						window.resizeTo(window.outerWidth, theHeight+winDiff);
+					}
+				}	
+			}				
+
 			// END FOR LOOP FOR WIDGETS
 			this.cp.resize();	
 		},
