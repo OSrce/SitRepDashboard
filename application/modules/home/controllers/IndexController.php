@@ -169,32 +169,45 @@ class Home_IndexController extends Zend_Controller_Action
 					//SETUP presetSelect
 					$presetSelect = $presetsTable->select();
 					$presetSelect->order('id');	
-				} elseif( $theModule['name'] == 'srdata\/layers\/\*' ) {
+				} elseif( $theModule['name'] == 'srdata/layers/*' ) {
 				// LOAD EVERY LAYER
 					//SETUP layerSelect
 					$logger->log("Load Every Layer.",Zend_Log::DEBUG);
 					$layerSelect = $layersTable->select();
 					$layerSelect->order('id');	
-				} elseif( preg_match( '/srdata\/layers\/(\d+)/', $theModule['name'], $matchArr ) ) {
+				} elseif( preg_match( 'srdata\/layers\/(\d+)/', $theModule['name'], $matchArr ) ) {
 				//LOAD SPECFIC LAYER
 					//SETUP layerSelect
 					$logger->log("Load Layer :".$matchArr[1],Zend_Log::DEBUG);
 					$layerSelect = $layersTable->select();
 					$layerSelect->where('id = ?',$matchArr[1]);	
 					$layerSelect->order('id');	
-				} elseif( $theModule['name'] == 'srdata\/styles\/\*' ) {
+				} elseif( $theModule['name'] == 'srdata/styles/*' ) {
 				// LOAD EVERY STYLE
 					//SETUP styleSelect
 					$logger->log("Load Every Style.",Zend_Log::DEBUG);
 					$styleSelect = $stylesTable->select();
 					$styleSelect->order('id');	
-				} elseif( preg_match( '/srdata\/styles\/(\d+)/', $theModule['name'], $matchArr ) ) {
+				} elseif( preg_match( 'srdata\/styles\/(\d+)/', $theModule['name'], $matchArr ) ) {
 				//LOAD SPECFIC STYLE
 					//SETUP styleSelect
 					$logger->log("Load Style :".$matchArr[1],Zend_Log::DEBUG);
 					$styleSelect = $stylesTable->select();
 					$styleSelect->where('id = ?',$matchArr[1]);	
 					$styleSelect->order('id');	
+				} elseif( $theModule['name'] == 'srdata/wlayout/*' ) {
+				// LOAD EVERY WINDOW LAYOUT
+					//SETUP styleSelect
+					$logger->log("Load Every WLayout.",Zend_Log::DEBUG);
+					$wlayoutSelect = $wlayoutsTable->select();
+					$wlayoutSelect->order('id');	
+				} elseif( preg_match( 'srdata\/wlayout\/(\d+)/', $theModule['name'], $matchArr ) ) {
+				//LOAD SPECFIC WINDOW LAYOUT
+					//SETUP styleSelect
+					$logger->log("Load WLayout :".$matchArr[1],Zend_Log::DEBUG);
+					$wlayoutSelect = $wlayoutsTable->select();
+					$wlayoutSelect->where('id = ?',$matchArr[1]);	
+					$wlayoutSelect->order('id');	
 				}
 				//GET ALL THE LAYER INFO FOR THIS RESOURCE:
 				if($layerSelect != null) {

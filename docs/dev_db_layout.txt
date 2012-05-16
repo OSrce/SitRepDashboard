@@ -79,7 +79,7 @@ update sr_window_layout set view_data=E'[[{"type":"opstrack","id":1,"linkViewIdA
 
 
 
-
+insert into sr_acl_permissions ( role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) VALUES ( 'gid', 553, 64, 'deny', 'allow', 'deny', 'deny' );
 
 
  insert into sr_acl_permissions ( role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) SELECT 'gid',500, resource_id, permission_create, permission_read, permission_update, permission_delete from sr_acl_permissions where role_id=553;
