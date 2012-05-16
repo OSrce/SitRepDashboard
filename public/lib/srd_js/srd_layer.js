@@ -176,6 +176,9 @@ srd_layer.prototype.loadData = function( ) {
 
 	if( this.options.type == "XYZ" ) {
 		console.log("XYZ Layer Created : "+this.options.name+":::"+this.options.url+":::");
+		if( !this.options.attribution) {
+			this.options.attribution = "";
+		}
 		this.layer = new OpenLayers.Layer.XYZ ( 
 			this.options.name,
 //				"test",
