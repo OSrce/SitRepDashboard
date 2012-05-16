@@ -674,6 +674,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							//BEGIN USERNAME / Logout Options
 							this.srd_userMenu = new dijit.Menu({});
 							this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
+								id: "srdLogout",
 								label: "Log Out", //this.staticVals.user_title+" "+this.staticVals.user_lastname,
 								popup: this.srd_userMenu
 							}) );
@@ -959,6 +960,8 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.staticVals.view_layout_x = this.srd_wlayoutArr[this.selected_wlayout].view_x;
 						this.staticVals.view_layout_y = this.srd_wlayoutArr[this.selected_wlayout].view_y;
 						this.staticVals.view_data = this.srd_wlayoutArr[this.selected_wlayout].view_data;
+						this.staticVals.showname = this.srd_wlayoutArr[this.selected_wlayout].showname;
+						this.staticVals.layoutName = this.srd_wlayoutArr[this.selected_wlayout].name;
 
 						this.viewContainer = new srd_gridContainer( {
 							nbZones: this.staticVals.view_layout_x,
@@ -996,6 +999,21 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 								this.viewArr[tmpX][tmpY].updateViewLinks();
 							}
 						}	
+						// CHECK IF showname is set to true and if so display layout name.
+						if(this.nameCP) {
+							this.srd_container.removeChild(this.nameCP);
+							this.nameCP.destroy();
+							delete this.nameCP;
+						}
+						if(this.staticVals.showname) {
+							console.log("Calling show name code");
+						this.nameCP = new dijit.layout.ContentPane( {
+								content: " "+this.staticVals.layoutName,
+								id: "srdLayoutName",
+								region: 'bottom',
+							});
+							this.srd_container.addChild(this.nameCP);
+						}
 					}
 				}
 				// END changeWindowLayout FUNCTION

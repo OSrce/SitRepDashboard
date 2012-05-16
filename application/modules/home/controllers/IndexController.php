@@ -55,11 +55,11 @@ class Home_IndexController extends Zend_Controller_Action
 
 //			$srd_session = new Zend_Session_Namespace("srd");
 			
-/*			if($srd_session-> != true) {
+			if($this->_uid == NULL) {
 				$this->_redirect('/login');
 				exit(-1);
 			}
-*/
+
 			date_default_timezone_set("America/New_York");
 			$logger = new Zend_Log();
 			$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
@@ -175,7 +175,7 @@ class Home_IndexController extends Zend_Controller_Action
 					$logger->log("Load Every Layer.",Zend_Log::DEBUG);
 					$layerSelect = $layersTable->select();
 					$layerSelect->order('id');	
-				} elseif( preg_match( 'srdata\/layers\/(\d+)/', $theModule['name'], $matchArr ) ) {
+				} elseif( preg_match( '/srdata\/layers\/(\d+)/', $theModule['name'], $matchArr ) ) {
 				//LOAD SPECFIC LAYER
 					//SETUP layerSelect
 					$logger->log("Load Layer :".$matchArr[1],Zend_Log::DEBUG);
@@ -188,7 +188,7 @@ class Home_IndexController extends Zend_Controller_Action
 					$logger->log("Load Every Style.",Zend_Log::DEBUG);
 					$styleSelect = $stylesTable->select();
 					$styleSelect->order('id');	
-				} elseif( preg_match( 'srdata\/styles\/(\d+)/', $theModule['name'], $matchArr ) ) {
+				} elseif( preg_match( '/srdata\/styles\/(\d+)/', $theModule['name'], $matchArr ) ) {
 				//LOAD SPECFIC STYLE
 					//SETUP styleSelect
 					$logger->log("Load Style :".$matchArr[1],Zend_Log::DEBUG);
@@ -201,7 +201,7 @@ class Home_IndexController extends Zend_Controller_Action
 					$logger->log("Load Every WLayout.",Zend_Log::DEBUG);
 					$wlayoutSelect = $wlayoutsTable->select();
 					$wlayoutSelect->order('id');	
-				} elseif( preg_match( 'srdata\/wlayout\/(\d+)/', $theModule['name'], $matchArr ) ) {
+				} elseif( preg_match( '/srdata\/wlayout\/(\d+)/', $theModule['name'], $matchArr ) ) {
 				//LOAD SPECFIC WINDOW LAYOUT
 					//SETUP styleSelect
 					$logger->log("Load WLayout :".$matchArr[1],Zend_Log::DEBUG);
