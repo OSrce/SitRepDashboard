@@ -999,21 +999,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 								this.viewArr[tmpX][tmpY].updateViewLinks();
 							}
 						}	
-						// CHECK IF showname is set to true and if so display layout name.
-						if(this.nameCP) {
-							this.srd_container.removeChild(this.nameCP);
-							this.nameCP.destroy();
-							delete this.nameCP;
-						}
-						if(this.staticVals.showname) {
-							console.log("Calling show name code");
-						this.nameCP = new dijit.layout.ContentPane( {
-								content: " "+this.staticVals.layoutName,
-								id: "srdLayoutName",
-								region: 'bottom',
-							});
-							this.srd_container.addChild(this.nameCP);
-						}
+						this.updateLayoutNameDisplay();
 					}
 				}
 				// END changeWindowLayout FUNCTION
@@ -1132,8 +1118,25 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 					window.location.href = "/login/index/logout";	
 
 				}
-
-
+				// BEGIN toggleLayoutNameDisplay
+				srd_document.prototype.updateLayoutNameDisplay = function() {
+					// CHECK IF showname is set to true and if so display layout name.
+					if(this.nameCP) {
+						this.srd_container.removeChild(this.nameCP);
+						this.nameCP.destroy();
+						delete this.nameCP;
+					}
+					if(this.staticVals.showname) {
+						this.nameCP = new dijit.layout.ContentPane( {
+							content: '<img src="'+this.siteLeftImage+'" class="srdLayoutImage"/><div id="srdLayoutText">'+this.staticVals.layoutName+'</div><img src="'+this.siteRightImage+'" class="srdLayoutImage"/>',
+							class: "srdLayoutName",
+							region: 'bottom',
+						});
+						this.srd_container.addChild(this.nameCP);
+					}
+				}
+				// END toggleLayoutNameDisplay
+			
 
 
 

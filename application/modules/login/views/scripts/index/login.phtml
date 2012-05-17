@@ -2,6 +2,7 @@
 	<head>
 		<title>SitRep Login Page</title>
 		<link rel="stylesheet" href="lib/srd_css/srd_style.css" type="text/css" />
+		<link rel="stylesheet" href="lib/srd_css/srd_view_style.css" type="text/css" />
 		<script type="text/javascript" src="lib/SR_Dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 		<script type="text/javascript" src="lib/SR_Dojo/dojo/srd_dojo.js" djConfig="parseOnLoad: true"></script>
 
@@ -27,8 +28,8 @@
 				<div dojoType="dijit.layout.ContentPane" style="width:20%;" region="right" ></div>
 				<div dojoType="dijit.layout.ContentPane" style="height:90px;" region="top" >
 <?php
-				echo $this->srd_login_opts['leftimage'];
-				echo $this->srd_login_opts['rightimage'];
+				echo '<img src="'.$this->srd_login_opts['leftimage'].'" class="srdLoginImage" id="leftLoginImage" />';
+				echo '<img src="'.$this->srd_login_opts['rightimage'].'" class="srdLoginImage" id="rightLoginImage" />';
 
 ?>
 					<center><h1>

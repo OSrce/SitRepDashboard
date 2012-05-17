@@ -116,6 +116,10 @@ class Home_IndexController extends Zend_Controller_Action
 			$this->getResponse()->appendBody("]\n");
 			// END LOAD srdLayerArr data
 
+			//PUT THE LINKS TO THE SITE SPECIFIC IMAGES IN JS.
+			$this->getResponse()->appendBody("srd.siteLeftImage='".$this->view->srd_login_opts['leftimage']."';\n" );
+			$this->getResponse()->appendBody("srd.siteRightImage='".$this->view->srd_login_opts['rightimage']."';\n" );
+			$this->getResponse()->appendBody("srd.siteTitle='".$this->view->srd_login_opts['title']."';\n" );
 
 			$this->getResponse()->appendBody( "\n</script>\n");
 			$this->getResponse()->appendBody( "\n</head>\n");
