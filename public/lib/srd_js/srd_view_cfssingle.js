@@ -171,9 +171,9 @@ dojo.declare(
 		displaySingleCfs: function() {
 			console.log("Called Display Single CFS");
 			if( !this.srd_widgetArr) {
-				var theLeftImageWidget = dojo.create("div", {'class':"srd_cfs_row0", id:"srd_cfs_leftImage", innerHTML: this.srd_doc.siteLeftImage} , this.cp.domNode);
+				var theLeftImageWidget = dojo.create("div", {'class':"srd_cfs_row0", id:"srd_cfs_leftImage", innerHTML: '<img src="'+this.srd_doc.siteLeftImage+'" class="srdLoginImage" id="leftLoginImage" />'    } , this.cp.domNode);
 				var theTitleWidget = dojo.create("div", {'class':"srd_cfs_row0", id:"srd_cfs_title", innerHTML: this.srd_doc.siteTitle} , this.cp.domNode);
-				var theRightImageWidget = dojo.create("div", {'class':"srd_cfs_row0", id:"srd_cfs_rightImage", innerHTML: this.srd_doc.siteRightImage} , this.cp.domNode);
+				var theRightImageWidget = dojo.create("div", {'class':"srd_cfs_row0", id:"srd_cfs_rightImage", innerHTML: '<img src="'+this.srd_doc.siteRightImage+'" class="srdLoginImage" id="rightLoginImage" />'  } , this.cp.domNode);
 				
 				this.srd_widgetArr = {};
 				for(var i=0;i<this.srd_structList[this.selectedTable][0].cells.length;i++) {
