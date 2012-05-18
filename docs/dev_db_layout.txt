@@ -98,6 +98,8 @@ INSERT INTO sr_queries (name, notes, data) VALUES ('Highway', 'Highway - Citywid
 
 INSERT INTO sr_queries (name, notes, data) VALUES ('Transit', 'Transit - Citywide Tracking', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_codesup1 ~ \'9$\'" }' );
 
+INSERT INTO sr_queries (name, notes, data) VALUES ('Priority 1', 'Priority 1 CFS - Citywide', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_priority=1" }' );
+
 INSERT INTO sr_queries (name, notes, data) VALUES ('34 Precinct', '34 Precinct - Calls For Service', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_pct=34" }' );
 
 insert into sr_acl_permissions ( role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) VALUES ( 'gid', 553, 68, 'deny', 'allow', 'deny', 'deny' );

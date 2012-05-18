@@ -153,6 +153,7 @@ class Home_IndexController extends Zend_Controller_Action
 		$acl = new Login_Acl($this->_db,$this->_uid,$this->_gid);
 		$theRole = "uid:".$this->_uid;
 		$theResources = $acl->getResources();
+		$this->_queries = array();
 		$this->_wlayouts = array();
 		$this->_layers = array();
 		$this->_styles = array();

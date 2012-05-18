@@ -145,8 +145,24 @@ dojo.declare(
 				console.log("linkView "+theId+" , "+this.data.linkViewIdArr[theId]);
 				this.linkView(theId);
 			}
-		}	
+		},	
 		// END updateViewLinks FUNCTION
+		// BEGIN getLabel FUNCTION
+		getLabel : function() {
+			if(this.label) {
+				return this.label;
+			} else {
+				return null;
+			}
+		},	
+		// END getLabel FUNCTION
+		// BEGIN loadingComplete FUNCTION
+		loadingComplete : function() {
+		}	
+		// END loadingComplete FUNCTION
+
+
+
 		//
 		//
 	}

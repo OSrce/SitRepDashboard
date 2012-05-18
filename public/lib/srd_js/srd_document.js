@@ -999,13 +999,18 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							this.viewArr[xPos] = tmpViewYArr;
 						}
 						this.srd_container.resize();
+						// BELOW IS CALLED TO PERFORM ACTION WHEN VIEWS ARE DONE BEING CREATED.
+						// TODO: LETS FIX IT.
 						// UPDATE LINKS IN ALL VIEWS 
-						for(var tmpX in this.viewArr) {
-							for(var tmpY in this.viewArr[tmpX] ) {
-								this.viewArr[tmpX][tmpY].updateViewLinks();
-							}
-						}	
-						this.updateLayoutNameDisplay();
+						dojo.ready(function() {
+							for(var tmpX in this.viewArr) {
+								for(var tmpY in this.viewArr[tmpX] ) {
+									this.viewArr[tmpX][tmpY].updateViewLinks();
+									this.viewArr[tmpX][tmpY].loadingComplete();
+								}
+							}	
+							this.updateLayoutNameDisplay();
+						}.bind(this) );
 					}
 //					}.bind(this) );
 				}
@@ -1133,9 +1138,27 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.nameCP.destroy();
 						delete this.nameCP;
 					}
-					if(this.staticVals.showname) {
+					if( this.staticVals.showname != -1) {
+						var theWindowLabel = '';
+						if(this.staticVals.showname == -2) {
+							theWindowLabel = this.staticVals.layoutName;
+						} else if( this.staticVals.showname == -3) {
+
+	
+						} else {
+							for(var xPos in this.viewArr) {
+								for(var yPos in this.viewArr[xPos]) {
+									var viewLabel = this.viewArr[xPos][yPos].getLabel();
+									if(theWindowLabel && viewLabel) {
+										theWindowLabel = theWindowLabel+' | '+viewLabel;
+									} else if (viewLabel) {
+										theWindowLabel = viewLabel;
+									}
+								}
+							}
+						}
 						this.nameCP = new dijit.layout.ContentPane( {
-							content: '<img src="'+this.siteLeftImage+'" class="srdLayoutImage"/><div id="srdLayoutText">'+this.staticVals.layoutName+'</div><img src="'+this.siteRightImage+'" class="srdLayoutImage"/>',
+							content: '<img src="'+this.siteLeftImage+'" class="srdLayoutImage"/><div id="srdLayoutText">'+theWindowLabel+'</div><img src="'+this.siteRightImage+'" class="srdLayoutImage"/>',
 							class: "srdLayoutName",
 							region: 'bottom',
 						});

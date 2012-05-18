@@ -509,11 +509,35 @@ dojo.declare(
 		// BEGIN changeQuery
 		changeQuery: function(theQueryId) {
 			console.log("Change Query to id:"+theQueryId);
+			this.data.srd_queryid = theQueryId;
 			this.srd_query = this.srd_queryArr[theQueryId].data;
 			this.refreshTable();
+			this.srd_doc.updateLayoutNameDisplay();
 
-		}
+		},
 		// END changeQuery
+		// BEGIN getLabel
+		getLabel: function() {
+			console.log("Get Label Called!");
+			if(this.label) {
+				return this.label;
+			} else {
+				if(this.srd_queryArr && this.srd_queryArr[this.data.srd_queryid]) {
+					return this.srd_queryArr[this.data.srd_queryid].notes;
+				} else {
+					return '';
+				}
+			}
+		},
+		// END changeQuery
+		// BEGIN loadingComplete FUNCTION
+		loadingComplete : function() {
+			
+		}	
+		// END loadingComplete FUNCTION
+
+
+
 	}
 );
 

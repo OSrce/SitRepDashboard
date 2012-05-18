@@ -20,6 +20,7 @@ dojo.declare(
 		srd_store		 : null,
 		srd_dataStore		 : null,
 		srd_datagrid : null,
+		onChangeActivated : true,
 	
 		//CONSTUCTOR - REMEMBER SUPER CONSTRUCTOR GETS CALLED FIRST!
 		constructor : function( view_data, parent_srd_doc) {
@@ -234,6 +235,7 @@ dojo.declare(
 		// BEGIN getData FUNCTION
 		getData : function() {	
 //			console.log("getData Called!");
+			if( this.onChangeActivated ) {
 			if( this.srd_widgetArr["cfs_date"] && this.srd_widgetArr["cfs_num"] ) {
 				if( this.srd_widgetArr["cfs_date"].value && this.srd_widgetArr["cfs_num"].value) {
 //					var theDate = dojo.date.locale.format( new Date(), { datePattern: "y-M-d" } );
@@ -243,10 +245,12 @@ dojo.declare(
 					dojo.when( this.srd_store.query({"cfs_date":theDate, "cfs_num":theJob}, {
 						count: 1
 					} ), function(results) {
+						console.log("TEST1");
 						this.displayResults(results[0])
 					}.bind(this)
 					);
 				}
+			}
 			}
 		},
 		// END getData FUNCTION
@@ -324,10 +328,12 @@ dojo.declare(
 
 			this.srd_widgetArr["cfs_date"].set("value",this.theDate);
 			this.srd_widgetArr["cfs_num"].set("value", this.theJob);
+			this.onChangeActivated = false;
 				dojo.when( this.srd_store.query({"cfs_date":this.theDate, "cfs_num":this.theJob}, {
 					count: 1
 				} ), function(results) {
-					this.displayResults(results[0])
+					this.displayResults(results[0]);
+					this.onChangeActivated = true;
 				}.bind(this)
 				);
 			}.bind(this) );
