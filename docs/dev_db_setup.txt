@@ -142,7 +142,7 @@ SELECT AddGeometryColumn('sr_layer_dynamic_data','sr_geom',4326,'GEOMETRY',3);
 CREATE TABLE sr_window_layout ( 
 	id SERIAL NOT NULL,
 	name VARCHAR(128) NOT NULL DEFAULT '',
-	showname BOOL DEFAULT false,
+	showname INT NOT NULL DEFAULT -1,
 	view_x	INT NOT NULL DEFAULT 1,
 	view_y	INT NOT NULL DEFAULT 1,
 	view_data TEXT,
@@ -154,6 +154,18 @@ CREATE TABLE sr_locations_workqueue (
 	location_id INT,
 	PRIMARY KEY (id )
 );
+
+CREATE TABLE sr_queries (
+	id SERIAL NOT NULL,
+	parent BIGINT NOT NULL DEFAULT 0,
+	children BOOL NOT NULL DEFAULT FALSE,
+	name VARCHAR(128) NOT NULL DEFAULT '',
+	notes TEXT,
+	data TEXT,
+	PRIMARY KEY (id)
+);
+
+INSERT INTO sr_modules (name) VALUES ( 'srdata/queries/*' );
 
 
 

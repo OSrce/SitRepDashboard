@@ -6,6 +6,7 @@ class Home_IndexController extends Zend_Controller_Action
 		private $_uid;
 		private $_gid;
 
+		private $_queries;
 		private $_wlayouts;
 		private $_layers;
 		private $_styles;
@@ -75,6 +76,15 @@ class Home_IndexController extends Zend_Controller_Action
 			// END LOAD STATIC VALS
 			
 
+			// BEGIN LOAD srdQueryArr data :
+			foreach($this->_queries as $queryId => $queryArr) {
+				$queryArrJSON = Zend_Json::encode($queryArr);
+				$logger->log("printqueryJSON:".$queryArrJSON,Zend_Log::DEBUG);
+				$this->getResponse()->appendBody( "srd.srd_queryArr['$queryId'] = \n");
+				$this->getResponse()->appendBody( $queryArrJSON."\n");
+			}
+			// END LOAD srdQueryArr data
+
 			// BEGIN LOAD srdWlayoutArr data :
 			foreach($this->_wlayouts as $wlayoutId => $wlayoutArr) {
 				$wlayoutArrJSON = Zend_Json::encode($wlayoutArr);
@@ -133,6 +143,7 @@ class Home_IndexController extends Zend_Controller_Action
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
 	
 
+		$queriesTable = new Srdata_Model_DbTable_Queries($this->_db);
 		$wlayoutsTable = new Srdata_Model_DbTable_Wlayout($this->_db);
 		$presetsTable = new Srdata_Model_DbTable_Presets($this->_db);
 		$stylesTable = new Srdata_Model_DbTable_Styles($this->_db);
@@ -152,6 +163,7 @@ class Home_IndexController extends Zend_Controller_Action
 			$theSelect = $modulesTable->select();
 			$theSelect->where('id=?',$theRes);
 			$theModule = $modulesTable->fetchRow($theSelect);
+			$querySelect = null;
 			$wlayoutSelect = null;
 			$layerSelect = null;
 			$styleSelect = null;
@@ -160,10 +172,12 @@ class Home_IndexController extends Zend_Controller_Action
 				if( $theModule['name'] == '*/*/*' || $theModule['name'] == 'srdata/*/*' ) {
 				// LOAD EVERY LAYER, STYLE, PRESET...
 					$logger->log("Load Everything.",Zend_Log::DEBUG);
+					//SETUP querySelect
+					$querySelect = $queriesTable->select();
+					$querySelect->order('id');	
 					//SETUP wlayoutSelect
 					$wlayoutSelect = $wlayoutsTable->select();
 					$wlayoutSelect->order('id');	
-	
 					//SETUP layerSelect
 					$layerSelect = $layersTable->select();
 					$layerSelect->order('id');	
@@ -199,9 +213,19 @@ class Home_IndexController extends Zend_Controller_Action
 					$styleSelect = $stylesTable->select();
 					$styleSelect->where('id = ?',$matchArr[1]);	
 					$styleSelect->order('id');	
+				} elseif( $theModule['name'] == 'srdata/queries/*' ) {
+				// LOAD EVERY QUERY
+					$logger->log("Load Every Query.",Zend_Log::DEBUG);
+					$querySelect = $queriesTable->select();
+					$querySelect->order('id');	
+				} elseif( preg_match( '/srdata\/queries\/(\d+)/', $theModule['name'], $matchArr ) ) {
+					//LOAD SPECFIC QUERY
+					$logger->log("Load Query :".$matchArr[1],Zend_Log::DEBUG);
+					$querySelect = $queriesTable->select();
+					$querySelect->where('id = ?',$matchArr[1]);	
+					$querySelect->order('id');	
 				} elseif( $theModule['name'] == 'srdata/wlayout/*' ) {
-				// LOAD EVERY WINDOW LAYOUT
-					//SETUP styleSelect
+					// LOAD EVERY WINDOW LAYOUT
 					$logger->log("Load Every WLayout.",Zend_Log::DEBUG);
 					$wlayoutSelect = $wlayoutsTable->select();
 					$wlayoutSelect->order('id');	
@@ -274,7 +298,15 @@ class Home_IndexController extends Zend_Controller_Action
 						}
 					}
 				}
-	
+				if($querySelect != null) {
+					$queryRowSet = $queriesTable->fetchAll($querySelect);
+					foreach($queryRowSet as $queryRow) {
+						if( !array_key_exists( $queryRow['id'], $this->_queries) ) { 
+							$this->_queries[$queryRow['id']] = $queryRow->toArray();
+							$this->_queries[$queryRow['id']]['data'] = Zend_Json::decode( $queryRow['data']);
+						}
+					}
+				}
 			}
 		}
 	}

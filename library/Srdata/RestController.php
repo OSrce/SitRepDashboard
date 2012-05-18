@@ -52,7 +52,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 					continue;
 				} elseif( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
 					$tableSort = $keyArr[1];
-				} elseif( $key == 'SREXPR' ) {
+				} elseif( $key == 'SREXPR' || $key == '"SREXPR"') {
 					$selStr = (string) $val;
 					$select->where($selStr); 	
 				} else {

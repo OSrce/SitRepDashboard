@@ -62,6 +62,7 @@ function srd_document() {
 	this.srd_wlayoutArr = [];
 	this.srd_styleArr = [];
 	this.srd_layerArr = [];
+	this.srd_queryArr = [];
 
 	this.srd_selLayer = null;
 	this.srd_selControl = null;
@@ -564,6 +565,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 								popup: this.selectedView.dataMenu
 							} );
 							this.srd_menuBar.addChild(this.srd_dataMenuPopup);
+
 							/// END Data Menu
 							this.srd_dataMenu = this.srd_viewMenu;	
 
@@ -948,6 +950,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 				// END selectEditLayer FUNCTION
 				// BEGIN changeWindowLayout FUNCTION
 				srd_document.prototype.srd_changeWindowLayout = function(wlayout) {
+//					dojo.ready( function() {
 					if( wlayout != this.selected_wlayout)	{
 						console.log("Changing Window Layout from "+this.selected_wlayout+" TO "+wlayout);
 						this.selected_wlayout = wlayout;
@@ -967,10 +970,13 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							nbZones: this.staticVals.view_layout_x,
 				//		nbColumns: 2,
 							isAutoOrganized: true,
-							hasResizeableColumns : true
+							hasResizeableColumns : false
 						}  );
 						dojo.place(this.viewContainer.domNode, this.centerPane.domNode,'first');
 						this.viewContainer.startup();
+						// NOTE: viewContainer Drag AND Drop DISABLED - Make
+						// MENU Item to toggle rearrange mode later...
+						this.viewContainer.disableDnd();
 						this.viewArr = [];
 						for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
 							if( !this.staticVals.view_data[xPos] ) {
@@ -1001,6 +1007,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						}	
 						this.updateLayoutNameDisplay();
 					}
+//					}.bind(this) );
 				}
 				// END changeWindowLayout FUNCTION
 

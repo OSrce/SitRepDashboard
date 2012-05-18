@@ -16,6 +16,7 @@ dojo.declare(
 	'srd_view_opstrack',
 	srd_view,
 	{
+		srd_queryArr : null,
 		srd_layerArr : null,
 		srd_selLayer : null,
 		srd_store		 : null,
@@ -32,6 +33,7 @@ dojo.declare(
 		constructor : function( view_data, parent_srd_doc) {
 			dojo.addOnLoad( function() {
 			console.log("srd_view_ops constructor called!");
+			this.srd_queryArr = this.srd_doc.srd_queryArr;
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_selLayer = this.srd_doc.srd_selLayer;
 //				console.log("Selected Layer : "+this.srd_selLayer.name);
@@ -81,6 +83,20 @@ dojo.declare(
 					srd_view: this,
 					onClick: function() { this.srd_view.deleteSelectedItems(); } 
 				} ) );
+				this.selectedQueryMenu = new dijit.Menu();
+				for( var theQueryId in this.srd_queryArr) {
+					this.selectedQueryMenu.addChild( new dijit.MenuItem( {
+						label: this.srd_queryArr[theQueryId].name+" : "+this.srd_queryArr[theQueryId].notes,
+						value: theQueryId,
+						srd_view: this,
+						onClick: function() { this.srd_view.changeQuery(this.value) }
+					} ) );
+				}
+				var changeQueryMenuItem = new dijit.PopupMenuItem( {
+					label: "Change Query: ",
+					popup: this.selectedQueryMenu
+				} );
+				this.dataMenu.addChild(changeQueryMenuItem);
 				var autoRefreshMenuItem = new dijit.CheckedMenuItem( {
 					label: "Auto Refresh",
 					srd_view: this,
@@ -149,6 +165,14 @@ dojo.declare(
 
 				this.srd_sort = [{attribute:'cfs_finaldisdate', descending:true},{attribute:'cfs_timecreated', descending:true}];
 				this.srd_dataStore = new dojo.data.ObjectStore( { objectStore: this.srd_store } );
+
+				// CHECK TO SEE IF srd_queryid is set and if so, get QUERY FROM queryArr
+				if(this.data.srd_queryid && this.srd_queryArr[this.data.srd_queryid]) {
+					if(this.srd_queryArr[this.data.srd_queryid].data) {
+						this.data.srd_query = this.srd_queryArr[this.data.srd_queryid].data;
+					}
+				}
+	
 				if(this.data.srd_query) {
 					this.srd_query = this.data.srd_query;
 				} else {
@@ -480,7 +504,16 @@ dojo.declare(
 			
 			var theWindow = window.open(urlStr,'CallsForService','width=612,height='+screen.height+',resizeable=1');	
 
+		},
+		// END popupCfsSingle
+		// BEGIN changeQuery
+		changeQuery: function(theQueryId) {
+			console.log("Change Query to id:"+theQueryId);
+			this.srd_query = this.srd_queryArr[theQueryId].data;
+			this.refreshTable();
+
 		}
+		// END changeQuery
 	}
 );
 

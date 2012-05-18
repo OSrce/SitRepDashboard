@@ -40,6 +40,7 @@ dojo.declare(
 			}.bind(this) );
 		},
 		map_init : function() {
+//			dojo.ready(function() {
 			if(! this.map ) {
 				console.log("CREATING MAP!!!!");
 				this.geolocateControl = new OpenLayers.Control.Geolocate( {
@@ -173,6 +174,7 @@ dojo.declare(
 				console.log( "Location detection failed!" );
 			} );
 				console.log("END map_init function");
+//			}.bind(this) );
 		},
 		// END map_init
 		// BEGIN goToPoint
