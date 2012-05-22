@@ -102,10 +102,30 @@ INSERT INTO sr_queries (name, notes, data) VALUES ('Priority 1', 'Priority 1 CFS
 
 INSERT INTO sr_queries (name, notes, data) VALUES ('34 Precinct', '34 Precinct - Calls For Service', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_pct=34" }' );
 
+INSERT INTO sr_queries (name, notes, data) VALUES ('PBMS Crimes', 'Patrol Boro Manhattan South - Crimes in Progress', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_pct>=1 AND cfs_pct <=18) AND (cfs_priority=1 OR (cfs_code>=30 AND cfs_code <=39) )" }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('PBMN Crimes', 'Patrol Boro Manhattan North - Crimes in Progress', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_pct>=19 AND cfs_pct <=34) AND (cfs_priority=1 OR (cfs_code>=30 AND cfs_code <=39) )" }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('PBBX Crimes', 'Patrol Boro Bronx - Crimes in Progress', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_pct>=40 AND cfs_pct <=52) AND (cfs_priority=1 OR (cfs_code>=30 AND cfs_code <=39) )" }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('PBBS Crimes', 'Patrol Boro Brooklyn South - Crimes in Progress', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_pct=60 OR cfs_pct=61 OR cfs_pct=62 OR cfs_pct=63 OR cfs_pct=66 OR cfs_pct=67 OR cfs_pct=68 OR cfs_pct=69 OR cfs_pct=70 OR cfs_pct=71 OR cfs_pct=72 OR cfs_pct=76 OR cfs_pct=78 ) AND (cfs_priority=1 OR (cfs_code>=30 AND cfs_code <=39) )" }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('PBBN Crimes', 'Patrol Boro Brooklyn North - Crimes in Progress', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_pct=73 OR cfs_pct=75 OR cfs_pct=77 OR cfs_pct=79 OR cfs_pct=81 OR cfs_pct=83 OR cfs_pct=84 OR cfs_pct=88 OR cfs_pct=90 OR cfs_pct=94 ) AND (cfs_priority=1 OR (cfs_code>=30 AND cfs_code <=39) )" }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('PBQS Crimes', 'Patrol Boro Queens South - Crimes in Progress', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_pct=100 OR cfs_pct=101 OR cfs_pct=102 OR cfs_pct=103 OR cfs_pct=105 OR cfs_pct=106 OR cfs_pct=107 OR cfs_pct=113 ) AND (cfs_priority=1 OR (cfs_code>=30 AND cfs_code <=39) )" }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('PBQN Crimes', 'Patrol Boro Queens North - Crimes in Progress', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_pct=104 OR cfs_pct=108 OR cfs_pct=109 OR cfs_pct=110 OR cfs_pct=111 OR cfs_pct=112 OR cfs_pct=114 OR cfs_pct=115 ) AND (cfs_priority=1 OR (cfs_code>=30 AND cfs_code <=39) )" }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('PBSI Crimes', 'Patrol Boro Staten Island - Crimes in Progress', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_pct>=120 AND cfs_pct<=123 ) AND (cfs_priority=1 OR (cfs_code>=30 AND cfs_code <=39) )" }' );
+
+
+
 insert into sr_acl_permissions ( role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) VALUES ( 'gid', 553, 68, 'deny', 'allow', 'deny', 'deny' );
 
 
 INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUES ( 'Operations Main Layout', 0, 2, 1, E'[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' );
+
+INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUES ( 'CFS Only Layout', 0, 1, 1, E'[[{"type":"opstrack","id":1,"autoRefresh":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }] ]' );
 
 UPDATE sr_window_layout set view_data=E'[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' where id=4;
 

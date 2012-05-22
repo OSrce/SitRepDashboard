@@ -532,7 +532,9 @@ dojo.declare(
 		// END changeQuery
 		// BEGIN loadingComplete FUNCTION
 		loadingComplete : function() {
-			
+			if(this.mapData) {
+				this.drawMapData();
+			}			
 		}	
 		// END loadingComplete FUNCTION
 

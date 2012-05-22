@@ -169,6 +169,12 @@ NEED TO CHANCE APACHE CONF :
 -- already done - check srd_ssl RewriteEngine etc.
 ------------------------
 
+SHOWNAME NOW INT VAL :
+-1 = DO NOT SHOW NAME
+-2 = SHOW FROM WINDOW LAYOUT
+-3 = SHOW FROM ALL VIEWS COMBINED
+0-N = SHOW FROM SPECIFIC VIEW.
+
 
 
 
