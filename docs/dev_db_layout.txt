@@ -127,5 +127,7 @@ INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUE
 
 INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUES ( 'CFS Only Layout', 0, 1, 1, E'[[{"type":"opstrack","id":1,"autoRefresh":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }] ]' );
 
+INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUES ( 'Map Only Layout', 0, 1, 1, E'[ [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' );
+
 UPDATE sr_window_layout set view_data=E'[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' where id=4;
 

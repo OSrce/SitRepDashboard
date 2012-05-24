@@ -16,11 +16,9 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 
 		date_default_timezone_set("America/New_York");
  	  $logger = new Zend_Log();
- 	  $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_auth.log"));
- 		$logger->log("TEMP TEST1\n",Zend_Log::DEBUG);
-//		$logger->log("TEMP TEST:".print_r($auth,true),Zend_Log::DEBUG);
+ 	  $logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_request.log"));
 		$request = new Zend_Controller_Request_Http();
-		$logger->log("Test2:".print_r($request->getHeader('Cookie') , true),Zend_Log::DEBUG);	
+		$logger->log("Cookie:".print_r($request->getHeader('Cookie') , true),Zend_Log::DEBUG);	
 
 
 		$redirect = true;
@@ -34,7 +32,7 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 		
 //TEMP TESTING		
 	
-		 		$logger->log("TEMP TEST:".print_r($user,true),Zend_Log::DEBUG);
+//		 		$logger->log("TEMP TEST:".print_r($user,true),Zend_Log::DEBUG);
 
 //TEMP TESTING END
 	
