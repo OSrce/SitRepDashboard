@@ -168,6 +168,13 @@ CREATE TABLE sr_queries (
 INSERT INTO sr_modules (name) VALUES ( 'srdata/queries/*' );
 
 
+CREATE TABLE sr_cfs_updatequeue ( 
+	cfs_date DATE NOT NULL,
+	cfs_num INT NOT NULL,
+	PRIMARY KEY (cfs_date, cfs_num )
+);
+
+
 
 
 
