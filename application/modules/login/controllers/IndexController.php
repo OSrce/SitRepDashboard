@@ -63,7 +63,7 @@ class Login_IndexController extends Zend_Controller_Action {
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/ldap.log"));
 	
 		$options = array();
-		$options['username'] = $this->getRequest()->getParam('username');
+		$options['username'] = strtolower($this->getRequest()->getParam('username'));
 		$options['password'] = $this->getRequest()->getParam('password');
 		$options['keeploggedin'] = $this->getRequest()->getParam('keeploggedin');
 
