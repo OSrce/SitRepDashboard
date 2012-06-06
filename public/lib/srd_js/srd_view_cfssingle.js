@@ -230,6 +230,11 @@ dojo.declare(
 					}
 				}
 			}
+			// TODO TEMP FIX TO AUTO REFRESH PAGE UNTIL COMET IMPLEMENTED
+			this.srd_timer = new dojox.timing.Timer(10000);
+			this.srd_timer.onTick = function() { this.getData(); }.bind(this);
+			this.srd_timer.start();
+			// END TEMP FIX
 		},
 		// END displaySingleCfs FUNCTION
 		// BEGIN getData FUNCTION
@@ -245,7 +250,7 @@ dojo.declare(
 					dojo.when( this.srd_store.query({"cfs_date":theDate, "cfs_num":theJob}, {
 						count: 1
 					} ), function(results) {
-						console.log("TEST1");
+//						console.log("TEST1");
 						this.displayResults(results[0])
 					}.bind(this)
 					);
