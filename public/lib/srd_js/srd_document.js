@@ -446,7 +446,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							} );	
 							//// ICON in LEFT CORNER ////
 							this.srd_menuBar.addChild(new dijit.MenuBarItem( {
-								label: '<img src="lib/img/SR_Icon.png" height="20" width="16">' } ) );
+								label: '<img src="lib/img/SitRepIcon_Small.png" height="20" width="20">' } ) );
 							//// SitRep MENU /////	
 							var srd_sitrepMenu = new dijit.Menu({});
 							this.srd_menuBar.addChild(new dijit.MenuBarItem({
