@@ -120,6 +120,15 @@ INSERT INTO sr_queries (name, notes, data) VALUES ('PBSI Crimes', 'Patrol Boro S
 
 INSERT INTO sr_queries (name, notes, data) VALUES ('Fireworks', 'Fireworks - Citywide', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_code=10 OR cfs_code=50 OR cfs_code=39 OR cfs_code=29 OR cfs_code=59) AND (cfs_codesup2 ~ \'FIREWORK\' OR cfs_body ~\'FIREWORK\' ) " }' );
 
+INSERT INTO sr_queries (name, notes, data) VALUES ('Mobilizations', 'Mobilizations - Citywide', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'30 minutes\' ) AND (cfs_body ~\'LEVEL 1\' OR cfs_body ~\'LVL 1\' OR cfs_body ~\'LEVEL 2\' OR cfs_body ~\'LEVEL 3\' OR cfs_body ~\'LEVEL 4\' ) " }' );
+
+############ NEED TO FIX ##############
+INSERT INTO sr_queries (name, notes, data) VALUES ('Operations 3 Hour Recap', 'Operations 3 Hour Recap - Citywide', E'{"SREXPR": "( cfs_timecreated >= current_time - interval \'3 hour\' ) AND cfs_routenotifications=\'true\' " }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('Operations 24 Hour Recap', 'Operations 24 Hour Recap - Citywide', E'{"SREXPR": "( cfs_finaldisdate >= current_timestamp - interval \'24 hours\' cfs_timecreated >= current_time - interval \'24 hour\' ) AND cfs_routenotifications=\'true\' " }' );
+############ END NEED TO FIX ###############3
+
+
 
 insert into sr_acl_permissions ( role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) VALUES ( 'gid', 553, 68, 'deny', 'allow', 'deny', 'deny' );
 

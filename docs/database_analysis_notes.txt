@@ -1,0 +1,13 @@
+
+
+-- TOTAL NUMBER OF OPEN JOBS.
+SELECT COUNT(*) FROM sr_cfs WHERE cfs_finaldis IS NULL;
+
+--TIME THAT OLDEST OPEN JOB HAS BEEN UPDATED
+SELECT (cfs_updated_on - current_timestamp) AS oldest_update_time FROM sr_cfs WHERE cfs_finaldis IS NULL ORDER BY cfs_updated_on LIMIT 1;
+
+-- TOTAL NUMBER OF OPEN JOBS THAT HAVEN't BEEN UPDATED IN MORE THEN 60 SECONDS
+SELECT count(*) from sr_cfs WHERE cfs_finaldis IS NULL AND cfs_updated_on < current_timestamp -  interval '1 minutes';
+
+
+
