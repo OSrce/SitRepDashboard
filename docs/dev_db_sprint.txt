@@ -98,6 +98,7 @@ CREATE VIEW sr_cfs_withlocation AS SELECT (cfs.cfs_date||'|'||cfs.cfs_num) as id
 -- CREATE INDEX FOR sr_cfs
 CREATE INDEX cfs_finaldisdate_idx ON sr_cfs ( cfs_finaldisdate );
 CREATE INDEX cfs_finaldis_idx ON sr_cfs (cfs_finaldis);
+CREATE INDEX cfs_timecreated_idx ON sr_cfs ( cfs_timecreated );
 --CREATE INDEX cfs_code_idx ON sr_cfs (cfs_code);
 --CREATE INDEX cfs_pct_idx ON sr_cfs (cfs_pct);
 

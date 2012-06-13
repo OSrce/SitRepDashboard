@@ -10,4 +10,11 @@ SELECT (cfs_updated_on - current_timestamp) AS oldest_update_time FROM sr_cfs WH
 SELECT count(*) from sr_cfs WHERE cfs_finaldis IS NULL AND cfs_updated_on < current_timestamp -  interval '1 minutes';
 
 
+-- CHECK RECENTLY UPDATED JOBS WITH OLD FINALS 
+-- USEFULL FOR AFTER RESETING cfs_bodylastline to NULL
+ SELECT cfs_date, cfs_num, cfs_finaldissup1, cfs_finaldisdate, cfs_updated_on, cfs_bodylastline FROM sr_cfs WHERE cfs_finaldisdate <= current_timestamp - interval'3 hours' AND cfs_updated_on >= current_timestamp - interval'2 hour';
+
+
+
+
 

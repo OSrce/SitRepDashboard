@@ -16,28 +16,21 @@ IF TG_RELNAME='sr_cfs' THEN
 	IF NEW.cfs_location IS NOT NULL THEN
 		RETURN NEW;
 	END IF;
+	IF TG_OP='UPDATE' THEN
+		RETURN NEW;
+	END IF;
 	IF NEW.cfs_addr IS NULL THEN
 		IF NEW.cfs_cross1 IS NULL AND NEW.cfs_cross2 IS NULL THEN
 			/* NO GOOD -> RETURN cfs_location = -1 */
 			NEW.cfs_location := -1;
 		ELSE
-		/* WE DO NOT HAVE A GOOD ADDR STR SO WE ARE USING CROSS STREETS */
+			/* WE DO NOT HAVE A GOOD ADDR STR SO WE ARE USING CROSS STREETS */
 			INSERT INTO sr_locations (pct, sector, source, address, cross1, cross2) VALUES ( NEW.cfs_pct, NEW.cfs_sector, 2, NEW.cfs_addr, NEW.cfs_cross1, NEW.cfs_cross2 );
 			NEW.cfs_location := currval('sr_locations_id_seq');
---			PERFORM dblink_connect('con1','dbname=sr_data');
---			querystr := 'SELECT sr_geocode_func('||NEW.cfs_location||')';
---			PERFORM sr_geocode_func(NEW.cfs_location);
---			PERFORM dblink_send_query('con1',querystr);
---			PERFORM dblink_disconnect('con1');
 		END IF;
 	ELSE /* We have a GOOD Address String */
 		INSERT INTO sr_locations (pct, sector, source, address, cross1, cross2) VALUES ( NEW.cfs_pct, NEW.cfs_sector, 1, NEW.cfs_addr, NEW.cfs_cross1, NEW.cfs_cross2 );
-			NEW.cfs_location := currval('sr_locations_id_seq');
---			PERFORM dblink_connect('con1','dbname=sr_data');
---			querystr := 'SELECT sr_geocode_func('||NEW.cfs_location||')';
---			PERFORM sr_geocode_func(NEW.cfs_location);
---			PERFORM dblink_send_query('con1',querystr);
---			PERFORM dblink_disconnect('con1');
+		NEW.cfs_location := currval('sr_locations_id_seq');
 	END IF;
 	RETURN NEW;
 END IF;

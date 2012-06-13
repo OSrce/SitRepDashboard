@@ -122,11 +122,11 @@ INSERT INTO sr_queries (name, notes, data) VALUES ('Fireworks', 'Fireworks - Cit
 
 INSERT INTO sr_queries (name, notes, data) VALUES ('Mobilizations', 'Mobilizations - Citywide', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'30 minutes\' ) AND (cfs_body ~\'LEVEL 1\' OR cfs_body ~\'LVL 1\' OR cfs_body ~\'LEVEL 2\' OR cfs_body ~\'LEVEL 3\' OR cfs_body ~\'LEVEL 4\' ) " }' );
 
-############ NEED TO FIX ##############
-INSERT INTO sr_queries (name, notes, data) VALUES ('Operations 3 Hour Recap', 'Operations 3 Hour Recap - Citywide', E'{"SREXPR": "( cfs_timecreated >= current_time - interval \'3 hour\' ) AND cfs_routenotifications=\'true\' " }' );
+INSERT INTO sr_queries (name, notes, data) VALUES ('Operations 3 Hour Recap', 'Operations 3 Hour Recap - Citywide', E'{"SREXPR": "( cfs_timecreated >= current_timestamp - interval \'3 hour\' ) AND cfs_routenotifications=\'true\' " }' );
 
-INSERT INTO sr_queries (name, notes, data) VALUES ('Operations 24 Hour Recap', 'Operations 24 Hour Recap - Citywide', E'{"SREXPR": "( cfs_finaldisdate >= current_timestamp - interval \'24 hours\' cfs_timecreated >= current_time - interval \'24 hour\' ) AND cfs_routenotifications=\'true\' " }' );
-############ END NEED TO FIX ###############3
+-- INSERT INTO sr_queries (name, notes, data) VALUES ('Operations 24 Hour Recap', 'Operations 24 Hour Recap - Citywide', E'{"SREXPR": "( cfs_finaldisdate >= current_timestamp - interval \'24 hours\' cfs_timecreated >= current_timestamp - interval \'24 hour\' ) AND cfs_routenotifications=\'true\' " }' );
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('Largest Jobs', 'Largest 20 Jobs Last 8 Hours - Citywide', E'{"SREXPR": "( cfs_timecreated >= current_timestamp - interval \'8 hours\' ) ORDER BY length(cfs_body) LIMIT 20 " }' );
 
 
 
@@ -140,4 +140,15 @@ INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUE
 INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUES ( 'Map Only Layout', 0, 1, 1, E'[ [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' );
 
 UPDATE sr_window_layout set view_data=E'[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' where id=4;
+
+
+-- ALTERING sr_cfs changing cfs_timecreated from time to timestamp.
+ALTER TABLE sr_cfs RENAME COLUMN cfs_timecreated TO cfs_timecreatedold;
+ALTER TABLE sr_cfs add COLUMN cfs_timecreated timestamp;
+UPDATE sr_cfs SET cfs_timecreated=to_timestamp(cfs_date||' '||cfs_timecreatedold, 'YYYY-MM-DD HH24:MI:SS');
+ALTER TABLE sr_cfs DROP COLUMN cfs_timecreatedold CASCADE;
+-- NEED TO RECREATE VIEW: sr_cfs_withlocation
+
+
+
 

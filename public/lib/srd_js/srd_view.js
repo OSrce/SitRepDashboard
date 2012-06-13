@@ -10,6 +10,7 @@
 
 dojo.require("dojox.grid.EnhancedGrid");
 dojo.require("dojox.grid.enhanced.plugins.NestedSorting");
+dojo.require("dojox.grid.enhanced.plugins.Pagination");
 
 //srd_view class definition using dojo.declare 
 dojo.declare( 
