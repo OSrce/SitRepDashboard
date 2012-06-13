@@ -129,6 +129,7 @@ INSERT INTO sr_queries (name, notes, data) VALUES ('Operations 3 Hour Recap', 'O
 INSERT INTO sr_queries (name, notes, data) VALUES ('Largest Jobs', 'Largest 20 Jobs Last 8 Hours - Citywide', E'{"SREXPR": "( cfs_timecreated >= current_timestamp - interval \'8 hours\' ) ORDER BY length(cfs_body) LIMIT 20 " }' );
 
 
+INSERT INTO sr_queries (name, notes, data) VALUES ('All CFS', 'All Calls For Service - Citywide', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' )" }' );
 
 insert into sr_acl_permissions ( role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) VALUES ( 'gid', 553, 68, 'deny', 'allow', 'deny', 'deny' );
 
@@ -138,6 +139,9 @@ INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUE
 INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUES ( 'CFS Only Layout', 0, 1, 1, E'[[{"type":"opstrack","id":1,"autoRefresh":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }] ]' );
 
 INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUES ( 'Map Only Layout', 0, 1, 1, E'[ [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' );
+
+INSERT INTO sr_window_layout ( name, showname, view_x, view_y, view_data ) VALUES ( 'Main Layout', 0, 2, 1, E'[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":12 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' );
+
 
 UPDATE sr_window_layout set view_data=E'[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]' where id=4;
 
