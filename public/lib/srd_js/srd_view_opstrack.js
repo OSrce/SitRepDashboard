@@ -131,7 +131,6 @@ dojo.declare(
 						cells: [
 							{ name: "Date", field:"cfs_date", width: "120px", hidden:true },
 							{ name: "Time", field:"cfs_timecreated", width: "90px", formatter:this.dateToTime},
-//							{ name: "TimeCreated", field:"cfs_timecreated", width: "90px", hidden:true},
 //							{ name: "Job Let", field:"cfs_letter", width: "50px" },
 							{ name: "Signal", field:"cfs_code", width: "90px", formatter: this.formatSignal},
 							{ name: "Signal Info1", field:"cfs_codesup1", width: "50px" },

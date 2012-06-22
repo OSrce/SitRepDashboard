@@ -767,7 +767,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							editPaletteTop.addChild(activeLayerName);
 							this.srd_layerEditMenu = new dijit.Menu({ });
 							for( tmpId in this.srd_layerArr) {
-								if(this.srd_layerArr[tmpId].options.isBaseLayer == false) {
+								if(this.srd_layerArr[tmpId].options.feature_update == "true") {
 										this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
 										label: this.srd_layerArr[tmpId].options.name,
 										srd_doc: this,
@@ -787,30 +787,31 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							// be null so if it is it means we don't have ANY editable layers to
 							// choose from.
 							if(this.srd_selLayer == null ) {
-								// TODO :
 								// MAKE IT SO THAT ALL EDIT CONTROLS ARENT SELECTABLE.
+								this.srd_layerEditMenuDropDown = new dijit.form.DropDownButton({
+									label: "No Layers Available to Edit",
+									dropDown: this.srd_layerEditMenu,
+									id: "srd_activeLayer",
+									region:'top'
+								});
+							} else {
+								this.srd_layerEditMenuDropDown = new dijit.form.DropDownButton({
+									label: this.srd_selLayer.options.name,
+									dropDown: this.srd_layerEditMenu,
+									id: "srd_activeLayer",
+									region:'top'
+								});
 							}
-
-					
-							this.srd_layerEditMenuDropDown = new dijit.form.DropDownButton({
-								label: this.srd_selLayer.options.name,
-								dropDown: this.srd_layerEditMenu,
-				//				style: "width:inherit;position:relative",
-								id: "srd_activeLayer",
-								region:'top'
-
-							});
 							editPaletteTop.addChild(this.srd_layerEditMenuDropDown);
 							editPaletteTop.startup();
 							this.srd_toolbar.addChild(editPaletteTop);
 							// END LAYER SELECT
 
 				//			this.srd_toolbar.addChild(this.srd_selLayer.editPalette.layoutContainer)
-							this.srd_selLayer.editPalette.addToContainer(this.srd_toolbar);
-
-
-							this.srd_selectEditLayer(this.srd_selLayer.id);
-
+							if(this.srd_selLayer != null) {
+								this.srd_selLayer.editPalette.addToContainer(this.srd_toolbar);
+								this.srd_selectEditLayer(this.srd_selLayer.id);
+							}
 						} else {
 							this.srd_container.addChild(this.srd_toolbar);
 							this.srd_container.resize();

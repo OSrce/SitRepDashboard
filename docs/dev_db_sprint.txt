@@ -91,8 +91,12 @@ SELECT AddGeometryColumn('sr_locations','sr_geom',4326,'GEOMETRY',3);
 CREATE VIEW sr_cfs_withlocation AS SELECT (cfs.cfs_date||'|'||cfs.cfs_num) as id, cfs.*, ST_AsText(loc.sr_geom) as geometry FROM sr_cfs cfs, sr_locations loc WHERE cfs.cfs_location = loc.id;
 
 -- DIAGNOSTICS
+-- ANALYZE
 --  SELECT pg_size_pretty(pg_relation_size('sr_cfs') );
 --  SELECT pg_size_pretty(pg_total_relation_size('sr_cfs') );
+
+CREATE VIEW sr_assets_status_byname AS SELECT asset.name, status.* FROM sr_assets asset, sr_assets_status status WHERE asset.id=status.asset_id;
+
 
 
 -- CREATE INDEX FOR sr_cfs

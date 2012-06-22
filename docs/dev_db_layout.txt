@@ -131,6 +131,10 @@ INSERT INTO sr_queries (name, notes, data) VALUES ('Largest Jobs', 'Largest 20 J
 
 INSERT INTO sr_queries (name, notes, data) VALUES ('All CFS', 'All Calls For Service - Citywide', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' )" }' );
 
+
+INSERT INTO sr_queries (name, notes, data) VALUES ('Power Outages', 'Power Out Calls For Service - Citywide', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND (cfs_codesup2 ~ \'POWER OUT\' OR cfs_codesup2 ~\'BLACK OUT\' OR cfs_body ~\'POWER OUT\' ) " }' );
+
+
 insert into sr_acl_permissions ( role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) VALUES ( 'gid', 553, 68, 'deny', 'allow', 'deny', 'deny' );
 
 
