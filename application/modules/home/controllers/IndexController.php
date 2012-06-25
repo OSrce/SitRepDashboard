@@ -74,17 +74,41 @@ class Home_IndexController extends Zend_Controller_Action
 			$this->getResponse()->appendBody( "srd.staticVals = ");
 			$this->getResponse()->appendBody( Zend_Json::encode($staticVals)."\n");
 			// END LOAD STATIC VALS
-			
 
-			// BEGIN LOAD srdQueryArr data :
-			foreach($this->_queries as $queryId => $queryArr) {
-				$queryArrJSON = Zend_Json::encode($queryArr);
-				$logger->log("printqueryJSON:".$queryArrJSON,Zend_Log::DEBUG);
-				$this->getResponse()->appendBody( "srd.srd_queryArr['$queryId'] = \n");
-				$this->getResponse()->appendBody( $queryArrJSON."\n");
+			$serverToClientArr = array();
+			$serverToClientArr['queries'] = 'srd.srd_queryArr';
+			$serverToClientArr['layers'] = 'theLayers';
+			$serverToClientArr['styles'] = 'srd.srd_styleArr';
+			$serverToClientArr['wlayout'] = 'srd.srd_wlayoutArr';
+			$serverToClientArr['presets'] = 'srd.srd_presetArr';
+
+			foreach($this->_data as $resType => $resArr) {
+				// BEGIN LOAD srdQueryArr data :
+				if($resType != 'layers' ) {
+					foreach($resArr as $theId => $theArr) {
+						$theArrJSON = Zend_Json::encode($theArr);
+//						$logger->log("print".$theId."JSON:".$theArrJSON,Zend_Log::DEBUG);
+						$this->getResponse()->appendBody( $serverToClientArr[$resType]."['$theId'] = \n");
+						$this->getResponse()->appendBody( $theArrJSON."\n");
+					}
+				} else {
+					$this->getResponse()->appendBody("var theLayers = [\n");
+					$firstTime =1;
+					foreach($resArr as $theId => $theArr) {
+						if($firstTime ==1) {
+							$firstTime =0;
+						} else {
+							$this->getResponse()->appendBody(",");
+						}
+						$layerOptionsJSON = Zend_Json::encode($theArr);
+						$this->getResponse()->appendBody( $layerOptionsJSON."\n");
+					}
+					$this->getResponse()->appendBody("]\n");
+				}
+				// END LOAD srdQueryArr data
 			}
-			// END LOAD srdQueryArr data
 
+/*
 			// BEGIN LOAD srdWlayoutArr data :
 			foreach($this->_wlayouts as $wlayoutId => $wlayoutArr) {
 				$wlayoutArrJSON = Zend_Json::encode($wlayoutArr);
@@ -125,7 +149,7 @@ class Home_IndexController extends Zend_Controller_Action
 			}
 			$this->getResponse()->appendBody("]\n");
 			// END LOAD srdLayerArr data
-
+*/
 			//PUT THE LINKS TO THE SITE SPECIFIC IMAGES IN JS.
 			$this->getResponse()->appendBody("srd.siteLeftImage='".$this->view->srd_login_opts['leftimage']."';\n" );
 			$this->getResponse()->appendBody("srd.siteRightImage='".$this->view->srd_login_opts['rightimage']."';\n" );
@@ -142,125 +166,149 @@ class Home_IndexController extends Zend_Controller_Action
 		$logger = new Zend_Log();
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
 	
-
-		$queriesTable = new Srdata_Model_DbTable_Queries($this->_db);
-		$wlayoutsTable = new Srdata_Model_DbTable_Wlayout($this->_db);
-		$presetsTable = new Srdata_Model_DbTable_Presets($this->_db);
-		$stylesTable = new Srdata_Model_DbTable_Styles($this->_db);
-		$layersTable = new Srdata_Model_DbTable_Layers($this->_db);
 		$modulesTable = new Srdata_Model_DbTable_Modules($this->_db);
+		$modulesRowSet = $modulesTable->fetchAll();
+		$moduleArr = array();
+		foreach($modulesRowSet as $moduleRow) {
+			$moduleArr[$moduleRow['id'] ] = $moduleRow['name'];
+		}
+
+		$tableArr = array();
+		$tableArr['queries'] = new Srdata_Model_DbTable_Queries($this->_db);
+		$tableArr['wlayout'] = new Srdata_Model_DbTable_Wlayout($this->_db);
+		$tableArr['preset'] = new Srdata_Model_DbTable_Presets($this->_db);
+		$tableArr['styles'] = new Srdata_Model_DbTable_Styles($this->_db);
+		$tableArr['layers'] = new Srdata_Model_DbTable_Layers($this->_db);
 
 		$acl = new Login_Acl($this->_db,$this->_uid,$this->_gid);
 		$theRole = "uid:".$this->_uid;
+		$logger->log("The Roles:::$theRole",Zend_Log::DEBUG);
 		$theResources = $acl->getResources();
-		$this->_queries = array();
-		$this->_wlayouts = array();
-		$this->_layers = array();
-		$this->_styles = array();
-		$logger->log("getLayer 1:::".print_r($theResources,true),Zend_Log::DEBUG);
+
+//		$this->_queries = array();
+//		$this->_wlayouts = array();
+//		$this->_layers = array();
+//		$this->_styles = array();
+		$this->_data = array();
+		foreach($tableArr as $key => $value) {
+			$this->_data[$key] = array();
+		}
+
+		##### FIGURE OUT WHAT WE NEED BY ITERATING THROUGH ALL MODULES WITH
+		##### ACL = ALLOW READ 
+		### LOAD ALLs.
+		$loadEverything = null;
+		$loadAllArr = array();
+		### LOAD IND ARRs
+		$loadArr = array();
+
+		$logger->log("The Modules:::".print_r($moduleArr,true),Zend_Log::DEBUG);
+		$logger->log("The Resources:::".print_r($theResources,true),Zend_Log::DEBUG);
 		foreach($theResources as $theRes) {
 //		list ($resType, $resId) = preg_split('/:/',$theRes ); 
-//		if($resType == 'layer') {
-			$theSelect = $modulesTable->select();
-			$theSelect->where('id=?',$theRes);
-			$theModule = $modulesTable->fetchRow($theSelect);
-			$querySelect = null;
-			$wlayoutSelect = null;
-			$layerSelect = null;
-			$styleSelect = null;
-			$presetSelect = null;
+//			$theSelect = $modulesTable->select();
+//			$theSelect->where('id=?',$theRes);
+//			$theModule = $modulesTable->fetchRow($theSelect);
+		
 			if( $acl->isAllowed($theRole,$theRes,'read') ) {
-				if( $theModule['name'] == '*/*/*' || $theModule['name'] == 'srdata/*/*' ) {
+				if( $moduleArr[$theRes] == '*/*/*' || $moduleArr[$theRes] == 'srdata/*/*' ) {
 				// LOAD EVERY LAYER, STYLE, PRESET...
+					$loadEverything = $theRes;
 					$logger->log("Load Everything.",Zend_Log::DEBUG);
-					//SETUP querySelect
-					$querySelect = $queriesTable->select();
-					$querySelect->order('id');	
-					//SETUP wlayoutSelect
-					$wlayoutSelect = $wlayoutsTable->select();
-					$wlayoutSelect->order('id');	
-					//SETUP layerSelect
-					$layerSelect = $layersTable->select();
-					$layerSelect->order('id');	
-					//SETUP styleSelect
-					$styleSelect = $stylesTable->select();
-					$styleSelect->order('id');	
-					//SETUP presetSelect
-					$presetSelect = $presetsTable->select();
-					$presetSelect->order('id');	
-				} elseif( $theModule['name'] == 'srdata/layers/*' ) {
-				// LOAD EVERY LAYER
-					//SETUP layerSelect
-					$logger->log("Load Every Layer.",Zend_Log::DEBUG);
-					$layerSelect = $layersTable->select();
-					$layerSelect->order('id');	
-				} elseif( preg_match( '/srdata\/layers\/(\d+)/', $theModule['name'], $matchArr ) ) {
-				//LOAD SPECFIC LAYER
-					//SETUP layerSelect
-					$logger->log("Load Layer :".$matchArr[1],Zend_Log::DEBUG);
-					$layerSelect = $layersTable->select();
-					$layerSelect->where('id = ?',$matchArr[1]);	
-					$layerSelect->order('id');	
-				} elseif( $theModule['name'] == 'srdata/styles/*' ) {
-				// LOAD EVERY STYLE
-					//SETUP styleSelect
-					$logger->log("Load Every Style.",Zend_Log::DEBUG);
-					$styleSelect = $stylesTable->select();
-					$styleSelect->order('id');	
-				} elseif( preg_match( '/srdata\/styles\/(\d+)/', $theModule['name'], $matchArr ) ) {
-				//LOAD SPECFIC STYLE
-					//SETUP styleSelect
-					$logger->log("Load Style :".$matchArr[1],Zend_Log::DEBUG);
-					$styleSelect = $stylesTable->select();
-					$styleSelect->where('id = ?',$matchArr[1]);	
-					$styleSelect->order('id');	
-				} elseif( $theModule['name'] == 'srdata/queries/*' ) {
-				// LOAD EVERY QUERY
-					$logger->log("Load Every Query.",Zend_Log::DEBUG);
-					$querySelect = $queriesTable->select();
-					$querySelect->order('id');	
-				} elseif( preg_match( '/srdata\/queries\/(\d+)/', $theModule['name'], $matchArr ) ) {
-					//LOAD SPECFIC QUERY
-					$logger->log("Load Query :".$matchArr[1],Zend_Log::DEBUG);
-					$querySelect = $queriesTable->select();
-					$querySelect->where('id = ?',$matchArr[1]);	
-					$querySelect->order('id');	
-				} elseif( $theModule['name'] == 'srdata/wlayout/*' ) {
-					// LOAD EVERY WINDOW LAYOUT
-					$logger->log("Load Every WLayout.",Zend_Log::DEBUG);
-					$wlayoutSelect = $wlayoutsTable->select();
-					$wlayoutSelect->order('id');	
-				} elseif( preg_match( '/srdata\/wlayout\/(\d+)/', $theModule['name'], $matchArr ) ) {
-				//LOAD SPECFIC WINDOW LAYOUT
-					//SETUP styleSelect
-					$logger->log("Load WLayout :".$matchArr[1],Zend_Log::DEBUG);
-					$wlayoutSelect = $wlayoutsTable->select();
-					$wlayoutSelect->where('id = ?',$matchArr[1]);	
-					$wlayoutSelect->order('id');	
+				} elseif( preg_match( '/srdata\/(\w+)\/\*/', $moduleArr[$theRes], $matchArr ) ) {
+				// LOAD EVERY ######
+					$loadAllArr[$matchArr[1]] = $theRes;
+				} elseif( preg_match( '/srdata\/(\w+)\/(\d+)/', $moduleArr[$theRes], $matchArr ) ) {
+				//LOAD SPECFIC ITEM
+					if( !array_key_exists($matchArr[1], $loadArr) ) {
+						$loadArr[$matchArr[1]] = array();
+					}
+					$loadArr[$matchArr[1]][$matchArr[2]] = $theRes;
+				} 
+			}
+		}
+		### END FOREACH RESOURCE THIS USER CAN READ LOOP.
+		### BEGIN LOAD
+		foreach($tableArr as $resType => $resTable) {
+			$theRowSet = null;
+			if($loadEverything != null || array_key_exists($resType, $loadAllArr) ) {
+				$logger->log("Load Every $resType.",Zend_Log::DEBUG);
+				$theSelect = $resTable->select();
+				$theSelect->order('id');	
+				$theRowSet = $resTable->fetchAll($theSelect);
+			} elseif ( array_key_exists($resType, $loadArr) && count( $loadArr[$resType]) > 0 ) {
+				$findResArr = array();
+				foreach($loadArr[$resType] as $theResId) {
+					$logger->log("Load $resType :".$theResId,Zend_Log::DEBUG);
+					array_push($findResArr, $theResId);
 				}
-				//GET ALL THE LAYER INFO FOR THIS RESOURCE:
-				if($layerSelect != null) {
-					$layerRowSet = $layersTable->fetchAll($layerSelect);
-					foreach($layerRowSet as $layerRow) {
-//						$logger->log("layerRow is type:".gettype($layerRow),Zend_Log::DEBUG);
-						if( !array_key_exists( $layerRow['id'], $this->_layers) ) { 
-							$this->_layers[$layerRow['id']] = $layerRow->toArray();
-							$this->_layers[$layerRow['id']]['layer_update'] = 'false';
-							$this->_layers[$layerRow['id']]['layer_delete'] = 'false';
-							$this->_layers[$layerRow['id']]['feature_create'] = 'false';
-							$this->_layers[$layerRow['id']]['feature_update'] = 'false';
-							$this->_layers[$layerRow['id']]['feature_delete'] = 'false';
+				$theRowSet = $resTable->find($findRessArr);
+			}
+			if($theRowSet != null) {
+				foreach($theRowSet as $theRow) {
+					if( !array_key_exists( $theRow['id'], $this->_data[$resType] ) ) { 
+						$this->_data[$resType][$theRow['id']] = $theRow->toArray();
+						$this->_data[$resType][$theRow['id']]['can_update'] = 'false';
+						$this->_data[$resType][$theRow['id']]['can_delete'] = 'false';
+						$tmpRes = null;
+						if( array_key_exists($resType, $loadArr) && array_key_exists($theRow['id'], $loadArr[$resType]) ) {
+							$tmpRes = $loadArr[$resType][$theRow['id']];
+//							$logger->log("Test: $resType :".$theRow['id']." :$tmpRes",Zend_Log::DEBUG);
+						} elseif ( array_key_exists($resType, $loadAllArr) ) {
+							$tmpRes = $loadAllArr[$resType];
+//							$logger->log("Test2: $resType :".$theRow['id']." :$tmpRes",Zend_Log::DEBUG);
+						} elseif ( $loadEverything != null) {
+							$tmpRes = $loadEverything;
+//							$logger->log("Test3: $resType :".$theRow['id']." :$tmpRes",Zend_Log::DEBUG);
 						}
-						$tmpResLayer = null;
-						$tmpResFeature = null;
-						if( $theModule['name'] == '*/*/*' || $theModule['name'] == 'srdata/*/*' ) {
-							$tmpResLayer = $theRes;
-							$tmpResFeature = $theRes;
-						} elseif( preg_match( '/srdata\/layers/', $theModule['name'] ) ) {
-							$tmpResLayer = $theRes;
-						} elseif( preg_match( '/srdata\/features/', $theModule['name'] ) ) {
-							$tmpResFeature = $theRes;
+						if($tmpRes != null) {
+//							$logger->log("Check Update and Delete for $resType :".$theRow['id']." :$tmpRes",Zend_Log::DEBUG);
+							if( $acl->isAllowed($theRole,$tmpRes,'update') ) {
+								$this->_data[$resType][$theRow['id']]['can_update'] = 'true';
+							}
+							if( $acl->isAllowed($theRole,$tmpRes,'delete') ) {
+								$this->_data[$resType][$theRow['id']]['can_delete'] = 'true';
+							}	
+						}	
+						
+						// UNFORTUNATE EXCEPTIONS THAT HAVE TO BE HANDLED
+						// TODO : FIX THESE!
+						if($resType == 'layers') {
+							$this->_data[$resType][$theRow['id']]['feature_create'] = 'false';
+							$this->_data[$resType][$theRow['id']]['feature_update'] = 'false';
+							$this->_data[$resType][$theRow['id']]['feature_delete'] = 'false';
+							$tmpRes = null;
+							if( array_key_exists('features', $loadArr) && array_key_exists($theRow['id'], $loadArr['features']) ) {
+								$tmpRes = $loadArr[$resType][$theRow['id']];
+							} elseif ( array_key_exists('features', $loadAllArr) ) {
+								$tmpRes = $loadAllArr[$resType];
+							} elseif ( $loadEverything != null) {
+								$tmpRes = $loadEverything;
+							}
+							if($tmpRes != null) {
+//								$logger->log("Check Feature Update and Delete for $resType :".$theRow['id']." : $tmpRes",Zend_Log::DEBUG);
+								if( $acl->isAllowed($theRole,$tmpRes,'create') ) {
+									$this->_data[$resType][$theRow['id']]['feature_create'] = 'true';
+								}	
+								if( $acl->isAllowed($theRole,$tmpRes,'update') ) {
+									$this->_data[$resType][$theRow['id']]['feature_update'] = 'true';
+								}
+								if( $acl->isAllowed($theRole,$tmpRes,'delete') ) {
+									$this->_data[$resType][$theRow['id']]['feature_delete'] = 'true';
+								}	
+							}	
+						} elseif($resType == 'wlayout') {
+							$this->_data[$resType][$theRow['id']]['view_data'] = Zend_Json::decode(	$this->_data[$resType][$theRow['id']]['view_data'] ); 
+						} elseif($resType == 'queries') {
+							$this->_data[$resType][$theRow['id']]['data'] = Zend_Json::decode(	$this->_data[$resType][$theRow['id']]['data'] ); 
 						}
+						// END UNFORTUNATE EXCEPTIONS.	
+					}
+				}
+			}
+		}
+	
+/*
 						if($tmpResLayer != null) {
 							if( $acl->isAllowed($theRole,$tmpResLayer,'update') ) {
 								$this->_layers[$layerRow['id']]['layer_update'] = 'true';
@@ -280,36 +328,13 @@ class Home_IndexController extends Zend_Controller_Action
 								$this->_layers[$layerRow['id']]['feature_delete'] = 'true';
 							}
 						}
-					}
-				}
-				if($styleSelect != null) {
-					$styleRowSet = $stylesTable->fetchAll($styleSelect);
-					foreach($styleRowSet as $styleRow) {
-						if( !array_key_exists( $styleRow['id'], $this->_styles) ) { 
-							$this->_styles[$styleRow['id']] = $styleRow->toArray();
-						}
-					}
-				}
-				if($wlayoutSelect != null) {
-					$wlayoutRowSet = $wlayoutsTable->fetchAll($wlayoutSelect);
-					foreach($wlayoutRowSet as $wlayoutRow) {
-						if( !array_key_exists( $wlayoutRow['id'], $this->_wlayouts) ) { 
-							$this->_wlayouts[$wlayoutRow['id']] = $wlayoutRow->toArray();
-							$this->_wlayouts[$wlayoutRow['id']]['view_data'] = Zend_Json::decode( $wlayoutRow['view_data']);
-						}
-					}
-				}
-				if($querySelect != null) {
-					$queryRowSet = $queriesTable->fetchAll($querySelect);
-					foreach($queryRowSet as $queryRow) {
-						if( !array_key_exists( $queryRow['id'], $this->_queries) ) { 
-							$this->_queries[$queryRow['id']] = $queryRow->toArray();
-							$this->_queries[$queryRow['id']]['data'] = Zend_Json::decode( $queryRow['data']);
-						}
-					}
-				}
-			}
-		}
+*/
+
+
+		### END LOAD LAYERS
 	}
+	### END getLayers FUNCTION
 }
+
+
 

@@ -407,8 +407,8 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						console.log("Create Layer Called and New Layeroptions object returned! ID:"+returnId);
 						this.id = returnId;
 						this.isBaseLayer = false;
-						this.layer_update = true;
-						this.layer_delete = true;
+						this.can_update = true;
+						this.can_delete = true;
 						this.feature_create = true;
 						this.feature_update = true;
 						this.feature_delete = true;

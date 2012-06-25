@@ -54,6 +54,9 @@ create TABLE sr_modules (
 	PRIMARY KEY(id)
 );
 
+-- FUTURE USE --
+-- CREATE VIEW sr_acl AS SELECT module.name, acl.* FROM sr_modules module, sr_acl_permissions acl WHERE module.id=acl.resource_id;
+
 CREATE TYPE layer_type AS ENUM ('XYZ','Vector','WFS','GeoRSS','WMS');
 CREATE TYPE layer_format AS ENUM ('GML','WFST','WKT','GeoJSON','SRJSON');
 CREATE TABLE sr_layers (
