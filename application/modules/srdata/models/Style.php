@@ -18,7 +18,10 @@ class Srdata_Model_Style extends Zend_Db_Table_Row_Abstract
 		'externalGraphic'		=> 'externalgraphic',
 		'labelAlign'				=> 'labelalign',
 		'labelXOffset'			=> 'labelxoffset',
-		'labelYOffset'			=> 'labelyoffset'
+		'labelYOffset'			=> 'labelyoffset',
+		'graphicHeight'			=> 'graphicheight',
+		'graphicWidth'			=> 'graphicwidth',
+		'graphicOpacity'		=> 'graphicopacity'
 
 	);	
 

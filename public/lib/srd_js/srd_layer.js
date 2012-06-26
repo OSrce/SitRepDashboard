@@ -78,28 +78,27 @@ function srd_layer( ) {
 		this.srd_styleArr = [];
 		
 		this.srd_featureAttributes = {
-			fillColor: '#777777',
-			fillOpacity: 0.5,
-			strokeColor : '#555555',
-			strokeOpacity : 1,
-			strokeWidth: '3',
-			pointRadius: '6',
-			label: 'Test Label',
-			fontColor: '#000000',
-			fontSize: '14',
-			fontFamily: 'Courier New, monospace',
-			fontWeight: 'bold',
-			labelAlign: 'rt',
-			labelXOffset: '0',
-			labelYOffset: '0',
-			externalGraphic: '',
-//			externalGraphic: 'lib/img/map_icons/PoliceCar_Left.png',
-			graphicWidth: '80',
-			graphicHeight: '40',
-			graphicOpacity: '1',
-			rotation: '45'
-
-//			backgroundGraphic: ''
+			setStyles: '${styleFunction}',
+			fillColor: '${fillColor}',
+			fillOpacity: '${fillOpacity}',
+			strokeColor : '${stokeColor}',
+			strokeWidth : '${strokeWidth}',
+			strokeOpacity : '${strokeOpacity}',
+			pointRadius: '${pointRadius}',
+			label: '${label}',
+			fontColor: '${fontColor}',
+			fontSize: '${fontSize}',
+			fontFamily: '${fontFamily}',
+			fontWeight: '${fontWeight}',
+			labelAlign: '${labelAlign}',
+			labelXOffset: '${labelXOffset}',
+			labelYOffset: '${labelYOffset}',
+			externalGraphic: '${externalGraphic}',
+			graphicWidth: '${graphicWidth}',
+			graphicHeight: '${graphicHeight}',
+			graphicOpacity: '${graphicOpacity}',
+			rotation: '${rotation}',
+			backgroundGraphic: '${backgroundGraphic}'
 		}
 		
 
@@ -120,8 +119,6 @@ function srd_layer( ) {
 			labelXOffset: '0',
 			labelYOffset: '0'
 		}	
-
-
 
 
 		this.srd_customSelectFeatureAttributes.label = '**${label}**';
@@ -201,7 +198,7 @@ srd_layer.prototype.loadData = function( ) {
 				layers: "nexrad-n0r-wmst",
 				transparent : "true",
 				format : 'image/png',
-				time : '2012-02-28T17:00:00',
+				time : '2012-06-26T13:00:00',
 				srs: 'EPSG:4326'
 			},
 			{
@@ -218,14 +215,45 @@ srd_layer.prototype.loadData = function( ) {
 		if(this.srd_styleMap == null) {
 //			this.srd_styleMap = new OpenLayers.StyleMap();
 			this.srd_styleMap = new OpenLayers.StyleMap( { 
-				'default': this.srd_styleArr[this.options.defaultstyle]
+//				'default': this.srd_styleArr[this.options.defaultstyle]
+//				'default': new OpenLayers.Style( this.srd_featureAttributes, { 
+				'default': new OpenLayers.Style( {styleFunction: "${styleFunction}" }, { 
+				context: {
+					styleFunction : function(feature) { this.srd_styleFunction(feature); }.bind(this)
+/*					fillColor: function(feature) { return feature.tmpAttributes.fillColor; },
+					fillOpacity: function(feature) { return feature.tmpAttributes.fillOpacity; },
+					strokeColor: function(feature) { return feature.tmpAttributes.strokeColor; },
+					strokeWidth: function(feature) { return feature.tmpAttributes.strokeWidth; },
+					strokeOpacity: function(feature) { return feature.tmpAttributes.strokeOpacity; },
+					pointRadius: function(feature) { return feature.tmpAttributes.pointRadius; },
+					label: function(feature) { return feature.tmpAttributes.label; },
+					fontColor: function(feature) { return feature.tmpAttributes.fontColor; },
+					fontSize: function(feature) { return feature.tmpAttributes.fontSize; },
+					fontFamily: function(feature) { return feature.tmpAttributes.fontFamily; },
+					fontWeight: function(feature) { return feature.tmpAttributes.fontWeight; },
+					labelAlign: function(feature) { return feature.tmpAttributes.labelAlign; },
+					labelXOffset: function(feature) { return feature.tmpAttributes.labelXOffset; },
+					labelYOffset: function(feature) { return feature.tmpAttributes.labelYOffset; },
+					externalGraphic: function(feature) { return feature.tmpAttributes.externalGraphic; },
+					graphicWidth: function(feature) { return feature.tmpAttributes.graphicWidth; },
+					graphicHeight: function(feature) { return feature.tmpAttributes.graphicHeight; },
+					graphicOpacity: function(feature) { return feature.tmpAttributes.graphicOpacity; },
+					rotation: function(feature) { return feature.tmpAttributes.rotation; },
+					backgroupGraphic: function(feature) { return feature.tmpAttributes.backgroupGraphic; },
+*/
+				} 
+				}  )
+
 			} );
-			var theRuleArr = [];
+/*			var theRuleArr = [];
 			theRuleArr.push( new OpenLayers.Rule( {
 				elseFilter: true,
-				symbolizer: this.srd_styleArr[this.options.defaultstyle] 
+//				symbolizer: this.srd_styleArr[this.options.defaultstyle] 
+					symbolizer: "${styleFunc}",
+					styleFunc: this.srd_styleFunction
 				} )
 			);
+*/
 /*	
 			for(var styleId in this.srd_styleArr) {
 				theRuleArr.push( new OpenLayers.Rule( {
@@ -239,8 +267,10 @@ srd_layer.prototype.loadData = function( ) {
 				);
 			}
 */
-			this.srd_styleMap.styles["default"].addRules( theRuleArr );
-			this.srd_styleMap.addUniqueValueRules("default","style", this.srd_styleArr);
+//			this.srd_styleMap.styles["default"].addRules( theRuleArr );
+//			this.srd_styleMap.addUniqueValueRules("default","style", this.srd_styleArr);
+
+//				this.srd_styleMap.addUniqueValueRules("default","feature", this.srd_styleFunction);
 		}
 
 //		var tmpSymbolizer = this.srd_styleMap.styles["default"].defaultStyle;
@@ -248,9 +278,13 @@ srd_layer.prototype.loadData = function( ) {
 /*
 		var mainRule = new OpenLayers.Rule( {
 			elseFilter: true,
-			symbolizer: this.srd_styleArr[this.options.defaultstyle] } );
+			symbolizer: "${styleFunction}"
+		} );
+*/
+//			symbolizer: this.srd_styleArr[this.options.defaultstyle] } );
 //			symbolizer: tmpSymbolizer} );
 
+/*
 		var customRule = new OpenLayers.Rule( {
 			filter: new OpenLayers.Filter.Comparison( {
 				type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
@@ -273,6 +307,7 @@ srd_layer.prototype.loadData = function( ) {
 		this.srd_styleMap.styles["select"].addRules( [ customSelectRule] );
 */
 
+//		this.srd_styleMap.styles["default"].addRules( [mainRule ] );
 //		this.srd_styleMap.styles["default"] = this.srd_styleArr[this.options.defaultstyle];
 
 //console.log("End Messy Rule code");
@@ -1113,7 +1148,83 @@ srd_layer.prototype.srd_delete = function(evt) {
 }	
 // END srd_update EVENT HANDLER FOR AFTER FEATURES ARE UPDATED
 
+// BEGIN srd_styleFunction 
+srd_layer.prototype.srd_styleFunction = function( feature ) {
+	if( !this.options) {
+		console.log("Styling Feature :"+feature.id+" NO this.options!!!");
+		return;
+	}
+	console.log("Styling Feature :"+feature.id+" on layer"+this.options.id);
+	if( !feature.tmpAttributes) {
+		feature.tmpAttributes = {
+      fillColor: '#777777',
+      fillOpacity: 0,
+      strokeColor : '#555555',
+      strokeOpacity : 0,
+      strokeWidth: 0,
+      pointRadius: 0,
+      label: '',
+      fontColor: '#000000',
+      fontSize: '14',
+			fontFamily: 'Courier New, monospace',
+			fontWeight: '',
+			labelAlign: 'ct',
+			labelXOffset: 0,
+			labelYOffset: 0,
+			externalGraphic: '',
+			graphicWidth: 0,
+			graphicHeight: 0,
+			graphicOpacity: 0,
+			rotation: 0,
+			backgroundGraphic: ''
+		};
+	}
 
+	// CHECK IF STYLE # SET FOR FEATURE
+	if( feature.data.style && this.srd_styleArr[feature.data.style]  ) {
+		console.log("Feature:"+feature.id+" has style :"+feature.data.style);
+		for(var i in feature.tmpAttributes) {
+			if(this.srd_styleArr[feature.data.style][i] ) {
+				feature.tmpAttributes[i] = this.srd_styleArr[feature.data.style][i];
+			}
+		}
+	// ELSE CHECK IF STYLE # SET FOR LAYER
+	} else if ( this.options.defaultstyle && this.srd_styleArr[this.options.defaultstyle] ) {
+		console.log("Feature:"+feature.id+" using layer style :"+this.options.defaultstyle);
+		for(var i in feature.tmpAttributes) {
+			if(this.srd_styleArr[this.options.defaultstyle][i] ) {
+				feature.tmpAttributes[i] = this.srd_styleArr[this.options.defaultstyle][i];
+			}
+		}
+	// ELSE NO STYLES AVAILABLE -> USING HARDCODED DEFAULT STYLE.
+	} else {
+		feature.tmpAttributes = {
+      fillColor: '#777777',
+      fillOpacity: 0.5,
+      strokeColor : '#555555',
+      strokeOpacity : 1,
+      strokeWidth: '3',
+      pointRadius: '6',
+      label: 'Test Label',
+      fontColor: '#000000',
+      fontSize: '14',
+			fontFamily: 'Courier New, monospace',
+			fontWeight: 'bold',
+			labelAlign: 'rt',
+			labelXOffset: '0',
+			labelYOffset: '0',
+			externalGraphic: '',
+			graphicWidth: '80',
+			graphicHeight: '40',
+			graphicOpacity: '1',
+			rotation: '45',
+			backgroundGraphic: ''
+		}
+	}
+	
+	return;
+}
+// END srd_styleFunction 
 
 
 
