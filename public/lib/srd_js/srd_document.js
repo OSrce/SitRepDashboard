@@ -62,6 +62,7 @@ function srd_document() {
 	this.srd_wlayoutArr = [];
 	this.srd_styleArr = [];
 	this.srd_layerArr = [];
+	this.srd_presetArr = [];
 	this.srd_queryArr = [];
 
 	this.srd_selLayer = null;

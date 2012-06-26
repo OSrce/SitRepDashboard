@@ -176,7 +176,7 @@ class Home_IndexController extends Zend_Controller_Action
 		$tableArr = array();
 		$tableArr['queries'] = new Srdata_Model_DbTable_Queries($this->_db);
 		$tableArr['wlayout'] = new Srdata_Model_DbTable_Wlayout($this->_db);
-		$tableArr['preset'] = new Srdata_Model_DbTable_Presets($this->_db);
+		$tableArr['presets'] = new Srdata_Model_DbTable_Presets($this->_db);
 		$tableArr['styles'] = new Srdata_Model_DbTable_Styles($this->_db);
 		$tableArr['layers'] = new Srdata_Model_DbTable_Layers($this->_db);
 
