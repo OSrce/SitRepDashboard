@@ -1258,6 +1258,14 @@ srd_layer.prototype.srd_beforeAdd = function( theObject ) {
 				feature.style = this.srd_styleArr[this.options.defaultstyle];
 			}
 		}
+/*		if(feature.style) {
+			for(var i in feature.style) {
+				if( dojo.isString( feature.style[i]) && feature.style[i].charAt(0) == '$' && feature.attributes[feature.style[i].substr(2,feature.style[i].length-3)   ] ) {
+						feature.style[i] = feature.attributes[ feature.style[i].substr(2,feature.style[i].length-3)  ];
+				}
+			}
+		}
+*/
 	return;
 }
 
