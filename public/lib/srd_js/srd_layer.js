@@ -78,10 +78,20 @@ function srd_layer( ) {
 		this.srd_styleArr = [];
 		
 		this.srd_featureAttributes = {
+//			setStyles: '${styleFunction}',
+			fillColor: '#ee9900',
+			fillOpacity: 0.4,
+			strokeColor : '#ee9900',
+			strokeWidth : 1,
+			strokeOpacity : 1,
+			pointRadius: 6
+		}
+
+/*		this.srd_featureAttributes = {
 			setStyles: '${styleFunction}',
 			fillColor: '${fillColor}',
 			fillOpacity: '${fillOpacity}',
-			strokeColor : '${stokeColor}',
+			strokeColor : '${strokeColor}',
 			strokeWidth : '${strokeWidth}',
 			strokeOpacity : '${strokeOpacity}',
 			pointRadius: '${pointRadius}',
@@ -97,10 +107,10 @@ function srd_layer( ) {
 			graphicWidth: '${graphicWidth}',
 			graphicHeight: '${graphicHeight}',
 			graphicOpacity: '${graphicOpacity}',
-			rotation: '${rotation}',
-			backgroundGraphic: '${backgroundGraphic}'
+			rotation: '${rotation}'
+//			backgroundGraphic: '${backgroundGraphic}'
 		}
-		
+*/
 
 //		this.srd_customSelectFeatureAttributes = Object.create(this.srd_customFeatureAttributes);
 		this.srd_customSelectFeatureAttributes = {
@@ -216,11 +226,11 @@ srd_layer.prototype.loadData = function( ) {
 //			this.srd_styleMap = new OpenLayers.StyleMap();
 			this.srd_styleMap = new OpenLayers.StyleMap( { 
 //				'default': this.srd_styleArr[this.options.defaultstyle]
-//				'default': new OpenLayers.Style( this.srd_featureAttributes, { 
-				'default': new OpenLayers.Style( {styleFunction: "${styleFunction}" }, { 
+				'default': new OpenLayers.Style( this.srd_featureAttributes, { 
+//				'default': new OpenLayers.Style( {styleFunction: "${styleFunction}" }, { 
 				context: {
-					styleFunction : function(feature) { this.srd_styleFunction(feature); }.bind(this)
-/*					fillColor: function(feature) { return feature.tmpAttributes.fillColor; },
+					styleFunction : function(feature) { this.srd_styleFunction(feature); }.bind(this),
+					fillColor: function(feature) { return feature.tmpAttributes.fillColor; },
 					fillOpacity: function(feature) { return feature.tmpAttributes.fillOpacity; },
 					strokeColor: function(feature) { return feature.tmpAttributes.strokeColor; },
 					strokeWidth: function(feature) { return feature.tmpAttributes.strokeWidth; },
@@ -240,7 +250,7 @@ srd_layer.prototype.loadData = function( ) {
 					graphicOpacity: function(feature) { return feature.tmpAttributes.graphicOpacity; },
 					rotation: function(feature) { return feature.tmpAttributes.rotation; },
 					backgroupGraphic: function(feature) { return feature.tmpAttributes.backgroupGraphic; },
-*/
+
 				} 
 				}  )
 
@@ -497,6 +507,10 @@ srd_layer.prototype.loadData = function( ) {
 //								{ mode: OpenLayers.Control.ModifyFeature.DRAG } );
 //		this.map.addControl(this.modifyControl);
 //		this.modifyControl.activate();
+
+		// STYLING FOR ALL VECTOR LAYERS :
+		var theObject = {};
+		this.layer.events.register('beforefeatureadded', theObject, function(theObject) { this.srd_beforeAdd(theObject)}.bind(this)  );
 
 	
 //// BEGIN controller initialize ////
@@ -1155,15 +1169,17 @@ srd_layer.prototype.srd_styleFunction = function( feature ) {
 		return;
 	}
 	console.log("Styling Feature :"+feature.id+" on layer"+this.options.id);
-	if( !feature.tmpAttributes) {
+
+/*	if( !feature.tmpAttributes) {
+//		console.log("Feature:"+feature.id+" using hardcoded defaults.");
 		feature.tmpAttributes = {
       fillColor: '#777777',
-      fillOpacity: 0,
+      fillOpacity: 1,
       strokeColor : '#555555',
-      strokeOpacity : 0,
-      strokeWidth: 0,
-      pointRadius: 0,
-      label: '',
+      strokeOpacity : 1,
+      strokeWidth: 5,
+      pointRadius: 8,
+      label: 'MyTestLabel',
       fontColor: '#000000',
       fontSize: '14',
 			fontFamily: 'Courier New, monospace',
@@ -1178,56 +1194,72 @@ srd_layer.prototype.srd_styleFunction = function( feature ) {
 			rotation: 0,
 			backgroundGraphic: ''
 		};
-	}
+*/
+		// CHECK IF STYLE # SET FOR FEATURE
+		if( feature.data.style && this.srd_styleArr[feature.data.style]  ) {
+			if( !feature.style ) {
+				feature.style = this.srd_styleArr[feature.data.style];
+			}
+/*
+//			console.log("Feature:"+feature.id+" has style :"+feature.data.style);
+//			for(var i in feature.tmpAttributes) {
+			for(var i in this.srd_styleArr[feature.data.style] ) {
+//				if(this.srd_styleArr[feature.data.style][i] ) {
+					if( dojo.isString( this.srd_styleArr[feature.data.style][i]) && this.srd_styleArr[feature.data.style][i].charAt(0) == '$' && feature.attributes[this.srd_styleArr[feature.data.style][i].substr(2,this.srd_styleArr[feature.data.style][i].length-3)   ] ) {
+//						feature.tmpAttributes[i] = feature.attributes[ this.srd_styleArr[feature.data.style][i].substr(2,this.srd_styleArr[feature.data.style][i].length-3)  ];
+						feature.style[i] = feature.attributes[ this.srd_styleArr[feature.data.style][i].substr(2,this.srd_styleArr[feature.data.style][i].length-3)  ];
+					} else {
+//						feature.tmpAttributes[i] = this.srd_styleArr[feature.data.style][i];
+						feature.style[i] = this.srd_styleArr[feature.data.style][i];
+					}
+//				}
 
-	// CHECK IF STYLE # SET FOR FEATURE
-	if( feature.data.style && this.srd_styleArr[feature.data.style]  ) {
-		console.log("Feature:"+feature.id+" has style :"+feature.data.style);
-		for(var i in feature.tmpAttributes) {
-			if(this.srd_styleArr[feature.data.style][i] ) {
-				feature.tmpAttributes[i] = this.srd_styleArr[feature.data.style][i];
+			}
+*/
+		// ELSE CHECK IF STYLE # SET FOR LAYER
+		} else if ( this.options.defaultstyle && this.srd_styleArr[this.options.defaultstyle] ) {
+//			console.log("Feature:"+feature.id+" using layer style :"+this.options.defaultstyle);
+			if( !feature.style ) {
+				feature.style = this.srd_styleArr[this.options.defaultstyle];
+			}
+//			console.log("Feature:"+feature.id+" using layer style :"+this.options.defaultstyle);
+/*			for(var i in feature.tmpAttributes) {
+				if(this.srd_styleArr[this.options.defaultstyle][i] ) {
+					if( dojo.isString( this.srd_styleArr[this.options.defaultstyle][i]) && this.srd_styleArr[this.options.defaultstyle][i].charAt(0) == '$' && feature.attributes[this.srd_styleArr[this.options.defaultstyle][i].substr(2,this.srd_styleArr[this.options.defaultstyle][i].length-3)   ] ) {
+						feature.tmpAttributes[i] = feature.attributes[ this.srd_styleArr[this.options.defaultstyle][i].substr(2,this.srd_styleArr[this.options.defaultstyle][i].length-3)  ];
+					} else {
+						feature.tmpAttributes[i] = this.srd_styleArr[this.options.defaultstyle][i];
+					}
+				}
 			}
 		}
-	// ELSE CHECK IF STYLE # SET FOR LAYER
-	} else if ( this.options.defaultstyle && this.srd_styleArr[this.options.defaultstyle] ) {
-		console.log("Feature:"+feature.id+" using layer style :"+this.options.defaultstyle);
-		for(var i in feature.tmpAttributes) {
-			if(this.srd_styleArr[this.options.defaultstyle][i] ) {
-				feature.tmpAttributes[i] = this.srd_styleArr[this.options.defaultstyle][i];
-			}
-		}
-	// ELSE NO STYLES AVAILABLE -> USING HARDCODED DEFAULT STYLE.
-	} else {
-		feature.tmpAttributes = {
-      fillColor: '#777777',
-      fillOpacity: 0.5,
-      strokeColor : '#555555',
-      strokeOpacity : 1,
-      strokeWidth: '3',
-      pointRadius: '6',
-      label: 'Test Label',
-      fontColor: '#000000',
-      fontSize: '14',
-			fontFamily: 'Courier New, monospace',
-			fontWeight: 'bold',
-			labelAlign: 'rt',
-			labelXOffset: '0',
-			labelYOffset: '0',
-			externalGraphic: '',
-			graphicWidth: '80',
-			graphicHeight: '40',
-			graphicOpacity: '1',
-			rotation: '45',
-			backgroundGraphic: ''
-		}
+*/
 	}
-	
 	return;
 }
 // END srd_styleFunction 
 
-
-
+srd_layer.prototype.srd_beforeAdd = function( theObject ) {
+	console.log("Before Add Feature :"+theObject.feature.id+" on layer"+this.options.id);
+	if( !this.options) {
+		console.log("Feature :"+feature.id+" NO this.options!!!");
+		return;
+	}
+		var feature = theObject.feature;
+		if( feature.data.style && this.srd_styleArr[feature.data.style]  ) {
+			if( !feature.style ) {
+				feature.style = this.srd_styleArr[feature.data.style];
+/// TODO TODO NEED TO FIX SYMBOLIZERS
+//				feature.style.label = feature.attributes.label;
+			}
+		} else if ( this.options.defaultstyle && this.srd_styleArr[this.options.defaultstyle] ) {
+//			console.log("Feature:"+feature.id+" using layer style :"+this.options.defaultstyle);
+			if( !feature.style ) {
+				feature.style = this.srd_styleArr[this.options.defaultstyle];
+			}
+		}
+	return;
+}
 
 
 
