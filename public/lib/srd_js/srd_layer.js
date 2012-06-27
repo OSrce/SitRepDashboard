@@ -224,6 +224,18 @@ srd_layer.prototype.loadData = function( ) {
 // BEGIN MESSY STYLE RULE CODE
 		if(this.srd_styleMap == null) {
 //			this.srd_styleMap = new OpenLayers.StyleMap();
+
+			if(this.options.defaultstyle &&  this.srd_styleArr[this.options.defaultstyle] ) {
+				this.srd_styleMap = new OpenLayers.StyleMap( { 
+					'default': new OpenLayers.Style( this.srd_styleArr[this.options.defaultstyle] )
+				} ); 	
+			} else {
+				this.srd_styleMap = new OpenLayers.StyleMap( { 
+					'default': new OpenLayers.Style( this.srd_featureAttributes )
+				} ); 
+			}
+		}
+/*
 			this.srd_styleMap = new OpenLayers.StyleMap( { 
 //				'default': this.srd_styleArr[this.options.defaultstyle]
 				'default': new OpenLayers.Style( this.srd_featureAttributes, { 
@@ -253,8 +265,9 @@ srd_layer.prototype.loadData = function( ) {
 
 				} 
 				}  )
+*/
 
-			} );
+///			} );
 /*			var theRuleArr = [];
 			theRuleArr.push( new OpenLayers.Rule( {
 				elseFilter: true,
@@ -281,7 +294,7 @@ srd_layer.prototype.loadData = function( ) {
 //			this.srd_styleMap.addUniqueValueRules("default","style", this.srd_styleArr);
 
 //				this.srd_styleMap.addUniqueValueRules("default","feature", this.srd_styleFunction);
-		}
+//		}
 
 //		var tmpSymbolizer = this.srd_styleMap.styles["default"].defaultStyle;
 
@@ -427,7 +440,7 @@ srd_layer.prototype.loadData = function( ) {
 						var theFeature = new OpenLayers.Feature.Vector( new OpenLayers.Geometry.fromWKT( theFeat.geometry), dojo.fromJson(theFeat.feature_data) );
 						theFeature.fid = theFeat.feature_id;
 //						theFeature.id = theFeat.feature_id;
-						console.log("Adding Feature:"+theFeature.fid);
+						console.log("Adding Feature: "+theFeature.fid+" on Layer: "+this.options.id);
 						this.layer.addFeatures( [theFeature] ); 
 	
 					}.bind(this) );
@@ -547,14 +560,17 @@ srd_layer.prototype.loadData = function( ) {
 				}
 			} );
 
-	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer, {
+
+	this.srd_drawControls.select = new OpenLayers.Control.ModifyFeature(this.layer);
+/*
+  	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer, {
 		onSelect: function(theFeature) { 
 			this.onFeatureSelect(theFeature) 
 		}.bind(this), 
 		onUnselect: function(theFeature) { 
 			this.onFeatureUnselect(theFeature) }.bind(this)
 		} );
-
+*/
 
 // TODO REGISTER KEYPRESS EVENT FOR DEL KEY TO DEL SELECTED FEATURE AT ANY TIME.
 //		this.layer.events.register("keypress"
@@ -563,7 +579,8 @@ srd_layer.prototype.loadData = function( ) {
 
 	console.log("End if Vector");
 //	console.log("TEST5::"+this.srd_featureAttributes.tagName+":::");
-/////////////////////////////////////////////
+
+	/////////////////////////////////////////////
 	}
 	// END IF VECTOR
 
@@ -631,7 +648,7 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 
 // BEGIN FUNC onFeatureSelect
 srd_layer.prototype.onFeatureSelect = function(theFeature) {
-	console.log("Feature selected: "+theFeature.attributes.style);
+	console.log("Feature selected: "+theFeature.fid);
 //	this.editPalette.setFeatureAttributes( theFeature.attributes);
 //	theFeature.
 	this.selectedFeature = theFeature;
@@ -1239,25 +1256,49 @@ srd_layer.prototype.srd_styleFunction = function( feature ) {
 }
 // END srd_styleFunction 
 
+
+// BEFORE ADD SHOULD ONLY BE USED FOR FEATURE SPECIFIC STYLING.
 srd_layer.prototype.srd_beforeAdd = function( theObject ) {
-	console.log("Before Add Feature :"+theObject.feature.id+" on layer"+this.options.id);
+//	console.log("Before Add Feature :"+theObject.feature.id+" on layer"+this.options.id);
 	if( !this.options) {
 		console.log("Feature :"+feature.id+" NO this.options!!!");
 		return;
 	}
+
 		var feature = theObject.feature;
 		if( feature.data.style && this.srd_styleArr[feature.data.style]  ) {
 			if( !feature.style ) {
-				feature.style = this.srd_styleArr[feature.data.style];
+				feature.style = {};
+				for(var i in this.srd_styleArr[feature.data.style] ) {
+					if( dojo.isString( this.srd_styleArr[feature.data.style][i]) && this.srd_styleArr[feature.data.style][i].charAt(0) == '$' ) {
+						if( !feature.attributes[this.srd_styleArr[feature.data.style][i].substr(2,this.srd_styleArr[feature.data.style][i].length-3)] ) {
+						feature.attributes[this.srd_styleArr[feature.data.style][i].substr(2,this.srd_styleArr[feature.data.style][i].length-3)] = '';
+						}
+						feature.style[i] = feature.attributes[this.srd_styleArr[feature.data.style][i].substr(2,this.srd_styleArr[feature.data.style][i].length-3)  ];
+					} else {
+						feature.style[i] = this.srd_styleArr[feature.data.style][i];
+					}
+				}
 /// TODO TODO NEED TO FIX SYMBOLIZERS
 //				feature.style.label = feature.attributes.label;
 			}
 		} else if ( this.options.defaultstyle && this.srd_styleArr[this.options.defaultstyle] ) {
-//			console.log("Feature:"+feature.id+" using layer style :"+this.options.defaultstyle);
-			if( !feature.style ) {
-				feature.style = this.srd_styleArr[this.options.defaultstyle];
+			for(var i in this.srd_styleArr[this.options.defaultstyle] ) {
+				if( dojo.isString( this.srd_styleArr[this.options.defaultstyle][i]) && this.srd_styleArr[this.options.defaultstyle][i].charAt(0) == '$' ) {
+
+					if( !feature.attributes[ this.srd_styleArr[this.options.defaultstyle][i].substr(2,this.srd_styleArr[this.options.defaultstyle][i].length-3)] ) {
+						feature.attributes[this.srd_styleArr[this.options.defaultstyle][i].substr(2,this.srd_styleArr[this.options.defaultstyle][i].length-3)] = '';
+					}
+				}
 			}
+
+//			console.log("Feature:"+feature.id+" using layer style :"+this.options.defaultstyle);
+//			if( !feature.style ) {
+//				feature.style = this.srd_styleArr[this.options.defaultstyle];
+//			}
 		}
+
+
 /*		if(feature.style) {
 			for(var i in feature.style) {
 				if( dojo.isString( feature.style[i]) && feature.style[i].charAt(0) == '$' && feature.attributes[feature.style[i].substr(2,feature.style[i].length-3)   ] ) {

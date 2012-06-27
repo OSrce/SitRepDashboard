@@ -4,7 +4,8 @@ class Srdata_Model_DbTable_Features extends Zend_Db_Table_Abstract
 {
     protected $_name = 'sr_layer_dynamic_data';
 		protected $_rowClass = 'Srdata_Model_Feature';
-		protected $_primary = array('layer_id', 'feature_id');
+//		protected $_primary = array('layer_id', 'feature_id');
+		protected $_primary = 'id';
 
 		public function insert(array $data) {
 			if( !empty( $data['sr_geom'] ) ) {

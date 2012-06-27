@@ -29,14 +29,14 @@ class Srdata_FeaturesController extends Srdata_RestController
 		// GET (Index) Action === READ ALL fetchAll
     public function indexAction()
     {
-			$this->logger->log($this->tableName." Get (Index) Action Called: ", Zend_Log::DEBUG);	
+			$this->logger->log($this->tableName." Get 1(Index) Action Called: ", Zend_Log::DEBUG);	
 			$select = $this->restTable->select();
 			$select->from( 'sr_layer_dynamic_data',array(
-				'feature_id', 'feature_data', 'geometry' => new Zend_Db_Expr("ST_AsText(sr_geom)")  ) );
-			foreach($this->pKeyArr as $theKey => $theVal) {
-        if(isset( $theVal)  ) {
+				'id', 'feature_id', 'feature_data', 'geometry' => new Zend_Db_Expr("ST_AsText(sr_geom)")  ) );
+			foreach($this->colsArr as $theKey => $theVal) {
+        if( $this->_getParam($theKey) ) {
           $this->logger->log("The Primary Key(s): $theKey === $theVal\n", Zend_Log::DEBUG);
-          $select->where("$theKey = ?",$theVal);
+          $select->where("$theKey = ?",$this->_getParam($theKey));
         }
       }
 
@@ -54,7 +54,7 @@ class Srdata_FeaturesController extends Srdata_RestController
 		// GET Action === READ SPECIFIC ROW
 		public function getAction() 
 		{
-			$this->logger->log($this->tableName." Get Action Called: ", Zend_Log::DEBUG);	
+			$this->logger->log($this->tableName." 1Get Action Called: ", Zend_Log::DEBUG);	
 			
 			$select = $this->restTable->select();
 			$select->from( 'sr_layer_dynamic_data',array('feature_style',

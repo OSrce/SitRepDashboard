@@ -24,11 +24,13 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$this->logger->log("REST Class: ".$this->tableName." Inited. ", Zend_Log::DEBUG);	
 			
 			$this->logger->log("Primary Info: ".print_r($this->restTable->info('primary'),true), Zend_Log::DEBUG);	
+			$this->logger->log("Cols Info: ".print_r($this->restTable->info('cols'),true), Zend_Log::DEBUG);	
+			$this->colsArr = $this->restTable->info('cols');
 			$this->pKeyArr = array();
 			if( is_array( $this->restTable->info('primary') ) ) {
 				foreach($this->restTable->info('primary') as $theKey) {
 					$this->pKeyArr[$theKey] = $this->_getParam($theKey);
-					$this->logger->log("Primary Key Found: $theKey === ".$this->_getParam($theKey), Zend_Log::DEBUG);	
+//					$this->logger->log("Primary Key Found: $theKey === ".$this->_getParam($theKey), Zend_Log::DEBUG);	
 				}
 			} else {
 				$theKey = $this->restTable->info('primary');

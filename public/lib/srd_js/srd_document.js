@@ -811,7 +811,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 				//			this.srd_toolbar.addChild(this.srd_selLayer.editPalette.layoutContainer)
 							if(this.srd_selLayer != null) {
 								this.srd_selLayer.editPalette.addToContainer(this.srd_toolbar);
-								this.srd_selectEditLayer(this.srd_selLayer.id);
+								this.srd_selectEditLayer(this.srd_selLayer.options.id);
 							}
 						} else {
 							this.srd_container.addChild(this.srd_toolbar);
