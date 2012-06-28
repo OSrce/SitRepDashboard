@@ -15,7 +15,7 @@ class Srdata_GeojsonstaticController extends Zend_Rest_Controller
 
 			$this->db = $this->getInvokeArg('bootstrap')->getResource('db');
 			$this->restTable = new Srdata_Model_DbTable_Featuresstatic($this->db);
-			$this->tableName = "Featuresstatic";
+			$this->tableName = "Geojsonstatic";
 			$this->idName = "layer_id";
 			$this->layerId = $this->_getParam($this->idName);	
 			if( $this->layerId ==null) {

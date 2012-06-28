@@ -97,6 +97,9 @@ function srd_document() {
 			view_data: null,
 			
 			default_wlayout:null,
+			// autoRefresh -> should the whole system poll for changes to the tables?
+			// right now only used for existing dynamic data (srjson) layers.
+			autoRefresh : null,
 
 			layerCount: null
 	};
@@ -1169,6 +1172,42 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 				}
 				// END toggleLayoutNameDisplay
 			
+
+// BEGIN toggleAutoRefresh
+srd_document.prototype.toggleAutoRefresh = function() {
+	if(this.staticVals.autoRefresh != null ) {
+		if(this.staticVals.autoRefresh == true) {
+			this.srd_timer = new dojox.timing.Timer(15000);
+			this.srd_timer.onTick = function() { 
+				this.sendRefresh();
+			}.bind(this);
+			this.srd_timer.start();
+		} else {
+			this.srd_timer.stop();
+			delete this.srd_timer;	
+		}
+	}
+	return;
+}
+// END toggleAutoRefresh
+
+// BEGIN sendRefresh
+// ITERATE THROUGH ALL VIEWS AND SEND REFRESH CMD TO sr_layers.
+srd_document.prototype.sendRefresh = function() {
+		console.log("SRD DOC sendRefresh Called!");
+		for( var i in this.srd_layerArr) {
+			if( this.srd_layerArr[i].options != null ) {
+				if( this.srd_layerArr[i].options.visibility == true && this.srd_layerArr[i].options.format == "SRJSON") {
+					this.srd_layerArr[i].refresh();
+				}
+			}
+		}
+		return;
+}
+// END sendRefresh
+
+
+
 
 
 

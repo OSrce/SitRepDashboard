@@ -439,9 +439,9 @@ srd_layer.prototype.loadData = function( ) {
 					dojo.forEach( theFeatArr, function(theFeat) {
 						var theFeature = new OpenLayers.Feature.Vector( new OpenLayers.Geometry.fromWKT( theFeat.geometry), dojo.fromJson(theFeat.feature_data) );
 						theFeature.db_id = theFeat.id;
-						theFeature.fid = theFeat.feature_id;
+//						theFeature.fid = theFeat.feature_id;
 //						theFeature.id = theFeat.feature_id;
-						console.log("Adding Feature: "+theFeature.fid+" on Layer: "+this.options.id);
+						console.log("Adding Feature: "+theFeature.db_id+" on Layer: "+this.options.id);
 						this.layer.addFeatures( [theFeature] ); 
 	
 					}.bind(this) );
@@ -641,15 +641,15 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 			}
 		}
 	}
-	this.featureCount++;
-	feature.fid = this.featureCount;
+//	this.featureCount++;
+//	feature.fid = this.featureCount;
 }
 
 
 
 // BEGIN FUNC onFeatureSelect
 srd_layer.prototype.onFeatureSelect = function(theFeature) {
-	console.log("Feature selected: "+theFeature.fid);
+	console.log("Feature selected: "+theFeature.db_id);
 //	this.editPalette.setFeatureAttributes( theFeature.attributes);
 //	theFeature.
 	this.selectedFeature = theFeature;
@@ -677,7 +677,7 @@ srd_layer.prototype.onPopupClose = function(evt) {
 }
 // BEGIN FUNC onFeatureUnselect
 srd_layer.prototype.onFeatureUnselect = function(theFeature) {
-	console.log("Feature unselected: "+theFeature.fid);
+	console.log("Feature unselected: "+theFeature.db_id);
 //	this.editPalette.setFeatureAttributes( this.srd_featureAttributes );
 	if(this.options.format == "NONE") {	
 		this.map.removePopup(this.selectedFeature.popup);
@@ -719,7 +719,7 @@ loadWFS = function(evt, the_srd_layer) {
 // ref to the grid, cell and rowIndex
 srd_layer.prototype.selectFeature = function(e) {
 	var item = this.srd_layerGrid.getItem( e.rowIndex );
-	this.selectedFeature  = this.layer.getFeatureByFid(item.fid);
+	this.selectedFeature  = this.layer.getFeatureByFid(item.db_id);
 	var thePoint = this.selectedFeature.geometry;
 	var thelat = thePoint.y;
 	var thelon = thePoint.x;
@@ -773,7 +773,7 @@ loadDataGrid = function(evt, the_srd_layer) {
 		
 
 		the_srd_layer.srd_data[j] = new Array();
-		the_srd_layer.srd_data[j].fid = theFeatArr[j].fid;
+//		the_srd_layer.srd_data[j].fid = theFeatArr[j].fid;
 		var i=0;
 		var canEdit = false;
 		for(var propName in theFeatArr[j].attributes ) {
@@ -1094,7 +1094,7 @@ srd_layer.prototype.crudComplete = function(resp) {
 			'sr_requestType' : 'create'
 		}
 	
-		console.log("crudComplete ="+resp.reqFeatures.fid+":::"+resp.priv.responseText);
+		console.log("crudComplete ="+resp.reqFeatures.db_id+":::"+resp.priv.responseText);
 //		if(resp.code == OpenLayers.Protocol.Response.FAILURE || respObj.inserted != true) {
 //		if(resp.code != OpenLayers.Protocol.Response.SUCCESS || respObj.inserted != true) {
 		if(resp.code != OpenLayers.Protocol.Response.SUCCESS || respObj.inserted != true) {
@@ -1125,14 +1125,17 @@ srd_layer.prototype.createFeature = function(theFeat,options) {
 // BEGIN srd_create EVENT HANDLER FOR AFTER NEW FEATURES ARE CREATED
 srd_layer.prototype.srd_create = function(evt) {
 //	console.log("Create Feature Called! ID: "+evt.feature.id);
-	var featId = this.layer.features.length;
+/*
+ 	var featId = this.layer.features.length;
 	while( this.layer.getFeatureByFid(featId) != null) {
 		featId++;
 	}
+	evt.feature.fid= featId;
+*/
 	var item = {
 //		"id":evt.feature.db_id,
 		"layer_id":this.options.id,
-		"feature_id":featId,
+//		"feature_id":featId,
 		"feature_data":dojo.toJson(evt.feature.attributes),
 		"sr_geom":evt.feature.geometry.toString()
 	}
@@ -1142,19 +1145,19 @@ srd_layer.prototype.srd_create = function(evt) {
 //		var retItem = dojo.fromJson(retStr);
 //		console.log("Created Feature on server side! retItem.feature_id:"+retItem.feature_id);
 //		this.feature.fid=retItem.feature_id;
-		this.feature.fid=returnId;
-		console.log("Created Feature on server side! this.feature.fid:"+this.feature.fid);
+		this.feature.db_id=returnId;
+		console.log("Created Feature on server side! this.feature.db_id:"+this.feature.db_id);
 	}.bind(evt) );	
 }
 // END srd_create EVENT HANDLER FOR AFTER NEW FEATURES ARE CREATED
 
 // BEGIN srd_update EVENT HANDLER FOR AFTER FEATURES ARE UPDATED
 srd_layer.prototype.srd_update = function(evt) {
-	console.log("Update Feature Called! ID: "+evt.feature.fid);
+	console.log("Update Feature Called! ID: "+evt.feature.db_id);
 	var item = {
 		"id":evt.feature.db_id,
 		"layer_id":this.options.id,
-		"feature_id":evt.feature.fid,
+//		"feature_id":evt.feature.fid,
 		"feature_data":dojo.toJson(evt.feature.attributes),
 		"sr_geom":evt.feature.geometry.toString()
 	}
@@ -1171,7 +1174,7 @@ srd_layer.prototype.srd_update = function(evt) {
 
 // BEGIN srd_delete EVENT HANDLER FOR AFTER FEATURES ARE DELETED
 srd_layer.prototype.srd_delete = function(evt) {
-	console.log("Delete Feature Called! ID: "+evt.feature.fid);
+	console.log("Delete Feature Called! ID: "+evt.feature.db_id);
 //	var itemStr = "layer_id/"+this.options.id+"/feature_id/"+evt.feature.fid;
 	evt.srd_layer = this;
 	dojo.when( this.store.remove(evt.feature.db_id), function(returnId) {
@@ -1313,8 +1316,76 @@ srd_layer.prototype.srd_beforeAdd = function( theObject ) {
 */
 	return;
 }
+// END srd_beforeAdd
 
 
+// BEFORE refresh
+srd_layer.prototype.refresh = function() {
+	console.log("REFRESH on layer: "+this.options.id);
+	dojo.when(this.store.query({"layer_id":this.options.id}), function(theFeatArr) {
+		for(var i in this.layer.features) {
+			var foundUpdateId = null;
+			for(var j in theFeatArr) {
+				// IF FOUND -> CHECK FOR UPDATE ON THAT FEATURE.
+				if(this.layer.features[i].db_id == theFeatArr[j].id) {	
+					foundUpdateId = this.layer.features[i].db_id;
+					this.compareAndUpdateFeature(this.layer.features[i], theFeatArr[j]);
+//					console.log("Update Feature: "+this.layer.features[i].db_id+" on Layer: "+this.options.id);
+				}
+			}
+			// IF foundUpdateId == null -> DELETE 
+			if( foundUpdateId == null) {
+				console.log("Remove Feature: "+this.layer.features[i].db_id+" on Layer: "+this.options.id);
+				this.layer.removeFeatures( Array(this.layer.features[i]), {silent:true} );
+			}
+		}
+		for(var j in theFeatArr) {
+		var addFeature = true;
+			for(var i in this.layer.features) {
+				if(this.layer.features[i].db_id == theFeatArr[j].id) {	
+					addFeature = false;
+				}
+			}
+			if(addFeature == true) {
+				var theFeature = new OpenLayers.Feature.Vector( new OpenLayers.Geometry.fromWKT( theFeatArr[j].geometry), dojo.fromJson(theFeatArr[j].feature_data) );
+				theFeature.db_id = theFeatArr[j].id;
+//				theFeature.fid = theFeatArr[j].feature_id;
+				console.log("Adding Feature: "+theFeature.db_id+" on Layer: "+this.options.id);
+				this.layer.addFeatures( [theFeature], {silent:true} ); 
+			}
+		}	
+	}.bind(this) );
+	return;
+}
+// END refresh
+
+
+// BEGIN srd_compareAndUpdateFeature 
+srd_layer.prototype.compareAndUpdateFeature = function(oldFeat, newFeat) {
+	console.log("Compare from Server Feature: "+oldFeat.db_id+" on Layer: "+this.options.id);
+	var tmpDataStr = dojo.toJson(oldFeat.attributes);
+	var updateFeature = false;
+	if(tmpDataStr != newFeat.feature_data) {
+		console.log(oldFeat.db_id+" DIFF IN DATA :"+tmpDataStr+" ::: "+newFeat.feature_data);
+		updateFeature = true;
+		delete oldFeat.attributes;
+		oldFeat.attributes = dojo.toJson(newFeat.feature_data);
+	} 
+  var tmpGeomStr = oldFeat.geometry.toString();
+	if( tmpGeomStr != newFeat.geometry ) {
+		console.log(oldFeat.db_id+" DIFF IN GEOM :"+tmpGeomStr+" ::: "+newFeat.geometry);
+		updateFeature = true;
+		this.layer.removeFeatures([oldFeat], {silent:true} );	
+		delete oldFeat.geometry;
+		oldFeat.geometry =  new OpenLayers.Geometry.fromWKT( newFeat.geometry);
+		this.layer.addFeatures([oldFeat], {silent:true} );
+	}
+	if(updateFeature == true) {
+//		this.layer.drawFeature(oldFeat);
+	}
+	return;
+}
+// END compareAndUpdateFeature
 
 
 

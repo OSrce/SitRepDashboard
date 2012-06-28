@@ -247,9 +247,19 @@ dojo.declare(
 					}.bind(this);				
 				this.srd_timer.start();	
 				this.autoRefresh = true;
+				// TODO : this policy should be set from srd_document and then
+				// pushed down to each view (not the other way arround)
+				if( this.srd_doc.staticVals != null) {
+					this.srd_doc.staticVals.autoRefresh = true;
+					this.srd_doc.toggleAutoRefresh();
+				}
 			} else {
 				this.srd_timer.stop();	
 				this.autoRefresh = false;
+				if( this.srd_doc.staticVals != null) {
+					this.srd_doc.staticVals.autoRefresh = false;
+					this.srd_doc.toggleAutoRefresh();
+				}
 			}
 		},
 		// END toggleAutoRefresh
