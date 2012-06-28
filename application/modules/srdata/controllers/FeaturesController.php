@@ -34,9 +34,9 @@ class Srdata_FeaturesController extends Srdata_RestController
 			$select->from( 'sr_layer_dynamic_data',array(
 				'id', 'feature_id', 'feature_data', 'geometry' => new Zend_Db_Expr("ST_AsText(sr_geom)")  ) );
 			foreach($this->colsArr as $theKey => $theVal) {
-        if( $this->_getParam($theKey) ) {
-          $this->logger->log("The Primary Key(s): $theKey === $theVal\n", Zend_Log::DEBUG);
-          $select->where("$theKey = ?",$this->_getParam($theKey));
+        if( $this->_getParam($theVal) ) {
+          $this->logger->log("The To use Key(s): $theVal === ".$this->_getParam($theVal)."\n", Zend_Log::DEBUG);
+          $select->where("$theVal = ?",$this->_getParam($theVal));
         }
       }
 
@@ -90,7 +90,8 @@ class Srdata_FeaturesController extends Srdata_RestController
 			$this->getResponse()->setHttpResponseCode(200);
 		}
 
-		// POST Action === CREATE
+		// POST Action === CREATE IF NO ID SPECIFIED
+		//             === UPDATE IF ID SPECIFIED
 		public function postAction() 
 		{
 			$this->logger->log($this->tableName." Post Action Called: ", Zend_Log::DEBUG);	
@@ -98,8 +99,13 @@ class Srdata_FeaturesController extends Srdata_RestController
 			$data = Zend_Json::decode($this->getRequest()->getRawBody() );
 //			$this->boolToString($data);
 			
-			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
-			$theRow = $this->restTable->insert($data);
+			$this->logger->log("Post Data: ".print_r($data,true), Zend_Log::DEBUG);
+			if(isset( $data['id'])  ) {
+				$where = $this->restTable->getAdapter()->quoteInto('id = ?', $data['id']);
+				$theRow = $this->restTable->update($data, $where);
+			} else {
+				$theRow = $this->restTable->insert($data);
+			}
 			$this->retObj['id'] = $theRow['feature_id'];
 			$this->logger->log("Put Data Result: ".print_r($this->retObj,true), Zend_Log::DEBUG);
 			$this->getResponse()->appendBody(Zend_Json::encode($this->retObj));
@@ -115,7 +121,12 @@ class Srdata_FeaturesController extends Srdata_RestController
 //			$this->boolToString($data);
 			
 			$this->logger->log("Put Data: ".print_r($data,true), Zend_Log::DEBUG);
-			$theRow = $this->restTable->insert($data);
+			if(isset( $data['id'])  ) {
+				$where = $this->restTable->getAdapter()->quoteInto('id = ?', $data['id']);
+				$theRow = $this->restTable->update($data, $where);
+			} else {
+				$theRow = $this->restTable->insert($data);
+			}
 			$this->logger->log("Put Data Result: ".print_r($theRow,true), Zend_Log::DEBUG);
 			$this->getResponse()->appendBody(Zend_Json::encode($theRow));
 			$this->getResponse()->setHttpResponseCode(201);

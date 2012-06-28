@@ -29,8 +29,10 @@ class Srdata_Model_DbTable_Features extends Zend_Db_Table_Abstract
 
 		public function update(array $data, $where) {
 			if( !empty( $data['sr_geom'] ) ) {
-				$geomTmp = "'".Zend_Json::encode( $data['sr_geom'] )."'";
-				$data['sr_geom'] = new Zend_Db_Expr(" SetSRID( ST_GeomFromGeoJSON($geomTmp), 4326) ");
+//				$geomTmp = "'".Zend_Json::encode( $data['sr_geom'] )."'";
+				$geomTmp = "'".$data['sr_geom']."'"; //"'".Zend_Json::encode( $data['sr_geom'] )."'";
+//				$data['sr_geom'] = new Zend_Db_Expr(" ST_Force_3D( ST_GeomFromText($geomTmp), 4326) ");
+					$data['sr_geom'] = new Zend_Db_Expr(" ST_Force_3D( ST_GeomFromText( $geomTmp, 4326)) ");
 			}
 			return parent::update($data,$where);
 		}

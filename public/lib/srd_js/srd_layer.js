@@ -438,6 +438,7 @@ srd_layer.prototype.loadData = function( ) {
 				dojo.when(this.store.query({"layer_id":this.options.id}), function(theFeatArr) {
 					dojo.forEach( theFeatArr, function(theFeat) {
 						var theFeature = new OpenLayers.Feature.Vector( new OpenLayers.Geometry.fromWKT( theFeat.geometry), dojo.fromJson(theFeat.feature_data) );
+						theFeature.db_id = theFeat.id;
 						theFeature.fid = theFeat.feature_id;
 //						theFeature.id = theFeat.feature_id;
 						console.log("Adding Feature: "+theFeature.fid+" on Layer: "+this.options.id);
@@ -1129,6 +1130,7 @@ srd_layer.prototype.srd_create = function(evt) {
 		featId++;
 	}
 	var item = {
+//		"id":evt.feature.db_id,
 		"layer_id":this.options.id,
 		"feature_id":featId,
 		"feature_data":dojo.toJson(evt.feature.attributes),
@@ -1150,6 +1152,7 @@ srd_layer.prototype.srd_create = function(evt) {
 srd_layer.prototype.srd_update = function(evt) {
 	console.log("Update Feature Called! ID: "+evt.feature.fid);
 	var item = {
+		"id":evt.feature.db_id,
 		"layer_id":this.options.id,
 		"feature_id":evt.feature.fid,
 		"feature_data":dojo.toJson(evt.feature.attributes),
@@ -1160,7 +1163,7 @@ srd_layer.prototype.srd_update = function(evt) {
 //		console.log("Created Feature on server side! ID:"+returnId);
 		var retItem = dojo.fromJson(returnId);
 //		console.log("Created Feature on server side! ID:"+this.feature.fid);
-		this.feature.fid=returnId;
+//		this.feature.db_id=returnId;
 //		console.log("Created Feature on server side! ID:"+this.feature.fid);
 	}.bind(evt) );	
 }	
@@ -1169,15 +1172,16 @@ srd_layer.prototype.srd_update = function(evt) {
 // BEGIN srd_delete EVENT HANDLER FOR AFTER FEATURES ARE DELETED
 srd_layer.prototype.srd_delete = function(evt) {
 	console.log("Delete Feature Called! ID: "+evt.feature.fid);
-	var itemStr = "layer_id/"+this.options.id+"/feature_id/"+evt.feature.fid;
+//	var itemStr = "layer_id/"+this.options.id+"/feature_id/"+evt.feature.fid;
 	evt.srd_layer = this;
-	dojo.when( this.store.remove(itemStr), function(returnId) {
+	dojo.when( this.store.remove(evt.feature.db_id), function(returnId) {
+//	dojo.when( this.store.remove(itemStr), function(returnId) {
 		var retItem = dojo.fromJson(returnId);
 //		this.feature.fid=returnId;
 //		console.log("Created Feature on server side! ID:"+this.feature.fid);
 	}.bind(evt) );	
 }	
-// END srd_update EVENT HANDLER FOR AFTER FEATURES ARE UPDATED
+// END srd_delete EVENT HANDLER FOR AFTER FEATURES ARE DELETED
 
 // BEGIN srd_styleFunction 
 srd_layer.prototype.srd_styleFunction = function( feature ) {

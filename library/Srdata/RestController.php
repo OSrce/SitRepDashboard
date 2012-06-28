@@ -49,7 +49,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$paramArr = $this->_getAllParams();	
 			$this->logger->log("The Params: ".print_r($paramArr,true)."\n", Zend_Log::DEBUG);	
 			foreach($paramArr as $key=> $val) {
-				$this->logger->log("The key:$key:::\n", Zend_Log::DEBUG);	
+//				$this->logger->log("The key:$key:::\n", Zend_Log::DEBUG);	
 				if( $key == "module" || $key == "controller" || $key == "action") {
 					continue;
 				} elseif( preg_match( "/^sort\((.*)\)/", $key, $keyArr) ) {
