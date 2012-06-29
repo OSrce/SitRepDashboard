@@ -963,6 +963,15 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							this.viewContainer.destroyRecursive();
 						}
 						if(this.viewArr) {
+							for(var i in this.viewArr) {
+								if(this.viewArr[i] != null) {
+									for(var j in this.viewArr[i]) {
+										this.viewArr[i][j].destroy();
+										delete this.viewArr[i][j];
+									}	
+									delete this.viewArr[i];
+								}
+							}
 							delete this.viewArr;
 						}
 						this.staticVals.view_layout_x = this.srd_wlayoutArr[this.selected_wlayout].view_x;

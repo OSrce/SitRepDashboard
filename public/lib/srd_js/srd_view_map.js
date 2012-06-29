@@ -25,18 +25,21 @@ dojo.declare(
 		//CONSTUCTOR
 		constructor : function( view_data, parent_srd_doc) {
 			console.log("srd_view_map constructor called!");
+			this.type='map';
 			this.start_lat = view_data.start_lat;
 			this.start_lon = view_data.start_lon;
 			this.start_zoom = view_data.start_zoom;
 //			this.map = this.srd_doc.map;
-			dojo.addOnLoad( function() {
+			dojo.ready( function() {
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_mapContent = new dijit.layout.ContentPane(
 	     {  splitter: 'false', style: "background-color:black;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
 			
 			this.insideContainer.addChild(this.srd_mapContent);
-			this.mapDiv = dojo.create("div",{ id: 'srdmap', 'class':'map', style:'top:0;left:0;width:100%;height:100%;' }, this.srd_mapContent.domNode);
-			this.map_init();
+//			dojo.ready(function() {
+				this.mapDiv = dojo.create("div",{ id: 'srdmap', 'class':'map', style:'top:0;left:0;width:100%;height:100%;' }, this.srd_mapContent.domNode);
+				this.map_init();
+//				}.bind(this) );
 			}.bind(this) );
 		},
 		map_init : function() {
@@ -60,10 +63,17 @@ dojo.declare(
 						this.geolocateControl
 					],
 					projection : "EPSG:900913",
-					displayProjection: "EPSG:4326"
-//					maxExtent : new OpenLayers.Bounds(-20037508,-20037508, 20037508, 20037508)
+					displayProjection: "EPSG:4326",
+					units: "m",
+					maxExtent : new OpenLayers.Bounds(-20037508.34,-20037508.34, 20037508.34, 20037508.34)
 				} );
 				this.map.render( this.mapDiv  ); 
+
+				// TESTING
+				console.log("DIV SIZE : W="+this.mapDiv.scrollWidth+" H="+this.mapDiv.scrollHeight);
+				var test = this.map.getSize();
+				console.log("MAP SIZE : W="+test.w+" H="+test.h);
+				// END TESTINGING
 				console.log("DONE CREATING MAP!!!!");
 			}
 			////////////////////////
@@ -86,19 +96,6 @@ dojo.declare(
 				this.srd_layerArr[i].addLayerToMap(this.map);
 				console.log("Finished addLayerToMap:"+this.srd_layerArr[i].options.name);
 			
-			if(i == 2001 || i == 3001) {
-				//TEMP HACK FOR MapData :
-				this.srd_layerArr[i].layer.setVisibility(true);
-				this.srd_layerArr[i].layer.setVisibility(false);
-			}
-
-			// IF start_base_layer is set to a valid baselayer we have, then we
-			// should start with that base layer being the one shown.
-			if(this.data.start_base_layer && this.srd_layerArr[this.data.start_base_layer]) {
-				this.map.setBaseLayer(this.srd_layerArr[this.data.start_base_layer].layer);
-
-			}
-
 
 				// BEGIN ADD layer to uploadMenu
 			/*	this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
@@ -118,11 +115,22 @@ dojo.declare(
 			var lonlat = new OpenLayers.LonLat(this.start_lon, this.start_lat).transform( mapProjection, googleProjection  );
 
 			this.map.setCenter( lonlat, this.start_zoom ); 
-			this.map.zoomTo( 10 ); 
+			this.map.zoomTo( this.start_zoom ); 
+	
+			console.log("goToPoint Lat/Lon/Zoom :"+this.start_lat+" / "+this.start_lon+" / "+this.start_zoom);	
 			this.goToPoint(this.start_lat, this.start_lon);
 
+//			console.log("Should be displaying Map at this point!");
 
-			console.log("Should be displaying Map at this point!");
+			// IF start_base_layer is set to a valid baselayer we have, then we
+			// should start with that base layer being the one shown.
+			if(this.data.start_base_layer && this.srd_layerArr[this.data.start_base_layer]) {
+				this.map.setBaseLayer(this.srd_layerArr[this.data.start_base_layer].layer);
+
+			}
+
+
+
 
 
 			// Adding the Control for the Layer select 
@@ -166,6 +174,8 @@ dojo.declare(
 						this.geolocateFirstTime = false;
 						this.bind = true;
 					}			
+
+
 				}.bind(this)
 				// END function(e)
 			);
@@ -173,6 +183,19 @@ dojo.declare(
 			this.geolocateControl.events.register("locationfailed",this,function() {
 				console.log( "Location detection failed!" );
 			} );
+// ATTEMPTING TO FIX MAP LOAD BUG...
+//				dojo.ready(function() {
+//				if(this.data.start_base_layer != null) {
+//					this.map.removeLayer(this.srd_layerArr[this.data.start_base_layer].layer); 
+//					this.map.addLayer(this.srd_layerArr[this.data.start_base_layer].layer); 
+//						console.log("Redrawing Layer :"+this.srd_layerArr[i].options.name);
+//				}
+//				for(var i in this.srd_layerArr) {
+//					if(this.srd_layerArr[i].options.isBaseLayer == true && this.srd_layerArr[i].options.visibility == true) {
+//						this.srd_layerArr[i].layer.redraw();
+//					} 
+//				}
+//				}.bind(this) );
 				console.log("END map_init function");
 //			}.bind(this) );
 		},
@@ -226,8 +249,25 @@ dojo.declare(
 				count++;
 			}.bind(this);
 			window.resizeInterval = window.setInterval(resize, 50, point, radius);	
-		}
+		},
 		//END pulsate
+		//BEGIN DESTROY
+		destroy : function() {
+			console.log("srd_view_map destroy called!");
+			if(this.map) {
+				for(var i in this.srd_layerArr) {
+					if(this.srd_layerArr[i].layer != null) {
+						console.log("Layer :"+this.srd_layerArr[i].name+" exists!");
+						this.srd_layerArr[i].layer.destroy();
+						this.srd_layerArr[i].map = null;
+					}
+				}
+				this.map.destroy();
+				delete this.map;
+				dojo.destroy(this.mapDiv);
+			}
+			return;
+		}
 	}
 );
 

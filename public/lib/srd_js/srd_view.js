@@ -21,6 +21,7 @@ dojo.declare(
 		srd_doc : null,
 		// type: this can be one of the following:
 		// empty, map, datagrid, admin, view (more to come)
+		type : 'empty',
 		data : {},
 		outsideContainer : null,
 		insideContainer : null,
@@ -65,12 +66,12 @@ dojo.declare(
 
 			dojo.connect(this.insideContainer, 'onClick',this, 'srd_select');
 			this.dataMenu = new dijit.Menu( {} );
+//			dojo.publish("view_create_finished","test1");
 		},
 		destroy : function() {
 			console.log("Destroy View called!");
-			this.srd_doc.viewContainer.removeChild(this.outsideContainer);
 			this.outsideContainer.destroyRecursive();			
-
+//			this.srd_doc.viewContainer.removeChild(this.outsideContainer);
 		},
 		// RESIZE - USED FOR Y DIM SINCE ITS NOT HANDLED AUTOMATICALLY.
 		resize : function( view_data) {

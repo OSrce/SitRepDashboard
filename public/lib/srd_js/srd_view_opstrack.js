@@ -279,6 +279,7 @@ dojo.declare(
 		},
 		// END toggleMapData
 		drawMapData: function() {
+			dojo.ready(  function() {
 			console.log("Adding OpsTrack to Map");
 			var theOptions = {
 				name: 'OpsTrack',
@@ -299,6 +300,7 @@ dojo.declare(
 				}
 			}
 			this.createMapFeatures();
+			}.bind(this) );
 		},
 		//END DRAW MAP DATA
 		createMapFeatures: function() {
