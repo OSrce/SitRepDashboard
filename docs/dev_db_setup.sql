@@ -150,6 +150,7 @@ CREATE TABLE sr_window_layout (
 	id SERIAL NOT NULL,
 	name VARCHAR(128) NOT NULL DEFAULT '',
 	showname INT NOT NULL DEFAULT -1,
+	theme INT NOT NULL DEFAULT 0,
 	view_x	INT NOT NULL DEFAULT 1,
 	view_y	INT NOT NULL DEFAULT 1,
 	view_data TEXT,
@@ -172,7 +173,6 @@ CREATE TABLE sr_queries (
 	PRIMARY KEY (id)
 );
 
-INSERT INTO sr_modules (name) VALUES ( 'srdata/queries/*' );
 
 
 CREATE TABLE sr_cfs_updatequeue ( 

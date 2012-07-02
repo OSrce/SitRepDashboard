@@ -27,6 +27,7 @@ dojo.declare(
 		insideContainer : null,
 		selected : null,
 		containerStyle : null,
+		loaded : false,
 		dataMenu : null,
 //		id : null,
 //		linkViewArr : null,
@@ -67,6 +68,9 @@ dojo.declare(
 			dojo.connect(this.insideContainer, 'onClick',this, 'srd_select');
 			this.dataMenu = new dijit.Menu( {} );
 //			dojo.publish("view_create_finished","test1");
+			if(this.type=='empty') {
+				this.onLoad();
+			}
 		},
 		destroy : function() {
 			console.log("Destroy View called!");
@@ -135,9 +139,9 @@ dojo.declare(
 			if( !this.data.linkViewArr ) {
 					this.data.linkViewArr = [];
 			}	
-			if( !this.data.linkViewArr[theId] ) {
+//			if( !this.data.linkViewArr[theId] ) {
 				this.data.linkViewArr[theId] = this.srd_doc.getView(this.data.linkViewIdArr[theId]);
-			}
+//			}
 		},
 		// END linkView FUNCTION
 		// BEGIN updateViewLinks FUNCTION
@@ -160,8 +164,16 @@ dojo.declare(
 		// END getLabel FUNCTION
 		// BEGIN loadingComplete FUNCTION
 		loadingComplete : function() {
-		}	
+		},
 		// END loadingComplete FUNCTION
+		// BEGIN onLoad event
+		onLoad : function(data) {
+			console.log("View: "+this.type+" onLoad Event Called!");
+			this.loaded = true;
+			return;
+		}	
+		// END onLoad FUNCTION
+
 
 
 

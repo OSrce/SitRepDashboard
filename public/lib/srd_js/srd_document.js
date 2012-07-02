@@ -103,6 +103,11 @@ function srd_document() {
 
 			layerCount: null
 	};
+	// srd_themeArr == Array of objects about available css themes.
+	this.srd_themeArr = [
+		{ 'name': 'Light on Dark Theme', 'classType':'tundra' },
+		{ 'name': 'Dark on Light Theme', 'classType':'SitRep_Dark' }
+	]
 
 	// srd_document should have a list of sub-objects - srd_view
 	// maps, datagrids (spreadsheets), admin, empty, video, etc all should be 
@@ -561,6 +566,21 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 								label: "View Columns: "+this.staticVals.view_layout_x,
 								popup:this.srd_windowColMenu	
 							}));
+
+							// CHANGE THEME MENU DROP DOWN
+							this.srd_themeMenu = new dijit.Menu();
+							for(var themeId in this.srd_themeArr) {
+								this.srd_themeMenu.addChild( new dijit.MenuItem( {
+									label: this.srd_themeArr[themeId].name,
+									value: themeId,
+									srd_doc: this,
+									onClick: function() { this.srd_doc.srd_changeTheme(this.value) }
+								} ) );
+							}
+							this.srd_viewMenu.addChild(new dijit.PopupMenuItem({
+								label: "Change Theme : ",
+								popup:this.srd_themeMenu	
+							}));
 							///// END View Menu ////	
 
 							//// Data Menu ////
@@ -979,6 +999,10 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.staticVals.view_data = this.srd_wlayoutArr[this.selected_wlayout].view_data;
 						this.staticVals.showname = this.srd_wlayoutArr[this.selected_wlayout].showname;
 						this.staticVals.layoutName = this.srd_wlayoutArr[this.selected_wlayout].name;
+						
+						if( this.srd_wlayoutArr[this.selected_wlayout].theme != null) {
+							this.srd_changeTheme(this.srd_wlayoutArr[this.selected_wlayout].theme);
+						}		
 
 						this.viewContainer = new srd_gridContainer( {
 							nbZones: this.staticVals.view_layout_x,
@@ -1009,6 +1033,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 
 								tmpViewYArr[yPos] = new window[ this.viewType[this.staticVals.view_data[xPos][yPos].type] ](this.staticVals.view_data[xPos][yPos], this);
 								this.selectedView = tmpViewYArr[yPos];
+								dojo.connect(tmpViewYArr[yPos], 'onLoad', function() { this.loadedViews(); }.bind(this) );
 							}
 							this.viewArr[xPos] = tmpViewYArr;
 						}
@@ -1016,15 +1041,15 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						// BELOW IS CALLED TO PERFORM ACTION WHEN VIEWS ARE DONE BEING CREATED.
 						// TODO: LETS FIX IT.
 						// UPDATE LINKS IN ALL VIEWS 
-						dojo.ready(function() {
-							for(var tmpX in this.viewArr) {
-								for(var tmpY in this.viewArr[tmpX] ) {
-									this.viewArr[tmpX][tmpY].updateViewLinks();
-									this.viewArr[tmpX][tmpY].loadingComplete();
-								}
-							}	
-							this.updateLayoutNameDisplay();
-						}.bind(this) );
+//						dojo.ready(function() {
+//							for(var tmpX in this.viewArr) {
+//								for(var tmpY in this.viewArr[tmpX] ) {
+//									this.viewArr[tmpX][tmpY].updateViewLinks();
+//									this.viewArr[tmpX][tmpY].loadingComplete();
+//								}
+//							}	
+//							this.updateLayoutNameDisplay();
+//						}.bind(this) );
 					}
 //					}.bind(this) );
 				}
@@ -1214,6 +1239,49 @@ srd_document.prototype.sendRefresh = function() {
 		return;
 }
 // END sendRefresh
+
+// BEGIN srd_changeTheme
+srd_document.prototype.srd_changeTheme = function( theThemeId) {
+	console.log("SRD DOC srd_changeTheme Called!");
+	var currentTheme = dojo.attr(dojo.body(), 'class');
+	if(this.srd_themeArr[theThemeId] != null && currentTheme != this.srd_themeArr[theThemeId].classType ) {
+		dojo.attr(dojo.body(),'class',this.srd_themeArr[theThemeId].classType );
+		this.srd_container.resize();
+	}
+	return;
+}
+// END srd_changeTheme
+
+// BEGIN srd_changeTheme
+srd_document.prototype.loadedViews = function() {
+	console.log("SRD DOC loadedViews Called!");
+	var allViewsLoaded = true;
+	for(var tmpX in this.viewArr) {
+		for(var tmpY in this.viewArr[tmpX] ) {
+			console.log("loadedViews Processing: "+tmpX+" : "+tmpY);
+			if(this.viewArr[tmpX][tmpY].loaded != true) {
+				allViewsLoaded = false;
+				console.log("loadedViews FALSE!");
+			}
+		}
+	}	
+	if( allViewsLoaded == true ) {
+		console.log("loadedViews: ALL VIEWS LOADED!");
+		for(var tmpX in this.viewArr) {
+			for(var tmpY in this.viewArr[tmpX] ) {
+				this.viewArr[tmpX][tmpY].updateViewLinks();
+				this.viewArr[tmpX][tmpY].loadingComplete();
+			}
+		}
+		dojo.ready(function() {
+			this.updateLayoutNameDisplay();
+		}.bind(this) );
+	}	
+	return;
+}
+// END srd_changeTheme
+
+
 
 
 

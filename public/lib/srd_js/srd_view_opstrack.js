@@ -16,6 +16,7 @@ dojo.declare(
 	'srd_view_opstrack',
 	srd_view,
 	{
+		type:'opstrack',
 		srd_queryArr : null,
 		srd_layerArr : null,
 		srd_selLayer : null,
@@ -192,8 +193,10 @@ dojo.declare(
 				this.insideContainer.addChild(this.srd_datagrid);
 				dojo.connect(this.srd_datagrid, 'onRowDblClick', this, 'popupCfsSingle');
 				this.srd_doc.srd_dataMenuPopup.set('popup',this.dataMenu );
+				this.onLoad();
 			}.bind(this) );		
 		},
+		// END constructor
 		deleteSelectedItems: function() {
 			var items = this.srd_datagrid.selection.getSelected();
 			if(items.length) {

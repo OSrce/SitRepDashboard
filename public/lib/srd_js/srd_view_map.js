@@ -13,6 +13,7 @@ dojo.declare(
 	'srd_view_map',
 	srd_view,
 	{
+		type: 'map',
 		// MAP VARIABLES 
 		map : null,
 		srd_layerArr : null,
@@ -25,7 +26,6 @@ dojo.declare(
 		//CONSTUCTOR
 		constructor : function( view_data, parent_srd_doc) {
 			console.log("srd_view_map constructor called!");
-			this.type='map';
 			this.start_lat = view_data.start_lat;
 			this.start_lon = view_data.start_lon;
 			this.start_zoom = view_data.start_zoom;
@@ -34,15 +34,12 @@ dojo.declare(
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_mapContent = new dijit.layout.ContentPane(
 	     {  splitter: 'false', style: "background-color:black;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
-			
+			dojo.connect(this.srd_mapContent,'onShow', function(data) { this.map_init(); }.bind(this)  );
 			this.insideContainer.addChild(this.srd_mapContent);
-//			dojo.ready(function() {
-				this.mapDiv = dojo.create("div",{ id: 'srdmap', 'class':'map', style:'top:0;left:0;width:100%;height:100%;' }, this.srd_mapContent.domNode);
-				this.map_init();
-//				}.bind(this) );
 			}.bind(this) );
 		},
 		map_init : function() {
+			this.mapDiv = dojo.create("div",{ id: 'srdmap', 'class':'map', style:'top:0;left:0;width:100%;height:100%;' }, this.srd_mapContent.domNode);
 //			dojo.ready(function() {
 			if(! this.map ) {
 				console.log("CREATING MAP!!!!");
@@ -197,6 +194,9 @@ dojo.declare(
 //				}
 //				}.bind(this) );
 				console.log("END map_init function");
+
+				// CALL onLoad function to trigger the event.
+				this.onLoad();
 //			}.bind(this) );
 		},
 		// END map_init
