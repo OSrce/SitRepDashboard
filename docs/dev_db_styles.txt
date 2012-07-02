@@ -1,0 +1,90 @@
+
+
+-- TABLE sr_styles 
+-- Should be list of symbolizers.
+
+CREATE TABLE sr_style_symbolizers (
+	id SERIAL NOT NULL,
+	name VARCHAR(128) NOT NULL,
+	label VARCHAR(128),
+	fillColor VARCHAR(32),
+	fillOpacity REAL,
+	strokeColor VARCHAR(32),
+	strokeOpacity REAL,
+	strokeWidth INT,
+	pointRadius INT,
+	fontColor VARCHAR(32),
+	fontSize INT,
+	fontFamily VARCHAR(64),
+	fontWeight VARCHAR(32),
+	fontOpacity REAL,
+	labelAlign VARCHAR(32),
+	labelXOffset INT,
+	labelYOffset INT,	
+	externalGraphic VARCHAR(128),
+	graphicWidth INT,
+	graphicHeight INT,
+	graphicOpacity REAL,
+	rotation INT,
+	created_on TIMESTAMP,
+	updated_on TIMESTAMP,
+	created_by INT,
+	updated_by INT,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE sr_style_rules (
+	id SERIAL NOT NULL,
+	name VARCHAR(128) NOT NULL DEFAULT '',
+	symbolizer_id INT NOT NULL,
+	PRIMARY KEY(id)
+);
+
+
+-- TABLE sr_styles corresponds to OpenLayers.Style
+-- SitRep should create StyleMap based on all rows
+-- that match style_id and then make the render intents
+-- based on render_type
+-- id <- used internally
+-- style_id the style_id
+-- render_type :
+--   0:  'default' : sitrep_bw
+--   1:  'dark' : sitrep_bw_dark
+
+CREATE TABLE sr_styles (
+	id SERIAL NOT NULL,
+	name VARCHAR(128) NOT NULL DEFAULT '',
+	style_id int NOT NULL,
+	render_type int NOT NULL,
+	defaultstyle INT NOT NULL DEFAULT 0,
+	PRIMARY KEY(id)
+);
+
+
+-- TABLE sr_style_presets 
+-- List of styles that should be included in presets list
+-- when editing a layer.
+CREATE TABLE sr_style_presets (
+	id SERIAL NOT NULL,
+	name VARCHAR(128) NOT NULL DEFAULT '',
+	style_id int NOT NULL,
+	layer_id int NOT NULL DEFAULT 0,
+--	group_id int NOT NULL DEFAULT 0,
+--	user_id int NOT NULL DEFAULT 0,
+	created_on TIMESTAMP,
+	updated_on TIMESTAMP,
+	created_by INT,
+	updated_by INT,
+	PRIMARY KEY(id)
+);
+
+
+
+
+
+
+
+
+
+
+

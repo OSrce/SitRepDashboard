@@ -1,0 +1,164 @@
+.SitRep_Dark .dijitMenuBar {
+	color: white;
+}
+
+.SitRep_Dark .dijitMenuItem {
+	background-color: black;
+}
+
+.SitRep_Dark .dijitArrowButtonInner {
+	color: white;
+}
+
+.SitRep_Dark .dijitReset {
+	color: white;
+}
+
+.SitRep_Dark .dijitComboBox {
+
+	color: white;
+       border-bottom-color: white;
+        border-top-color: white;
+        border-left-color: white;
+        border-right-color: white;
+
+}
+
+.SitRep_Dark .dijitTextBox {
+
+	border-bottom-color: white;
+	border-top-color: white;
+	border-left-color: white;
+	border-right-color: white;
+
+}
+
+.SitRep_Dark .dijitArrowButtonContainer {
+	color: white;
+}
+
+.SitRep_Dark .dijitArrowButton {
+	color: white;
+	background-image: url(form/images/buttonArrows.png);
+
+}
+
+.dojoxGrid {
+    background-color: black;
+	color: white;
+    }
+
+.dojoxGridHeader {
+    background-color: black;
+}
+
+.dojoxGridMasterHeader {
+    background-color: black;
+    color: white;
+}
+
+
+
+.dojoxGridSorted {
+        background-color: black;
+        color: black;
+}
+
+
+
+.dojoxGridNestSorted {
+        background-color: black;
+        color: black;
+}
+
+
+
+.dijitBorderContainer-child {
+        background-color: black;
+        color: black;
+}
+
+
+.dijitBorderContainerPane {
+	background-color: black;
+	color: black;
+}
+
+.gridContainer {
+        background-color: black;
+        color: black;
+}
+
+.gridContainerTable {
+	background-color: black;
+}
+
+.gridContainerZone {
+    background-color: black;
+    height: 100%;
+    vertical-align: top;
+}
+
+.dojoxGridHeader .dojoxGridCell { 
+	background-color: black;
+	border: 1px solid;
+	border-color: black white white black;
+	background: url(images/grid_dx_gradient.gif) black top repeat-x;
+	padding-bottom: 2px;
+}
+
+
+.dojoxGridHeader .dojoxGridCellOver {
+	background-image: none;
+	background-color: #606060;
+	border-bottom-color: #FEBE47;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom-width: 3px;
+}
+
+.dojoxGridRowbar { 
+	border: 10px solid;
+	border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
+	border-top: none;
+	background: url(images/grid_dx_gradient.gif) green top repeat-x;
+}
+.dojoxGridRowbarInner {
+	border-top: 1px solid blue;
+}
+.dojoxGridRowbarOver {
+	background-image: none;
+	background-color: black;
+	border-top-color: black;
+	border-bottom-color: black;
+}
+
+.SitRep_Dark .dojoxGridRow {
+	color: white;
+	position: relative;
+	width: 9000em;
+}
+.dojoxGridRow {
+	
+	border: 1px solid #070229;
+	border-color: #070229;
+	
+	border-left: none;
+	border-right: none;
+	background-color: #191919;
+	border-top: none;
+}
+
+.dojoxGridRowOdd {
+	background-color: black;
+}
+.dojoxGridRowOver {
+	background-color:#606060;
+	border-top-color: blue;
+	border-bottom-color: blue;
+}
+
+.dojoxGridScrollbox {
+	background-color : black;
+}
+
