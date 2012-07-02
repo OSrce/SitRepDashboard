@@ -160,10 +160,12 @@ dojo.declare(
 			} else {
 				return null;
 			}
+			return;
 		},	
 		// END getLabel FUNCTION
 		// BEGIN loadingComplete FUNCTION
 		loadingComplete : function() {
+			return;
 		},
 		// END loadingComplete FUNCTION
 		// BEGIN onLoad event

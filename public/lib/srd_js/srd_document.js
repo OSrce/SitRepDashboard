@@ -1172,11 +1172,13 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 				// BEGIN toggleLayoutNameDisplay
 				srd_document.prototype.updateLayoutNameDisplay = function() {
 					// CHECK IF showname is set to true and if so display layout name.
-					if(this.nameCP) {
+
+					if(this.nameCP != null) {
 						this.srd_container.removeChild(this.nameCP);
 						this.nameCP.destroy();
 						delete this.nameCP;
 					}
+
 					if( this.staticVals.showname != -1) {
 						var theWindowLabel = '';
 						if(this.staticVals.showname == -2) {
@@ -1201,8 +1203,12 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							class: "srdLayoutName",
 							region: 'bottom',
 						});
+
 						this.srd_container.addChild(this.nameCP);
+
 					}
+	
+				return;
 				}
 				// END toggleLayoutNameDisplay
 			
@@ -1252,7 +1258,7 @@ srd_document.prototype.srd_changeTheme = function( theThemeId) {
 }
 // END srd_changeTheme
 
-// BEGIN srd_changeTheme
+// BEGIN loadedViews
 srd_document.prototype.loadedViews = function() {
 	console.log("SRD DOC loadedViews Called!");
 	var allViewsLoaded = true;
@@ -1267,19 +1273,19 @@ srd_document.prototype.loadedViews = function() {
 	}	
 	if( allViewsLoaded == true ) {
 		console.log("loadedViews: ALL VIEWS LOADED!");
+		dojo.ready(function() {
 		for(var tmpX in this.viewArr) {
 			for(var tmpY in this.viewArr[tmpX] ) {
 				this.viewArr[tmpX][tmpY].updateViewLinks();
 				this.viewArr[tmpX][tmpY].loadingComplete();
 			}
 		}
-		dojo.ready(function() {
 			this.updateLayoutNameDisplay();
 		}.bind(this) );
 	}	
 	return;
 }
-// END srd_changeTheme
+// END loadedViews
 
 
 

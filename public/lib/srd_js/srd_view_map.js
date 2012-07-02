@@ -34,15 +34,16 @@ dojo.declare(
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_mapContent = new dijit.layout.ContentPane(
 	     {  splitter: 'false', style: "background-color:black;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
-			dojo.connect(this.srd_mapContent,'onShow', function(data) { this.map_init(); }.bind(this)  );
+			this.srd_mapContent.connect(this.srd_mapContent,'onShow', function(data) { this.map_init(); }.bind(this)  );
 			this.insideContainer.addChild(this.srd_mapContent);
 			}.bind(this) );
 		},
 		map_init : function() {
-			this.mapDiv = dojo.create("div",{ id: 'srdmap', 'class':'map', style:'top:0;left:0;width:100%;height:100%;' }, this.srd_mapContent.domNode);
+//			console.log("###############CALLED MAP_INIT");
 //			dojo.ready(function() {
-			if(! this.map ) {
+			if( this.map == null) {
 				console.log("CREATING MAP!!!!");
+				this.mapDiv = dojo.create("div",{ id: 'srdmap', 'class':'map', style:'top:0;left:0;width:100%;height:100%;' }, this.srd_mapContent.domNode);
 				this.geolocateControl = new OpenLayers.Control.Geolocate( {
 					bind: false,
 					geolocationOptions: {
@@ -66,13 +67,7 @@ dojo.declare(
 				} );
 				this.map.render( this.mapDiv  ); 
 
-				// TESTING
-				console.log("DIV SIZE : W="+this.mapDiv.scrollWidth+" H="+this.mapDiv.scrollHeight);
-				var test = this.map.getSize();
-				console.log("MAP SIZE : W="+test.w+" H="+test.h);
-				// END TESTINGING
 				console.log("DONE CREATING MAP!!!!");
-			}
 			////////////////////////
 			///// LAYER CREATION ////
 
@@ -198,6 +193,7 @@ dojo.declare(
 				// CALL onLoad function to trigger the event.
 				this.onLoad();
 //			}.bind(this) );
+			}
 		},
 		// END map_init
 		// BEGIN goToPoint
@@ -257,9 +253,10 @@ dojo.declare(
 			if(this.map) {
 				for(var i in this.srd_layerArr) {
 					if(this.srd_layerArr[i].layer != null) {
-						console.log("Layer :"+this.srd_layerArr[i].name+" exists!");
+						console.log("Layer :"+this.srd_layerArr[i].options.name+" exists!");
 						this.srd_layerArr[i].layer.destroy();
 						this.srd_layerArr[i].map = null;
+//						delete this.srd_layerArr[i].layer;
 					}
 				}
 				this.map.destroy();
