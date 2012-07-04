@@ -16,8 +16,12 @@ class Login_Auth {
 		case 'ldap' :
 			$auth = new Zend_Auth_Adapter_Ldap($options['ldap'],$username,$password );
 		break;
-		// TODO : case 'db'
-
+		case 'http_auth' :
+			$auth = new Zend_Auth_Adapter_Http($options['http_auth'],$username,$password );
+			$basicResolver = new Zend_Auth_Adapter_Http_Resolver_File();
+   		$basicResolver->setFile($options['http_auth']['passFile']);
+   		$auth->setBasicResolver($basicResolver);
+		break;
 		}
 
 		return $auth;
