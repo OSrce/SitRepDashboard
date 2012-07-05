@@ -1,0 +1,15 @@
+
+---- CHOOSE AUTH METHO IN application.ini ----
+ldap == ldap
+
+http == HTTP Basic authenication using a text file :
+/var/www/html/basicPasswd.txt (or whatever is specified at
+http_aut.passFile )
+
+
+
+
+
+
+
+

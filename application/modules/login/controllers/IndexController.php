@@ -68,14 +68,30 @@ class Login_IndexController extends Zend_Controller_Action {
 		$options['keeploggedin'] = $this->getRequest()->getParam('keeploggedin');
 
 		$db = $this->getInvokeArg('bootstrap')->getResource('db');
-		$options['ldap'] = $this->_options['ldap'];
-		$authAdapter = Login_Auth::_getAdapter('ldap', $options);
+
+		$logger->log("auth_type: ".print_r($this->_options['auth_type'],true),Zend_Log::DEBUG);
+		$options['auth_type'] = '';
+		if( $this->_options['auth_type']) {
+			if( $this->_options['auth_type'] == "config_file") {
+				$options['file_auth'] = $this->_options['file_auth'];
+				$authAdapter = Login_Auth::_getAdapter('config_file', $options);
+//				$authAdapter->setRequest($this->getRequest() );
+//				$authAdapter->setResponse(new Zend_Controller_Response_Http()  );
+				$logger->log("Using http_auth: ".print_r($options['http_auth'],true),Zend_Log::DEBUG);
+			} else {
+				$options['ldap'] = $this->_options['ldap'];
+				$authAdapter = Login_Auth::_getAdapter('ldap', $options);
+			}	
+		} else {
+			$options['ldap'] = $this->_options['ldap'];
+			$authAdapter = Login_Auth::_getAdapter('ldap', $options);
+		}
 
 		$result = $auth->authenticate($authAdapter);
+//		$logger->log("Result: ".print_r($result,true),Zend_Log::DEBUG);
 		
 		if($result->isValid() ) {
-//			if(1==1) {
-			$logger->log("LDAP Results: ".print_r($result,true),Zend_Log::DEBUG);
+			$logger->log("AUTH Results: ".print_r($result,true),Zend_Log::DEBUG);
 			// USER AUTH WAS SUCCESSFUL, NOW NEED TO SEE IF USER IN DB
 			$userTable = new Login_Model_DbTable_Users($db);
 			$user = $userTable->fetchRow(
@@ -85,6 +101,17 @@ class Login_IndexController extends Zend_Controller_Action {
 			if(is_null($user) ) {
 			// USER NOT IN DB
 				$logger->log("LDAP : User=".$options['username']." not in db, pulling from LDAP",Zend_Log::DEBUG);
+
+				if( $this->_options['auth_type'] && $this->_options['auth_type'] == 'http') {
+					$nextUid = $userTable->fetchRow($userTable->select()->from('sr_users','MIN(uid)'));
+					if($nextUid->min > 0) {
+						$uid = -100;
+					} else {
+						$uid = $nextUid->min - 1;
+					}
+					$user->uid = $uid;
+					$user->gid = -1;
+				} else {	
 				$ldap = new Zend_Ldap();
 				$ldap->setOptions($options['ldap']['server1']);
 				try {
@@ -96,40 +123,7 @@ class Login_IndexController extends Zend_Controller_Action {
 
 					$user = $userTable->createRow();
 					$user->username = $options['username'];
-/*					$user->dn = $ldapUserInfo["dn"];
-					if( array_key_exists("nypdtaxid" , $ldapUserInfo) ) {
-						$user->uid = $ldapUserInfo["nypdtaxid"][0];
-					} else {
-						$nextUid = $userTable->fetchRow($userTable->select()->from('sr_users','MIN(uid)'));
-//						$logger->log("LDAP: nextUid:".print_r($nextUid,true),Zend_Log::DEBUG);
-						if($nextUid->min > 0) {
-							$uid = -100;
-						} else {
-							$uid = $nextUid->min - 1;
-						}
-						$user->uid = $uid;
-					}
-					if( array_key_exists("nypdcmdcode" , $ldapUserInfo) ) {
-						$user->gid = $ldapUserInfo["nypdcmdcode"][0];
-					} else {
-						$user->gid = -1;
-					}
-					if( array_key_exists("title" , $ldapUserInfo) ) {
-						$user->title = $ldapUserInfo["title"][0];
-					}
-					if( array_key_exists("nypdtitlecode" , $ldapUserInfo) ) {
-						$user->titlecode = $ldapUserInfo["nypdtitlecode"][0];
-					}
-					if( array_key_exists("sn" , $ldapUserInfo) ) {
-						$user->lastname = $ldapUserInfo["sn"][0];
-					}
-					if( array_key_exists("givenname" , $ldapUserInfo) ) {
-						$user->firstname = $ldapUserInfo["givenname"][0];
-					}
-					if( array_key_exists("mail" , $ldapUserInfo) ) {
-						$user->email = $ldapUserInfo["mail"][0];
-					}
-*/
+
 					$ldapInfoArr = $this->_options['srd']['userfromldap'];
 					foreach ($ldapInfoArr as $userVar => $ldapVar) {
 						if( $ldapVar != '' && array_key_exists($ldapVar , $ldapUserInfo) ) {
@@ -170,6 +164,9 @@ class Login_IndexController extends Zend_Controller_Action {
 					$this->_helper->flashMessenger->addMessage("Authentication error:".$zle->getMessage());
 					$this->_redirect('/login');		
 				}
+				}
+				// END ELSE FOR auth_type == ldap
+
 			}
 
 //		$this->_helper->flashMessenger->addMessage("User Authenticated!.");
