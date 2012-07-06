@@ -37,6 +37,8 @@ CREATE TABLE sr_style_rules (
 	id SERIAL NOT NULL,
 	name VARCHAR(128) NOT NULL DEFAULT '',
 	symbolizer_id INT NOT NULL,
+	elsefilter bool DEFAULT false,
+	filter_data text, 
 	PRIMARY KEY(id)
 );
 
@@ -46,7 +48,7 @@ CREATE TABLE sr_style_rules (
 -- that match style_id and then make the render intents
 -- based on render_type
 -- id <- used internally
--- style_id the style_id
+-- stylemap_id the stylemap_id
 -- render_type :
 --   0:  'default' : sitrep_bw
 --   1:  'dark' : sitrep_bw_dark
@@ -54,7 +56,7 @@ CREATE TABLE sr_style_rules (
 CREATE TABLE sr_styles (
 	id SERIAL NOT NULL,
 	name VARCHAR(128) NOT NULL DEFAULT '',
-	style_id int NOT NULL,
+	stylemap_id int NOT NULL,
 	render_type int NOT NULL,
 	defaultstyle INT NOT NULL DEFAULT 0,
 	PRIMARY KEY(id)

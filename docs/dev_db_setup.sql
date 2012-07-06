@@ -124,14 +124,13 @@ CREATE TABLE sr_style_presets (
 CREATE TABLE sr_layer_static_data (
 	id SERIAL NOT NULL,
 	layer_id INT NOT NULL,
-	feature_id BIGINT NOT NULL,
 	feature_style INT,	
 	feature_data TEXT,
 	PRIMARY KEY ( id ) 
 );
 
 SELECT AddGeometryColumn('sr_layer_static_data','sr_geom',4326,'GEOMETRY',2);
-CREATE INDEX sr_layer_static_data_idx2 on sr_layer_static_data ( layer_id, feature_id);
+CREATE INDEX sr_layer_static_data_idx2 on sr_layer_static_data ( layer_id, id);
 
 
 CREATE TABLE sr_layer_dynamic_data (

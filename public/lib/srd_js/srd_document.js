@@ -486,7 +486,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 				//				disabled: true
 				//			} ) );
 							for( tmpId in this.srd_layerArr) {
-								if(this.srd_layerArr[tmpId].type == "Vector" && this.srd_layerArr[tmpId].feature_update == true) {
+								if(this.srd_layerArr[tmpId].options.type == "Vector" && this.srd_layerArr[tmpId].feature_update == true) {
 									this.srd_saveMenu.addChild(new dijit.MenuItem( { 
 										label: this.srd_layerArr[tmpId].name,
 										onClick: function() { this.saveLayer(tmpId) }.bind(this)
@@ -791,7 +791,7 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							editPaletteTop.addChild(activeLayerName);
 							this.srd_layerEditMenu = new dijit.Menu({ });
 							for( tmpId in this.srd_layerArr) {
-								if(this.srd_layerArr[tmpId].options.feature_update == "true") {
+								if( this.srd_layerArr[tmpId].options.type == "Vector" && this.srd_layerArr[tmpId].options.feature_update == "true") {
 										this.srd_layerEditMenu.addChild(new dijit.MenuItem( { 
 										label: this.srd_layerArr[tmpId].options.name,
 										srd_doc: this,

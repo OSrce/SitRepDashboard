@@ -5,7 +5,7 @@ class Srdata_FeaturesController extends Srdata_RestController
 		protected $tableName; 
 		protected $db;
 		protected $restTable;
-		protected $layerId;
+//		protected $layerId;
 
     public function init()
     {
