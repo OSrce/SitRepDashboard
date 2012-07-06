@@ -130,9 +130,9 @@ SELECT pg_catalog.setval('sr_layers_id_seq', 2000, true);
 --
 
 COPY sr_layers (id, name, type, format, isbaselayer, projection, visibility, sphericalmercator, url, numzoomlevels, minzoomlevel, maxzoomlevel, attribution, defaultstyle, created_on, updated_on, created_by, updated_by) FROM stdin;
-1001	SitRep	XYZ	\N	t	EPSG:900913	t	t	https://nyc.sitrep.org/sr_tiles/${z}/${x}/${y}.png	30	\N	\N		\N	\N	2012-02-22 12:39:26.877309	\N	\N
-1002	SitRep BW	XYZ	\N	t	EPSG:900913	t	t	https://nyc.sitrep.org/sr_tiles_bw/${z}/${x}/${y}.png	30	\N	\N	\N	\N	\N	2012-02-22 12:39:26.92042	\N	\N
-1003	SitRep BW Dark	XYZ	\N	t	EPSG:900913	t	t	https://nyc.sitrep.org/sr_tiles_bw_dark/${z}/${x}/${y}.png	30	\N	\N	\N	\N	\N	2012-02-22 12:39:26.970325	\N	\N
+1001	SitRep	XYZ	\N	t	EPSG:900913	t	t	https://sitrep.local/sr_tiles/${z}/${x}/${y}.png	30	\N	\N		\N	\N	2012-02-22 12:39:26.877309	\N	\N
+1002	SitRep BW	XYZ	\N	t	EPSG:900913	t	t	https://sitrep.local/sr_tiles_bw/${z}/${x}/${y}.png	30	\N	\N	\N	\N	\N	2012-02-22 12:39:26.92042	\N	\N
+1003	SitRep BW Dark	XYZ	\N	t	EPSG:900913	t	t	https://sitrep.local/sr_tiles_bw_dark/${z}/${x}/${y}.png	30	\N	\N	\N	\N	\N	2012-02-22 12:39:26.970325	\N	\N
 \.
 
 

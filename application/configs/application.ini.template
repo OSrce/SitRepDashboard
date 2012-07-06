@@ -48,8 +48,8 @@ ldap.server1.baseDn = "DC=some,DC=domain"
 
 srd.login.remembermeseconds = 86500
 srd.login.title = "SitRep Demo Server"
-srd.login.leftimage = 'IMG HERE'
-srd.login.rightimage = 'IMG HERE'
+srd.login.leftimage = '/lib/img/SitRepIcon_Small.png'
+srd.login.rightimage = '/lib/img/OSrce_Alpha1.png'
 
 srd.userfromldap.username = 'username'
 srd.userfromldap.dn = 'dn'
