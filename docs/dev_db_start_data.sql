@@ -69,7 +69,7 @@ COPY sr_modules (id, name) FROM stdin;
 -- Name: sr_acl_permissions_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sitrepadmin
 --
 
-SELECT pg_catalog.setval('sr_acl_permissions_permission_id_seq', 108, true);
+SELECT pg_catalog.setval('sr_acl_permissions_permission_id_seq', 20, true);
 
 
 --
@@ -77,50 +77,63 @@ SELECT pg_catalog.setval('sr_acl_permissions_permission_id_seq', 108, true);
 --
 
 COPY sr_acl_permissions (permission_id, role_type, role_id, resource_id, permission_create, permission_read, permission_update, permission_delete) FROM stdin;
-2	gid	5000	1	deny	allow	deny	deny
-56	uid	942303	61	allow	allow	allow	allow
-11	gid	553	3	deny	allow	deny	deny
-12	gid	553	4	deny	allow	deny	deny
-13	gid	553	17	deny	allow	deny	deny
-14	gid	553	18	deny	allow	deny	deny
-15	gid	553	19	deny	allow	deny	deny
-16	gid	553	20	deny	allow	deny	deny
-17	gid	553	21	deny	allow	deny	deny
-18	gid	553	22	deny	allow	deny	deny
-19	gid	553	23	deny	allow	deny	deny
-20	gid	553	24	deny	allow	deny	deny
-21	gid	553	25	deny	allow	deny	deny
-22	gid	553	26	deny	allow	deny	deny
-23	gid	553	27	deny	allow	deny	deny
-24	gid	553	28	deny	allow	deny	deny
-25	gid	553	29	deny	allow	deny	deny
-26	gid	553	30	deny	allow	deny	deny
-27	gid	553	31	deny	allow	deny	deny
-28	gid	553	32	deny	allow	deny	deny
-29	gid	553	33	deny	allow	deny	deny
-30	gid	553	34	deny	allow	deny	deny
-31	gid	553	35	deny	allow	deny	deny
-32	gid	553	36	deny	allow	deny	deny
-33	gid	553	37	deny	allow	deny	deny
-34	gid	553	38	deny	allow	deny	deny
-35	gid	553	39	deny	allow	deny	deny
-36	gid	553	40	deny	allow	deny	deny
-37	gid	553	41	deny	allow	deny	deny
-38	gid	553	42	deny	allow	deny	deny
-39	gid	553	43	deny	allow	deny	deny
-40	gid	553	44	deny	allow	deny	deny
-41	gid	553	45	deny	allow	deny	deny
-42	gid	553	46	deny	allow	deny	deny
-43	gid	553	47	deny	allow	deny	deny
-44	gid	553	48	deny	allow	deny	deny
-48	uid	-104	53	allow	allow	allow	allow
-49	uid	-104	53	allow	allow	allow	allow
-50	uid	942303	55	allow	allow	allow	allow
-51	uid	942303	56	allow	allow	allow	allow
-52	uid	942303	57	allow	allow	allow	allow
-1	gid	527	1	allow	allow	allow	allow
-47	uid	-104	52	allow	allow	allow	allow
-5
+1	gid	11	1	allow	allow	allow	allow
+2	gid	10	2	deny	allow	deny	deny
+3	gid	10	3	deny	allow	deny	deny
+4	gid	10	4	deny	allow	deny	deny
+5	gid	10	5	deny	allow	deny	deny
+6	gid	10	6	deny	allow	deny	deny
+7	gid	10	7	deny	allow	deny	deny
+8	gid	10	8	deny	allow	deny	deny
+9	gid	10	9	deny	allow	deny	deny
+10	gid	10	10	deny	allow	deny	deny
+11	gid	10	11	deny	allow	deny	deny
+12	gid	10	12	deny	allow	deny	deny
+13	gid	10	13	deny	allow	deny	deny
+14	gid	10	14	deny	allow	deny	deny
+15	gid	10	15	deny	allow	deny	deny
+16	gid	10	16	deny	allow	deny	deny
+17	gid	10	17	deny	allow	deny	deny
+18	gid	10	18	deny	allow	deny	deny
+19	gid	10	19	deny	allow	deny	deny
+\.
+
+
+--
+-- Name: sr_window_layout_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sitrepadmin
+--
+
+SELECT pg_catalog.setval('sr_window_layout_id_seq', 4, true);
+
+
+--
+-- Data for Name: sr_window_layout; Type: TABLE DATA; Schema: public; Owner: sitrepadmin
+--
+
+COPY sr_window_layout (id, name, showname, theme, view_x, view_y, view_data) FROM stdin;
+1	Main Layout	0	0	2	1	[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":12 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]
+2	CFS Only Layout	0	0	1	1	[[{"type":"opstrack","id":1,"autoRefresh":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }] ]
+3	Map Only Layout	0	0	1	1	[ [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]
+4	Main Layout Dark	1	0	2	1	[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":12 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1003}] ]
+\.
+
+
+--
+-- Name: sr_layers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sitrepadmin
+--
+
+SELECT pg_catalog.setval('sr_layers_id_seq', 2000, true);
+
+
+--
+-- Data for Name: sr_layers; Type: TABLE DATA; Schema: public; Owner: sitrepadmin
+--
+
+COPY sr_layers (id, name, type, format, isbaselayer, projection, visibility, sphericalmercator, url, numzoomlevels, minzoomlevel, maxzoomlevel, attribution, defaultstyle, created_on, updated_on, created_by, updated_by) FROM stdin;
+1001	SitRep	XYZ	\N	t	EPSG:900913	t	t	https://nyc.sitrep.org/sr_tiles/${z}/${x}/${y}.png	30	\N	\N		\N	\N	2012-02-22 12:39:26.877309	\N	\N
+1002	SitRep BW	XYZ	\N	t	EPSG:900913	t	t	https://nyc.sitrep.org/sr_tiles_bw/${z}/${x}/${y}.png	30	\N	\N	\N	\N	\N	2012-02-22 12:39:26.92042	\N	\N
+1003	SitRep BW Dark	XYZ	\N	t	EPSG:900913	t	t	https://nyc.sitrep.org/sr_tiles_bw_dark/${z}/${x}/${y}.png	30	\N	\N	\N	\N	\N	2012-02-22 12:39:26.970325	\N	\N
+\.
 
 
 
