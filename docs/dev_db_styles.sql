@@ -33,14 +33,19 @@ CREATE TABLE sr_style_symbolizers (
 	PRIMARY KEY(id)
 );
 
+-- TABLE sr_style_rules is used to build
+-- both OpenLayers.Rule and OpenLayers.Filter
 CREATE TABLE sr_style_rules (
 	id SERIAL NOT NULL,
 	name VARCHAR(128) NOT NULL DEFAULT '',
+	style_id INT NOT NULL,
 	symbolizer_id INT NOT NULL,
 	elsefilter bool DEFAULT false,
 	filter_data text, 
 	PRIMARY KEY(id)
 );
+
+CREATE INDEX sr_style_rules_idx2 ON sr_style_rules (style_id);
 
 
 -- TABLE sr_styles corresponds to OpenLayers.Style
@@ -50,18 +55,22 @@ CREATE TABLE sr_style_rules (
 -- id <- used internally
 -- stylemap_id the stylemap_id
 -- render_type :
---   0:  'default' : sitrep_bw
---   1:  'dark' : sitrep_bw_dark
+--   'default' : sitrep_bw
+--   'default_dark' : sitrep_bw_dark
+-- defaultsymbolizer_id : the row from style_symbolizers that should be used
+-- 	as the 'default' object for the OpenLayers.Style 
+-- NOTE: every Style regardless of Render Intent has a default object.
 
 CREATE TABLE sr_styles (
 	id SERIAL NOT NULL,
 	name VARCHAR(128) NOT NULL DEFAULT '',
 	stylemap_id int NOT NULL,
-	render_type int NOT NULL,
-	defaultstyle INT NOT NULL DEFAULT 0,
+	render_type VARCHAR(128) NOT NULL DEFAULT 'default',
+	defaultsymbolizer_id INT,
 	PRIMARY KEY(id)
 );
 
+CREATE INDEX sr_styles_idx2 ON sr_styles (stylemap_id);
 
 -- TABLE sr_style_presets 
 -- List of styles that should be included in presets list

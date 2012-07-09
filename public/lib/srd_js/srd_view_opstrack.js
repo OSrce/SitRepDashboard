@@ -295,6 +295,7 @@ dojo.declare(
 			this.srd_layer = new srd_layer();
 			this.srd_layer.options = theOptions;
 			this.srd_layer.srd_styleArr = this.srd_doc.srd_styleArr;
+			this.srd_layer.srd_styleMap = this.srd_layer.srd_styleArr["5001"];
 			this.srd_layer.loadData();
 			// NEED TO FIX TODO:::
 			for(var tmpId in this.data.linkViewArr) {
@@ -460,7 +461,7 @@ dojo.declare(
 					var theFeatureAttr = { 
 						label: cfs.cfs_code,
 						body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
-						style: 2001
+						sr_status: "Open-Unassigned"
 					}
 					var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
 					this.srd_layer.layer.addFeatures( Array( theFeat), {});
@@ -478,7 +479,8 @@ dojo.declare(
 					var theFeatureAttr = { 
 						label: cfs.cfs_code,
 						body : "Signal: "+cfs.cfs_code+" Job :"+cfs.cfs_num,
-						style: 2001
+						sr_status: "Open-Unassigned"
+						
 					}
 					var theFeat = new OpenLayers.Feature.Vector(theRefFeat[0].geometry,theFeatureAttr,null);
 					this.srd_layer.layer.addFeatures( Array( theFeat), {});
@@ -490,13 +492,13 @@ dojo.declare(
 					label: "10-"+cfs.cfs_code,
 					body : "Signal: 10-"+cfs.cfs_code+" Job :"+cfs.cfs_num,
 					cfs : cfs,
-					style: 5001
+					sr_status: "Open-Unassigned"
 				}
 				if( cfs.cfs_assignedunit) {
-					theFeatureAttr.style = 5002;
+					theFeatureAttr.sr_status = "Open-Assigned";
 				}
 				if ( cfs.cfs_finaldisdate ) {
-					theFeatureAttr.style = 5004;
+					theFeatureAttr.sr_status = "Closed";
 				}	
 
 				var theGeom = new OpenLayers.Geometry.fromWKT(cfs.geometry);

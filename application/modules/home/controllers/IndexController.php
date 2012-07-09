@@ -77,13 +77,23 @@ class Home_IndexController extends Zend_Controller_Action
 
 			$serverToClientArr = array();
 			$serverToClientArr['queries'] = 'srd.srd_queryArr';
-			$serverToClientArr['layers'] = 'theLayers';
-			$serverToClientArr['styles'] = 'srd.srd_styleArr';
+			$serverToClientArr['layers'] = 'var theLayers';
+			$serverToClientArr['styles'] = 'var theStyles';
+			$serverToClientArr['style_symbolizers'] = 'var theStyleSymbolizers';
+			$serverToClientArr['style_rules'] = 'var theStyleRules';
 			$serverToClientArr['wlayout'] = 'srd.srd_wlayoutArr';
 			$serverToClientArr['presets'] = 'srd.srd_presetArr';
 
 			foreach($this->_data as $resType => $resArr) {
 				// BEGIN LOAD srdQueryArr data :
+
+					$this->getResponse()->appendBody($serverToClientArr[$resType]." = ");
+					$this->getResponse()->appendBody( 
+							Zend_Json::encode($resArr) 
+					);
+					$this->getResponse()->appendBody("\n");
+					
+/*
 				if($resType != 'layers' ) {
 					foreach($resArr as $theId => $theArr) {
 						$theArrJSON = Zend_Json::encode($theArr);
@@ -91,6 +101,7 @@ class Home_IndexController extends Zend_Controller_Action
 						$this->getResponse()->appendBody( $serverToClientArr[$resType]."['$theId'] = \n");
 						$this->getResponse()->appendBody( $theArrJSON."\n");
 					}
+
 				} else {
 					$this->getResponse()->appendBody("var theLayers = [\n");
 					$firstTime =1;
@@ -105,6 +116,7 @@ class Home_IndexController extends Zend_Controller_Action
 					}
 					$this->getResponse()->appendBody("]\n");
 				}
+*/		
 				// END LOAD srdQueryArr data
 			}
 
@@ -178,6 +190,8 @@ class Home_IndexController extends Zend_Controller_Action
 		$tableArr['wlayout'] = new Srdata_Model_DbTable_Wlayout($this->_db);
 		$tableArr['presets'] = new Srdata_Model_DbTable_Presets($this->_db);
 		$tableArr['styles'] = new Srdata_Model_DbTable_Styles($this->_db);
+		$tableArr['style_symbolizers'] = new Srdata_Model_DbTable_Stylesymbolizers($this->_db);
+		$tableArr['style_rules'] = new Srdata_Model_DbTable_Stylerules($this->_db);
 		$tableArr['layers'] = new Srdata_Model_DbTable_Layers($this->_db);
 
 		$acl = new Login_Acl($this->_db,$this->_uid,$this->_gid);
@@ -301,6 +315,8 @@ class Home_IndexController extends Zend_Controller_Action
 							$this->_data[$resType][$theRow['id']]['view_data'] = Zend_Json::decode(	$this->_data[$resType][$theRow['id']]['view_data'] ); 
 						} elseif($resType == 'queries') {
 							$this->_data[$resType][$theRow['id']]['data'] = Zend_Json::decode(	$this->_data[$resType][$theRow['id']]['data'] ); 
+						} elseif($resType == 'style_rules') {
+							$this->_data[$resType][$theRow['id']]['filter_data'] = Zend_Json::decode(	$this->_data[$resType][$theRow['id']]['filter_data'] ); 
 						}
 						// END UNFORTUNATE EXCEPTIONS.	
 					}

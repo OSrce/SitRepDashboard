@@ -175,6 +175,7 @@ srd_document.prototype.srd_init = function() {
 	}
 
 	// TESTING - TODO: CLEAN UP - STYLES AND LAYERS (Settings) SHOULD be stores!
+/*
 	var tmpStore = new dojo.store.Memory({data: theLayers, idProperty: "id"}); 
 	tmpStore.query().forEach(function(layerOptions) {
 		this.srd_layerArr[layerOptions.id] = new srd_layer();
@@ -188,8 +189,55 @@ srd_document.prototype.srd_init = function() {
 		} ),
 		tmpStore
 	);
+*/
 
 
+
+	var theStyleMaps = {};
+	for( var theId in theStyles) {
+		var theStyle = theStyles[theId];
+		if(theStyleMaps[theStyle.stylemap_id] == null ) {
+				theStyleMaps[theStyle.stylemap_id] = {};
+		}
+		var theOptions = {};
+		if(theStyle.render_type == 'default') {
+			theOptions['isDefault'] = true;
+		}
+		for(var theRId in theStyleRules) {
+			var tmpRule = theStyleRules[theRId];
+			if( tmpRule["style_id"] == theId) {
+				var filterData = tmpRule["filter_data"];
+				var theFilter = null;
+				if(filterData.type == "==") {
+					theFilter = new OpenLayers.Filter.Comparison({
+						type: OpenLayers.Filter.Comparison.EQUAL_TO,
+						property: filterData.property,
+						value: filterData.value
+					} );
+				}	
+				if( theOptions['rules'] == null) {
+					theOptions['rules'] = [];
+				}
+				if( theFilter != null && theStyleSymbolizers[tmpRule["symbolizer_id"]] != null ) {
+					theOptions['rules'].push(new OpenLayers.Rule({ filter: theFilter, symbolizer: theStyleSymbolizers[tmpRule["symbolizer_id"]] }) );
+				}	
+			}
+		}	
+		theStyleMaps[theStyle.stylemap_id][theStyle.render_type] = new OpenLayers.Style( theStyleSymbolizers[theStyle.defaultsymbolizer_id] , theOptions);
+
+	}	
+	for ( var theId in theStyleMaps) {
+		this.srd_styleArr[theId] = new OpenLayers.StyleMap( theStyleMaps[theId] );
+	}
+	
+	// POPULATING THE srd_layerArr from the data that came over the server
+	for( var theId in theLayers) {
+		var layerOptions = theLayers[theId];
+		this.srd_layerArr[layerOptions.id] = new srd_layer();
+		this.srd_layerArr[layerOptions.id].options = layerOptions;
+//		this.srd_layerArr[layerOptions.id].srd_styleArr = this.srd_styleArr;
+		this.srd_layerArr[layerOptions.id].srd_styleMap = this.srd_styleArr[theId];
+	}	
 
 
 //	this.srd_container.startup();

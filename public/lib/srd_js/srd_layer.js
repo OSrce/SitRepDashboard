@@ -222,10 +222,13 @@ srd_layer.prototype.loadData = function( ) {
 
 	console.log("Vector Layer created:"+this.options.name);
 // BEGIN MESSY STYLE RULE CODE
+
+/*
 		if(this.srd_styleMap == null) {
 //			this.srd_styleMap = new OpenLayers.StyleMap();
 
-			if(this.options.defaultstyle &&  this.srd_styleArr[this.options.defaultstyle] ) {
+
+ 			if(this.options.defaultstyle &&  this.srd_styleArr[this.options.defaultstyle] ) {
 				this.srd_styleMap = new OpenLayers.StyleMap( { 
 					'default': new OpenLayers.Style( this.srd_styleArr[this.options.defaultstyle] )
 				} ); 	
@@ -235,6 +238,7 @@ srd_layer.prototype.loadData = function( ) {
 				} ); 
 			}
 		}
+	*/
 /*
 			this.srd_styleMap = new OpenLayers.StyleMap( { 
 //				'default': this.srd_styleArr[this.options.defaultstyle]
@@ -1272,6 +1276,7 @@ srd_layer.prototype.srd_beforeAdd = function( theObject ) {
 		return;
 	}
 
+/*
 		var feature = theObject.feature;
 		if( feature.data.style && this.srd_styleArr[feature.data.style]  ) {
 			if( !feature.style ) {
@@ -1299,12 +1304,14 @@ srd_layer.prototype.srd_beforeAdd = function( theObject ) {
 				}
 			}
 
+
+
 //			console.log("Feature:"+feature.id+" using layer style :"+this.options.defaultstyle);
 //			if( !feature.style ) {
 //				feature.style = this.srd_styleArr[this.options.defaultstyle];
 //			}
 		}
-
+*/
 
 /*		if(feature.style) {
 			for(var i in feature.style) {
