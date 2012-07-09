@@ -79,8 +79,8 @@ class Home_IndexController extends Zend_Controller_Action
 			$serverToClientArr['queries'] = 'srd.srd_queryArr';
 			$serverToClientArr['layers'] = 'var theLayers';
 			$serverToClientArr['styles'] = 'var theStyles';
-			$serverToClientArr['style_symbolizers'] = 'var theStyleSymbolizers';
-			$serverToClientArr['style_rules'] = 'var theStyleRules';
+			$serverToClientArr['stylesymbolizers'] = 'var theStyleSymbolizers';
+			$serverToClientArr['stylerules'] = 'var theStyleRules';
 			$serverToClientArr['wlayout'] = 'srd.srd_wlayoutArr';
 			$serverToClientArr['presets'] = 'srd.srd_presetArr';
 
@@ -190,8 +190,8 @@ class Home_IndexController extends Zend_Controller_Action
 		$tableArr['wlayout'] = new Srdata_Model_DbTable_Wlayout($this->_db);
 		$tableArr['presets'] = new Srdata_Model_DbTable_Presets($this->_db);
 		$tableArr['styles'] = new Srdata_Model_DbTable_Styles($this->_db);
-		$tableArr['style_symbolizers'] = new Srdata_Model_DbTable_Stylesymbolizers($this->_db);
-		$tableArr['style_rules'] = new Srdata_Model_DbTable_Stylerules($this->_db);
+		$tableArr['stylesymbolizers'] = new Srdata_Model_DbTable_Stylesymbolizers($this->_db);
+		$tableArr['stylerules'] = new Srdata_Model_DbTable_Stylerules($this->_db);
 		$tableArr['layers'] = new Srdata_Model_DbTable_Layers($this->_db);
 
 		$acl = new Login_Acl($this->_db,$this->_uid,$this->_gid);
@@ -315,7 +315,7 @@ class Home_IndexController extends Zend_Controller_Action
 							$this->_data[$resType][$theRow['id']]['view_data'] = Zend_Json::decode(	$this->_data[$resType][$theRow['id']]['view_data'] ); 
 						} elseif($resType == 'queries') {
 							$this->_data[$resType][$theRow['id']]['data'] = Zend_Json::decode(	$this->_data[$resType][$theRow['id']]['data'] ); 
-						} elseif($resType == 'style_rules') {
+						} elseif($resType == 'stylerules') {
 							$this->_data[$resType][$theRow['id']]['filter_data'] = Zend_Json::decode(	$this->_data[$resType][$theRow['id']]['filter_data'] ); 
 						}
 						// END UNFORTUNATE EXCEPTIONS.	

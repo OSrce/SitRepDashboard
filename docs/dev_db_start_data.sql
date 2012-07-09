@@ -63,6 +63,8 @@ COPY sr_modules (id, name) FROM stdin;
 17	srdata/cfs/*
 18	srdata/wlayout/*
 19	srdata/queries/*
+20	srdata/stylerules/*
+21	srdata/stylesymbolizers/*
 \.
 
 --
@@ -96,6 +98,8 @@ COPY sr_acl_permissions (permission_id, role_type, role_id, resource_id, permiss
 17	gid	10	17	deny	allow	deny	deny
 18	gid	10	18	deny	allow	deny	deny
 19	gid	10	19	deny	allow	deny	deny
+20	gid	10	20	deny	allow	deny	deny
+21	gid	10	21	deny	allow	deny	deny
 \.
 
 
