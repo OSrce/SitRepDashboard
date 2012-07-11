@@ -89,7 +89,7 @@ INSERT INTO sr_cfs_backup SELECT cfs_date, cfs_letter, cfs_num, cfs_pct, cfs_sec
 COPY (SELECT * FROM sr_layer_static_data WHERE layer_id=2010) TO '/tmp/pct_centers.copy';
 
 
-insert into sr_layer_static_data (layer_id, feature_id, feature_data, sr_geom) SELECT 2010, feature_id, feature_data, ST_Centroid(sr_geom)  FROM sr_layer_static_data where layer_id=2001;
+insert into sr_layer_static_data (layer_id, feature_data, sr_geom) SELECT 2010,  feature_data, ST_Centroid(sr_geom)  FROM sr_layer_static_data where layer_id=2001;
 
 
 INSERT INTO sr_queries (name, notes, data) VALUES ('Operations', 'CFS Routed to Operations Unit', E'{"SREXPR": "( cfs_finaldis IS NULL OR cfs_finaldisdate >= current_timestamp - interval \'15 minutes\' ) AND cfs_routenotifications=\'true\' " }' );

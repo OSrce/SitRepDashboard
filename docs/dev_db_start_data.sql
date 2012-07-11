@@ -2,6 +2,8 @@
 -- PostgreSQL database dump
 --
 
+\c sr_data
+
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -115,10 +117,10 @@ SELECT pg_catalog.setval('sr_window_layout_id_seq', 4, true);
 --
 
 COPY sr_window_layout (id, name, showname, theme, view_x, view_y, view_data) FROM stdin;
-1	Main Layout	0	0	2	1	[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":12 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]
+1	Main Layout	0	0	2	1	[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]
 2	CFS Only Layout	0	0	1	1	[[{"type":"opstrack","id":1,"autoRefresh":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }] ]
 3	Map Only Layout	0	0	1	1	[ [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1002}] ]
-4	Main Layout Dark	1	0	2	1	[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":12 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1003}] ]
+4	Main Layout Dark	1	0	2	1	[[{"type":"opstrack","id":1,"linkViewIdArr":[2],"autoRefresh":true,"mapData":true,"querysort":{"cfs_finaldisdate":"desc","cfs_timecreated":"desc"},"srd_queryid":1 }], [{"type":"map","id":2,"linkViewIdArr":[1],"start_lat":40.713,"start_lon":-73.996,"start_zoom":12,"start_base_layer":1003}] ]
 \.
 
 

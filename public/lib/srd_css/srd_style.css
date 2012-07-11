@@ -4126,7 +4126,9 @@ html, body {
 	height: 300px;
 }	
 
-
+.gridContainerZone > *{
+	margin: 0 !important;
+}
 
 
 

@@ -32,7 +32,7 @@ class Srdata_FeaturesController extends Srdata_RestController
 			$this->logger->log($this->tableName." Get 1(Index) Action Called: ", Zend_Log::DEBUG);	
 			$select = $this->restTable->select();
 			$select->from( 'sr_layer_dynamic_data',array(
-				'id', 'feature_data', 'geometry' => new Zend_Db_Expr("ST_AsText(sr_geom)")  ) );
+				'id', 'feature_data', 'geometry' => new Zend_Db_Expr("ST_AsText(ST_Force_2D(sr_geom))")  ) );
 			foreach($this->colsArr as $theKey => $theVal) {
         if( $this->_getParam($theVal) ) {
           $this->logger->log("The To use Key(s): $theVal === ".$this->_getParam($theVal)."\n", Zend_Log::DEBUG);
@@ -48,7 +48,7 @@ class Srdata_FeaturesController extends Srdata_RestController
 				$theError = $theExcept->getMessage();
 				$this->logger->log("Read Features Failed : ".$theError, Zend_Log::DEBUG);
 			}
-
+			return;
 		}
 
 		// GET Action === READ SPECIFIC ROW
@@ -58,7 +58,7 @@ class Srdata_FeaturesController extends Srdata_RestController
 			
 			$select = $this->restTable->select();
 			$select->from( 'sr_layer_dynamic_data',array('feature_style',
-				 'feature_data', 'geojson_geom' => new Zend_Db_Expr("ST_AsGeoJSON(sr_geom)")  ) );
+				 'feature_data', 'geojson_geom' => new Zend_Db_Expr("ST_AsText(ST_Force_2D(sr_geom))")  ) );
 
 			foreach($this->pKeyArr as $theKey => $theVal) {
         if(isset( $theVal)  ) {
@@ -88,6 +88,7 @@ class Srdata_FeaturesController extends Srdata_RestController
 				$this->logger->log("Read Features Failed : ".$theError, Zend_Log::DEBUG);
 			}
 			$this->getResponse()->setHttpResponseCode(200);
+			return;
 		}
 
 		// POST Action === CREATE IF NO ID SPECIFIED
@@ -110,7 +111,7 @@ class Srdata_FeaturesController extends Srdata_RestController
 			$this->logger->log("Post Data Result: ".print_r($this->retObj,true), Zend_Log::DEBUG);
 			$this->getResponse()->appendBody(Zend_Json::encode($this->retObj));
 			$this->getResponse()->setHttpResponseCode(201);
-
+			return;
 		}
 
 		// PUT Action === UPDATE
@@ -130,7 +131,7 @@ class Srdata_FeaturesController extends Srdata_RestController
 			$this->logger->log("Put Data Result: ".print_r($theRow,true), Zend_Log::DEBUG);
 			$this->getResponse()->appendBody(Zend_Json::encode($theRow));
 			$this->getResponse()->setHttpResponseCode(201);
-
+			return;
 
 
 

@@ -5,6 +5,7 @@
 *
 */
 
+\c sr_data;
 
 CREATE TABLE sr_cfs (
   cfs_date DATE NOT NULL,
@@ -88,7 +89,7 @@ CREATE TABLE sr_locations (
 SELECT AddGeometryColumn('sr_locations','sr_geom',4326,'GEOMETRY',3);
 
 
-CREATE VIEW sr_cfs_withlocation AS SELECT (cfs.cfs_date||'|'||cfs.cfs_num) as id, cfs.*, ST_AsText(loc.sr_geom) as geometry FROM sr_cfs cfs, sr_locations loc WHERE cfs.cfs_location = loc.id;
+CREATE VIEW sr_cfs_withlocation AS SELECT (cfs.cfs_date||'|'||cfs.cfs_num) as id, cfs.*, ST_AsText(ST_Force_2D(loc.sr_geom)) as geometry FROM sr_cfs cfs, sr_locations loc WHERE cfs.cfs_location = loc.id;
 
 -- DIAGNOSTICS
 -- ANALYZE

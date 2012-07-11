@@ -22,6 +22,7 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 
 
 		$redirect = true;
+
 		if($this->_module != self::MODULE_NO_AUTH) {
 			if($this->_isAuth($auth) ) {
 					$user = $auth->getStorage()->read();
@@ -47,6 +48,7 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 //					$cache->save($acl,'ACL_'.$this->_role);
 //				}
 
+
 				if( $this->_isAllowed($auth,$acl) ) {
 					$redirect=false;
 				} else {
@@ -57,11 +59,13 @@ class Login_Plugin_Securitycheck extends Zend_Controller_Plugin_Abstract {
 					$this->getResponse()->setHttpResponseCode(403);
 					return;
 				}
+
 			} 
 		} else {
 			$redirect = false;
 		}
 	
+
 		if($redirect) {
 			$request->setModuleName('login');
 			$request->setControllerName('index');

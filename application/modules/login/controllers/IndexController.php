@@ -44,9 +44,33 @@ class Login_IndexController extends Zend_Controller_Action {
 	}
 
 	public function loginAction() {
+		if($this->checkAuth() == 0) {
+			return $this->_redirect('/home');
+		} else {
+			return $this->_redirect('/login');		
+		}
+	}
+
+	public function embeddedloginAction() {
+		$this->_helper->viewRenderer->setNoRender(true);
+		$theResponse = array();
+		if($this->checkAuth() == 0) {
+			$theResponse['authorized'] = true;
+			$theResponse['authenticated'] = true;
+		} else {
+			$theResponse['authorized'] = false;
+			$theResponse['authenticated'] = false;
+		}
+		$this->getResponse()->appendBody(Zend_Json::encode($theResponse));
+		$this->getResponse()->setHttpResponseCode(200);
+		return;
+	}
+
+	private function checkAuth() {
 		$auth = Zend_Auth::getInstance();
 		if( $auth->getIdentity() ) {
-			return $this->_redirect('/home');
+//			return $this->_redirect('/home');
+			return 0;
 		}
 
 		$opt=array( 'custom' => array( 'timeout' => $this->_options['auth']['timeout'] ) );
@@ -162,7 +186,8 @@ class Login_IndexController extends Zend_Controller_Action {
 				} catch( Zend_Ldap_Exception $zle) {
 					$logger->log("LDAP: ERROR:".$zle->getMessage(),Zend_Log::DEBUG);
 					$this->_helper->flashMessenger->addMessage("Authentication error:".$zle->getMessage());
-					$this->_redirect('/login');		
+//					$this->_redirect('/login');		
+						return 1;
 				}
 				}
 				// END ELSE FOR auth_type == ldap
@@ -196,14 +221,16 @@ class Login_IndexController extends Zend_Controller_Action {
 				Zend_Session::getSaveHandler()->setLifetime( $this->view->srd_login_opts['remembermeseconds'] );
 			}
 
-			$this->_redirect('/home');
+			return 0;
+//			$this->_redirect('/home');
 		} else {
 			$messages = $result->getMessages();
 			foreach ($messages as $i => $message) {
 				$logger->log("AUTH LDAP : $message",Zend_Log::DEBUG);
 			}
 			$this->_helper->flashMessenger->addMessage("Authentication error: Incorrect Login.");
-			$this->_redirect('/login');
+//			$this->_redirect('/login');
+			return 1;
 		}
 
 

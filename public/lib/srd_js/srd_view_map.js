@@ -249,17 +249,19 @@ dojo.declare(
 		//END pulsate
 		//BEGIN DESTROY
 		destroy : function() {
+// TODO - TO FIX : CAREFUL ON DELETING MAPS or LAYERS AS it may
+//   SEND DELETE TO REMOVE FEATURES FROM SERVER.
 			console.log("srd_view_map destroy called!");
 			if(this.map) {
 				for(var i in this.srd_layerArr) {
 					if(this.srd_layerArr[i].layer != null) {
 						console.log("Layer :"+this.srd_layerArr[i].options.name+" exists!");
-						this.srd_layerArr[i].layer.destroy();
-						this.srd_layerArr[i].map = null;
+//						this.srd_layerArr[i].layer.remove();
+//						this.srd_layerArr[i].map = null;
 //						delete this.srd_layerArr[i].layer;
 					}
 				}
-				this.map.destroy();
+//				this.map.unloadDestroy();
 				delete this.map;
 				dojo.destroy(this.mapDiv);
 			}

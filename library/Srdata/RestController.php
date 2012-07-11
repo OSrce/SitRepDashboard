@@ -126,13 +126,15 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		//	print Zend_Json::encode($rows->toArray());
 			$this->getResponse()->appendBody( Zend_Json::encode($rows->toArray()) );
 
+			return;
     }
 
 		// GET Action === READ SPECIFIC ROW
 		public function getAction() 
 		{
 			$this->logger->log($this->tableName." Get (READ) Action Called: ", Zend_Log::DEBUG);	
-				$this->indexAction();
+			$this->indexAction();
+			return;
 		}
 
 		// POST Action === CREATE
@@ -151,6 +153,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$this->getResponse()->appendBody(Zend_Json::encode($this->retObj));
 
 			$this->getResponse()->setHttpResponseCode(201);
+			return;
 		}
 
 		// PUT Action === UPDATE
@@ -167,6 +170,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 
 			$this->getResponse()->appendBody(Zend_Json::encode($data));
 			$this->getResponse()->setHttpResponseCode(200);
+			return;
 		}
 
 		// DELETE Action === DELETE
@@ -189,7 +193,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 
 			// SHOULD CHECK TO SEE IF DELETE WAS SUCCESSFUL BEFORE RETURNING No Content (204).			
 			$this->getResponse()->setHttpResponseCode(204);
-
+			return;
 		}
 
 		public function boolToString( &$var )
