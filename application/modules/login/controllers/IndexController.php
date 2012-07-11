@@ -75,12 +75,13 @@ class Login_IndexController extends Zend_Controller_Action {
 
 		$opt=array( 'custom' => array( 'timeout' => $this->_options['auth']['timeout'] ) );
 
-		$form = new Login_Form_Login($opt);
+/*		$form = new Login_Form_Login($opt);
 
 		if( !$form->isValid($this->getRequest()->getPost() ) ) {
 			$this->view->form = $form;
 			$this->render('login');
 		}
+*/
 
 		date_default_timezone_set("America/New_York");
 		$logger = new Zend_Log();
@@ -93,9 +94,10 @@ class Login_IndexController extends Zend_Controller_Action {
 
 		$db = $this->getInvokeArg('bootstrap')->getResource('db');
 
-		$logger->log("auth_type: ".print_r($this->_options['auth_type'],true),Zend_Log::DEBUG);
 		$options['auth_type'] = '';
-		if( $this->_options['auth_type']) {
+		if( array_key_exists( 'auth_type', $this->_options ) ) {
+			$logger->log("auth_type: ".print_r($this->_options['auth_type'],true),Zend_Log::DEBUG);
+
 			if( $this->_options['auth_type'] == "config_file") {
 				$options['file_auth'] = $this->_options['file_auth'];
 				$authAdapter = Login_Auth::_getAdapter('config_file', $options);
