@@ -3,6 +3,8 @@
 class Login_IndexController extends Zend_Controller_Action {
 	
 	private $options;
+	private $username;
+	private $password;
 
 	public function init() {
 		$this->_options = $this->getInvokeArg('bootstrap')->getOptions();
@@ -44,6 +46,8 @@ class Login_IndexController extends Zend_Controller_Action {
 	}
 
 	public function loginAction() {
+		$this->username = strtolower($this->getRequest()->getParam('username'));
+		$this->password = $this->getRequest()->getParam('password');
 		if($this->checkAuth() == 0) {
 			return $this->_redirect('/home');
 		} else {
@@ -52,6 +56,9 @@ class Login_IndexController extends Zend_Controller_Action {
 	}
 
 	public function embeddedloginAction() {
+		$data = Zend_Json::decode($this->getRequest()->getRawBody() );
+		$this->username = $data['username'];
+		$this->password = $data['password'];
 		$this->_helper->viewRenderer->setNoRender(true);
 		$theResponse = array();
 		if($this->checkAuth() == 0) {
@@ -87,9 +94,10 @@ class Login_IndexController extends Zend_Controller_Action {
 		$logger = new Zend_Log();
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/ldap.log"));
 	
+//		$logger->log("username: ".$this->username." pass:".$this->password,Zend_Log::DEBUG);
 		$options = array();
-		$options['username'] = strtolower($this->getRequest()->getParam('username'));
-		$options['password'] = $this->getRequest()->getParam('password');
+		$options['username'] = $this->username;
+		$options['password'] = $this->password;
 		$options['keeploggedin'] = $this->getRequest()->getParam('keeploggedin');
 
 		$db = $this->getInvokeArg('bootstrap')->getResource('db');
@@ -122,11 +130,11 @@ class Login_IndexController extends Zend_Controller_Action {
 			$userTable = new Login_Model_DbTable_Users($db);
 			$user = $userTable->fetchRow(
 								$userTable->select()
-													-> where('username = ? ',$options['username'] )
+													-> where('username = ? ',$this->username )
 							);
 			if(is_null($user) ) {
 			// USER NOT IN DB
-				$logger->log("LDAP : User=".$options['username']." not in db, pulling from LDAP",Zend_Log::DEBUG);
+				$logger->log("LDAP : User=".$this->username." not in db, pulling from LDAP",Zend_Log::DEBUG);
 
 				if( $this->_options['auth_type'] && $this->_options['auth_type'] == 'http') {
 					$nextUid = $userTable->fetchRow($userTable->select()->from('sr_users','MIN(uid)'));
@@ -141,14 +149,14 @@ class Login_IndexController extends Zend_Controller_Action {
 				$ldap = new Zend_Ldap();
 				$ldap->setOptions($options['ldap']['server1']);
 				try {
-					$ldap->bind($options['username'],$options['password'] );
-					$canonicalName = $ldap->getCanonicalAccountName($options['username'],Zend_Ldap::ACCTNAME_FORM_DN);
+					$ldap->bind($this->username,$this->password );
+					$canonicalName = $ldap->getCanonicalAccountName($this->username,Zend_Ldap::ACCTNAME_FORM_DN);
 					$logger->log("LDAP: cname :".print_r($canonicalName, true),Zend_Log::DEBUG);
 					$ldapUserInfo = $ldap->getEntry($canonicalName);
 					$logger->log("LDAP: getEntry Success :".print_r($ldapUserInfo, true),Zend_Log::DEBUG);
 
 					$user = $userTable->createRow();
-					$user->username = $options['username'];
+					$user->username = $this->username;
 
 					$ldapInfoArr = $this->_options['srd']['userfromldap'];
 					foreach ($ldapInfoArr as $userVar => $ldapVar) {
@@ -169,19 +177,6 @@ class Login_IndexController extends Zend_Controller_Action {
 
 					}
 
-					// DEFAULTS FOR USERS NOT IN DB :
-//					$user->view_layout_x = 1;
-//					$user->view_layout_y = 1;
-					//TODO : This should be pulled from options ini ...
-/*					$default_view_data = array( 
-						'0' => array(
-							'0' => array(
-								'type' 				=> 'opstrack'
-							)
-						)
-					);
-					$user->view_data = Zend_Json::encode($default_view_data);	
-*/
 					$user->wlayout = 1;
 					$user->save();
 
