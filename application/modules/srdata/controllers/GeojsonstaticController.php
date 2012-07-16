@@ -58,6 +58,8 @@ class Srdata_GeojsonstaticController extends Srdata_RestController
 						echo '}';
 				}
 				echo '] }';
+
+				$this->getResponse()->setHttpResponseCode(200);
 			} catch(Zend_DB_Statement_Exception $theExcept) {
 				$theError = $theExcept->getMessage();
 				$this->logger->log("Read Features Failed : ".$theError, Zend_Log::DEBUG);

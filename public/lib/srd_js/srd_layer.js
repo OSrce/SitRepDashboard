@@ -87,6 +87,8 @@ function srd_layer( ) {
 			pointRadius: 6
 		}
 
+		this.renderIntent = 'default';
+
 /*		this.srd_featureAttributes = {
 			setStyles: '${styleFunction}',
 			fillColor: '${fillColor}',
@@ -1268,12 +1270,69 @@ srd_layer.prototype.srd_styleFunction = function( feature ) {
 // END srd_styleFunction 
 
 
+srd_layer.prototype.srd_checkAndSetStyleAttr = function(feature, attrName, attrVal) {
+	var dynamicVarRegEx = /\$\{.*\}/;
+	var dynamicVal = dynamicVarRegEx.exec( String(attrVal) ); 
+	if ( dynamicVal != null ) {
+		dynamicVal = String(dynamicVal);
+		dynamicVal = dynamicVal.substr(2, dynamicVal.length-3);
+//		console.log("Found attrVal === "+attrVal+" dynamicVal === "+dynamicVal);
+			
+		if(feature.attributes[dynamicVal] == null) {
+			switch( String(attrName) ) {
+			// COLORS :
+			case "fillColor" :
+			case "strokeColor" :
+//			case "labelAlign" :
+			case "fontColor" :
+//			case "label" :
+//			case "fontFamily" :
+				feature.attributes[dynamicVal] = "#555555";
+				break;
+			case "fillOpacity" :
+			case "strokeOpacity" :
+			case "pointRadius" :
+			case "fontOpacity" :
+			case "fontSize" :
+				feature.attributes[dynamicVal] = 1;
+				break;
+			default:
+				feature.attributes[dynamicVal] = "";
+				break;
+			}
+		}
+	}
+
+	return;
+}
+
+
 // BEFORE ADD SHOULD ONLY BE USED FOR FEATURE SPECIFIC STYLING.
 srd_layer.prototype.srd_beforeAdd = function( theObject ) {
 //	console.log("Before Add Feature :"+theObject.feature.id+" on layer"+this.options.id);
 	if( !this.options) {
 		console.log("Feature :"+feature.id+" NO this.options!!!");
 		return;
+	}
+	var feature = theObject.feature;
+	if( feature.attribute == null || feature.attribute.srstyle == null ) {
+		for(var attrName in this.srd_styleMap.styles[this.renderIntent].defaultStyle) {
+			var attrVal = this.srd_styleMap.styles[this.renderIntent].defaultStyle[attrName];
+//			console.log("attrName = "+attrName+" attrVal = "+attrVal);
+			this.srd_checkAndSetStyleAttr(feature, attrName, attrVal);
+		}
+/// THE FOLLOWING CODE CHECKS FOR VARIABLES SET AS ATTRIBUTE IN RULE SYMBOLIZERS
+//  NOT NEEDED SINCE THEY EXTEND BY DEFAULT.
+/*	} else {
+		for( var i in  this.srd_styleMap.styles[this.renderIntent].rules ) {
+			if( this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer && this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer.id == feature.attribute.srstyle) {
+				for( var attrName in this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer ) {
+					var attrVal = this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer[attrName];
+					this.srd_checkAndSetStyleAttr(feature, attrName, attrVal);
+				}
+			}
+		}
+*/
 	}
 
 /*

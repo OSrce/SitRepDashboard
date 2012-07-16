@@ -208,21 +208,40 @@ srd_document.prototype.srd_init = function() {
 			if( tmpRule["style_id"] == theId) {
 				var filterData = tmpRule["filter_data"];
 				var theFilter = null;
-				if(filterData.type == "==") {
-					theFilter = new OpenLayers.Filter.Comparison({
-						type: OpenLayers.Filter.Comparison.EQUAL_TO,
-						property: filterData.property,
-						value: filterData.value
-					} );
-				}	
+				if(filterData == null) {
+					filterData = {};
+				}
+				switch(String(filterData.type)) {
+					case "==" :
+						theFilter = new OpenLayers.Filter.Comparison({
+							type: OpenLayers.Filter.Comparison.EQUAL_TO,
+							property: filterData.property,
+							value: filterData.value
+						} );
+					break;
+					default :
+/*						theFilter = new OpenLayers.Filter.Comparison({
+							type: OpenLayers.Filter.Comparison.EQUAL_TO,
+							property: "srstyle",
+							value: tmpRule["symbolizer_id"]
+						} );
+*/
+					break;	
+				}
+
 				if( theOptions['rules'] == null) {
 					theOptions['rules'] = [];
+					theOptions['rules'].push(new OpenLayers.Rule({ elseFilter: true }) );
 				}
 				if( theFilter != null && theStyleSymbolizers[tmpRule["symbolizer_id"]] != null ) {
-					theOptions['rules'].push(new OpenLayers.Rule({ filter: theFilter, symbolizer: theStyleSymbolizers[tmpRule["symbolizer_id"]] }) );
+					theOptions['rules'].push(new OpenLayers.Rule({ filter: theFilter, symbolizer: theStyleSymbolizers[tmpRule["symbolizer_id"]], elseFilter: tmpRule["elsefilter"] }) );
+				} else if( theFilter != null) {
+					theOptions['rules'].push(new OpenLayers.Rule({ symbolizer: theStyleSymbolizers[tmpRule["symbolizer_id"]], elseFilter: tmpRule["elsefilter"] }) );
 				}	
 			}
-		}	
+		}
+		theOptions.defaultsPerSymbolizer = false;	
+
 		theStyleMaps[theStyle.stylemap_id][theStyle.render_type] = new OpenLayers.Style( theStyleSymbolizers[theStyle.defaultsymbolizer_id] , theOptions);
 
 	}	

@@ -125,6 +125,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 			$rows = $this->restTable->fetchAll($select);
 		//	print Zend_Json::encode($rows->toArray());
 			$this->getResponse()->appendBody( Zend_Json::encode($rows->toArray()) );
+			$this->getResponse()->setHttpResponseCode(200);
 
 			return;
     }
@@ -134,6 +135,7 @@ abstract class Srdata_RestController extends Zend_Rest_Controller
 		{
 			$this->logger->log($this->tableName." Get (READ) Action Called: ", Zend_Log::DEBUG);	
 			$this->indexAction();
+			$this->getResponse()->setHttpResponseCode(200);
 			return;
 		}
 
