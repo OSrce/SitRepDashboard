@@ -76,6 +76,16 @@ function srd_layer( ) {
 		}
 
 		this.srd_styleArr = [];
+
+		this.defaultAttributes = {
+			label: '',
+			fillColor: '#ee9900',
+			fillOpacity: 0.5,
+			strokeColor : '#ee9900',
+			strokeWidth : 1,
+			strokeOpacity : 1,
+			pointRadius: 6
+		}
 		
 		this.srd_featureAttributes = {
 //			setStyles: '${styleFunction}',
@@ -455,6 +465,21 @@ srd_layer.prototype.loadData = function( ) {
 					this.layer.events.register("featureadded", this, this.srd_create);
 					this.layer.events.register("featuremodified", this, this.srd_update);
 					this.layer.events.register("featureremoved", this, this.srd_delete);
+					this.layer.events.register("featureselected", this, this.onFeatureSelect);
+					this.layer.events.register("featureunselected", this, this.onFeatureUnselect);
+
+/*					this.selectControl = new OpenLayers.Control.SelectFeature(
+						this.layer, {
+							onSelect: function(theFeature) { 
+								this.onFeatureSelect(theFeature) 
+							}.bind(this), 
+							onUnselect: function(theFeature) { 
+								this.onFeatureUnselect(theFeature) 
+							}.bind(this)
+						} 
+					);
+	*/
+
 
 				}.bind(this) );
 
@@ -568,7 +593,11 @@ srd_layer.prototype.loadData = function( ) {
 			} );
 
 
-	this.srd_drawControls.select = new OpenLayers.Control.ModifyFeature(this.layer);
+	this.srd_drawControls.select = new OpenLayers.Control.ModifyFeature(this.layer,
+		{
+//			selectControl: this.selectControl
+		}
+	);
 /*
   	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer, {
 		onSelect: function(theFeature) { 
@@ -654,9 +683,12 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 
 
 // BEGIN FUNC onFeatureSelect
-srd_layer.prototype.onFeatureSelect = function(theFeature) {
+srd_layer.prototype.onFeatureSelect = function(evt) {
+	var theFeature = evt.feature;
 	console.log("Feature selected: "+theFeature.db_id);
-//	this.editPalette.setFeatureAttributes( theFeature.attributes);
+
+	this.editPalette.setFeatureAttributes( theFeature );
+
 //	theFeature.
 	this.selectedFeature = theFeature;
 	if(this.options.format == "NONE") {	
@@ -682,7 +714,8 @@ srd_layer.prototype.onPopupClose = function(evt) {
 	this.selectControl.unselect(this.selectedFeature);
 }
 // BEGIN FUNC onFeatureUnselect
-srd_layer.prototype.onFeatureUnselect = function(theFeature) {
+srd_layer.prototype.onFeatureUnselect = function(evt) {
+	var theFeature = evt.feature;
 	console.log("Feature unselected: "+theFeature.db_id);
 //	this.editPalette.setFeatureAttributes( this.srd_featureAttributes );
 	if(this.options.format == "NONE") {	
@@ -1317,9 +1350,15 @@ srd_layer.prototype.srd_beforeAdd = function( theObject ) {
 	var feature = theObject.feature;
 	if( feature.attribute == null || feature.attribute.srstyle == null ) {
 		for(var attrName in this.srd_styleMap.styles[this.renderIntent].defaultStyle) {
-			var attrVal = this.srd_styleMap.styles[this.renderIntent].defaultStyle[attrName];
+			var attrVal = this.getFeatureAttribute(feature, attrName);
+			if(attrVal == null) {
+				attrVal = this.defaultAttributes[attrName];
+				this.setFeatureAttribute(feature, attrName, attrVal);
+			}
+
+//			var attrVal = this.srd_styleMap.styles[this.renderIntent].defaultStyle[attrName];
 //			console.log("attrName = "+attrName+" attrVal = "+attrVal);
-			this.srd_checkAndSetStyleAttr(feature, attrName, attrVal);
+//			this.srd_checkAndSetStyleAttr(feature, attrName, attrVal);
 		}
 /// THE FOLLOWING CODE CHECKS FOR VARIABLES SET AS ATTRIBUTE IN RULE SYMBOLIZERS
 //  NOT NEEDED SINCE THEY EXTEND BY DEFAULT.
@@ -1452,6 +1491,89 @@ srd_layer.prototype.compareAndUpdateFeature = function(oldFeat, newFeat) {
 	return;
 }
 // END compareAndUpdateFeature
+
+
+// BEGIN getAttribute ( attribute ) 
+// RETURNS Attribute value -> returnValue.
+srd_layer.prototype.getAttribute = function( attribute ) {
+	if(this.selectedFeature != null ) {
+		return this.getFeatureAttribute(attribute);
+	}
+	if( this.selectedPreset != null) {
+
+	}
+	var returnValue = null;
+
+	return returnValue;	
+}
+// END getAttribute ( attribute )
+
+
+
+// BEGIN getFeatureAttribute ( attribute ) 
+// RETURNS Attribute value.
+srd_layer.prototype.getFeatureAttribute = function( feature, attribute ) {
+	var attrVal = null;
+	if( feature.attribute == null || feature.attribute.srstyle == null ) {
+		attrVal = this.srd_styleMap.styles[this.renderIntent].defaultStyle[attribute];
+	} else {
+		for( var i in  this.srd_styleMap.styles[this.renderIntent].rules ) {
+			if( this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer && this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer.id == feature.attribute.srstyle) {
+				attrVal = this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer[attribute];
+			}
+		}
+	}
+	if(attrVal != null ) {
+		var dynamicVarRegEx = /\$\{.*\}/;
+		var dynamicVal = dynamicVarRegEx.exec( String(attrVal) ); 
+		if ( dynamicVal != null ) {
+		// VALUE IS DYNAMIC!
+			dynamicVal = String(dynamicVal);
+			dynamicVal = dynamicVal.substr(2, dynamicVal.length-3);
+			console.log("GetAttribute : Feature ID :"+feature.id+" attribute :"+attribute+" value :"+attrVal+" dynVal :"+dynamicVal);
+			if(feature.attribute != null && feature.attribute[dynamicVal] != null) {
+				attrVal = feature.attribute[dynamicVal];
+				console.log("dynVal Val :"+attrVal);
+			}
+		}
+	}
+	return attrVal;
+}
+// END getFeatureAttribute ( attribute )
+
+// BEGIN setFeatureAttribute ( feature, attribute, attrVal) 
+// RETURNS BOOL.
+srd_layer.prototype.setFeatureAttribute = function( feature, attribute, value ) {
+	console.log("SetAttribute : Feature ID :"+feature.id+" attribute :"+attribute+" value :"+value);
+	var attrVal = null;
+	if( feature.attribute == null || feature.attribute.srstyle == null ) {
+		attrVal = this.srd_styleMap.styles[this.renderIntent].defaultStyle[attribute];
+	} else {
+		for( var i in  this.srd_styleMap.styles[this.renderIntent].rules ) {
+			if( this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer && this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer.id == feature.attribute.srstyle) {
+				attrVal = this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer[attribute];
+			}
+		}
+	}
+	if(attrVal != null ) {
+		var dynamicVarRegEx = /\$\{.*\}/;
+		var dynamicVal = dynamicVarRegEx.exec( String(attrVal) ); 
+		if ( dynamicVal != null ) {
+		// VALUE IS DYNAMIC!
+			dynamicVal = String(dynamicVal);
+			dynamicVal = dynamicVal.substr(2, dynamicVal.length-3);
+			feature.attribute[dynamicVal] = value;
+			return true;
+		}
+	}
+	return false;
+}
+// END getFeatureAttribute ( attribute )
+
+
+
+
+
 
 
 

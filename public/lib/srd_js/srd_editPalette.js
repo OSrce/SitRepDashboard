@@ -64,7 +64,15 @@ srd_editPalette.prototype.removeFromContainer = function(theContainer) {
 
 
 // BEGIN setFeatureAttributes
-srd_editPalette.prototype.setFeatureAttributes = function (theAttributes) {
+srd_editPalette.prototype.setFeatureAttributes = function (feature) {
+	// this function is to set the appropriate values
+	// of the attributes of the feature selected to the 
+	// controls in the editPalette.  We will use the attributes
+	// in the defaultStyle symbolizer unless a feature.attributes.srstyle
+	// is specified.  In either case, if the symbolizer value is a
+	// feature.attribute variable then the control is 'editable' otherwise
+	// it should be read only.
+
 	if(theAttributes != this.srd_featureAttributes) {
 		this.srd_featureAttributes = theAttributes;
 		for(conId in this.controlArray) {
@@ -277,23 +285,72 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 // BEGIN getPresets
 srd_editPalette.prototype.getPresets = function() {
 	dojo.addOnLoad(function() {
-		this.styleArr = this.srd_layer.srd_styleArr;
+		console.log("editPalette getPresets for :"+this.srd_layer.options.name);
+//		this.styleArr = this.srd_layer.srd_styleArr;
+		this.srd_styleMap = this.srd_layer.srd_styleMap;
+		this.renderIntent = this.srd_layer.renderIntent;
 		var presetsCP = new dijit.layout.ContentPane( );
 		this.presetsContainer.addChild(presetsCP);
 		this.presetsSource = new dojo.dnd.Source( presetsCP.domNode );
-		this.presetsArr = [];
-		for( var styleId in this.styleArr) {
-			this.presetsArr.push(this.styleArr[styleId] );
+//		this.presetsArr = [];
+//		for( var styleId in this.styleArr) {
+//			this.presetsArr.push(this.styleArr[styleId] );
+//		}
+//		this.presetsSource.insertNodes( false, this.presetsArr );
+	
+		if( this.srd_styleMap == null || this.renderIntent == null) {
+			return;
 		}
-		this.presetsSource.insertNodes( false, this.presetsArr );
 
+
+		this.presetNodeArr = [];
+		// NEED TO MAKE DND ITEM FOR DEFAULT STYLE
+		if( this.srd_styleMap.styles[this.renderIntent].defaultStyle ) {
+			var theSym = this.srd_styleMap.styles[this.renderIntent].defaultStyle;
+			// the Symbolizer is for points, lines, and polys
+			if ( theSym.externalGraphic == null || theSym.externalGraphic == ""  ) {
+				this.presetNodeCreator(theSym, 'point');
+				this.presetNodeCreator(theSym, 'line');
+				this.presetNodeCreator(theSym, 'polygon');
+			// the Symbolizer is for an externalGraphic
+			} else {
+				this.presetNodeCreator(theSym, 'graphic');
+			}
+		}
+		// NEED TO MAKE DND ITEM FOR DEFAULT STYLE
+		for( var i in this.srd_styleMap.styles[this.renderIntent].rules) {
+			if(this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer) {
+				var theSym = this.srd_styleMap.styles[this.renderIntent].rules[i].symbolizer;
+				// the Symbolizer is for points, lines, and polys
+				if ( theSym.externalGraphic == null || theSym.externalGraphic == ""  ) {
+					this.presetNodeCreator(theSym, 'point');
+					this.presetNodeCreator(theSym, 'line');
+					this.presetNodeCreator(theSym, 'polygon');
+				// the Symbolizer is for an externalGraphic
+				} else {
+					this.presetNodeCreator(theSym, 'graphic');
+				}
+			}
+		}
+
+		this.presetsSource.insertNodes( false, this.presetNodeArr );
 
 	}.bind(this) );
 }
 // END getPresets()
 
 
+// BEGIN presetNodeCreator
+srd_editPalette.prototype.presetNodeCreator = function(item, hint) {
+//	var node = domConstruct.toDom(stringUtil.substitute(
 
+//	);
+		var node = dojo.create('div', { innerHtml: item.id } );
+
+//	return { node: node, data: item, type: type };
+		this.presetNodeArr.push(  { node: node, data: item, type: hint } );
+
+}
 
 
 
