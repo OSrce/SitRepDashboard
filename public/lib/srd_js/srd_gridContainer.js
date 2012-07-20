@@ -1,6 +1,8 @@
-dojo.require("dojox.layout.GridContainer");
+require(["dojo/_base/declare", 
+					"dojox/layout/GridContainer"
+], function(declare,GridContainer) {
 
-dojo.declare(
+	declare(
 	"srd_gridContainer", 
 	dojox.layout.GridContainer, 
 	{
@@ -15,5 +17,5 @@ dojo.declare(
 
 } );
 
-
+} );
 

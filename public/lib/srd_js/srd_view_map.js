@@ -7,11 +7,16 @@
 //
 //
 /////////////////////////////////
+require( [
+	"dojo/_base/declare",
+	"srd_js/srd_view",
+], function(declare, srd_view) {
+
 
 //srd_view_map class definition using dojo.declare 
-dojo.declare( 
+declare( 
 	'srd_view_map',
-	srd_view,
+	[srd_view],
 	{
 		type: 'map',
 		// MAP VARIABLES 
@@ -271,7 +276,7 @@ dojo.declare(
 );
 
 
-
+});
 
 
 

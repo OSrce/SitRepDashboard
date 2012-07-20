@@ -8,12 +8,17 @@
 //
 /////////////////////////////////
 
-dojo.require("dijit.form.DateTextBox");
+require([
+	"dijit/form/DateTextBox",
+	"dojo/_base/declare",
+	"srd_js/srd_view"
+], function(declare, srd_view) {
+
 
 //srd_view class definition using dojo.declare 
 dojo.declare( 
 	'srd_view_cfssingle',
-	srd_view,
+	[srd_view],
 	{
 		srd_layerArr : null,
 		srd_selLayer : null,
@@ -349,6 +354,6 @@ dojo.declare(
 
 
 
-
+}) ;
 
 

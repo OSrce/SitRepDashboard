@@ -56,11 +56,16 @@
 		
 		<link rel="stylesheet" type="text/css" href="lib/srd_css/SitRep_Dark.css" />
 
+<!--
 		<script type="text/javascript" src="lib/SR_Dojo/dojo/dojo.js" ></script>
 		<script type="text/javascript" src="lib/SR_Dojo/dojo/srd_dojo.js" ></script>
+-->
+		<script data-dojo-config="async: true" src="lib/dojo/dojo.js"></script>
+
 
 		<script src="lib/SR_OpenLayers/OpenLayers.js"></script>
 
+<!--
 		<script src="lib/srd_js/srd_gridContainer.js"></script>
 		<script src="lib/srd_js/srd_editPalette.js"></script>
 		<script src="lib/srd_js/srd_layer.js"></script>
@@ -72,14 +77,53 @@
 		<script src="lib/srd_js/srd_view_opstrack.js"></script>
 		<script src="lib/srd_js/srd_edit.js"></script>
 		<script src="lib/srd_js/srd_document.js"></script>
+-->
 
 		<script type="text/javascript">
+
+		var dojoConfig = {
+			baseUrl: "lib",
+			tlmSiblingOfDojo: false,
+			packages: [
+				{ name: "dojo", location: "dojo" },
+				{ name: "dijit", location: "dijit" },
+				{ name: "dojox", location: "dojox" },
+				{ name: "srd_js", location: "srd_js" }
+			]
+		};
+		loadsrd = {};
+
+		require([
+			"dojo/dom",
+			"dijit/registry",
+			"dojo/parser",
+			"dojo/_base/declare",
+			"dojox/layout/GridContainer",
+			"dijit/form/Form",
+			"srd_js/srd_gridContainer",
+			"srd_js/srd_editPalette",
+			"srd_js/srd_layer",
+			"srd_js/srd_view",
+			"srd_js/srd_view_opstrack",
+//			"srd_js/srd_view_map",
+//			"srd_js/srd_view_datagrid",
+//			"srd_js/srd_view_admin",
+			"srd_js/srd_view_cfssingle",
+			"srd_js/srd_document",
+			"dojo/domReady!"
+
+		], function( dojo, dom, registry, parser, Form, srd_document) {
 			var srd = new srd_document();	
+<!--
 <?php
-       echo "srd.siteLeftImage='".$this->srd_login_opts['leftimage']."';\n";
-       echo "srd.siteRightImage='".$this->srd_login_opts['rightimage']."';\n";
-       echo "srd.siteTitle='".$this->srd_login_opts['title']."';\n";
+       echo "loadsrd.siteLeftImage='".$this->srd_login_opts['leftimage']."';\n";
+       echo "loadsrd.siteRightImage='".$this->srd_login_opts['rightimage']."';\n";
+       echo "loadsrd.siteTitle='".$this->srd_login_opts['title']."';\n";
 ?>
+-->
+
+		} );
+
 		</script>
 
 

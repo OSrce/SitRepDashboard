@@ -8,13 +8,17 @@
 //
 /////////////////////////////////
 
-dojo.require('dojox.timing');
-dojo.require('dojo.store.Observable');
+require([
+	'dojox/timing',
+	'dojo/store/Observable',
+	"dojo/_base/declare",
+	"srd_js/srd_view"
+], function (declare, srd_view) {
 
 //srd_view class definition using dojo.declare 
-dojo.declare( 
+declare( 
 	'srd_view_opstrack',
-	srd_view,
+	[srd_view] ,
 	{
 		type:'opstrack',
 		srd_queryArr : null,
@@ -397,7 +401,6 @@ dojo.declare(
 			store.query = function(query, directives) {
 				directives.doNotEvictList = [];
 				var results = masterStore.query(query, directives);
-//				results.forEach(function(object) {
 				results.then(function(objects) {
 //TEST
 					var cacheResults = cachingStore.query();
@@ -557,10 +560,9 @@ dojo.declare(
 
 
 
-	}
-);
+	} );
 
-
+}  );
 
 
 

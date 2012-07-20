@@ -1,21 +1,29 @@
 
+/*
 if(dojo.isIE) {
-	dojo.require("dojox.form.uploader.plugins.IFrame");
+	"dojox.form.uploader.plugins.IFrame");
 } else if(dojo.isKhtml) {
-	dojo.require("dojox.form.uploader.plugins.HTML5");
+	"dojox.form.uploader.plugins.HTML5");
 } else {
-	dojo.require("dojox.form.uploader.plugins.Flash");
+	"dojox.form.uploader.plugins.Flash");
 }
+*/
 
-dojo.require("dojox.layout.GridContainer");
+require( [
+	"dojox/layout/GridContainer",
+	"dojox/data/QueryReadStore",
+	"dojox/data/JsonRestStore",
+	"dojo/store/DataStore",
+	"dojo/store/JsonRest",
+	"dojo/store/Cache",
+	"dojo/_base/declare",
+	"srd_js/srd_layer",
+	"srd_js/srd_view",
+//	"srd_js/srd_view_map",
+	"dojo/domReady!"
+] , function( declare ) {
 
-dojo.require("dojox.data.QueryReadStore");
-dojo.require("dojox.data.JsonRestStore");
-dojo.require("dojo.store.DataStore");
-dojo.require("dojo.store.JsonRest");
-dojo.require("dojo.store.Cache");
-
-dojo.provide("ComboBoxReadStore");
+/*dojo.provide("ComboBoxReadStore");
 dojo.declare(
 	"ComboBoxReadStore",
 	dojox.data.QueryReadStore,
@@ -26,10 +34,13 @@ dojo.declare(
 		}
 	}
 );
+*/
 
 
 //srd_document CLASS 
-function srd_document() {
+declare( "srd_document", null, {
+
+	constructor : function() {
 	//THE UI VARS
 	this.srd_container = null;
 	this.srd_menuBar = null;
@@ -138,11 +149,24 @@ function srd_document() {
 		}
 	}
 
-}
+// BEGIN ASSOCIATE DATA FROM SERVER
+	this.staticVals = loadsrd.staticVals;
+	this.srd_queryArr = loadsrd.srd_queryArr;
+	this.srd_wlayoutArr = loadsrd.srd_wlayoutArr;
+	this.srd_presetArr = loadsrd.srd_presetArr;
+	this.siteLeftImage= loadsrd.siteLeftImage;
+	this.siteRightImage= loadsrd.siteRightImage;
+	this.siteTitle = loadsrd.title;
+
+// END ASSOCIATE DATA FROM SERVER
+
+
+
+},
 // END srd_document CLASS DEF
 
 // SRD_DOCUMENT CONSTRUCTOR
-srd_document.prototype.srd_init = function() {
+srd_init : function() {
 // srd_init : called by SitRepDashboard when we are ready to 
 // load initial values and the first 'screen' we will see :
 // map, admin, or data.
@@ -293,11 +317,11 @@ srd_document.prototype.srd_init = function() {
 
 //	this.srd_displayMenuBar();
 
-}
+},
 // END SRD_DOCUMENT CONSTRUCTOR
 
 // BEGIN: LOAD FROM LOCAL STORE
-srd_document.prototype.loadFromLocalStore = function() {
+loadFromLocalStore : function() {
 	//BEGIN CLEAR STORE LINE - DEBUG ONLY
 	this.srd_localStore.clear("srd");	
 	//END CLEAR STORE LINE - DEBUG ONLY
@@ -312,18 +336,18 @@ srd_document.prototype.loadFromLocalStore = function() {
 //		console.log("Loading Layer Settings from LocalStorage:"+this.srd_layerArr[i].name);
 	}
 	return 0;
-}
+},
 
 // END: LOAD FROM LOCAL STORE
 
 
 
-srd_document.prototype.storePutHandler = function() {
+storePutHandler : function() {
 //	console.log("LocalStorage Put called!");
-}
+},
 
 
-srd_document.prototype.loadDefaults = function() {
+loadDefaults : function() {
 	if( this.srd_xmlStore == null ) {
 		// READ the srd_settings.xml file and load it into a dojo.data object.
 		this.srd_xmlStore = new dojox.data.XmlStore({ 
@@ -341,10 +365,10 @@ srd_document.prototype.loadDefaults = function() {
 			this.errorOnLoad(errScope);
 		}.bind(this)
 	});
-}
+},
 
 
-srd_document.prototype.setValue = function(varName, varValue) {
+setValue : function(varName, varValue) {
 	switch(String(varName) ) {
 		case "single_user" :
 		case "runFromServer" :
@@ -365,15 +389,15 @@ srd_document.prototype.setValue = function(varName, varValue) {
 			this.staticVals[varName] = String(varValue);
 	}
 	return 0;
-}
+},
 
 
-srd_document.prototype.errorOnLoad = function(errorMessage) {
+errorOnLoad : function(errorMessage) {
 	alert("Error Loading srd_setttings.xml : "+errorMessage);
 	
-}
+},
 
-srd_document.prototype.defaultSettingsLoaded = function(items,request) {
+defaultSettingsLoaded : function(items,request) {
 	this.srd_items = items;
 	for(var i=0;i<this.srd_items.length;i++) {
 //		var itemName = this.srd_xmlStore.getIdentity( this.srd_items[i] ); 
@@ -452,9 +476,9 @@ srd_document.prototype.defaultSettingsLoaded = function(items,request) {
 		this.srd_localStore.put("staticVals", this.staticVals,this.storePutHandler,"srd");
 
 //		this.map_init();
-}
+},
 
-srd_document.prototype.srd_createWhiteboard = function() {
+srd_createWhiteboard : function() {
 	var theDate = new Date();
 	var theFrmt = "yyyyMMdd_HHmm";
 	var name = "WhiteBoard_"+dojo.date.locale.format(theDate,  {
@@ -463,9 +487,9 @@ srd_document.prototype.srd_createWhiteboard = function() {
         });
 	var url ="/srdata/features/";
 	this.srd_createLayer(name,url);
-}
+},
 	
-srd_document.prototype.srd_createLayer = function(theName,theUrl) {
+srd_createLayer : function(theName,theUrl) {
 //	var tmpLayer = new srd_layer();
 	var tmpOptions = {};
 	tmpOptions.name = theName;
@@ -510,9 +534,10 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						}
 					}.bind(tmpOptions)  );
 
-				}
+},
+// END srd_createLayer
 
-				srd_document.prototype.srd_displayMenuBar = function() {
+				srd_displayMenuBar : function() {
 					dojo.addOnLoad(function() {
 						if(this.srd_menuBar == null) {
 							this.srd_menuBar = new dijit.MenuBar( { 
@@ -791,9 +816,10 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.srd_container.addChild(this.srd_menuBar);
 					}.bind(this) );
 					return;
-				}
+},
+// END
 
-				srd_document.prototype.srd_toggleLocationTracking = function(menuItem) {
+srd_toggleLocationTracking : function(menuItem) {
 					dojo.addOnLoad( function() {
 						if(menuItem.checked == true) {
 							console.log("Enabling Location Tracking");
@@ -809,11 +835,11 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.selectedView.toggleLocationTracking(menuItem.checked);
 					return;
 					}.bind(this) );
-				}
+},
 
 
 
-				srd_document.prototype.srd_toggleEditPanel = function(menuItem) {
+srd_toggleEditPanel : function(menuItem) {
 					dojo.addOnLoad( function() {
 						if(menuItem.checked == true) {
 							if(this.srd_toolbar == null) {
@@ -929,9 +955,9 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 					}
 					return;
 					}.bind(this) );
-				}
+},
 
-				srd_document.prototype.saveLayer = function( layerId ) {
+saveLayer : function( layerId ) {
 					var formatGml = new OpenLayers.Format.GML( { 
 							'internalProjection' : new OpenLayers.Projection("EPSG:900913"),
 							'externalProjection' : new OpenLayers.Projection("EPSG:4326")
@@ -950,9 +976,9 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 							document.location.href = "lib/srd_php/UploadLayer.php?fileName="+this.content.fileName;
 						}
 					} );
-				}
+},
 
-				srd_document.prototype.openFile = function() {
+openFile : function() {
 				//	dojo.addOnLoad(function() {
 						if(this.fileSelDialog != null) {
 							this.fileSelDialog.show();
@@ -1021,10 +1047,10 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 
 				//	} );
 					
-				}
+},
 
 
-				srd_document.prototype.srd_selectEditLayer = function( theId ) {
+srd_selectEditLayer : function( theId ) {
 					console.log("srd_selectEditLayer Called:"+theId);
 					if(theId == this.srd_selLayer.id) {
 						return;
@@ -1038,10 +1064,10 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 					this.srd_layerEditMenuDropDown.set("label",this.srd_selLayer.options.name);
 					this.srd_selLayer.editPalette.activateDrawControl();
 				//	console.log("srd_selectEditLayer Finished");
-				}
-				// END selectEditLayer FUNCTION
-				// BEGIN changeWindowLayout FUNCTION
-				srd_document.prototype.srd_changeWindowLayout = function(wlayout) {
+},
+// END selectEditLayer FUNCTION
+// BEGIN changeWindowLayout FUNCTION
+srd_changeWindowLayout : function(wlayout) {
 //					dojo.ready( function() {
 					if( wlayout != this.selected_wlayout)	{
 						console.log("Changing Window Layout from "+this.selected_wlayout+" TO "+wlayout);
@@ -1119,11 +1145,11 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 //						}.bind(this) );
 					}
 //					}.bind(this) );
-				}
-				// END changeWindowLayout FUNCTION
+},
+// END changeWindowLayout FUNCTION
 
-				// BEGIN changeViewGridDimensions FUNCTION
-				srd_document.prototype.srd_changeViewGridDimensions = function(theDimType,theDim) {
+// BEGIN changeViewGridDimensions FUNCTION
+srd_changeViewGridDimensions : function(theDimType,theDim) {
 					console.log("changeViewGridDim called: "+theDimType+", val: "+theDim);
 					if(theDimType == 'x') {
 						if(theDim > this.staticVals.view_layout_x) {
@@ -1185,18 +1211,18 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.staticVals.view_layout_x = theDim;
 					}
 					this.srd_container.resize();
-				}
+},
 
-				srd_document.prototype.srd_updateViewMenu = function() {
+srd_updateViewMenu : function() {
 					var theLabel = "Selected View : ";
 					if(this.selectedView) {
 						theLabel = theLabel+this.selectedView.data.type+" "+this.selectedView.data.xPos+","+this.selectedView.data.yPos;
 					}
 					this.srd_viewMenuSelected.set('label', theLabel);
-				}
+},
 
 
-				srd_document.prototype.srd_changeViewType = function(theType) {
+srd_changeViewType : function(theType) {
 					if(this.selectedView && this.selectedView.data.type != theType) {	
 						var xPos = this.selectedView.data.xPos;
 						var yPos = this.selectedView.data.yPos;
@@ -1210,9 +1236,9 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						this.selectedView = this.viewArr[xPos][yPos];
 						this.viewContainer.resize();
 					}
-				}
-				// BEGIN getView FUNCTION
-				srd_document.prototype.getView = function(theId) {
+},
+// BEGIN getView FUNCTION
+getView : function(theId) {
 					for(var xPos=0;xPos<this.staticVals.view_layout_x;xPos++) {
 						if( this.staticVals.view_data[xPos] ) {
 							for(var yPos=0;yPos<this.staticVals.view_layout_y;yPos++) {
@@ -1227,17 +1253,18 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 						}
 					}
 					return null;
-				}	
-				// END getView FUNCTION
-				// FUNCTION TO DO ANY CLEAN UP NEEDED 
-				// THEN REDIRECT TO /login/logout
-				srd_document.prototype.logout = function() {	
+},	
+// END getView FUNCTION
+// FUNCTION TO DO ANY CLEAN UP NEEDED 
+// THEN REDIRECT TO /login/logout
+logout : function() {	
 					console.log("Logging Out User : "+this.staticVals.user_lastname);
 					window.location.href = "/login/index/logout";	
 
-				}
-				// BEGIN toggleLayoutNameDisplay
-				srd_document.prototype.updateLayoutNameDisplay = function() {
+},
+	
+// BEGIN toggleLayoutNameDisplay
+updateLayoutNameDisplay : function() {
 					// CHECK IF showname is set to true and if so display layout name.
 
 					if(this.nameCP != null) {
@@ -1276,12 +1303,12 @@ srd_document.prototype.srd_createLayer = function(theName,theUrl) {
 					}
 	
 				return;
-				}
-				// END toggleLayoutNameDisplay
+},
+// END toggleLayoutNameDisplay
 			
 
 // BEGIN toggleAutoRefresh
-srd_document.prototype.toggleAutoRefresh = function() {
+toggleAutoRefresh : function() {
 	if(this.staticVals.autoRefresh != null ) {
 		if(this.staticVals.autoRefresh == true) {
 			this.srd_timer = new dojox.timing.Timer(15000);
@@ -1295,12 +1322,12 @@ srd_document.prototype.toggleAutoRefresh = function() {
 		}
 	}
 	return;
-}
+},
 // END toggleAutoRefresh
 
 // BEGIN sendRefresh
 // ITERATE THROUGH ALL VIEWS AND SEND REFRESH CMD TO sr_layers.
-srd_document.prototype.sendRefresh = function() {
+sendRefresh : function() {
 		console.log("SRD DOC sendRefresh Called!");
 		for( var i in this.srd_layerArr) {
 			if( this.srd_layerArr[i].options != null ) {
@@ -1310,11 +1337,11 @@ srd_document.prototype.sendRefresh = function() {
 			}
 		}
 		return;
-}
+},
 // END sendRefresh
 
 // BEGIN srd_changeTheme
-srd_document.prototype.srd_changeTheme = function( theThemeId) {
+srd_changeTheme : function( theThemeId) {
 	console.log("SRD DOC srd_changeTheme Called!");
 	var currentTheme = dojo.attr(dojo.body(), 'class');
 	if(this.srd_themeArr[theThemeId] != null && currentTheme != this.srd_themeArr[theThemeId].classType ) {
@@ -1322,11 +1349,11 @@ srd_document.prototype.srd_changeTheme = function( theThemeId) {
 		this.srd_container.resize();
 	}
 	return;
-}
+},
 // END srd_changeTheme
 
 // BEGIN loadedViews
-srd_document.prototype.loadedViews = function() {
+loadedViews : function() {
 	console.log("SRD DOC loadedViews Called!");
 	var allViewsLoaded = true;
 	for(var tmpX in this.viewArr) {
@@ -1354,10 +1381,10 @@ srd_document.prototype.loadedViews = function() {
 }
 // END loadedViews
 
+} );
 
 
-
-
+} );
 
 
 

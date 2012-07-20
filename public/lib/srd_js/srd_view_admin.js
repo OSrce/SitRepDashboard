@@ -9,9 +9,15 @@
 /////////////////////////////////
 
 //srd_view class definition using dojo.declare 
-dojo.declare( 
+require( [
+	"dojo/_base/declare",
+	"srd_js/srd_view"
+], function(declare, srd_view) {
+
+
+declare( 
 	'srd_view_admin',
-	srd_view,
+	[srd_view],
 	{
 		srd_layerArr : null,
 		srd_selLayer : null,
@@ -286,7 +292,7 @@ dojo.declare(
 );
 
 
-
+} );
 
 
 

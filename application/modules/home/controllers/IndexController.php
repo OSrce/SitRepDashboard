@@ -71,18 +71,18 @@ class Home_IndexController extends Zend_Controller_Action
 
 			$this->getResponse()->appendBody( "<script type=\"text/javascript\">\n") ;
 			// BEGIN LOAD STATIC VALS INTO CLIENTS JS.			
-			$this->getResponse()->appendBody( "srd.staticVals = ");
+			$this->getResponse()->appendBody( "loadsrd.staticVals = ");
 			$this->getResponse()->appendBody( Zend_Json::encode($staticVals)."\n");
 			// END LOAD STATIC VALS
 
 			$serverToClientArr = array();
-			$serverToClientArr['queries'] = 'srd.srd_queryArr';
+			$serverToClientArr['queries'] = 'loadsrd.srd_queryArr';
 			$serverToClientArr['layers'] = 'var theLayers';
 			$serverToClientArr['styles'] = 'var theStyles';
 			$serverToClientArr['stylesymbolizers'] = 'var theStyleSymbolizers';
 			$serverToClientArr['stylerules'] = 'var theStyleRules';
-			$serverToClientArr['wlayout'] = 'srd.srd_wlayoutArr';
-			$serverToClientArr['presets'] = 'srd.srd_presetArr';
+			$serverToClientArr['wlayout'] = 'loadsrd.srd_wlayoutArr';
+			$serverToClientArr['presets'] = 'loadsrd.srd_presetArr';
 
 			foreach($this->_data as $resType => $resArr) {
 				// BEGIN LOAD srdQueryArr data :
@@ -163,9 +163,9 @@ class Home_IndexController extends Zend_Controller_Action
 			// END LOAD srdLayerArr data
 */
 			//PUT THE LINKS TO THE SITE SPECIFIC IMAGES IN JS.
-			$this->getResponse()->appendBody("srd.siteLeftImage='".$this->view->srd_login_opts['leftimage']."';\n" );
-			$this->getResponse()->appendBody("srd.siteRightImage='".$this->view->srd_login_opts['rightimage']."';\n" );
-			$this->getResponse()->appendBody("srd.siteTitle='".$this->view->srd_login_opts['title']."';\n" );
+			$this->getResponse()->appendBody("loadsrd.siteLeftImage='".$this->view->srd_login_opts['leftimage']."';\n" );
+			$this->getResponse()->appendBody("loadsrd.siteRightImage='".$this->view->srd_login_opts['rightimage']."';\n" );
+			$this->getResponse()->appendBody("loadsrd.siteTitle='".$this->view->srd_login_opts['title']."';\n" );
 
 			$this->getResponse()->appendBody( "\n</script>\n");
 			$this->getResponse()->appendBody( "\n</head>\n");

@@ -1,0 +1,16 @@
+
+mkdir certs
+cd certs
+
+openssl genrsa -out sitrepdev.key 1024
+
+openssl req -new -key sitrepdev.key -out sitrepdev.csr
+
+openssl x509 -req -days 3650 -in sitrepdev.csr -signkey sitrepdev.key -out sitrepdev.crt
+
+sudo cp sitrepdev.key /etc/pki/tls/private/.
+sudo cp sitrepdev.crt /etc/pki/tls/certs/.
+
+
+
+

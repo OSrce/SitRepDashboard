@@ -8,12 +8,15 @@
 //
 /////////////////////////////////
 
-dojo.require("dojox.grid.EnhancedGrid");
-dojo.require("dojox.grid.enhanced.plugins.NestedSorting");
-dojo.require("dojox.grid.enhanced.plugins.Pagination");
+require([ 
+	"dojo/_base/declare",
+	"dojox/grid/EnhancedGrid",
+	"dojox/grid/enhanced/plugins/NestedSorting",
+	"dojox/grid/enhanced/plugins/Pagination"
+], function(declare, EnhancedGrid) {
 
 //srd_view class definition using dojo.declare 
-dojo.declare( 
+declare( 
 	'srd_view',
 	null,
 	{
@@ -183,7 +186,10 @@ dojo.declare(
 		//
 	}
 );
+// END srd_view
 
+
+} );
 
 
 

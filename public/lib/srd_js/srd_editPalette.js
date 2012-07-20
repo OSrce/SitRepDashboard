@@ -1,13 +1,15 @@
+require([
+	"dojo/_base/declare",
+	"dijit/form/Form",
+	"dijit/form/NumberSpinner",
+	"dijit/layout/ContentPane",
+	"dijit/layout/BorderContainer",
+	"dojox/layout/ExpandoPane"
+], function(Form, NumberSpinner,ContentPane,BorderContainer,ExpandoPane, declare) {
 
-dojo.require("dijit.form.Form");
-dojo.require("dijit.form.NumberSpinner");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("dijit.layout.BorderContainer");
-dojo.require("dojox.layout.ExpandoPane");
-
-
-function srd_editPalette (theSrdLayer) {
-//	this.layoutContainer = new dijit.layout.LayoutContainer( {
+	declare(
+	"srd_editPalette", null, {
+	constructor: function(theSrdLayer) {
 	this.layoutContainer = new dojox.layout.ExpandoPane( {
 		style: "height:750px;margin:0px;border:9px;padding:9px;margin-right:16px;overflow:auto;",
 		region: 'top',
@@ -43,28 +45,28 @@ function srd_editPalette (theSrdLayer) {
 
 	// END BUILD THE PRESETS
 
-}
+},
 // END CONSTRUCTOR
 
 // BEGIN addToContainer
-srd_editPalette.prototype.addToContainer = function(theContainer) {
+addToContainer : function(theContainer) {
 	theContainer.addChild(this.presetsContainer);	
 	theContainer.addChild(this.layoutContainer);	
-}
+},
 // END
 
 // BEGIN removeFromContainer
-srd_editPalette.prototype.removeFromContainer = function(theContainer) {
+removeFromContainer : function(theContainer) {
 	theContainer.removeChild(this.presetsContainer);
 	theContainer.removeChild(this.layoutContainer);
 
 
-}
+},
 // END
 
 
 // BEGIN setFeatureAttributes
-srd_editPalette.prototype.setFeatureAttributes = function (feature) {
+setFeatureAttributes : function (feature) {
 	// this function is to set the appropriate values
 	// of the attributes of the feature selected to the 
 	// controls in the editPalette.  We will use the attributes
@@ -90,19 +92,19 @@ srd_editPalette.prototype.setFeatureAttributes = function (feature) {
 			}	
 		}
 	}
-}
+},
+// END setFeatureAttributes
 
-
-srd_editPalette.prototype.deactivateDrawControls = function() {
+deactivateDrawControls : function() {
 	if(this.drawControlArr != null) {
 		for(tmpDrawCon in this.drawControlArr) {
 			this.drawControlArr[tmpDrawCon].deactivate();
 		}
 	}
-}	
+},	
+// END deactivateDrawControls
 
-
-srd_editPalette.prototype.activateDrawControl = function(theDrawCon ) {
+activateDrawControl : function(theDrawCon ) {
 	if(theDrawCon != null) {
 		this.selCon = theDrawCon;
 	}
@@ -116,10 +118,10 @@ srd_editPalette.prototype.activateDrawControl = function(theDrawCon ) {
 			}
 		}
 	}
-}
+},
+// END activateDrawControl
 
-
-srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,conObject) {
+addControl : function(conType,conDisplayName,conName,conObject) {
 	dojo.addOnLoad(function() {
 		if(this.controlArray[conName] == null) {
 			this.controlArray[conName] = {};
@@ -278,12 +280,12 @@ srd_editPalette.prototype.addControl = function(conType,conDisplayName,conName,c
 	}.bind(this)  );
 	
 
-}
+},
 // END addControl
 
 
 // BEGIN getPresets
-srd_editPalette.prototype.getPresets = function() {
+getPresets : function() {
 	dojo.addOnLoad(function() {
 		console.log("editPalette getPresets for :"+this.srd_layer.options.name);
 //		this.styleArr = this.srd_layer.srd_styleArr;
@@ -336,12 +338,12 @@ srd_editPalette.prototype.getPresets = function() {
 		this.presetsSource.insertNodes( false, this.presetNodeArr );
 
 	}.bind(this) );
-}
+},
 // END getPresets()
 
 
 // BEGIN presetNodeCreator
-srd_editPalette.prototype.presetNodeCreator = function(item, hint) {
+presetNodeCreator : function(item, hint) {
 //	var node = domConstruct.toDom(stringUtil.substitute(
 
 //	);
@@ -351,6 +353,13 @@ srd_editPalette.prototype.presetNodeCreator = function(item, hint) {
 		this.presetNodeArr.push(  { node: node, data: item, type: hint } );
 
 }
+// END presetNodeCreator
+
+} );
+// END declare srd_editPalette
+
+} );
+// END REQUIRE
 
 
 

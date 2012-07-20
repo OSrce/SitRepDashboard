@@ -7,12 +7,16 @@
 //
 //////////////////////////////
 
-
-dojo.require("dojox.timing.Sequence");
+require([
+	"dojo/_base/declare",
+	"dojox/timing/Sequence"
+], function(Sequence, declare) {
 //OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
 
+declare(
+"srd_layer", null, {
 //srd_layer constructor 
-function srd_layer( ) {
+constructor : function ( ) {
 		this.map = 	null;  //OpenLayers Map Class.
 		this.layer = null; //OpenLayers Layer Class.
 		
@@ -147,9 +151,9 @@ function srd_layer( ) {
 //		this.srd_customSelectFeatureAttributes.label = '${label}';
 
 
-}
+},
 
-srd_layer.prototype.copyValuesFromLayer = function(the_srd_layer) {
+copyValuesFromLayer : function(the_srd_layer) {
 	for( var layerVal in the_srd_layer) {
 		if(layerVal == "srd_styleMap" ) {
 			if( the_srd_layer.srd_styleMap != null) {
@@ -163,15 +167,15 @@ srd_layer.prototype.copyValuesFromLayer = function(the_srd_layer) {
 		}
 	}	
 	return;
-}
+},
 
 
 // srd_layer return the OpenLayer layer class.
-srd_layer.prototype.getLayer = function() {
+getLayer : function() {
 	return this.layer;	
-}
+},
 
-srd_layer.prototype.addLayerToMap = function(theMap) {
+addLayerToMap : function(theMap) {
 	this.map = theMap; 
 	console.log("Adding Layer to Map. For Layer "+this.options.name);
 	this.map.addLayer( this.layer );
@@ -185,12 +189,12 @@ srd_layer.prototype.addLayerToMap = function(theMap) {
 		this.map.addControl(this.selectControl);
 		this.selectControl.activate();
 	}
-}
+},
 
 
 // loadData <- bring in the vector data from whatever source is specifed
 // right now only GML hopefully wfs-t real fucking soon.
-srd_layer.prototype.loadData = function( ) { 
+loadData : function( ) { 
 //srd_layer.prototype.loadData = function(type, name, source, settings ) { 
 
 	if( this.options.type == "XYZ" ) {
@@ -234,123 +238,6 @@ srd_layer.prototype.loadData = function( ) {
 
 	console.log("Vector Layer created:"+this.options.name);
 // BEGIN MESSY STYLE RULE CODE
-
-/*
-		if(this.srd_styleMap == null) {
-//			this.srd_styleMap = new OpenLayers.StyleMap();
-
-
- 			if(this.options.defaultstyle &&  this.srd_styleArr[this.options.defaultstyle] ) {
-				this.srd_styleMap = new OpenLayers.StyleMap( { 
-					'default': new OpenLayers.Style( this.srd_styleArr[this.options.defaultstyle] )
-				} ); 	
-			} else {
-				this.srd_styleMap = new OpenLayers.StyleMap( { 
-					'default': new OpenLayers.Style( this.srd_featureAttributes )
-				} ); 
-			}
-		}
-	*/
-/*
-			this.srd_styleMap = new OpenLayers.StyleMap( { 
-//				'default': this.srd_styleArr[this.options.defaultstyle]
-				'default': new OpenLayers.Style( this.srd_featureAttributes, { 
-//				'default': new OpenLayers.Style( {styleFunction: "${styleFunction}" }, { 
-				context: {
-					styleFunction : function(feature) { this.srd_styleFunction(feature); }.bind(this),
-					fillColor: function(feature) { return feature.tmpAttributes.fillColor; },
-					fillOpacity: function(feature) { return feature.tmpAttributes.fillOpacity; },
-					strokeColor: function(feature) { return feature.tmpAttributes.strokeColor; },
-					strokeWidth: function(feature) { return feature.tmpAttributes.strokeWidth; },
-					strokeOpacity: function(feature) { return feature.tmpAttributes.strokeOpacity; },
-					pointRadius: function(feature) { return feature.tmpAttributes.pointRadius; },
-					label: function(feature) { return feature.tmpAttributes.label; },
-					fontColor: function(feature) { return feature.tmpAttributes.fontColor; },
-					fontSize: function(feature) { return feature.tmpAttributes.fontSize; },
-					fontFamily: function(feature) { return feature.tmpAttributes.fontFamily; },
-					fontWeight: function(feature) { return feature.tmpAttributes.fontWeight; },
-					labelAlign: function(feature) { return feature.tmpAttributes.labelAlign; },
-					labelXOffset: function(feature) { return feature.tmpAttributes.labelXOffset; },
-					labelYOffset: function(feature) { return feature.tmpAttributes.labelYOffset; },
-					externalGraphic: function(feature) { return feature.tmpAttributes.externalGraphic; },
-					graphicWidth: function(feature) { return feature.tmpAttributes.graphicWidth; },
-					graphicHeight: function(feature) { return feature.tmpAttributes.graphicHeight; },
-					graphicOpacity: function(feature) { return feature.tmpAttributes.graphicOpacity; },
-					rotation: function(feature) { return feature.tmpAttributes.rotation; },
-					backgroupGraphic: function(feature) { return feature.tmpAttributes.backgroupGraphic; },
-
-				} 
-				}  )
-*/
-
-///			} );
-/*			var theRuleArr = [];
-			theRuleArr.push( new OpenLayers.Rule( {
-				elseFilter: true,
-//				symbolizer: this.srd_styleArr[this.options.defaultstyle] 
-					symbolizer: "${styleFunc}",
-					styleFunc: this.srd_styleFunction
-				} )
-			);
-*/
-/*	
-			for(var styleId in this.srd_styleArr) {
-				theRuleArr.push( new OpenLayers.Rule( {
-					filter: new OpenLayers.Filter.Comparison( {
-						type: OpenLayers.Filter.Comparison,EQUAL_TO,
-						property: 'style',
-						value: styleId
-					}),
-					symbolizer: this.srd_styleArr[styleId] 
-					} )
-				);
-			}
-*/
-//			this.srd_styleMap.styles["default"].addRules( theRuleArr );
-//			this.srd_styleMap.addUniqueValueRules("default","style", this.srd_styleArr);
-
-//				this.srd_styleMap.addUniqueValueRules("default","feature", this.srd_styleFunction);
-//		}
-
-//		var tmpSymbolizer = this.srd_styleMap.styles["default"].defaultStyle;
-
-/*
-		var mainRule = new OpenLayers.Rule( {
-			elseFilter: true,
-			symbolizer: "${styleFunction}"
-		} );
-*/
-//			symbolizer: this.srd_styleArr[this.options.defaultstyle] } );
-//			symbolizer: tmpSymbolizer} );
-
-/*
-		var customRule = new OpenLayers.Rule( {
-			filter: new OpenLayers.Filter.Comparison( {
-				type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
-				property: 'customStyle',
-				value: null
-			}),
-			symbolizer: this.srd_customFeatureAttributes
-		} );
-
-		var customSelectRule = new OpenLayers.Rule( {
-			filter: new OpenLayers.Filter.Comparison( {
-				type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
-				property: 'customStyle',
-				value: null
-			}),
-			symbolizer: this.srd_customSelectFeatureAttributes
-		} );
-
-		this.srd_styleMap.styles["default"].addRules( [mainRule, customRule] );
-		this.srd_styleMap.styles["select"].addRules( [ customSelectRule] );
-*/
-
-//		this.srd_styleMap.styles["default"].addRules( [mainRule ] );
-//		this.srd_styleMap.styles["default"] = this.srd_styleArr[this.options.defaultstyle];
-
-//console.log("End Messy Rule code");
-// END MESSY STYLE RULE CODE
 
 		if(this.options.format == "GML" ) {
 			this.runFromServer = true;
@@ -467,19 +354,6 @@ srd_layer.prototype.loadData = function( ) {
 					this.layer.events.register("featureremoved", this, this.srd_delete);
 					this.layer.events.register("featureselected", this, this.onFeatureSelect);
 					this.layer.events.register("featureunselected", this, this.onFeatureUnselect);
-
-/*					this.selectControl = new OpenLayers.Control.SelectFeature(
-						this.layer, {
-							onSelect: function(theFeature) { 
-								this.onFeatureSelect(theFeature) 
-							}.bind(this), 
-							onUnselect: function(theFeature) { 
-								this.onFeatureUnselect(theFeature) 
-							}.bind(this)
-						} 
-					);
-	*/
-
 
 				}.bind(this) );
 
@@ -598,15 +472,6 @@ srd_layer.prototype.loadData = function( ) {
 //			selectControl: this.selectControl
 		}
 	);
-/*
-  	this.srd_drawControls.select = new OpenLayers.Control.SelectFeature(this.layer, {
-		onSelect: function(theFeature) { 
-			this.onFeatureSelect(theFeature) 
-		}.bind(this), 
-		onUnselect: function(theFeature) { 
-			this.onFeatureUnselect(theFeature) }.bind(this)
-		} );
-*/
 
 // TODO REGISTER KEYPRESS EVENT FOR DEL KEY TO DEL SELECTED FEATURE AT ANY TIME.
 //		this.layer.events.register("keypress"
@@ -661,13 +526,13 @@ srd_layer.prototype.loadData = function( ) {
 //	this.layer.events.register("loadend", this.layer, this.loadDataGrid() );
 	
 	return 0;
-}; 
+}, 
 //// END srd_loadData  function
 
 
 
 // DEFINE preFeatureInsert for Dynamic Layers so that we can add appropriate styling
-srd_layer.prototype.srd_preFeatureInsert = function(feature) {
+srd_preFeatureInsert : function(feature) {
 	if( this.options.type=="Vector" && this.options.feature_update == true) {
 		if(feature.attributes.customStyle == null) {
 			feature.attributes.customStyle = true;
@@ -678,12 +543,12 @@ srd_layer.prototype.srd_preFeatureInsert = function(feature) {
 	}
 //	this.featureCount++;
 //	feature.fid = this.featureCount;
-}
+},
 
 
 
 // BEGIN FUNC onFeatureSelect
-srd_layer.prototype.onFeatureSelect = function(evt) {
+onFeatureSelect : function(evt) {
 	var theFeature = evt.feature;
 	console.log("Feature selected: "+theFeature.db_id);
 
@@ -708,13 +573,13 @@ srd_layer.prototype.onFeatureSelect = function(evt) {
 		this.selectedFeature.createPopup();
 	}
 
-}
+},
 //END FUNC onFeatureSelect
-srd_layer.prototype.onPopupClose = function(evt) {
+onPopupClose : function(evt) {
 	this.selectControl.unselect(this.selectedFeature);
-}
+},
 // BEGIN FUNC onFeatureUnselect
-srd_layer.prototype.onFeatureUnselect = function(evt) {
+onFeatureUnselect : function(evt) {
 	var theFeature = evt.feature;
 	console.log("Feature unselected: "+theFeature.db_id);
 //	this.editPalette.setFeatureAttributes( this.srd_featureAttributes );
@@ -724,39 +589,24 @@ srd_layer.prototype.onFeatureUnselect = function(evt) {
 		this.selectedFeature.popup = null;
 	}
 	this.selectedFeature = null;
-}
+},
 //END FUNC onFeatureSelect
 
-srd_layer.prototype.updateLayer = function() {
+updateLayer : function() {
 	if(this.selectedFeature != null) {
 		this.layer.drawFeature(this.selectedFeature);
 	} else {
 		this.layer.redraw();
 	}
-}
+},
 
 
 
-
-
-//NO LONGER CALLED...
-loadWFS = function(evt, the_srd_layer) {
-	/// WFS testing :
-		someFeatures = new Array();
-		var i=0;
-		for(i=0;i<the_srd_layer.tmpLayer.features.length;i++) {
-				someFeatures[i] = the_srd_layer.tmpLayer.features[i].clone();
-				someFeatures[i].state = OpenLayers.State.INSERT;
-		}
-		the_srd_layer.layer.addFeatures( someFeatures );
-	/// END WFS TESTING.
-}
-///END TO REMOVE.
 
 
 // this is going to be called by DataGrid -> onRowDblClick.  Event will be passed with 
 // ref to the grid, cell and rowIndex
-srd_layer.prototype.selectFeature = function(e) {
+selectFeature : function(e) {
 	var item = this.srd_layerGrid.getItem( e.rowIndex );
 	this.selectedFeature  = this.layer.getFeatureByFid(item.db_id);
 	var thePoint = this.selectedFeature.geometry;
@@ -770,134 +620,12 @@ srd_layer.prototype.selectFeature = function(e) {
 	}
 	selectControl.select(this.selectedFeature);		
 
-};
+},
 
 
 
 
-// BEGIN GLOBAL FUNC loadDataGrid	
-loadDataGrid = function(evt, the_srd_layer) {
-	if(the_srd_layer.saveStrategy != null) {
-//		the_srd_layer.saveStrategy.save();
-	}
-	var overlayTabContainer = dijit.byId("overlayTabContainer");
-//	var layerTab = new dijit.layout.ContentPane();
-//	layerTab.set('title', 'debugging');
-
-	var layer = the_srd_layer.layer;
-
-/// DESCRIBING HOW THE dojox.data.grid "spreadsheet"  should look.
-
-	
-	var theFeatArr = layer.features;
-	var theFeatPropNames = {};
-	var srd_layout = new Array();
-	var srd_tableLayout = new Array();
-	srd_tableLayout[0] = { cells: new Array() }; 
-//	alert("Load complete Number of features:"+layer.features.length);
-	var j=0;
-	for(j=0;j<theFeatArr.length;j++) {
-		if( !theFeatArr[j].attributes.srd_status) {
-			theFeatArr[j].attributes.srd_status = 'Default';
-			theFeatArr[j].state =  OpenLayers.State.UPDATE;
-		}
-		if( !theFeatArr[j].attributes.srd_description) {
-			theFeatArr[j].attributes.srd_description = 'None';
-			theFeatArr[j].state =  OpenLayers.State.UPDATE;
-		}
-		if( !theFeatArr[j].attributes.srd_notes) {
-			theFeatArr[j].attributes.srd_notes = 'None';
-			theFeatArr[j].state =  OpenLayers.State.UPDATE;
-		}
-		
-
-		the_srd_layer.srd_data[j] = new Array();
-//		the_srd_layer.srd_data[j].fid = theFeatArr[j].fid;
-		var i=0;
-		var canEdit = false;
-		for(var propName in theFeatArr[j].attributes ) {
-			canEdit = true;
-			if( propName == "gid" ) {
-				canEdit = false;
-			}
-			theFeatPropNames[i] = propName;
-			if( propName.toLowerCase() != 'lat' && propName.toLowerCase() != 'lon' && propName.toLowerCase() != 'latitude' && propName.toLowerCase() != 'longitude') {
-				the_srd_layer.srd_data[j][propName] = theFeatArr[j].attributes[propName];
-				srd_layout[i] = { field: theFeatPropNames[i], name: theFeatPropNames[i], width: 'auto', editable: canEdit };
-				i++;
-			}
-		}
-	}
-	srd_tableLayout[0].cells = srd_layout; 
-
-	if(the_srd_layer.srd_LayerStore == null) {
-
-		the_srd_layer.srd_LayerStore = new dojo.store.Memory( { 
-			idProperty: 'fid', 
-			data: the_srd_layer.srd_data,
-			features: { 'dojo.data.api.Read': true,
-									'dojo.data.api.Write': true } 
-			} );
-		}
-
-//alert( "TEST:" + 	srd_LayerStore.get('F1') +":TEST" );
-	
-	/// Utility Adapter for using dojo.store.Memory objects where dojo.data. objects are needed.
-	var srd_LegacyDataStore =  new dojo.data.ObjectStore({ objectStore: the_srd_layer.srd_LayerStore});
-
-	the_srd_layer.srd_layerGrid = new dojox.grid.DataGrid( 
-		{
-			title: layer.name, 
-			clientSort: true,
-//			rowSelector: '20px',
-			store:srd_LegacyDataStore ,
-			structure: srd_tableLayout
-		},
-		document.createElement('div')
-	);
-	var i=0;
-//	var theFeatArr = new Array( "", "", "");
-	overlayTabContainer.addChild(the_srd_layer.srd_layerGrid);
-
-//	layerTab.set('content', "TEST"+layer.features[0].attributes['Post_Number']+"END");
-//	overlayTabContainer.addChild(layerTab);
-
-	dojo.connect(the_srd_layer.srd_layerGrid, "onRowDblClick", the_srd_layer, the_srd_layer.selectFeature , true);
-
-};
-//END GLOBAL FUNC loadDataGrid
-//
-
-// TO FIX using for wfs-t debugging right now.
-function showMsg(szMessage) {
-//	alert(szMessage);
-}
-
-function showSuccessMsg(){
-    showMsg("Transaction successfully completed");
-};
-
-function showFailureMsg(){
-//    showMsg("An error occured while operating the transaction");
-};
-
-
-function featureAdded(evt, the_srd_layer) {
-	if(!evt.feature.attributes.srd_status) {
-		evt.feature.attributes.srd_status = 'Default';
-//		evt.feature.attributes.srd_description = 'DefaultDesc';
-//		evt.feature.attributes.srd_notes = 'DefaultNotes';
-	
-		if(evt.feature.state != OpenLayers.State.INSERT) {
-			evt.feature.state = OpenLayers.State.UPDATE;
-		}
-//		alert("featureAdded Called, and srd_status not there");
-		the_srd_layer.layer.redraw();
-	}
-};
-
-
-srd_layer.prototype.onFeatureInserted = function(insertedFeature) {
+onFeatureInserted : function(insertedFeature) {
 	if(!insertedFeature.attributes.srd_status) {
 		insertedFeature.attributes.srd_status = 'Default';
 	}
@@ -918,9 +646,9 @@ srd_layer.prototype.onFeatureInserted = function(insertedFeature) {
 		}
 	}
 
-};
+},
 
-srd_layer.prototype.setValue = function(varName, varValue) {
+setValue : function(varName, varValue) {
 //		console.log("setValue Called: Name:"+varName+", Value:"+varValue);
 	switch( String(varName )) {
 		case "sphericalMercator" :
@@ -949,9 +677,9 @@ srd_layer.prototype.setValue = function(varName, varValue) {
 	}
 
 	return 0;
-}
+},
 
-srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
+setStyleProperty : function(styleName,varName,varValue) {
 //	console.log(":::"+this.options.name+":::setStyleProperty name="+styleName+", varName="+varName+", varVal="+varValue);	
 //	return 0;
 	switch( String(varName) ) {
@@ -993,9 +721,9 @@ srd_layer.prototype.setStyleProperty = function(styleName,varName,varValue) {
 			}
 			break;	
 	}
-}
+},
 
-srd_layer.prototype.createStyle = function(styleName) {
+createStyle : function(styleName) {
 //	console.log("CREATE STYLE CALLED="+styleName);
 	if(this.srd_styleMap == null) {
 //		console.log("New StyleMap Created for Layer="+this.options.name);
@@ -1004,26 +732,20 @@ srd_layer.prototype.createStyle = function(styleName) {
 	var tmpStyleName = String(styleName);
 	this.srd_styleMap.styles[tmpStyleName] = new OpenLayers.Style( {} );
 
-}
+},
 
-srd_layer.prototype.copyStyle = function(theStyleName,theStyle) {
+copyStyle : function(theStyleName,theStyle) {
 	this.createStyle(theStyleName);
 	for(var styleVal in theStyle.defaultStyle) {
 //		console.log("Loading StyleSettings"+theStyleName+":::"+styleVal+":::"+theStyle.defaultStyle[styleVal] );
 		this.setStyleProperty(theStyleName,styleVal,theStyle.defaultStyle[styleVal] );
 	}
 
-}
-
-/*
-srd_layer.prototype.activate = function() {
-	for( theCon in this.srd_drawControls) {
-		theCon.
-*/
+},
 
 
 // BEGIN UPLOAD LAYER TO SERVER.
-srd_layer.prototype.uploadLayer = function() {
+uploadLayer : function() {
 	var uploadData = {
 		options: this.options,
 		styles: this.srd_featureAttributes
@@ -1061,11 +783,11 @@ srd_layer.prototype.uploadLayer = function() {
 	}
 	var deferred = dojo.xhrPost(xhrArgs);
 
-}
+},
 // END uploadLayer
 
 // BEGIN UPLOAD LAYER DATA TO SERVER.
-srd_layer.prototype.uploadData = function() {
+uploadData : function() {
 	var uploadData = {
 		options: this.options,
 		styles: this.srd_featureAttributes
@@ -1086,14 +808,14 @@ srd_layer.prototype.uploadData = function() {
 	}
 	var deferred = dojo.xhrPost(xhrArgs);
 
-}
+},
 // END uploadLayer
 
 
 
 
 // BEGIN DOWNLOAD LAYER STYLES FROM SERVER.
-srd_layer.prototype.downloadStyles = function() {
+downloadStyles : function() {
 	var requestData = {
 		layer_id : this.options.id
 	}
@@ -1112,12 +834,12 @@ srd_layer.prototype.downloadStyles = function() {
 	}
 	var deferred = dojo.xhrPost(xhrArgs);
 
-}
+},
 // END uploadLayer
 
 
 // BEGIN crudComplete SERVER.
-srd_layer.prototype.crudComplete = function(resp) {
+crudComplete : function(resp) {
 	if(resp.requestType == "create") {
 		var respObj = {inserted : false};
 		if( resp != null && resp.priv != null && resp.priv.responseText != null ) {
@@ -1134,8 +856,6 @@ srd_layer.prototype.crudComplete = function(resp) {
 		}
 	
 		console.log("crudComplete ="+resp.reqFeatures.db_id+":::"+resp.priv.responseText);
-//		if(resp.code == OpenLayers.Protocol.Response.FAILURE || respObj.inserted != true) {
-//		if(resp.code != OpenLayers.Protocol.Response.SUCCESS || respObj.inserted != true) {
 		if(resp.code != OpenLayers.Protocol.Response.SUCCESS || respObj.inserted != true) {
 			console.log("Create feature FAILED!, retrying in 1 sec.");
 			var options = {'headers': headers};
@@ -1151,18 +871,18 @@ srd_layer.prototype.crudComplete = function(resp) {
 			}
 		}
 	}
-}
+},
 // END crudComplete SERVER.
 
-srd_layer.prototype.createFeature = function(theFeat,options) {
+createFeature : function(theFeat,options) {
 	console.log("Create Feature Called for "+theFeat.fid);
 	console.log("theOptions="+options.headers.layer_id);
 	this.layerProtocol.create(theFeat,options);
-}
+},
 // ABOVE MAYBE TO REMOVE --- OLD CODE----
 
 // BEGIN srd_create EVENT HANDLER FOR AFTER NEW FEATURES ARE CREATED
-srd_layer.prototype.srd_create = function(evt) {
+srd_create : function(evt) {
 //	console.log("Create Feature Called! ID: "+evt.feature.id);
 /*
  	var featId = this.layer.features.length;
@@ -1187,11 +907,11 @@ srd_layer.prototype.srd_create = function(evt) {
 		this.feature.db_id=returnId;
 		console.log("Created Feature on server side! this.feature.db_id:"+this.feature.db_id);
 	}.bind(evt) );	
-}
+},
 // END srd_create EVENT HANDLER FOR AFTER NEW FEATURES ARE CREATED
 
 // BEGIN srd_update EVENT HANDLER FOR AFTER FEATURES ARE UPDATED
-srd_layer.prototype.srd_update = function(evt) {
+srd_update : function(evt) {
 	console.log("Update Feature Called! ID: "+evt.feature.db_id);
 	var item = {
 		"id":evt.feature.db_id,
@@ -1208,11 +928,11 @@ srd_layer.prototype.srd_update = function(evt) {
 //		this.feature.db_id=returnId;
 //		console.log("Created Feature on server side! ID:"+this.feature.fid);
 	}.bind(evt) );	
-}	
+},	
 // END srd_update EVENT HANDLER FOR AFTER FEATURES ARE UPDATED
 
 // BEGIN srd_delete EVENT HANDLER FOR AFTER FEATURES ARE DELETED
-srd_layer.prototype.srd_delete = function(evt) {
+srd_delete : function(evt) {
 	console.log("Delete Feature Called! ID: "+evt.feature.db_id);
 //	var itemStr = "layer_id/"+this.options.id+"/feature_id/"+evt.feature.fid;
 	evt.srd_layer = this;
@@ -1222,11 +942,11 @@ srd_layer.prototype.srd_delete = function(evt) {
 //		this.feature.fid=returnId;
 //		console.log("Created Feature on server side! ID:"+this.feature.fid);
 	}.bind(evt) );	
-}	
+},	
 // END srd_delete EVENT HANDLER FOR AFTER FEATURES ARE DELETED
 
 // BEGIN srd_styleFunction 
-srd_layer.prototype.srd_styleFunction = function( feature ) {
+srd_styleFunction : function( feature ) {
 	if( !this.options) {
 		console.log("Styling Feature :"+feature.id+" NO this.options!!!");
 		return;
@@ -1299,11 +1019,11 @@ srd_layer.prototype.srd_styleFunction = function( feature ) {
 */
 	}
 	return;
-}
+},
 // END srd_styleFunction 
 
 
-srd_layer.prototype.srd_checkAndSetStyleAttr = function(feature, attrName, attrVal) {
+srd_checkAndSetStyleAttr : function(feature, attrName, attrVal) {
 	var dynamicVarRegEx = /\$\{.*\}/;
 	var dynamicVal = dynamicVarRegEx.exec( String(attrVal) ); 
 	if ( dynamicVal != null ) {
@@ -1337,11 +1057,11 @@ srd_layer.prototype.srd_checkAndSetStyleAttr = function(feature, attrName, attrV
 	}
 
 	return;
-}
+},
 
 
 // BEFORE ADD SHOULD ONLY BE USED FOR FEATURE SPECIFIC STYLING.
-srd_layer.prototype.srd_beforeAdd = function( theObject ) {
+srd_beforeAdd : function( theObject ) {
 //	console.log("Before Add Feature :"+theObject.feature.id+" on layer"+this.options.id);
 	if( !this.options) {
 		console.log("Feature :"+feature.id+" NO this.options!!!");
@@ -1420,12 +1140,12 @@ srd_layer.prototype.srd_beforeAdd = function( theObject ) {
 		}
 */
 	return;
-}
+},
 // END srd_beforeAdd
 
 
 // BEFORE refresh
-srd_layer.prototype.refresh = function() {
+refresh : function() {
 	console.log("REFRESH on layer: "+this.options.id);
 	dojo.when(this.store.query({"layer_id":this.options.id}), function(theFeatArr) {
 		for(var i in this.layer.features) {
@@ -1461,12 +1181,12 @@ srd_layer.prototype.refresh = function() {
 		}	
 	}.bind(this) );
 	return;
-}
+},
 // END refresh
 
 
 // BEGIN srd_compareAndUpdateFeature 
-srd_layer.prototype.compareAndUpdateFeature = function(oldFeat, newFeat) {
+compareAndUpdateFeature : function(oldFeat, newFeat) {
 	console.log("Compare from Server Feature: "+oldFeat.db_id+" on Layer: "+this.options.id);
 	var tmpDataStr = dojo.toJson(oldFeat.attributes);
 	var updateFeature = false;
@@ -1489,13 +1209,13 @@ srd_layer.prototype.compareAndUpdateFeature = function(oldFeat, newFeat) {
 //		this.layer.drawFeature(oldFeat);
 	}
 	return;
-}
+},
 // END compareAndUpdateFeature
 
 
 // BEGIN getAttribute ( attribute ) 
 // RETURNS Attribute value -> returnValue.
-srd_layer.prototype.getAttribute = function( attribute ) {
+getAttribute : function( attribute ) {
 	if(this.selectedFeature != null ) {
 		return this.getFeatureAttribute(attribute);
 	}
@@ -1505,14 +1225,14 @@ srd_layer.prototype.getAttribute = function( attribute ) {
 	var returnValue = null;
 
 	return returnValue;	
-}
+},
 // END getAttribute ( attribute )
 
 
 
 // BEGIN getFeatureAttribute ( attribute ) 
 // RETURNS Attribute value.
-srd_layer.prototype.getFeatureAttribute = function( feature, attribute ) {
+getFeatureAttribute : function( feature, attribute ) {
 	var attrVal = null;
 	if( feature.attribute == null || feature.attribute.srstyle == null ) {
 		attrVal = this.srd_styleMap.styles[this.renderIntent].defaultStyle[attribute];
@@ -1538,12 +1258,12 @@ srd_layer.prototype.getFeatureAttribute = function( feature, attribute ) {
 		}
 	}
 	return attrVal;
-}
+},
 // END getFeatureAttribute ( attribute )
 
 // BEGIN setFeatureAttribute ( feature, attribute, attrVal) 
 // RETURNS BOOL.
-srd_layer.prototype.setFeatureAttribute = function( feature, attribute, value ) {
+setFeatureAttribute : function( feature, attribute, value ) {
 	console.log("SetAttribute : Feature ID :"+feature.id+" attribute :"+attribute+" value :"+value);
 	var attrVal = null;
 	if( feature.attribute == null || feature.attribute.srstyle == null ) {
@@ -1570,7 +1290,11 @@ srd_layer.prototype.setFeatureAttribute = function( feature, attribute, value ) 
 }
 // END getFeatureAttribute ( attribute )
 
+} );
+// END DECLARE
 
+});
+// END sr_layer
 
 
 
