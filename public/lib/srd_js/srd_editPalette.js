@@ -1,14 +1,16 @@
-require([
+define([
 	"dojo/_base/declare",
 	"dijit/form/Form",
+	"dijit/form/Textarea",
+	"dijit/ColorPalette",
+	"dijit/form/HorizontalSlider",
 	"dijit/form/NumberSpinner",
 	"dijit/layout/ContentPane",
 	"dijit/layout/BorderContainer",
 	"dojox/layout/ExpandoPane"
-], function(Form, NumberSpinner,ContentPane,BorderContainer,ExpandoPane, declare) {
+], function(declare, Form, NumberSpinner,ContentPane,BorderContainer,ExpandoPane) {
 
-	declare(
-	"srd_editPalette", null, {
+	return declare( [], {
 	constructor: function(theSrdLayer) {
 	this.layoutContainer = new dojox.layout.ExpandoPane( {
 		style: "height:750px;margin:0px;border:9px;padding:9px;margin-right:16px;overflow:auto;",

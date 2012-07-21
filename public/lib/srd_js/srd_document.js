@@ -9,19 +9,29 @@ if(dojo.isIE) {
 }
 */
 
-require( [
-	"dojox/layout/GridContainer",
-	"dojox/data/QueryReadStore",
-	"dojox/data/JsonRestStore",
-	"dojo/store/DataStore",
-	"dojo/store/JsonRest",
-	"dojo/store/Cache",
+define( [
 	"dojo/_base/declare",
+//	"dojox/layout/GridContainer",
+//	"dojox/data/JsonRestStore",
+//	"dojo/store/DataStore",
 	"srd_js/srd_layer",
 	"srd_js/srd_view",
-//	"srd_js/srd_view_map",
-	"dojo/domReady!"
-] , function( declare ) {
+	"srd_js/srd_gridContainer",
+	"srd_js/srd_view_map",
+	"srd_js/srd_view_cfssingle",
+	"srd_js/srd_view_admin",
+	"srd_js/srd_view_datagrid",
+	"srd_js/srd_view_opstrack",
+	"dojox/data/QueryReadStore",
+	"dojox/storage/LocalStorageProvider",
+	"dijit/layout/BorderContainer",
+	"dijit/layout/ContentPane",
+	"dijit/Menu",
+	"dijit/MenuBar",
+	"dijit/MenuBarItem",
+	"dijit/PopupMenuBarItem",
+	"dijit/form/ComboBox",
+] , function( declare, srd_layer, srd_view, srd_gridContainer  ) {
 
 /*dojo.provide("ComboBoxReadStore");
 dojo.declare(
@@ -38,7 +48,7 @@ dojo.declare(
 
 
 //srd_document CLASS 
-declare( "srd_document", null, {
+return declare( [], {
 
 	constructor : function() {
 	//THE UI VARS
@@ -1068,7 +1078,6 @@ srd_selectEditLayer : function( theId ) {
 // END selectEditLayer FUNCTION
 // BEGIN changeWindowLayout FUNCTION
 srd_changeWindowLayout : function(wlayout) {
-//					dojo.ready( function() {
 					if( wlayout != this.selected_wlayout)	{
 						console.log("Changing Window Layout from "+this.selected_wlayout+" TO "+wlayout);
 						this.selected_wlayout = wlayout;
@@ -1134,17 +1143,8 @@ srd_changeWindowLayout : function(wlayout) {
 						// BELOW IS CALLED TO PERFORM ACTION WHEN VIEWS ARE DONE BEING CREATED.
 						// TODO: LETS FIX IT.
 						// UPDATE LINKS IN ALL VIEWS 
-//						dojo.ready(function() {
-//							for(var tmpX in this.viewArr) {
-//								for(var tmpY in this.viewArr[tmpX] ) {
-//									this.viewArr[tmpX][tmpY].updateViewLinks();
-//									this.viewArr[tmpX][tmpY].loadingComplete();
-//								}
-//							}	
-//							this.updateLayoutNameDisplay();
-//						}.bind(this) );
+
 					}
-//					}.bind(this) );
 },
 // END changeWindowLayout FUNCTION
 
@@ -1382,7 +1382,6 @@ loadedViews : function() {
 // END loadedViews
 
 } );
-
 
 } );
 

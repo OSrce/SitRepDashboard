@@ -7,14 +7,14 @@
 //
 //////////////////////////////
 
-require([
+define([
 	"dojo/_base/declare",
+	"srd_js/srd_editPalette",
 	"dojox/timing/Sequence"
-], function(Sequence, declare) {
+], function(declare , srd_editPalette) {
 //OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
 
-declare(
-"srd_layer", null, {
+	return declare( [], {
 //srd_layer constructor 
 constructor : function ( ) {
 		this.map = 	null;  //OpenLayers Map Class.
@@ -1290,7 +1290,7 @@ setFeatureAttribute : function( feature, attribute, value ) {
 }
 // END getFeatureAttribute ( attribute )
 
-} );
+}) ;
 // END DECLARE
 
 });

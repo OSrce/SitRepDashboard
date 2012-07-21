@@ -1,10 +1,8 @@
-require(["dojo/_base/declare", 
+define(["dojo/_base/declare", 
 					"dojox/layout/GridContainer"
 ], function(declare,GridContainer) {
 
-	declare(
-	"srd_gridContainer", 
-	dojox.layout.GridContainer, 
+	return declare( [ GridContainer], 
 	{
 		hasResizeableRows : true,	
 		liveResizeableRows : false,	
@@ -12,10 +10,7 @@ require(["dojo/_base/declare",
 		minRowHeight: 20,
 		// Minimum child height in pixels
 		minChildHeight: 150
-		
-
-
-} );
+	} );
 
 } );
 

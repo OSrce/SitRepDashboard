@@ -7,17 +7,20 @@
 //
 //
 /////////////////////////////////
-
-require([
+define([
+	"dojo/_base/declare",
+	"srd_js/srd_view",
+	"srd_js/srd_layer",
 	'dojox/timing',
 	'dojo/store/Observable',
-	"dojo/_base/declare",
-	"srd_js/srd_view"
-], function (declare, srd_view) {
+	"dojo/store/JsonRest",
+	"dojo/store/Cache",
+	"dojo/data/ObjectStore",
+], function (declare, srd_view, srd_layer) {
 
 //srd_view class definition using dojo.declare 
-declare( 
-	'srd_view_opstrack',
+return declare( 
+	"srd_view_opstrack",
 	[srd_view] ,
 	{
 		type:'opstrack',
@@ -318,32 +321,7 @@ declare(
 		},
 		// END CREATE MAP FEATURES
 		refreshTable: function() {
-//			console.log("Refresh Table Called!");
-//			delete this.srd_memStore.data;
-//			this.srd_memStore.data = [];
-
-//				this.srd_memStore.query().forEach( function(cfs) {
-//					this.srd_memStore.remove(cfs);
-//				}.bind(this) ).then( function() {
-
-//			this.srd_datagrid.setQuery(this.srd_query ); 
-//				this.srd_datagrid._refresh();
-
-//			this.srd_datagrid.setStore(this.srd_dataStore); 
-//			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
 				this.srd_store.query(this.srd_query,{ sort:this.srd_sort } );
-//				dojo.when( this.srd_store.query(this.srd_query,{ sort:this.srd_sort } ), function(theDataArr) {
-/*					
-					if(this.mapData == true) {
-						this.srd_layer.layer.destroyFeatures();
-						this.srd_layer.layer.removeAllFeatures();
-						this.createMapFeatures();	
-					}
-
-				}.bind(this) );
-*/
-//			}.bind(this) );
-
 		},
 		// END refreshTable
 		

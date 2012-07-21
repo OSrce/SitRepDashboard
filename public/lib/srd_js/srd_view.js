@@ -8,18 +8,13 @@
 //
 /////////////////////////////////
 
-require([ 
+define([ 
 	"dojo/_base/declare",
 	"dojox/grid/EnhancedGrid",
 	"dojox/grid/enhanced/plugins/NestedSorting",
 	"dojox/grid/enhanced/plugins/Pagination"
-], function(declare, EnhancedGrid) {
-
-//srd_view class definition using dojo.declare 
-declare( 
-	'srd_view',
-	null,
-	{
+], function(declare, EnhancedGrid, NestedSorting, Pagination) {
+		return declare( [], {
 		// Pointer to parent srd_document class
 		srd_doc : null,
 		// type: this can be one of the following:
@@ -182,14 +177,10 @@ declare(
 
 
 
-		//
-		//
-	}
-);
+	});
+});
 // END srd_view
 
-
-} );
 
 
 
