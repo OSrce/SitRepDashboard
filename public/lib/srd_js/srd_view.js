@@ -10,10 +10,13 @@
 
 define([ 
 	"dojo/_base/declare",
+	"dijit/layout/BorderContainer",
+	"dijit/Menu",
+	"dijit/PopupMenuItem",
 	"dojox/grid/EnhancedGrid",
 	"dojox/grid/enhanced/plugins/NestedSorting",
 	"dojox/grid/enhanced/plugins/Pagination"
-], function(declare, EnhancedGrid, NestedSorting, Pagination) {
+], function(declare ) {
 		return declare( [], {
 		// Pointer to parent srd_document class
 		srd_doc : null,

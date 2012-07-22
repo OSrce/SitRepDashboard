@@ -8,15 +8,21 @@
 //
 /////////////////////////////////
 
-require([
-	"dijit/form/DateTextBox",
+define([
 	"dojo/_base/declare",
-	"srd_js/srd_view"
+	"srd_js/srd_view",
+	"dojo/store/Cache",
+	"dojo/store/JsonRest",
+	"dojo/store/Memory",
+	"dojo/data/ObjectStore",
+	"dijit/form/DateTextBox",
+	"dojox/timing",
+	"dijit/form/Textarea"
 ], function(declare, srd_view) {
 
 
 //srd_view class definition using dojo.declare 
-dojo.declare( 
+return declare( 
 	'srd_view_cfssingle',
 	[srd_view],
 	{
