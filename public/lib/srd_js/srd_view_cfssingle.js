@@ -110,7 +110,7 @@ return declare(
 							{ name: "Dup", field:"cfs_dupnum", srdtype:"PlainText", srdrow:3, width: "50px" },
 							{ name: "Updated", field:"cfs_updated_on", srdtype:"PlainText", srdrow:1, width: "60px" },
 
-							{ field:"cfs_body", srdtype:"Text", srdrow:6, width: "250px" }
+							{ field:"cfs_body", srdtype:"PlainText", srdrow:6, width: "250px" }
 							]
 					} ]
 					
@@ -224,7 +224,7 @@ return declare(
 							if(cell.name) {
 								var theLabel = dojo.create("label", {'class':"srd_cfs_row"+cell.srdrow, id:"label_"+cell.field, innerHTML: cell.name+" :"} , this.cp.domNode);
 							}
-							var theWidget = new dijit.form.Textarea( {
+							var theWidget = new dijit.form.SimpleTextarea( {
 								'class': "srd_cfs_row"+cell.srdrow,
 								id: cell.field,
 								editable: cell.editable,
@@ -235,6 +235,7 @@ return declare(
 							} );
 							theWidget.placeAt(this.cp.domNode);
 							theWidget.startup();
+							theWidget.set("style","");
 							this.srd_widgetArr[cell.field] = theWidget;
 							break;
 						}
@@ -276,7 +277,7 @@ return declare(
 //				console.log( "Showing value for "+hashId+" ::: "+item[hashId]);
 				if(this.srd_widgetArr[hashId] && hashId != "cfs_num" && hashId != "cfs_date" ) {
 					if(this.srd_widgetArr[hashId].declaredClass && this.srd_widgetArr[hashId].declaredClass != undefined ) {					
-						if(this.srd_widgetArr[hashId].declaredClass == "dijit.form.Textarea" ) {
+						if(this.srd_widgetArr[hashId].declaredClass == "dijit.form.SimpleTextarea" ) {
 //							console.log("Widget is TextArea");
 							this.srd_widgetArr[hashId].set("value", item[hashId]);
 /*						} else {
@@ -312,7 +313,7 @@ return declare(
 			}
 			// GET POSITION OF cfs_body TEXT and resize window height.
 			if(this.srd_widgetArr["cfs_body"] ) {	
-				var posObj = dojo.position(this.srd_widgetArr["cfs_body"].domNode);
+				var posObj = dojo.position(this.srd_widgetArr["cfs_body"]);
 				var theHeight = posObj.y + posObj.h + 20;
 				this.cp.resize({h:theHeight});
 				var winDiff = window.outerHeight-window.innerHeight;

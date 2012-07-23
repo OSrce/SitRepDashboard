@@ -15,7 +15,6 @@
 		<link rel="stylesheet" href="/lib/srd_css/srd_style.css" type="text/css" />
 		<link rel="stylesheet" href="/lib/srd_css/srd_view_style.css" type="text/css" />
 
-		<link rel="stylesheet" href="/lib/SR_OpenLayers/theme/default/style.css" type="text/css" />
 
 				<!--.olControlPanel  DESCRIBES THE PANEL ITSELF -->
 				<!-- olControlPanel div  DESCRIBES THE ELE IN THE PANEL (DEFAULTS) -->
@@ -26,10 +25,16 @@
                 height: 100%;
 								background-color:white;
 			      }
-						#theSrdDoc, #srd_container { 
+						#srd_container { 
                 width: auto;
                 height: auto;
 			      }
+
+						#theSrdDoc { 
+                width: 100%;
+                height: 100%;
+			      }
+	
 						
 						.srd_view_label {
 							background-color:lightgrey;
@@ -58,7 +63,6 @@
 
 		<script data-dojo-config="async: true" src="/lib/dojo/dojo.js"></script>
 
-		<script src="/lib/SR_OpenLayers/OpenLayers.js"></script>
 
 <!--
 		<script type="text/javascript" src="/lib/SR_Dojo/dojo/dojo.js" ></script>

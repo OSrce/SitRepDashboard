@@ -173,6 +173,7 @@
 #cfs_num {
 	left: 250px;
 	width: 81px;
+	height: 15px;
 }
 #label_cfs_updated_on {
 	left: 350px;
@@ -253,19 +254,10 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
 #cfs_body {
 	left: 10px;
 	width: 590px;
+	overflow: static;
 }
 
 

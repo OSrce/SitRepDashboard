@@ -552,7 +552,8 @@ onFeatureSelect : function(evt) {
 	var theFeature = evt.feature;
 	console.log("Feature selected: "+theFeature.db_id);
 
-	this.editPalette.setFeatureAttributes( theFeature );
+// TODO - NEED TO FIX
+//	this.editPalette.setFeatureAttributes( theFeature );
 
 //	theFeature.
 	this.selectedFeature = theFeature;
@@ -1250,7 +1251,7 @@ getFeatureAttribute : function( feature, attribute ) {
 		// VALUE IS DYNAMIC!
 			dynamicVal = String(dynamicVal);
 			dynamicVal = dynamicVal.substr(2, dynamicVal.length-3);
-			console.log("GetAttribute : Feature ID :"+feature.id+" attribute :"+attribute+" value :"+attrVal+" dynVal :"+dynamicVal);
+//			console.log("GetAttribute : Feature ID :"+feature.id+" attribute :"+attribute+" value :"+attrVal+" dynVal :"+dynamicVal);
 			if(feature.attribute != null && feature.attribute[dynamicVal] != null) {
 				attrVal = feature.attribute[dynamicVal];
 				console.log("dynVal Val :"+attrVal);
@@ -1264,7 +1265,7 @@ getFeatureAttribute : function( feature, attribute ) {
 // BEGIN setFeatureAttribute ( feature, attribute, attrVal) 
 // RETURNS BOOL.
 setFeatureAttribute : function( feature, attribute, value ) {
-	console.log("SetAttribute : Feature ID :"+feature.id+" attribute :"+attribute+" value :"+value);
+//	console.log("SetAttribute : Feature ID :"+feature.id+" attribute :"+attribute+" value :"+value);
 	var attrVal = null;
 	if( feature.attribute == null || feature.attribute.srstyle == null ) {
 		attrVal = this.srd_styleMap.styles[this.renderIntent].defaultStyle[attribute];
