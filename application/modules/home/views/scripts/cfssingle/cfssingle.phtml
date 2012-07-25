@@ -6,11 +6,6 @@
 		<title>SitRep</title>
 
 		<link rel="stylesheet" href="/lib/SR_Dojo/dijit/themes/tundra/tundra.css" type="text/css" />
-		<link rel="stylesheet" href="/lib/SR_Dojo/dojox/layout/resources/ExpandoPane.css" type="text/css" />
-		<link rel="stylesheet" href="/lib/SR_Dojo/dojox/layout/resources/GridContainer.css" type="text/css" />
-		<link rel="stylesheet" href="/lib/SR_Dojo/dojox/layout/resources/DndGridContainer.css" type="text/css" />
-		<link rel="stylesheet" href="/lib/SR_Dojo/dojox/grid/enhanced/resources/tundra/EnhancedGrid.css" type="text/css" />
-		<link rel="stylesheet" href="/lib/SR_Dojo/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css" type="text/css" />
 		<link rel="stylesheet" href="/lib/SR_Dojo/srd/form.css" type="text/css" />
 		<link rel="stylesheet" href="/lib/srd_css/srd_style.css" type="text/css" />
 		<link rel="stylesheet" href="/lib/srd_css/srd_view_style.css" type="text/css" />
@@ -25,63 +20,19 @@
                 height: 100%;
 								background-color:white;
 			      }
-						#srd_container { 
-                width: auto;
-                height: auto;
-			      }
 
 						#theSrdDoc { 
+								min-height: 100%;
                 width: 100%;
+                height: auto !important;
                 height: 100%;
 			      }
 	
 						
-						.srd_view_label {
-							background-color:lightgrey;
-							padding-left: 5px;
-						}
-	
-            #text {
-                position: absolute;
-                bottom: 1em;
-                left: 1em;
-                width: 512px;
-                z-index: 20000;
-                background-color: white;
-            }
-
-						.dojoxExpandoClosed .dojoxExpandoTitleNode {
-							display:inline;
-						}
-			
-						.gridContainerZone {
-							margin: 0px;
-						}
-
 		</style>	
 
 
-		<script data-dojo-config="async: true" src="/lib/dojo/dojo.js"></script>
-
-
-<!--
-		<script type="text/javascript" src="/lib/SR_Dojo/dojo/dojo.js" ></script>
-		<script type="text/javascript" src="/lib/SR_Dojo/dojo/srd_dojo.js" ></script>
-
-
-
-		<script src="/lib/srd_js/srd_gridContainer.js"></script>
-		<script src="/lib/srd_js/srd_editPalette.js"></script>
-		<script src="/lib/srd_js/srd_layer.js"></script>
-		<script src="/lib/srd_js/srd_view.js"></script>
-		<script src="/lib/srd_js/srd_view_map.js"></script>
-		<script src="/lib/srd_js/srd_view_datagrid.js"></script>
-		<script src="/lib/srd_js/srd_view_admin.js"></script>
-		<script src="/lib/srd_js/srd_view_cfssingle.js"></script>
-		<script src="/lib/srd_js/srd_view_opstrack.js"></script>
-		<script src="/lib/srd_js/srd_edit.js"></script>
-		<script src="/lib/srd_js/srd_document.js"></script>
--->
+		<script type="text/javascript" data-dojo-config="async: true" src="/lib/dojo/dojo.js"></script>
 
 		<script type="text/javascript">
 
@@ -140,7 +91,7 @@
 
 
 		</script>
-
+</head>
 
  	<body class="tundra" >
 		<div id="theSrdDoc"  >
