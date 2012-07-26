@@ -5,8 +5,6 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>SitRep</title>
 
-		<link rel="stylesheet" href="lib/SR_Dojo/dijit/themes/tundra/tundra.css" type="text/css" />
-		<link rel="stylesheet" href="lib/SR_Dojo/dojox/layout/resources/ExpandoPane.css" type="text/css" />
 		<link rel="stylesheet" href="lib/SR_Dojo/dojox/layout/resources/GridContainer.css" type="text/css" />
 		<link rel="stylesheet" href="lib/SR_Dojo/dojox/layout/resources/DndGridContainer.css" type="text/css" />
 		<link rel="stylesheet" href="lib/SR_Dojo/dojox/grid/enhanced/resources/tundra/EnhancedGrid.css" type="text/css" />
@@ -26,10 +24,21 @@
                 width: 100%;
                 height: 100%;
 			      }
-						#theSrdDoc, #srd_container { 
+						#theSrdDoc { 
+								min-height: 100%;
                 width: 100%;
-                height: 100%;
+                height: auto !important;
+								height: 100%;
+								overflow: visible;
 			      }
+
+						#srd_container { 
+                width: 100%;
+								height: 100%;
+						
+			      }
+	
+
 						
 						.srd_view_label {
 							background-color:lightgrey;
@@ -57,30 +66,9 @@
 		
 		<link rel="stylesheet" type="text/css" href="lib/srd_css/SitRep_Dark.css" />
 
-<!--
-		<script type="text/javascript" src="lib/SR_Dojo/dojo/dojo.js" ></script>
-		<script type="text/javascript" src="lib/SR_Dojo/dojo/srd_dojo.js" ></script>
--->
 		<script data-dojo-config="async: true" src="lib/dojo/dojo.js"></script>
 
-
-
 		<script src="lib/OpenLayers/OpenLayers.js"></script>
-
-<!--
-		<script src="lib/srd_js/srd_gridContainer.js"></script>
-		<script src="lib/srd_js/srd_editPalette.js"></script>
-		<script src="lib/srd_js/srd_layer.js"></script>
-		<script src="lib/srd_js/srd_view.js"></script>
-		<script src="lib/srd_js/srd_view_map.js"></script>
-		<script src="lib/srd_js/srd_view_datagrid.js"></script>
-		<script src="lib/srd_js/srd_view_admin.js"></script>
-		<script src="lib/srd_js/srd_view_cfssingle.js"></script>
-		<script src="lib/srd_js/srd_view_opstrack.js"></script>
-		<script src="lib/srd_js/srd_edit.js"></script>
-		<script src="lib/srd_js/srd_document.js"></script>
--->
-
 		<script type="text/javascript">
 
 		dojoConfig = {
@@ -97,21 +85,6 @@
 
 
 		require([
-//			"dojo/dom",
-//			"dijit/registry",
-//			"dojo/parser",
-//			"dojo/_base/declare",
-//			"dojox/layout/GridContainer",
-//			"dijit/form/Form",
-//			"srd_js/srd_gridContainer",
-//			"srd_js/srd_editPalette",
-//			"srd_js/srd_layer",
-//			"srd_js/srd_view",
-//			"srd_js/srd_view_opstrack",
-//			"srd_js/srd_view_map",
-//			"srd_js/srd_view_datagrid",
-//			"srd_js/srd_view_admin",
-//			"srd_js/srd_view_cfssingle",
 			"srd_js/srd_document",
 			"dojo/domReady!"
 

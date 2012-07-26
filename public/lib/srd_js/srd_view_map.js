@@ -60,7 +60,7 @@ declare(
 				this.map = new OpenLayers.Map({ 
 					controls: [
 						new OpenLayers.Control.Navigation(),
-						new OpenLayers.Control.PanZoomBar(),
+						new OpenLayers.Control.Zoom(),
 						new OpenLayers.Control.Attribution(),
 						new OpenLayers.Control.KeyboardDefaults(),
 						this.geolocateControl
