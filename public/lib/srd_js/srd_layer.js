@@ -221,15 +221,13 @@ loadData : function( ) {
 			this.options.url,
 			{
 				// TESTING ONLY
-				layers: "nexrad-n0r-wmst",
+				layers: "RAS_RIDGE_NEXRAD",
 				transparent : "true",
 				format : 'image/png',
-				time : '2012-06-26T13:00:00',
-				srs: 'EPSG:4326'
+				srs: 'EPSG:900913'
 			},
 			{
 				isBaseLayer:	this.options.isBaseLayer,
-				projection:		new OpenLayers.Projection(this.options.projection),
 				visibility:		this.options.visibility 
 				
  			}
