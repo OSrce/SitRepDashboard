@@ -175,6 +175,11 @@ SHOWNAME NOW INT VAL :
 -3 = SHOW FROM ALL VIEWS COMBINED
 0-N = SHOW FROM SPECIFIC VIEW.
 
+-----------------------------------
+
+-NOAA NexRad Weather :
+look at : http://nowcoast.noaa.gov/help/mapservices.html
+http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs
 
 
 
