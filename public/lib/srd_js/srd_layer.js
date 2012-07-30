@@ -227,6 +227,7 @@ loadData : function( ) {
 				srs: 'EPSG:900913'
 			},
 			{
+				opacity: 0.5,
 				isBaseLayer:	this.options.isBaseLayer,
 				visibility:		this.options.visibility 
 				
