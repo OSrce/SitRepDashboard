@@ -14,6 +14,7 @@ define( [
 //	"dojox/layout/GridContainer",
 //	"dojox/data/JsonRestStore",
 //	"dojo/store/DataStore",
+	"srd_js/srd_rtc",
 	"srd_js/srd_layer",
 	"srd_js/srd_view",
 	"srd_js/srd_gridContainer",
@@ -31,7 +32,8 @@ define( [
 	"dijit/MenuBarItem",
 	"dijit/PopupMenuBarItem",
 	"dijit/form/ComboBox",
-] , function( declare, srd_layer, srd_view, srd_gridContainer  ) {
+] , function( declare, srd_rtc, srd_layer, srd_view, srd_gridContainer  ) {
+//] , function( declare, srd_layer, srd_view, srd_gridContainer  ) {
 
 /*dojo.provide("ComboBoxReadStore");
 dojo.declare(
@@ -326,7 +328,8 @@ srd_init : function() {
 	}.bind(this) );
 
 //	this.srd_displayMenuBar();
-
+	
+	this.rtc = new srd_rtc(this);
 },
 // END SRD_DOCUMENT CONSTRUCTOR
 
