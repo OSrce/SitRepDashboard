@@ -1,0 +1,7 @@
+{
+	"name": "srd",
+	"description": "SitRep Dashboard",
+	"version": 1.0,
+	"dojoBuild": "srd.profile.js"
+}
+

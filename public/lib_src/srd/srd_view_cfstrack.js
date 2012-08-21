@@ -8,14 +8,18 @@
 //
 /////////////////////////////////
 
-dojo.require('dojox.timing');
-dojo.require('dojo.store.Observable');
-
 //srd_view class definition using dojo.declare 
-dojo.declare( 
-	'srd_view_cfstrack',
-	srd_view,
-	{
+define ( [ 
+	'dojo/_base/declare',
+	'srd/srd_view',
+	'dojox/timing',
+	'dojo/store/Observable'
+], function ( declare, srd_view) {
+	
+	return declare(
+		'srd_view_cfstrack',
+		[ srd_view ],
+		{
 		srd_layerArr : null,
 		srd_selLayer : null,
 		srd_store		 : null,
@@ -261,32 +265,7 @@ dojo.declare(
 		},
 		// END CREATE MAP FEATURES
 		refreshTable: function() {
-//			console.log("Refresh Table Called!");
-//			delete this.srd_memStore.data;
-//			this.srd_memStore.data = [];
-
-//				this.srd_memStore.query().forEach( function(cfs) {
-//					this.srd_memStore.remove(cfs);
-//				}.bind(this) ).then( function() {
-
-//			this.srd_datagrid.setQuery(this.srd_query ); 
-//				this.srd_datagrid._refresh();
-
-//			this.srd_datagrid.setStore(this.srd_dataStore); 
-//			dojo.when( this.srd_store.query(this.srd_query), function(theDataArr) {
 				this.srd_store.query(this.srd_query,{ sort:this.srd_sort } );
-//				dojo.when( this.srd_store.query(this.srd_query,{ sort:this.srd_sort } ), function(theDataArr) {
-/*					
-					if(this.mapData == true) {
-						this.srd_layer.layer.destroyFeatures();
-						this.srd_layer.layer.removeAllFeatures();
-						this.createMapFeatures();	
-					}
-
-				}.bind(this) );
-*/
-//			}.bind(this) );
-
 		},
 		// END refreshTable
 		
@@ -302,20 +281,10 @@ dojo.declare(
 			} else if(insertedInto > -1) {
 				var theIndex = this.srd_memStore.data.indexOf(object);
 //				console.log( "onNew :"+object.id+" : Index : "+theIndex);
-/*				if(theIndex >= 0 && theIndex != insertedInto) {
-					console.log("testing");					
-//					this.srd_dataStore.onNew(object,theIndex);
-//					this.srd_datagrid._clearData();
-					this.srd_datagrid._addItem(object,theIndex);
-					this.srd_datagrid.updateRows(0, insertedInto);
-//						this.srd_datagrid.update();
-				} else {
-*/
 					this.srd_dataStore.onNew(object,insertedInto);
 					if(this.mapData == true) {
 						this.addToMap(object);
 					}
-//				}
 			} else {
 				this.srd_dataStore.onSet(object);
 			}	
@@ -344,7 +313,6 @@ dojo.declare(
 			store.query = function(query, directives) {
 				directives.doNotEvictList = [];
 				var results = masterStore.query(query, directives);
-//				results.forEach(function(object) {
 				results.then(function(objects) {
 //TEST
 					var cacheResults = cachingStore.query();
@@ -463,7 +431,8 @@ dojo.declare(
 			var theWindow = window.open(urlStr,'CallsForService','width=612,scrollbars=1,resizeable=1');	
 
 		}
-	}
+	} );
+}
 );
 
 

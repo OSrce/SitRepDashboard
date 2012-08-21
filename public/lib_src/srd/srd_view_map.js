@@ -7,14 +7,14 @@
 //
 //
 /////////////////////////////////
-require( [
+define( 'srd/srd_view_map', [
 	"dojo/_base/declare",
-	"srd_js/srd_view",
+	"srd/srd_view"
 ], function(declare, srd_view) {
 
 
 //srd_view_map class definition using dojo.declare 
-declare( 
+	return declare( 
 	'srd_view_map',
 	[srd_view],
 	{

@@ -9,13 +9,13 @@
 /////////////////////////////////
 define([
 	"dojo/_base/declare",
-	"srd_js/srd_view",
-	"srd_js/srd_layer",
+	"srd/srd_view",
+	"srd/srd_layer",
 	'dojox/timing',
 	'dojo/store/Observable',
 	"dojo/store/JsonRest",
 	"dojo/store/Cache",
-	"dojo/data/ObjectStore",
+	"dojo/data/ObjectStore"
 ], function (declare, srd_view, srd_layer) {
 
 //srd_view class definition using dojo.declare 

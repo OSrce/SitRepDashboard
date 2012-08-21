@@ -12,9 +12,10 @@
 		<link rel="stylesheet" href="lib/dojox/layout/resources/DndGridContainer.css" type="text/css" />
 		<link rel="stylesheet" href="lib/dojox/grid/enhanced/resources/tundra/EnhancedGrid.css" type="text/css" />
 		<link rel="stylesheet" href="lib/dojox/grid/enhanced/resources/EnhancedGrid_rtl.css" type="text/css" />
-		<link rel="stylesheet" href="lib/SR_Dojo/srd/form.css" type="text/css" />
-		<link rel="stylesheet" href="lib/srd_css/srd_style.css" type="text/css" />
-		<link rel="stylesheet" href="lib/srd_css/srd_view_style.css" type="text/css" />
+<!--		<link rel="stylesheet" href="lib/dojo/css/form.css" type="text/css" />
+-->
+		<link rel="stylesheet" href="lib/srd/css/srd_style.css" type="text/css" />
+		<link rel="stylesheet" href="lib/srd/css/srd_view_style.css" type="text/css" />
 
 
 		<link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css" />
@@ -67,12 +68,12 @@
 
 		</style>	
 		
-		<link rel="stylesheet" type="text/css" href="lib/srd_css/SitRep_Dark.css" />
+		<link rel="stylesheet" type="text/css" href="lib/srd/css/SitRep_Dark.css" />
 
-		<script data-dojo-config="async: true" src="lib/dojo/dojo.js"></script>
+		<script data-dojo-config="async: 1 " src="lib/dojo/dojo.js" ></script>
 
 		<script src="lib/OpenLayers/OpenLayers.js"></script>
-		<script type="text/javascript">
+		<script type="text/javascript" >
 
 		dojoConfig = {
 			baseUrl: "lib",
@@ -81,7 +82,7 @@
 				{ name: "dojo", location: "dojo" },
 				{ name: "dijit", location: "dijit" },
 				{ name: "dojox", location: "dojox" },
-				{ name: "srd_js", location: "srd_js" },
+				{ name: "srd", location: "srd" },
 				{ name: "org", location: "org" }
 			]
 		};
@@ -89,9 +90,8 @@
 
 
 		require([
-			"srd_js/srd_document",
+			"srd/srd_document",
 			"dojo/domReady!"
-
 		], function( srd_document ) {
 
 				srd = new srd_document();

@@ -14,15 +14,16 @@ define( [
 //	"dojox/layout/GridContainer",
 //	"dojox/data/JsonRestStore",
 //	"dojo/store/DataStore",
-	"srd_js/srd_rtc",
-	"srd_js/srd_layer",
-	"srd_js/srd_view",
-	"srd_js/srd_gridContainer",
-	"srd_js/srd_view_map",
-	"srd_js/srd_view_cfssingle",
-	"srd_js/srd_view_admin",
-	"srd_js/srd_view_datagrid",
-	"srd_js/srd_view_opstrack",
+	"srd/srd_rtc",
+	"srd/srd_layer",
+	"srd/srd_view",
+	"srd/srd_gridContainer",
+	"srd/srd_view_map",
+	"srd/srd_view_cfssingle",
+	"srd/srd_view_admin",
+	"srd/srd_view_datagrid",
+	"srd/srd_view_opstrack",
+	"dojo",
 	"dojox/data/QueryReadStore",
 	"dojox/storage/LocalStorageProvider",
 	"dijit/layout/BorderContainer",
@@ -31,7 +32,7 @@ define( [
 	"dijit/MenuBar",
 	"dijit/MenuBarItem",
 	"dijit/PopupMenuBarItem",
-	"dijit/form/ComboBox",
+	"dijit/form/ComboBox"
 ] , function( declare, srd_rtc, srd_layer, srd_view, srd_gridContainer  ) {
 //] , function( declare, srd_layer, srd_view, srd_gridContainer  ) {
 
@@ -299,8 +300,8 @@ srd_init : function() {
 
 	dojo.addOnLoad(function() {
 		if(this.srd_container == null) {
-			var srd_jsDisabled = dojo.byId("srd_jsDisabled");
-			dojo.style(srd_jsDisabled, "display", "none");
+			var jsDisabled = dojo.byId("jsDisabled");
+			dojo.style(jsDisabled, "display", "none");
 			this.srd_container = new dijit.layout.BorderContainer( { 
 					gutters: false,
 					splitter: "false",
@@ -1297,8 +1298,8 @@ updateLayoutNameDisplay : function() {
 						}
 						this.nameCP = new dijit.layout.ContentPane( {
 							content: '<img src="'+this.siteLeftImage+'" class="srdLayoutImage"/><div id="srdLayoutText">'+theWindowLabel+'</div><img src="'+this.siteRightImage+'" class="srdLayoutImage"/>',
-							class: "srdLayoutName",
-							region: 'bottom',
+							'class': "srdLayoutName",
+							region: 'bottom'
 						});
 
 						this.srd_container.addChild(this.nameCP);

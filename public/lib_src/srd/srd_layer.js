@@ -9,7 +9,7 @@
 
 define([
 	"dojo/_base/declare",
-	"srd_js/srd_editPalette",
+	"srd/srd_editPalette",
 	"dojox/timing/Sequence"
 ], function(declare , srd_editPalette) {
 //OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";

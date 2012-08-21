@@ -10,7 +10,7 @@
 
 define([
 	"dojo/_base/declare",
-	"srd_js/srd_view",
+	"srd/srd_view",
 	"dojo/store/Cache",
 	"dojo/store/JsonRest",
 	"dojo/store/Memory",

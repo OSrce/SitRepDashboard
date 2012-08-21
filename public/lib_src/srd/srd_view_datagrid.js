@@ -11,7 +11,7 @@
 //srd_view class definition using dojo.declare 
 require([
 	"dojo/_base/declare",
-	"srd_js/srd_view"
+	"srd/srd_view"
 ], function(declare, srd_view) {
 
 

@@ -9,7 +9,7 @@
 //
 /////////////////////////////////
 
-define([
+define("srd/srd_rtc", [
 	"dojo/_base/declare",
 	"dojo/_base/unload",
 	"dojox/cometd/main",
@@ -22,6 +22,7 @@ define([
 
 		// BEGIN CONSTRUCTOR
 		constructor : function(parent_srd_doc) {
+
 			console.log("srd_rtc constructor called!");
 			this.srd_doc = parent_srd_doc;
 
@@ -122,13 +123,13 @@ define([
 						{
 							"channel": "/meta/connect",
 							"clientId": this.clientId,
-							"connectionType": "long-polling",
+							"connectionType": "long-polling"
 						},
 						// send a subscribe message
 						{
 							"channel": "/meta/subscribe",
 							"clientId": this.clientId,
-							"subscription": "/foo/**",
+							"subscription": "/foo/**"
 						}
 					]);
 					this.socket.on("message", function(evt) {
