@@ -35,16 +35,15 @@ define( 'srd/srd_view_map', [
 			this.start_lon = view_data.start_lon;
 			this.start_zoom = view_data.start_zoom;
 //			this.map = this.srd_doc.map;
-			dojo.ready( function() {
 			this.srd_layerArr = this.srd_doc.srd_layerArr;
 			this.srd_mapContent = new dijit.layout.ContentPane(
 	     {  splitter: 'false', style: "background-color:black;width:100%;height:100%;border:0px;margin:0px;padding:0px;", region: 'center'} );
 			this.srd_mapContent.connect(this.srd_mapContent,'onShow', function(data) { this.map_init(); }.bind(this)  );
 			this.insideContainer.addChild(this.srd_mapContent);
-			}.bind(this) );
+//			this.map_init();
 		},
 		map_init : function() {
-//			console.log("###############CALLED MAP_INIT");
+			console.log("###############CALLED MAP_INIT");
 //			dojo.ready(function() {
 			if( this.map == null) {
 				console.log("CREATING MAP!!!!");

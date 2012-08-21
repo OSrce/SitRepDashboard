@@ -52,13 +52,19 @@ define([
 				this.data.id = tmpId;
 				console.log("No View ID was found, created new id:"+tmpId);
 			}
-			this.data.height = Math.round(100 / this.data.yDim);
+			this.data.height = Math.round(100 / this.data.yDim) * this.srd_doc.viewContainer;
+//			this.containerStyle = 'width:100%; height:'+this.height+'%;margin:0px;border:0px;padding:0px; background-color:black;';
 //			this.containerStyle = 'width:100%; height:'+this.height+'%;margin:0px;border:0px;padding:0px; background-color:black;';
 
 			this.outsideContainer = new dijit.layout.BorderContainer({
+//				"style": "height:500px; width:100%;",
+//				"style": this.containerStyle,
 				"class": "srdViewOutside"
 			} );	
 			this.srd_doc.viewContainer.addChild(this.outsideContainer,this.data.xPos,this.data.yPos);
+
+//			this.test = new dijit.layout.ContentPane( { tile:"cpane1", content:" TEST CONTENT PANE", style:"background-color:blue; height:100%; width:100%;" } );
+//			this.srd_doc.viewContainer.addChild(this.test, 0, 0);
 
 			this.insideContainer = new dijit.layout.BorderContainer({
 				"class": "srdViewInside",

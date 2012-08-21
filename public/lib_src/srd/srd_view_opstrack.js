@@ -11,12 +11,12 @@ define([
 	"dojo/_base/declare",
 	"srd/srd_view",
 	"srd/srd_layer",
-	'dojox/timing',
 	'dojo/store/Observable',
+	'dojox/timing',
 	"dojo/store/JsonRest",
 	"dojo/store/Cache",
 	"dojo/data/ObjectStore"
-], function (declare, srd_view, srd_layer) {
+], function (declare, srd_view, srd_layer, Observable) {
 
 //srd_view class definition using dojo.declare 
 return declare( 
@@ -123,7 +123,7 @@ return declare(
 				} );
 				this.dataMenu.addChild(mapDataMenuItem);
 //				this.srd_memStore = new dojo.store.Memory();			
-				this.srd_memStore = dojo.store.Observable( new dojo.store.Memory() );			
+				this.srd_memStore = Observable( new dojo.store.Memory() );			
 				this.srd_store = new this.FixedCacheStore(
 					dojo.store.JsonRest({ 
 						idProperty: "id",

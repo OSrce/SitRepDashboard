@@ -25,14 +25,15 @@ define( [
 	"srd/srd_view_opstrack",
 	"dojo",
 	"dojox/data/QueryReadStore",
-	"dojox/storage/LocalStorageProvider",
+//	"dojox/storage/LocalStorageProvider",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
 	"dijit/Menu",
 	"dijit/MenuBar",
 	"dijit/MenuBarItem",
 	"dijit/PopupMenuBarItem",
-	"dijit/form/ComboBox"
+	"dijit/form/ComboBox",
+	"dojo/domReady!"
 ] , function( declare, srd_rtc, srd_layer, srd_view, srd_gridContainer  ) {
 //] , function( declare, srd_layer, srd_view, srd_gridContainer  ) {
 
@@ -188,7 +189,7 @@ srd_init : function() {
 		// LOCAL STORAGE LOADING
 		// LOAD THE VALUES AND CHECK TO SEE THAT WE HAVE EVERYTHING
 		// WE NEED.  OTHERWISE, LOAD DEFAULTS FROM XML FILE.
-		this.srd_localStore = new dojox.storage.LocalStorageProvider({});
+/*		this.srd_localStore = new dojox.storage.LocalStorageProvider({});
 		if( this.srd_localStore.isAvailable() ) {
 			this.srd_localStore.initialize();
 			if(this.srd_localStore.initialized == false ) {
@@ -200,7 +201,9 @@ srd_init : function() {
 				console.log("Store Is Inited");
 				this.loadFromLocalStore();
 			}
+
 		}
+*/
 	} else if(this.staticVals.runFromServer == true) {
 //		console.log("this.staticVals.start_lat == "+this.staticVals.start_lat); 
 		this.staticVals.docCount = 1;
@@ -1113,7 +1116,9 @@ srd_changeWindowLayout : function(wlayout) {
 						this.viewContainer = new srd_gridContainer( {
 							nbZones: this.staticVals.view_layout_x,
 				//		nbColumns: 2,
+//							style: "min-width:100%; min-height:100%;",
 							isAutoOrganized: true,
+//							style: "height:500px",
 							hasResizeableColumns : false
 						}  );
 						dojo.place(this.viewContainer.domNode, this.centerPane.domNode,'first');

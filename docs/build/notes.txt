@@ -1,0 +1,10 @@
+
+BUG IN dojo 1.8
+
+need to edit
+dojox/layout/resources/GridContainer.html
+
+--- ADD style="height:100%" to DIV ------
+
+
+

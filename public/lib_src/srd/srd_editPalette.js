@@ -35,11 +35,11 @@ define([
 	this.srd_layer = theSrdLayer;	
 
 	this.drawControlLabelArr =  {
-		point: { label: "Add Points", img: "lib/SR_OpenLayers/theme/default/img/draw_point_off.png" },
-		line: { label: "Add Lines", img: "lib/SR_OpenLayers/theme/default/img/draw_line_off.png" },
-		polygon: { label: "Add Polygons", img: "lib/SR_OpenLayers/theme/default/img/draw_polygon_off.png" },
-		remove: { label: "Remove Features", img: "lib/SR_OpenLayers/theme/default/img/remove_point_off.png" },
-		select: { label: "Select Features", img: "lib/SR_OpenLayers/theme/default/img/pan_off.png" }
+		point: { label: "Add Points", img: "lib/OpenLayers/theme/default/img/draw_point_off.png" },
+		line: { label: "Add Lines", img: "lib/OpenLayers/theme/default/img/draw_line_off.png" },
+		polygon: { label: "Add Polygons", img: "lib/OpenLayers/theme/default/img/draw_polygon_off.png" },
+		remove: { label: "Remove Features", img: "lib/OpenLayers/theme/default/img/remove_point_off.png" },
+		select: { label: "Select Features", img: "lib/OpenLayers/theme/default/img/pan_off.png" }
 	}	
 
 	//BEGIN BUILD THE PRESETS
