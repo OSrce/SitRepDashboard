@@ -10,10 +10,8 @@ if(dojo.isIE) {
 */
 
 define( [
+	"srd/doc_include",
 	"dojo/_base/declare",
-//	"dojox/layout/GridContainer",
-//	"dojox/data/JsonRestStore",
-//	"dojo/store/DataStore",
 	"srd/srd_rtc",
 	"srd/srd_layer",
 	"srd/srd_view",
@@ -34,7 +32,7 @@ define( [
 	"dijit/PopupMenuBarItem",
 	"dijit/form/ComboBox",
 	"dojo/domReady!"
-] , function( declare, srd_rtc, srd_layer, srd_view, srd_gridContainer  ) {
+] , function( doc_include, declare, srd_rtc, srd_layer, srd_view, srd_gridContainer  ) {
 //] , function( declare, srd_layer, srd_view, srd_gridContainer  ) {
 
 /*dojo.provide("ComboBoxReadStore");
@@ -52,7 +50,7 @@ dojo.declare(
 
 
 //srd_document CLASS 
-return declare( [], {
+return declare( null, {
 
 	constructor : function() {
 	//THE UI VARS

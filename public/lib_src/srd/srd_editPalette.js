@@ -1,4 +1,5 @@
 define([
+	"srd/edit_include",
 	"dojo/_base/declare",
 	"dijit/form/Form",
 	"dijit/form/Textarea",
@@ -8,7 +9,7 @@ define([
 	"dijit/layout/ContentPane",
 	"dijit/layout/BorderContainer",
 	"dojox/layout/ExpandoPane"
-], function(declare, Form, NumberSpinner,ContentPane,BorderContainer,ExpandoPane) {
+], function(edit_include, declare, Form, NumberSpinner,ContentPane,BorderContainer,ExpandoPane) {
 
 	return declare( [], {
 	constructor: function(theSrdLayer) {

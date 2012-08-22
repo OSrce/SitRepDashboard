@@ -70,14 +70,13 @@
 		
 		<link rel="stylesheet" type="text/css" href="lib/srd/css/SitRep_Dark.css" />
 
-		<script data-dojo-config="async: 1 " src="lib/dojo/dojo.js" ></script>
 
 		<script src="lib/OpenLayers/OpenLayers.js"></script>
 		<script type="text/javascript" >
 
 		dojoConfig = {
 			baseUrl: "lib",
-			tlmSiblingOfDojo: false,
+			tlmSiblingOfDojo: true,
 			packages: [
 				{ name: "dojo", location: "dojo" },
 				{ name: "dijit", location: "dijit" },
@@ -86,9 +85,15 @@
 				{ name: "org", location: "org" }
 			]
 		};
+		</script>
+
+
+		<script data-dojo-config="async: 1 " src="lib/dojo/dojo.js" ></script>
+		<script data-dojo-config="async: 0" src="lib/srd/doc_include.js" ></script>
+		<script data-dojo-config="async: 0" src="lib/srd/view_include.js" ></script>
+
+		<script>
 		loadsrd = {};
-
-
 		require([
 			"srd/srd_document",
 			"dojo/domReady!"

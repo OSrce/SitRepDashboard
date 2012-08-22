@@ -19,17 +19,58 @@ var profile = {
 //	optimize: 'closure',
 //	layerOptimize: 'closure',
 //	stripConsole: 'all',
-/*	layers: {
-		"dojo/dojo": {
+	layers: {
+/*		"dojo/dojo": {
 			include: [ "dojo/dojo", 'dojo/_base/loader', 'dojo/i18n', "dojo/domReady" ],
 			customBase: true,
 			boot: true
 		}
-//		"srd/Login": { 
-//			include: [ "srd/login_desktop" ]
-//		}
-	},
 */
+		"srd/edit_include" : {
+			include: [ 
+				"dijit/form/Form",
+				"dijit/form/Textarea",
+				"dijit/ColorPalette",
+				"dijit/form/HorizontalSlider",
+				"dijit/form/NumberSpinner",
+				"dojox/layout/ExpandoPane"
+			]
+		},
+		"srd/doc_include" : {
+			include: [
+				"srd/doc_include"
+			]
+		},
+		"srd/view_include": { 
+			include: [ 
+				"dojo/_base/declare",
+				"dijit/layout/BorderContainer",
+				"dijit/Menu",
+				"dijit/PopupMenuItem",
+				"dojox/grid/EnhancedGrid",
+				"dojox/grid/enhanced/plugins/NestedSorting",
+				"dojox/grid/enhanced/plugins/Pagination"
+			 ]
+		},
+		"srd/srd_view": {
+			include: [ "srd/srd_view" ],
+			exclude: [ "srd/view_include" ]
+		},
+		"srd/srd_editPalette": {
+			include: [ "srd/srd_editPalette" ],
+			exclude: [ "srd/doc_include" ]
+		},
+		
+
+		"srd/srd_document": {
+			include: [ "srd/srd_document" ],
+			exclude: [ "srd/doc_include" ]
+		}
+
+
+
+	},
+
 
 
     staticHasFeatures: {
