@@ -1,5 +1,5 @@
 define([
-	"srd/edit_include",
+	"srd/include_edit",
 	"dojo/_base/declare",
 	"dijit/form/Form",
 	"dijit/form/Textarea",

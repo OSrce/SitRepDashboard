@@ -36,19 +36,45 @@ class Home_IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
+			if($this->_uid == NULL) {
+				$this->_redirect('/login');
+				exit(-1);
+			}
+			$this->render('indexhead');
+			$this->indexBodyAction();
+			$this->render('srdincludes');
+			$this->render('index');
+
+		}
+
+
+    public function localindexAction()
+    {
+			if($this->_uid == NULL) {
+				$this->_redirect('/login');
+				exit(-1);
+			}
+
+			$this->render('indexhead');
+			$this->indexBodyAction();
+			$this->render('srdlocalincludes');
+			$this->render('index');
+		}
+
+    public function indexBodyAction()
+    {
+			$this->getResponse()->appendBody( "loadsrd = ");
+			$this->userdataAction();
+			$this->getResponse()->setHeader('Content-type', 'text/html', true);
+		}
+
+    public function userdataAction()
+    {
 
 			$staticVals = array( 
-//				'default_projection' => 'EPSG:4326',
-//				'view_layout_x' =>	$this->_view_layout_x,
-//				'view_layout_y' =>	$this->_view_layout_y,
-//				'view_data' =>	$this->_view_data,
 				'default_wlayout' => $this->_wlayout,
 				'user_title' => $this->_title,
 				'user_lastname' => $this->_lastname,
-//				'start_lat' => 40.714,
-//				'start_lon' => -73.998,
-//				'start_zoom' => 10,
-//				'runFromServer' => true
 			);
 
 //			$auth = Zend_Auth::getInstance();
@@ -56,123 +82,55 @@ class Home_IndexController extends Zend_Controller_Action
 
 //			$srd_session = new Zend_Session_Namespace("srd");
 			
-			if($this->_uid == NULL) {
-				$this->_redirect('/login');
-				exit(-1);
-			}
-
 			date_default_timezone_set("America/New_York");
 			$logger = new Zend_Log();
 			$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/sr_layer.log"));
 	
-			$this->render('srdincludes');
 
 			$this->getLayers();
 
-			$this->getResponse()->appendBody( "<script type=\"text/javascript\">\n") ;
+			$this->getResponse()->setHeader('Content-type', 'application/json', true);
+
 			// BEGIN LOAD STATIC VALS INTO CLIENTS JS.			
-			$this->getResponse()->appendBody( "loadsrd.staticVals = ");
-			$this->getResponse()->appendBody( Zend_Json::encode($staticVals)."\n");
+			$this->getResponse()->appendBody( "{ ");
+			$this->getResponse()->appendBody( "\"staticVals\" : ");
+			$this->getResponse()->appendBody( Zend_Json::encode($staticVals) );
 			// END LOAD STATIC VALS
 
 			$serverToClientArr = array();
-			$serverToClientArr['queries'] = 'loadsrd.srd_queryArr';
-			$serverToClientArr['layers'] = 'var theLayers';
-			$serverToClientArr['styles'] = 'var theStyles';
-			$serverToClientArr['stylesymbolizers'] = 'var theStyleSymbolizers';
-			$serverToClientArr['stylerules'] = 'var theStyleRules';
-			$serverToClientArr['wlayout'] = 'loadsrd.srd_wlayoutArr';
-			$serverToClientArr['presets'] = 'loadsrd.srd_presetArr';
+			$serverToClientArr['queries'] = "srd_queryArr";
+			$serverToClientArr['layers'] = "theLayers";
+			$serverToClientArr['styles'] = "theStyles";
+			$serverToClientArr['stylesymbolizers'] = "theStyleSymbolizers";
+			$serverToClientArr['stylerules'] = "theStyleRules";
+			$serverToClientArr['wlayout'] = "srd_wlayoutArr";
+			$serverToClientArr['presets'] = "srd_presetArr";
 
 			foreach($this->_data as $resType => $resArr) {
 				// BEGIN LOAD srdQueryArr data :
 
-					$this->getResponse()->appendBody($serverToClientArr[$resType]." = ");
+					$this->getResponse()->appendBody(",\n\n\n\"");
+					$this->getResponse()->appendBody($serverToClientArr[$resType]."\" : ");
 					$this->getResponse()->appendBody( 
 							Zend_Json::encode($resArr) 
 					);
-					$this->getResponse()->appendBody("\n");
 					
-/*
-				if($resType != 'layers' ) {
-					foreach($resArr as $theId => $theArr) {
-						$theArrJSON = Zend_Json::encode($theArr);
-//						$logger->log("print".$theId."JSON:".$theArrJSON,Zend_Log::DEBUG);
-						$this->getResponse()->appendBody( $serverToClientArr[$resType]."['$theId'] = \n");
-						$this->getResponse()->appendBody( $theArrJSON."\n");
-					}
-
-				} else {
-					$this->getResponse()->appendBody("var theLayers = [\n");
-					$firstTime =1;
-					foreach($resArr as $theId => $theArr) {
-						if($firstTime ==1) {
-							$firstTime =0;
-						} else {
-							$this->getResponse()->appendBody(",");
-						}
-						$layerOptionsJSON = Zend_Json::encode($theArr);
-						$this->getResponse()->appendBody( $layerOptionsJSON."\n");
-					}
-					$this->getResponse()->appendBody("]\n");
-				}
-*/		
-				// END LOAD srdQueryArr data
+			// END LOAD srdQueryArr data
 			}
 
-/*
-			// BEGIN LOAD srdWlayoutArr data :
-			foreach($this->_wlayouts as $wlayoutId => $wlayoutArr) {
-				$wlayoutArrJSON = Zend_Json::encode($wlayoutArr);
-				$logger->log("printwlayoutJSON:".$wlayoutArrJSON,Zend_Log::DEBUG);
-				$this->getResponse()->appendBody( "srd.srd_wlayoutArr['$wlayoutId'] = \n");
-				$this->getResponse()->appendBody( $wlayoutArrJSON."\n");
-			}
-			// END LOAD srdWlayoutArr data
 
-			// BEGIN LOAD srdStyleArr data :
-//			$this->getResponse()->appendBody("srd.srd_styleArr
-			foreach($this->_styles as $styleId => $styleArr) {
-//				$styleArr = $style->toArray();
-				$styleArrJSON = Zend_Json::encode($styleArr);
-				$logger->log("printstyleJSON:".$styleArrJSON,Zend_Log::DEBUG);
-				$this->getResponse()->appendBody( "srd.srd_styleArr['$styleId'] = \n");
-				$this->getResponse()->appendBody( $styleArrJSON."\n");
-			}
-			// END LOAD srdStyleArr data
-
-			// BEGIN LOAD srdLayerArr data :
-			$this->getResponse()->appendBody("var theLayers = [\n");
-			$firstTime =1;
-			foreach($this->_layers as $layerId => $layer) {
-				if($firstTime ==1) {
-					$firstTime =0;
-				} else {
-					$this->getResponse()->appendBody(",");
-				}
-//				$this->getResponse()->appendBody( "srd.srd_layerArr[$layerId] = new srd_layer();\n");
-				$layerOptions = $layer;
-				$logger->log("printLayer:".print_r($layerOptions,true),Zend_Log::DEBUG);
-				$layerOptionsJSON = Zend_Json::encode($layerOptions);
-//				$logger->log("printLayerJSON:".$layerOptionsJSON,Zend_Log::DEBUG);
-//				$this->getResponse()->appendBody( "srd.srd_layerArr['$layerId'].options = \n");
-				$this->getResponse()->appendBody( $layerOptionsJSON."\n");
-//				$this->getResponse()->appendBody( "srd.srd_layerArr['$layerId'].srd_styleArr = srd.srd_styleArr;\n");
-			}
-			$this->getResponse()->appendBody("]\n");
-			// END LOAD srdLayerArr data
-*/
 			//PUT THE LINKS TO THE SITE SPECIFIC IMAGES IN JS.
-			$this->getResponse()->appendBody("loadsrd.siteLeftImage='".$this->view->srd_login_opts['leftimage']."';\n" );
-			$this->getResponse()->appendBody("loadsrd.siteRightImage='".$this->view->srd_login_opts['rightimage']."';\n" );
-			$this->getResponse()->appendBody("loadsrd.siteTitle='".$this->view->srd_login_opts['title']."';\n" );
+			$this->getResponse()->appendBody(",\n\"siteLeftImage\" : \"".$this->view->srd_login_opts['leftimage']."\",\n" );
+			$this->getResponse()->appendBody("\"siteRightImage\" : \"".$this->view->srd_login_opts['rightimage']."\",\n" );
+			$this->getResponse()->appendBody("\"siteTitle\" : \"".$this->view->srd_login_opts['title']."\"\n" );
 
-			$this->getResponse()->appendBody( "\n</script>\n");
-			$this->getResponse()->appendBody( "\n</head>\n");
-			$this->render('index');
+			$this->getResponse()->appendBody( "\n}");
 
     }
-		
+		// END indexAction
+
+
+	
 	private function getLayers() {
 		date_default_timezone_set("America/New_York");
 		$logger = new Zend_Log();

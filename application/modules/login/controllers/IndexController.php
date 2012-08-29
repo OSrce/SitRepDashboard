@@ -57,6 +57,13 @@ class Login_IndexController extends Zend_Controller_Action {
 
 	public function embeddedloginAction() {
 		$data = Zend_Json::decode($this->getRequest()->getRawBody() );
+
+		date_default_timezone_set("America/New_York");
+		$logger = new Zend_Log();
+		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/ldap.log"));
+		$logger->log("DATA: ".print_r($this->getRequest()->getRawBody(),true),Zend_Log::DEBUG);
+	
+
 		$this->username = $data['username'];
 		$this->password = $data['password'];
 		$this->_helper->viewRenderer->setNoRender(true);
@@ -94,7 +101,7 @@ class Login_IndexController extends Zend_Controller_Action {
 		$logger = new Zend_Log();
 		$logger->addWriter(new Zend_Log_Writer_Stream("/tmp/ldap.log"));
 	
-//		$logger->log("username: ".$this->username." pass:".$this->password,Zend_Log::DEBUG);
+		$logger->log("username: ".$this->username." pass:".$this->password,Zend_Log::DEBUG);
 		$options = array();
 		$options['username'] = $this->username;
 		$options['password'] = $this->password;

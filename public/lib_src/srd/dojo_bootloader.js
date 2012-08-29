@@ -4,6 +4,7 @@ define( [
 				"dojo",
 				"dijit",
 				"dojox",
+				"dojo/selector/acme",
 				"dojox/data/QueryReadStore",
 //			"dojox/storage/LocalStorageProvider",
 				"dijit/layout/BorderContainer",

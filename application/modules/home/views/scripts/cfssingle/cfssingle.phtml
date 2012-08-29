@@ -5,8 +5,8 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>SitRep</title>
 
-		<link rel="stylesheet" href="/lib/srd_css/srd_style.css" type="text/css" />
-		<link rel="stylesheet" href="/lib/srd_css/srd_view_style.css" type="text/css" />
+		<link rel="stylesheet" href="/lib/srd/css/srd_style.css" type="text/css" />
+		<link rel="stylesheet" href="/lib/srd/css/srd_view_style.css" type="text/css" />
 
 
 				<!--.olControlPanel  DESCRIBES THE PANEL ITSELF -->
@@ -31,6 +31,7 @@
 
 
 		<script type="text/javascript" data-dojo-config="async: true" src="/lib/dojo/dojo.js"></script>
+		<script data-dojo-config="async: 0" src="/lib/srd/view_include.js" ></script>
 
 		<script type="text/javascript">
 
@@ -41,7 +42,7 @@
 				{ name: "dojo", location: "dojo" },
 				{ name: "dijit", location: "dijit" },
 				{ name: "dojox", location: "dojox" },
-				{ name: "srd_js", location: "srd_js" }
+				{ name: "srd", location: "srd" }
 			]
 		};
 		loadsrd = {};
@@ -62,7 +63,7 @@
 //			"srd_js/srd_view_map",
 //			"srd_js/srd_view_datagrid",
 //			"srd_js/srd_view_admin",
-			"srd_js/srd_view_cfssingle",
+			"srd/srd_view_cfssingle",
 //			"srd_js/srd_document",
 			"dijit/layout/LayoutContainer",
 			"dojo/domReady!"

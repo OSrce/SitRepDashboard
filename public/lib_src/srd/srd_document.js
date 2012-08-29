@@ -10,7 +10,7 @@ if(dojo.isIE) {
 */
 
 define( [
-	"srd/doc_include",
+//	"srd/dojo_bootloader",
 	"dojo/_base/declare",
 	"srd/srd_rtc",
 	"srd/srd_layer",
@@ -32,8 +32,8 @@ define( [
 	"dijit/PopupMenuBarItem",
 	"dijit/form/ComboBox",
 	"dojo/domReady!"
-] , function( doc_include, declare, srd_rtc, srd_layer, srd_view, srd_gridContainer  ) {
-//] , function( declare, srd_layer, srd_view, srd_gridContainer  ) {
+//] , function( doc_include,  declare, srd_rtc, srd_layer, srd_view, srd_gridContainer  ) {
+] , function( declare, srd_rtc, srd_layer, srd_view, srd_gridContainer  ) {
 
 /*dojo.provide("ComboBoxReadStore");
 dojo.declare(
@@ -52,7 +52,7 @@ dojo.declare(
 //srd_document CLASS 
 return declare( null, {
 
-	constructor : function() {
+	constructor : function( loadsrd ) {
 	//THE UI VARS
 	this.srd_container = null;
 	this.srd_menuBar = null;
@@ -170,6 +170,9 @@ return declare( null, {
 	this.siteRightImage= loadsrd.siteRightImage;
 	this.siteTitle = loadsrd.title;
 
+	this.loadsrd = loadsrd;
+	this.serverBaseUrl = loadsrd.serverBaseUrl;
+
 // END ASSOCIATE DATA FROM SERVER
 
 
@@ -183,6 +186,7 @@ srd_init : function() {
 // load initial values and the first 'screen' we will see :
 // map, admin, or data.
 
+	console.log("Called srd_init!");
 	if(this.staticVals.runFromServer == null ) {
 		// LOCAL STORAGE LOADING
 		// LOAD THE VALUES AND CHECK TO SEE THAT WE HAVE EVERYTHING
@@ -229,6 +233,10 @@ srd_init : function() {
 	);
 */
 
+	var theLayers = this.loadsrd.theLayers;
+	var theStyles = this.loadsrd.theStyles;
+	var theStyleSymbolizers = this.loadsrd.theStyleSymbolizers;
+	var theStyleRules = this.loadsrd.theStyleRules;
 
 
 	var theStyleMaps = {};
@@ -299,7 +307,7 @@ srd_init : function() {
 
 //	this.srd_container.startup();
 
-	dojo.addOnLoad(function() {
+//	dojo.addOnLoad(function() {
 		if(this.srd_container == null) {
 			var jsDisabled = dojo.byId("jsDisabled");
 			dojo.style(jsDisabled, "display", "none");
@@ -310,13 +318,14 @@ srd_init : function() {
 				 }, 'theSrdDoc' );
 			this.srd_container.startup();
 		}
-	}.bind(this) );
+//	}.bind(this) );
 
-	dojo.addOnLoad(function() {
+//	dojo.addOnLoad(function() {
 
 	this.srd_displayMenuBar();
 
 
+	console.log("test2");
 	// ASSUME view_layer_x/y have been set and that settings are populated
 	// parse and init different views
 	this.centerPane = new dijit.layout.ContentPane( { 
@@ -325,16 +334,19 @@ srd_init : function() {
 	} );
 	this.srd_container.addChild(this.centerPane);
 
+	console.log("test");
+
 	this.srd_changeWindowLayout(this.staticVals.default_wlayout);
 
-	}.bind(this) );
+//	}.bind(this) );
 
 //	this.srd_displayMenuBar();
 	
 	this.rtc = new srd_rtc(this);
 },
-// END SRD_DOCUMENT CONSTRUCTOR
+// END srd_init
 
+ 
 // BEGIN: LOAD FROM LOCAL STORE
 loadFromLocalStore : function() {
 	//BEGIN CLEAR STORE LINE - DEBUG ONLY
@@ -552,17 +564,19 @@ srd_createLayer : function(theName,theUrl) {
 },
 // END srd_createLayer
 
+//BEGIN srd_displayMenuBar
 				srd_displayMenuBar : function() {
-					dojo.addOnLoad(function() {
+					console.log("Adding Menu Bar");
+//					dojo.addOnLoad(function() {
 						if(this.srd_menuBar == null) {
 							this.srd_menuBar = new dijit.MenuBar( { 
 								splitter: false,
 								'region': 'top',
 								style: "margin:0px;padding:0px;"
-							} );	
+							} );
 							//// ICON in LEFT CORNER ////
 							this.srd_menuBar.addChild(new dijit.MenuBarItem( {
-								label: '<img src="lib/img/SitRepIcon_Small.png" height="20" width="20">' } ) );
+								label: '<img src="'+this.serverBaseUrl+'/lib/img/SitRepIcon_Small.png" height="20" width="20">' } ) );
 							//// SitRep MENU /////	
 							var srd_sitrepMenu = new dijit.Menu({});
 							this.srd_menuBar.addChild(new dijit.MenuBarItem({
@@ -588,10 +602,6 @@ srd_createLayer : function(theName,theUrl) {
 								onClick: function() { alert("Future Function - Save Project") }.bind(this)
 							}));
 							this.srd_saveMenu = new dijit.Menu( );
-				//			this.srd_saveMenu.addChild(new dijit.MenuItem( { 
-				//				label: "List of Editable Layers",
-				//				disabled: true
-				//			} ) );
 							for( tmpId in this.srd_layerArr) {
 								if(this.srd_layerArr[tmpId].options.type == "Vector" && this.srd_layerArr[tmpId].feature_update == true) {
 									this.srd_saveMenu.addChild(new dijit.MenuItem( { 
@@ -600,11 +610,11 @@ srd_createLayer : function(theName,theUrl) {
 									} ) );
 								}
 							}	
+
 							srd_fileMenu.addChild(new dijit.PopupMenuItem({
 								label: "Save Layer",
 								popup:this.srd_saveMenu
 							}));
-				//			srd_fileMenu.startup();
 
 							//// Edit Menu ////
 							var srd_editMenu = new dijit.Menu({});
@@ -615,7 +625,6 @@ srd_createLayer : function(theName,theUrl) {
 							srd_editMenu.addChild(new dijit.MenuItem({
 								label: "TEST1",
 								onClick: function() { alert("Place TEST Here") }.bind(this)
-				//				onClick: function() { this.srd_layerArr[13].uploadLayer(); }.bind(this)
 							}));
 							//// View Menu ////
 							this.srd_viewMenu = new dijit.Menu({});
@@ -645,6 +654,7 @@ srd_createLayer : function(theName,theUrl) {
 								label: "Change Type: ",
 								popup:this.srd_viewTypeMenu
 							}));
+
 							// ROW SIZE MENU DROP DOWN
 							this.srd_windowRowMenu = new dijit.Menu();
 							for(var y=1;y<5;y++) {
@@ -659,6 +669,7 @@ srd_createLayer : function(theName,theUrl) {
 								label: "View Rows: "+this.staticVals.view_layout_y,
 								popup:this.srd_windowRowMenu	
 							}));
+
 							// COLUMN SIZE MENU DROP DOWN
 							this.srd_windowColMenu = new dijit.Menu();
 							for(var x=1;x<5;x++) {
@@ -684,21 +695,25 @@ srd_createLayer : function(theName,theUrl) {
 									onClick: function() { this.srd_doc.srd_changeTheme(this.value) }
 								} ) );
 							}
+
 							this.srd_viewMenu.addChild(new dijit.PopupMenuItem({
 								label: "Change Theme : ",
 								popup:this.srd_themeMenu	
 							}));
 							///// END View Menu ////	
 
+							this.srd_dataMenuFiller = new dijit.Menu();
 							//// Data Menu ////
 							this.srd_dataMenuPopup = new dijit.PopupMenuBarItem({
 								label: "Data",
-								popup: this.selectedView.dataMenu
+								popup: this.srd_dataMenuFiller
+//								popup: this.selectedView.dataMenu
 							} );
 							this.srd_menuBar.addChild(this.srd_dataMenuPopup);
 
 							/// END Data Menu
 							this.srd_dataMenu = this.srd_viewMenu;	
+
 
 							//// Tools Menu ////
 							var srd_toolsMenu = new dijit.Menu({});
@@ -723,22 +738,6 @@ srd_createLayer : function(theName,theUrl) {
 								}) 
 							);
 					
-				/*
-							// BEGIN UPLOAD LAYER MENU
-							this.srd_uploadMenu = new dijit.Menu( );
-							for( tmpId in this.srd_layerArr) {
-									this.srd_uploadMenu.addChild(new dijit.MenuItem( { 
-										label: this.srd_layerArr[tmpId].name,
-										onClick: function() { this.srd_layerArr[tmpId].uploadLayer() }.bind(this)
-									} ) );
-							}	
-							srd_toolsMenu.addChild(new dijit.PopupMenuItem({
-								label: "Upload Layer to Server",
-								popup:this.srd_uploadMenu
-							}));
-							// END UPLOAD LAYER MENU
-				*/
-
 							//// Window Menu ////
 							this.srd_windowMenu = new dijit.Menu({});
 							this.srd_menuBar.addChild(new dijit.PopupMenuBarItem({
@@ -755,26 +754,7 @@ srd_createLayer : function(theName,theUrl) {
 								} ) );
 							}
 
-
-				/*			var theSchema = {
-								"type" : "object",
-								"properties" : {
-									"items" :
-									"rating" : { "type": "number"},
-									"addy" : { "type": "string"},
-									"lat" : { "type": "number"},
-									"lon" : { "type": "number"},
-								}
-							}
-				*/
-
-				//			this.srsearch_store = new dojox.data.JsonRestStore ( {
-				//				schema : theSchema,
-				//				target: "/srsearch/index",
-				//				syncMode:true
-
 							this.srsearch_store = new dojox.data.QueryReadStore( {
-				// 			this.srsearch_store = new ComboBoxReadStore( {
 								url: "/srsearch/index"
 							} );
 
@@ -821,18 +801,12 @@ srd_createLayer : function(theName,theUrl) {
 							this.srd_menuBar.startup();
 
 						}
-						
-				/*		// GET RID OF ALL WIDGETS ON SCREEN
-						var widgetArr = this.srd_container.getChildren();
-						for(var i=0;i<widgetArr.length;i++) {
-							this.srd_container.removeChild(widgetArr[i]);
-						}
-				*/
+
 						this.srd_container.addChild(this.srd_menuBar);
-					}.bind(this) );
-					return;
+//					}.bind(this) );
+//					return;
 },
-// END
+// END srd_displayMenuBar
 
 srd_toggleLocationTracking : function(menuItem) {
 					dojo.addOnLoad( function() {

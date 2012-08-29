@@ -230,7 +230,7 @@ define ( [
 			} else {
 				//UNCHECKED
 				this.mapData = false;
-				delete this.srd_layer.layer.destroy();
+				this.srd_layer.layer.destroy();
 				delete this.srd_layer;
 			}
 		},

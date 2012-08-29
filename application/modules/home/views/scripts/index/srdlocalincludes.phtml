@@ -1,8 +1,3 @@
-	</script>
-		<style>
-			@import "lib/srd/css/srd.css";
-			@import "lib/OpenLayers/theme/default/style.css";
-		</style>
 
 		<script type="text/javascript" >
 
@@ -17,21 +12,35 @@
 				{ name: "org", location: "org" }
 			]
 		};
+
+			OpenLayers = parent.OpenLayers;
+			require = parent.require;
+			define = parent.define;		
+			dojo = parent.dojo;
+			dojox = parent.dojox;
+	
 		</script>
 
-
-		<script data-dojo-config="async: 1 " src="lib/dojo/dojo.js" ></script>
-		<script src="lib/OpenLayers/OpenLayers.js"></script>
-		<script data-dojo-config="async: 0" src="lib/srd/dojo_bootloader.js" ></script>
-		<script data-dojo-config="async: 0" src="lib/srd/include_view.js" ></script>
+		<script data-dojo-config="async: 0" src="../../lib/dojo/dojo.js" ></script>
+		<script data-dojo-config="async: 0" src="../../lib/srd/include_view.js" ></script>
 
 		<script>
-		require([
+		loadsrd = {};
+		require( {
+			baseUrl: window.location.protocol + "//" + window.location.host + '/lib',
+			packages : [
+				{ name: "dojo", location: "dojo" },
+				{ name: "dijit", location: "dijit" },
+				{ name: "dojox", location: "dojox" },
+				{ name: "srd", location: 'srd' },
+				{ name: "org", location: "org" }
+			]
+		}, [
 			"srd/srd_document",
 			"dojo/domReady!"
 		], function( srd_document ) {
 
-				srd = new srd_document(loadsrd);
+				srd = new srd_document();
 				srd.srd_init();
 <!--
 <?php

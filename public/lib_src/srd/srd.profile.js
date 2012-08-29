@@ -15,10 +15,10 @@ var profile = {
 	basePath: "..",
 	action: 'release',
 	cssOptimize: 'comments',
-	mini: false,
-//	optimize: 'closure',
-//	layerOptimize: 'closure',
-//	stripConsole: 'all',
+	mini: true,
+	optimize: 'closure',
+	layerOptimize: 'closure',
+	stripConsole: 'all',
 	layers: {
 /*		"dojo/dojo": {
 			include: [ "dojo/dojo", 'dojo/_base/loader', 'dojo/i18n', "dojo/domReady" ],
@@ -26,7 +26,7 @@ var profile = {
 			boot: true
 		}
 */
-		"srd/edit_include" : {
+		"srd/include_edit" : {
 			include: [ 
 				"dijit/form/Form",
 				"dijit/form/Textarea",
@@ -36,12 +36,14 @@ var profile = {
 				"dojox/layout/ExpandoPane"
 			]
 		},
-		"srd/doc_include" : {
+		"srd/dojo_bootloader" : {
 			include: [
-				"srd/doc_include"
-			]
+				"srd/dojo_bootloader"
+			],
+			customBase: true,
+			boot: true
 		},
-		"srd/view_include": { 
+		"srd/include_view": { 
 			include: [ 
 				"dojo/_base/declare",
 				"dijit/layout/BorderContainer",
@@ -54,17 +56,17 @@ var profile = {
 		},
 		"srd/srd_view": {
 			include: [ "srd/srd_view" ],
-			exclude: [ "srd/view_include" ]
+			exclude: [ "srd/include_view" ]
 		},
 		"srd/srd_editPalette": {
 			include: [ "srd/srd_editPalette" ],
-			exclude: [ "srd/doc_include" ]
+			exclude: [ "srd/dojo_bootloader" ]
 		},
 		
 
 		"srd/srd_document": {
 			include: [ "srd/srd_document" ],
-			exclude: [ "srd/doc_include" ]
+			exclude: [ "srd/dojo_bootloader" ]
 		}
 
 
@@ -74,6 +76,7 @@ var profile = {
 
 
     staticHasFeatures: {
+				'config-tlmSiblingOfDojo':0,
         // The trace & log APIs are used for debugging the loader, so we don’t need them in the build
         'dojo-trace-api':0,
         'dojo-log-api':0,

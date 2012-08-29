@@ -10,7 +10,7 @@
 
 define([ 
 	"dojo/_base/declare",
-	"srd/view_include",
+	"srd/include_view",
 	"dijit/layout/BorderContainer",
 	"dijit/Menu",
 	"dijit/PopupMenuItem",
