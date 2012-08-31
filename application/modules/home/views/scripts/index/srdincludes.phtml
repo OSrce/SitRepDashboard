@@ -17,13 +17,14 @@
 				{ name: "org", location: "org" }
 			]
 		};
+
 		</script>
-
-
-		<script data-dojo-config="async: 1 " src="lib/dojo/dojo.js" ></script>
-		<script src="lib/OpenLayers/OpenLayers.js"></script>
+<!--
 		<script data-dojo-config="async: 0" src="lib/srd/dojo_bootloader.js" ></script>
 		<script data-dojo-config="async: 0" src="lib/srd/include_view.js" ></script>
+-->
+		<script data-dojo-config="async: 1 " src="lib/dojo/dojo.js" ></script>
+		<script src="lib/OpenLayers/OpenLayers.js"></script>
 
 		<script>
 		require([
@@ -31,15 +32,8 @@
 			"dojo/domReady!"
 		], function( srd_document ) {
 
-				srd = new srd_document(loadsrd);
+				srd = srd_document(loadsrd);
 				srd.srd_init();
-<!--
-<?php
-       echo "loadsrd.siteLeftImage='".$this->srd_login_opts['leftimage']."';\n";
-       echo "loadsrd.siteRightImage='".$this->srd_login_opts['rightimage']."';\n";
-       echo "loadsrd.siteTitle='".$this->srd_login_opts['title']."';\n";
-?>
--->
 		} );
 
 		</script>

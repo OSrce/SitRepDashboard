@@ -171,8 +171,10 @@ return declare( null, {
 	this.siteTitle = loadsrd.title;
 
 	this.loadsrd = loadsrd;
-	this.serverBaseUrl = loadsrd.serverBaseUrl;
-
+	this.serverBaseUrl = "";
+	if( loadsrd.serverBaseUrl) {
+		this.serverBaseUrl = loadsrd.serverBaseUrl;
+	}
 // END ASSOCIATE DATA FROM SERVER
 
 
@@ -342,7 +344,7 @@ srd_init : function() {
 
 //	this.srd_displayMenuBar();
 	
-	this.rtc = new srd_rtc(this);
+//	this.rtc = new srd_rtc(this);
 },
 // END srd_init
 
@@ -568,7 +570,7 @@ srd_createLayer : function(theName,theUrl) {
 				srd_displayMenuBar : function() {
 					console.log("Adding Menu Bar");
 //					dojo.addOnLoad(function() {
-						if(this.srd_menuBar == null) {
+						if( this.srd_menuBar == null) {
 							this.srd_menuBar = new dijit.MenuBar( { 
 								splitter: false,
 								'region': 'top',
@@ -589,24 +591,29 @@ srd_createLayer : function(theName,theUrl) {
 								label: "File",
 								popup: srd_fileMenu
 							}) );
+
 							srd_fileMenu.addChild(new dijit.MenuItem({
 								label: "New Whiteboard Layer",
-								onClick: function() { this.srd_createWhiteboard()  }.bind(this)
+								srd: this,
+								onClick: function() { srd.srd_createWhiteboard()  }
 							}));
+
 							srd_fileMenu.addChild(new dijit.MenuItem({
 								label: "Open",
-								onClick: function() { this.openFile() }.bind(this)
+								srd: this,
+								onClick: function() { srd.openFile() }
 							}));
 							srd_fileMenu.addChild(new dijit.MenuItem({
 								label: "Save Project",
-								onClick: function() { alert("Future Function - Save Project") }.bind(this)
+								onClick: function() { alert("Future Function - Save Project") }
 							}));
 							this.srd_saveMenu = new dijit.Menu( );
 							for( tmpId in this.srd_layerArr) {
 								if(this.srd_layerArr[tmpId].options.type == "Vector" && this.srd_layerArr[tmpId].feature_update == true) {
 									this.srd_saveMenu.addChild(new dijit.MenuItem( { 
 										label: this.srd_layerArr[tmpId].name,
-										onClick: function() { this.saveLayer(tmpId) }.bind(this)
+										srd: this,
+										onClick: function() { srd.saveLayer(tmpId) }
 									} ) );
 								}
 							}	
@@ -624,7 +631,7 @@ srd_createLayer : function(theName,theUrl) {
 							}) );
 							srd_editMenu.addChild(new dijit.MenuItem({
 								label: "TEST1",
-								onClick: function() { alert("Place TEST Here") }.bind(this)
+								onClick: function() { alert("Place TEST Here") }
 							}));
 							//// View Menu ////
 							this.srd_viewMenu = new dijit.Menu({});

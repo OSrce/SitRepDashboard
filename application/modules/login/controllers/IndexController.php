@@ -75,6 +75,7 @@ class Login_IndexController extends Zend_Controller_Action {
 			$theResponse['authorized'] = false;
 			$theResponse['authenticated'] = false;
 		}
+		$this->getResponse()->setHeader('Content-type', 'application/json', true);
 		$this->getResponse()->appendBody(Zend_Json::encode($theResponse));
 		$this->getResponse()->setHttpResponseCode(200);
 		return;
