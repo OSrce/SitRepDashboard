@@ -491,10 +491,15 @@ loadData : function( ) {
 			this.editPalette = new srd_editPalette(this);
 //			console.log("finished making editPal");
 
+
+			//This creates the mode drop down list (point, line, select, etc...)
 			if(this.options.type == "Vector" && this.options.feature_update == "true") {
 				this.editPalette.addControl("activeControlPicker","Edit Mode","activeControl",this.srd_drawControls);
 			}
+			
+			//This creates the feature label editor
 			this.editPalette.addControl("editText","Feature Label","label",this.srd_featureAttributes);
+
 
 //			console.log("finished making label");
 			this.editPalette.addControl("colorPicker","Font Color","fontColor",this.srd_featureAttributes);	

@@ -72,11 +72,21 @@ date; time osm2pgsql --append -m -s -d gis -C 1000 ct.osm.bz2; date;time osm2pgs
 
 date; time osm2pgsql -m -s -d gis -C 1000 /media/sf_VBOX_SHARED/tristate.osm.bz2; date
 
+Santa Barbara :
+#top=34.506 left=-119.9240 right=-119.5449 bottom=34.358
+top=34.506 left=-119.9240 right=-119.245 bottom=34.209
+
+Los Angles :
+top=34.3899 left=-119.395 right=-117.880 bottom=33.843
+
+date; time bzcat /media/sf_VM_SHARED/planet-120215.osm.bz2 | osmosis --read-xml enableDateParsing=no file=- --bounding-box top=34.3899 left=-119.395 right=-117.880 bottom=33.843 --write-xml file=- | bzip2 >~/OSM_Extracted_Data/LosAngeles.osm.bz2; date;
 
 
+date; time bzcat /media/sf_VM_SHARED/planet-120215.osm.bz2 | osmosis --read-xml enableDateParsing=no file=- --bounding-box top=34.506 left=-119.9240 right=-119.245 bottom=34.209 --write-xml file=- | bzip2 >~/OSM_Extracted_Data/santa_barbara.osm.bz2; date;
 
+#date; time osm2pgsql --append -m -s -d gis -C 1000 LosAngeles.osm.bz2; date;time osm2pgsql --append -m -s -d gis -C 1000 santa_barbara.osm.bz2;date; 
 
-
+date; time osm2pgsql --proj 4326 -m -s -d gis -C 1000 LosAngeles.osm.bz2; date;time osm2pgsql --proj 4326 --append -m -s -d gis -C 1000 santa_barbara.osm.bz2;date;
 
 
 
