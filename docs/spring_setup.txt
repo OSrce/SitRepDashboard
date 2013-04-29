@@ -1,0 +1,107 @@
+
+ssh -L 5432:nyc.sitrep.org:5432  -f sitrepadmin@nyc.sitrep.org -N
+
+wget http://www.openlayers.org/download/OpenLayers-2.12.tar.gz
+mvn install:install-file   -DgroupId=org.openlayers   -DartifactId=openlayers   -Dversion=2.12  -Dpackaging=tar.gz   -Dclassifier=release   -Dfile=./OpenLayers-2.12.tar.gz   -DgeneratePom -DcreateChecksum
+
+wget http://download.dojotoolkit.org/release-1.8.1/dojo-release-1.8.1-src.zip 
+mvn install:install-file   -DgroupId=org.dojotoolkit   -DartifactId=dojo   -Dversion=1.8.1   -Dpackaging=zip   -Dclassifier=sources   -Dfile=./dojo-release-1.8.1-src.zip   -DgeneratePom -DcreateChecksum
+
+mvn install:install-file   -DgroupId=org.dojotoolkit   -DartifactId=dojo   -Dversion=1.8.1   -Dpackaging=zip   -Dclassifier=release -Dfile=./dojo-release-1.8.1.zip -DgeneratePom -DcreateChecksum
+
+
+
+wget https://github.com/cometd/cometd/archive/master.tar.gz
+tar -zxvf cometd-master
+cd cometd-master
+tar -czvf cometd-common.tar.gz cometd-javascript/common
+tar -czvf cometd-dojo.tar.gz cometd-javascript/dojo
+cd ..
+mvn install:install-file   -DgroupId=org.cometd -DartifactId=cometd-javascript-common -Dversion=2.5.1 -Dpackaging=tar.gz   -Dclassifier=sources -Dfile=cometd-master/cometd-common.tar.gz -DgeneratePom -DcreateChecksum
+mvn install:install-file   -DgroupId=org.cometd -DartifactId=cometd-javascript-dojo -Dversion=2.5.1 -Dpackaging=tar.gz   -Dclassifier=sources -Dfile=cometd-master/cometd-dojo.tar.gz -DgeneratePom -DcreateChecksum
+
+
+
+
+IN ROO CMD LINE :
+
+---NOGOOD---persistence setup --database POSTGRES --provider HIBERNATE
+jpa setup --database POSTGRES --provider HIBERNATE 
+
+--- NEED TO ADDON INSTALL --
+ addon install id 01
+
+
+database properties set --key database.url --value jdbc:postgresql://localhost:5432/sr_data 
+database properties set --key database.username --value sitrepadmin
+
+enum type --class ~.domain.roletype
+enum constant --name uid
+enum constant --name gid
+
+enum type --class ~.domain.permittype
+enum constant --name deny
+enum constant --name allow
+
+enum type --class ~.domain.layer_type
+enum constant --name XYZ
+enum constant --name Vector
+enum constant --name WFS
+enum constant --name GeoRSS
+enum constant --name GeoWMS
+
+enum type --class ~.domain.layer_format
+enum constant --name GML
+enum constant --name WFST
+enum constant --name WKT
+enum constant --name GeoJSON
+enum constant --name SRJSON
+
+
+database reverse engineer --package ~.domain --schema PUBLIC
+
+--- database reverse engineer --package ~.domain --schema PUBLIC --includeTables  "sr_cfs sr_acl_permissions sr_assets sr_assets_status sr_groups sr_layer_dynamic_data sr_layers sr_layer_static_data sr_locations sr_modules sr_queries sr_session sr_style_presets sr_style_rules sr_styles sr_style_symbolizers  sr_users sr_window_layout"
+
+
+database reverse engineer --package ~.domain --schema PUBLIC --includeTables  "sr_cfs sr_acl_permissions sr_assets sr_assets_status sr_groups sr_layer_dynamic_data sr_layers sr_layer_static_data sr_locations sr_modules sr_queries sr_session sr_style_presets sr_style_rules sr_styles sr_style_symbolizers  sr_users sr_window_layout sr_query_monitor sr_query_monitor_results entity entity_status"
+
+
+
+web mvc setup
+
+web mvc all --package ~.web
+
+web mvc json all
+
+json all
+
+
+-- CREATE src/test/resources folders in src
+
+
+
+
+
+IN persistence.xml, change this :
+<property name="hibernate.hbm2ddl.auto" value="none"/>
+to this:
+<property name="hibernate.hbm2ddl.auto" value="none"/>
+
+-------------------------
+---Setup dojo in POM :
+mvn install:install-file -DgroupId=org.dojotoolkit -DartifactId=dojo -Dversion=1.8.1 -Dpackaging=zip -Dfile=~/Downloads/dojo-release-1.8.1-src.zip -DgeneratePom
+
+
+---Setup OpenLayers in POM :
+mvn install:install-file -DgroupId=org.openlayers -DartifactId=openlayers -Dversion=2.12 -Dpackaging=zip -Dfile=~/Downloads/OpenLayers-2.12.zip -DgeneratePom
+
+
+
+
+---------NEW DB SETUP
+database reverse engineer --package ~.domain --schema PUBLIC --includeTables  "entity  entity_status event layer location query srgroup sruser srmap style srule ssymbolizer"
+
+
+
+
+

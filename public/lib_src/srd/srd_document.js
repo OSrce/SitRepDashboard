@@ -1084,7 +1084,8 @@ srd_changeWindowLayout : function(wlayout) {
 						}
 						this.staticVals.view_layout_x = this.srd_wlayoutArr[this.selected_wlayout].view_x;
 						this.staticVals.view_layout_y = this.srd_wlayoutArr[this.selected_wlayout].view_y;
-						this.staticVals.view_data = this.srd_wlayoutArr[this.selected_wlayout].view_data;
+						this.staticVals.view_data = this.srd_wlayoutArr[this.selected_wlayout].view_data; 
+//						this.staticVals.view_data = dojo.fromJson( this.srd_wlayoutArr[this.selected_wlayout].view_data );
 						this.staticVals.showname = this.srd_wlayoutArr[this.selected_wlayout].showname;
 						this.staticVals.layoutName = this.srd_wlayoutArr[this.selected_wlayout].name;
 						

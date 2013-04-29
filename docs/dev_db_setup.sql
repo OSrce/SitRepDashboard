@@ -74,6 +74,8 @@ CREATE TABLE sr_layers (
 	maxZoomLevel INT,
 	attribution VARCHAR(128),
 	defaultStyle int,
+	bgcolor VARCHAR(8) default '0x000000',
+	opacity REAL default 1,
 	created_on TIMESTAMP,
 	updated_on TIMESTAMP,
 	created_by INT,
@@ -228,6 +230,31 @@ CREATE TABLE sr_cfs_updatequeue (
 	cfs_num INT NOT NULL,
 	PRIMARY KEY (cfs_date, cfs_num )
 );
+
+CREATE TABLE sr_query_monitor (
+	id BIGSERIAL NOT NULL,
+	queryid INT NOT NULL REFERENCES sr_queries(id),
+	PRIMARY KEY (id)
+);
+
+
+CREATE TABLE sr_query_monitor_results (
+	id BIGSERIAL NOT NULL,
+	monitorid BIGINT NOT NULL REFERENCES sr_query_monitor(id),
+	resultid BIGINT NOT NULL REFERENCES sr_cfs(id),
+  updatedon TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id)
+);
+
+
+
+
+
+
+
+
+
+
 
 
 

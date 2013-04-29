@@ -158,6 +158,10 @@ UPDATE sr_cfs SET cfs_timecreated=to_timestamp(cfs_date||' '||cfs_timecreatedold
 ALTER TABLE sr_cfs DROP COLUMN cfs_timecreatedold CASCADE;
 -- NEED TO RECREATE VIEW: sr_cfs_withlocation
 
+insert into sr_layers (id, name, type, format, isbaselayer,projection, visibility, sphericalmercator, url) VALUES (1005, 'sitrepbw', 'WMS', null, true, 'EPSG:900913', true, true, 'http://nyc.sitrep.org/geoserver/wms/' );
+
+
+
 
 
 

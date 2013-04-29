@@ -8,6 +8,7 @@
 \c sr_data;
 
 CREATE TABLE sr_cfs (
+	id BIGSERIAL NOT NULL,
   cfs_date DATE NOT NULL,
 	cfs_letter CHAR NOT NULL,
   cfs_num INT  NOT NULL,
@@ -16,7 +17,7 @@ CREATE TABLE sr_cfs (
 	cfs_addr VARCHAR(128),
 	cfs_cross1 VARCHAR(128),
 	cfs_cross2 VARCHAR(128),
-	cfs_location INT,
+	cfs_location BIGINT references sr_locations(id),
 	cfs_code INT NOT NULL,
 	cfs_codesup1 VARCHAR(8),
 	cfs_codesup2 VARCHAR(128),
@@ -39,7 +40,7 @@ CREATE TABLE sr_cfs (
 	cfs_bodylastline VARCHAR(100),
 	cfs_created_on TIMESTAMP,
 	cfs_updated_on TIMESTAMP,
-	PRIMARY KEY (cfs_date, cfs_num)
+	PRIMARY KEY (id)
 );
 
 
@@ -73,7 +74,7 @@ CREATE TABLE sr_assets_status (
 -- SOURCE 1=GPS, 2=ADDRESS, 3=CROSS ST, 4=SECTOR, 5=PRECINCT.
 
 CREATE TABLE sr_locations (
-	id SERIAL NOT NULL,
+	id BIGSERIAL NOT NULL,
 	pct INT,
 	sector CHAR,
 	source INT,
